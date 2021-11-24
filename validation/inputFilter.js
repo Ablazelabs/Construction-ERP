@@ -76,4 +76,12 @@ module.exports = (
       throw { key: i, message: e };
     }
   }
+  let returnedObj = {};
+  for (let i in optionalObj) {
+    if (givenObj[i] || givenObj[i] === 0) returnedObj[i] = givenObj[i];
+  }
+  for (let i in expectedObj) {
+    if (givenObj[i] || givenObj[i] === 0) returnedObj[i] = givenObj[i];
+  }
+  return returnedObj;
 };
