@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { verify } = require("jsonwebtoken");
-const { genSalt, hash } = require("bcrypt");
+const { genSalt, hash, compare } = require("bcrypt");
 
 const { sequelizer, error, confirmCredential } = require("../../config/config");
 const { sequelize, QueryTypes } = sequelizer();
@@ -13,11 +13,16 @@ router.post("/account/changepassword", async (req, res, next) => {
   try {
     inputFilter(
       { newPassword: "string" },
-      { accessToken: "string", tempAccessToken: "string", id: "number" },
+      {
+        accessToken: "string",
+        tempAccessToken: "string",
+        id: "number",
+        password: "string",
+      },
       req.body
     );
   } catch (e) {
-    error(e.key, e.message, next, 400);
+    error(e.key, e.message, next);
     return;
   }
   if (!req.body.accessToken && !req.body.tempAccessToken) {
@@ -46,15 +51,22 @@ router.post("/account/changepassword", async (req, res, next) => {
     return;
   }
   let id;
+  let selfUpdate = false;
   if (req.body.tempAccessToken) {
     id = payLoad.tempId;
   } else {
     if (!req.body.id && req.body.id != 0) {
-      error("id", "must be given with access token", next);
-      return;
+      if (req.body.password) {
+        selfUpdate = true;
+        id = payLoad.id;
+      } else {
+        error("id", "must be given with access token", next);
+        return;
+      }
+    } else {
+      id = req.body.id;
     }
     const PRIVILEGE_TYPE = "user_update";
-    id = req.body.id;
     if (
       !(await userHasPrivilegeOver(
         payLoad.id,
@@ -69,6 +81,27 @@ router.post("/account/changepassword", async (req, res, next) => {
 
   try {
     await sequelize.authenticate();
+    if (selfUpdate) {
+      const queryResult = await sequelize.query(
+        `SELECT password FROM account WHERE id = :id`,
+        {
+          replacements: { id },
+          type: QueryTypes.SELECT,
+        }
+      );
+      if (queryResult.length == 0) {
+        error(identifier.key, "account doesn't exist", next);
+        return;
+      }
+      const correctPassword = await compare(
+        req.body.password,
+        queryResult[0].password
+      );
+      if (!correctPassword) {
+        error("password", "Wrong password", next);
+        return;
+      }
+    }
     const salt = await genSalt(10);
     const hashPassword = await hash(req.body.newPassword, salt);
     await sequelize.query(

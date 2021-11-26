@@ -21,8 +21,9 @@ module.exports = {
       error("phone_number", "country code must be of 3 length", next);
     else if (phone_number.match("[0-9]{9}") && countryCode.match("[0-9]{3}")) {
       return true;
+    } else {
+      error("phone_number", "phone number characters must be Numbers", next);
     }
-    error("phone_number", "phone number characters must be Numbers", next);
   },
   checkEmail: (email, next) => {
     if (email.match(".+@.+[.].+")) return true;

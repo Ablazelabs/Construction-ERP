@@ -1,5 +1,5 @@
-const { genSalt, hash } = require("bcrypt");
 const express = require("express");
+const { genSalt, hash } = require("bcrypt");
 const router = express.Router();
 const { sequelizer, error, confirmCredential } = require("../config/config");
 const { sequelize, QueryTypes } = sequelizer();
@@ -67,6 +67,7 @@ router.post("/account", async (req, res, next) => {
     );
     res.send({ success: true });
   } catch (e) {
+    console.log(e);
     error("database", "error", next, 500);
   }
 });
@@ -296,11 +297,11 @@ router.patch("/account", async (req, res, next) => {
       }
     }
     if (updateQuery) {
-      const data = await sequelize.query(
-        `UPDATE account ${updateQuery} WHERE id=:id`,
+      await sequelize.query(
+        `UPDATE account ${updateQuery}, concurrency_stamp='random' WHERE id=:id`,
         {
           replacements: { id: req.body.id },
-          type: QueryTypes.SELECT,
+          type: QueryTypes.UPDATE,
         }
       );
       res.send({ success: true });
@@ -309,7 +310,7 @@ router.patch("/account", async (req, res, next) => {
     }
   } catch (e) {
     console.log(e);
-    error(e.key, e.message, next);
+    error("database", "error", next);
     return;
   }
 });
