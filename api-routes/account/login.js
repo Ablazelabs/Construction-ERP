@@ -40,8 +40,8 @@ router.post("/account/login", async (req, res, next) => {
       error(identifier.key, "account doesn't exist", next);
       return;
     }
-    if(queryResult[0].access_failed_count >= 5){
-      error('access','denied',next,423)
+    if (queryResult[0].access_failed_count >= 5) {
+      error("access", "denied", next, 423);
       return;
     }
     const correctPassword = await compare(
@@ -75,16 +75,8 @@ router.post("/account/login", async (req, res, next) => {
     );
     res.send({ accessToken });
   } catch (e) {
-    console.log(e)
     error("database", "error", next, 500);
   }
-});
-
-router.use((err, _req, res, _next) => {
-  let myError = JSON.parse(err.message);
-  const status = myError.status;
-  myError.status = undefined;
-  res.status(status).send({ error: myError });
 });
 
 module.exports = router;

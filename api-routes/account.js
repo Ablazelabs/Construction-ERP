@@ -1,11 +1,16 @@
-const { genSalt, hash, compare } = require("bcrypt");
+const { genSalt, hash } = require("bcrypt");
 const express = require("express");
 const router = express.Router();
 const { sequelizer, error, confirmCredential } = require("../config/config");
 const { sequelize, QueryTypes } = sequelizer();
+const { verify } = require("jsonwebtoken");
 const inputFilter = require("../validation/inputFilter");
 const validation = require("../validation/validation");
 const pgp = require("pg-promise")();
+const {
+  userHasPrivilege,
+  userHasPrivilegeOver,
+} = require("../validation/auth");
 router.post("/account", async (req, res, next) => {
   //error messages clearly define what the code fragment is trying to achieve
 
@@ -24,13 +29,14 @@ router.post("/account", async (req, res, next) => {
     ? { key: "phone_number", value: req.body.phone_number }
     : { key: "email", value: req.body.email };
   if (identifier["key"] == "phone_number") {
-    validation.checkPhoneNumber(identifier["value"], next);
+    if (!validation.checkPhoneNumber(identifier["value"], next)) return;
   } else {
-    validation.checkEmail(identifier["value"], next);
+    if (!validation.checkEmail(identifier["value"], next)) return;
   }
 
-  validation.checkPassword(req.body.password, next);
-
+  if (!validation.checkPassword(req.body.password, next)) {
+    return;
+  }
   try {
     await sequelize.authenticate();
     const queryResult = await sequelize.query(
@@ -64,7 +70,6 @@ router.post("/account", async (req, res, next) => {
     error("database", "error", next, 500);
   }
 });
-
 router.get("/account", async (req, res, next) => {
   let filter = {};
   let sort = {};
@@ -104,6 +109,16 @@ router.get("/account", async (req, res, next) => {
     return;
   }
 
+  let payLoad;
+  try {
+    payLoad = verify(req.body.accessToken, process.env.ACCESS_KEY);
+  } catch (e) {
+    error("accessToken", "Invalid or Expired Access Token", next, 401);
+  }
+
+  const PRIVILEGE_TYPE = "user_read";
+  if (!(await userHasPrivilege(payLoad.id, PRIVILEGE_TYPE, next))) return;
+
   //making the query!
 
   let query = "SELECT $1:name FROM account ";
@@ -139,6 +154,7 @@ router.get("/account", async (req, res, next) => {
     phone_number: 1,
     two_factor_enabled: 1,
     lockout_enabled: 1,
+    concurrency_stamp: 1,
   };
   query = pgp.as.format(query, [
     projection,
@@ -158,12 +174,183 @@ router.get("/account", async (req, res, next) => {
     return;
   }
 });
+router.patch("/account", async (req, res, next) => {
+  let updateData = {};
+  try {
+    inputFilter(
+      {
+        accessToken: "string",
+        id: "number",
+        updateData: "object",
+        concurrency_stamp: "string",
+      },
+      {},
+      req.body
+    );
 
-router.use((err, _req, res, _next) => {
-  let myError = JSON.parse(err.message);
-  const status = myError.status;
-  myError.status = undefined;
-  res.status(status).send({ error: myError });
+    updateData = inputFilter(
+      {},
+      {
+        username: "string",
+        email: "string",
+        phone_number: "string",
+        two_factor_enabled: "boolean",
+      },
+      req.body.updateData
+    );
+  } catch (e) {
+    error(e.key, e.message, next);
+    return;
+  }
+
+  let payLoad;
+  try {
+    payLoad = verify(req.body.accessToken, process.env.ACCESS_KEY);
+  } catch (e) {
+    error("accessToken", "Invalid or Expired Access Token", next, 401);
+    return;
+  }
+
+  if (Object.keys(updateData).length == 0) {
+    error("updateData", "no data has been sent for update", next);
+    return;
+  }
+
+  const PRIVILEGE_TYPE = "user_update";
+  if (
+    !(await userHasPrivilegeOver(payLoad.id, req.body.id, PRIVILEGE_TYPE, next))
+  ) {
+    return;
+  }
+  try {
+    await sequelize.authenticate();
+    let query = pgp.as.format(
+      "SELECT $1:name,concurrency_stamp FROM account WHERE id = $2",
+      [updateData, req.body.id]
+    );
+    query = query.replace(/"/g, "");
+
+    const data = await sequelize.query(query, {
+      type: QueryTypes.SELECT,
+    });
+    if (data.length == 0) {
+      error("id", "account doesn't exist", next);
+    }
+    let user = data[0];
+
+    if (user.concurrency_stamp !== req.body.concurrency_stamp) {
+      error("concurrency_stamp", "account already updated, refresh", next);
+      return;
+    }
+    if (updateData.email) {
+      if (updateData.email === user.email) {
+        updateData.email = undefined;
+      } else {
+        if (!validation.checkEmail(updateData.email, next)) {
+          return;
+        }
+        const data = await sequelize.query(
+          "SELECT email FROM account WHERE email = :email",
+          {
+            replacements: updateData,
+            type: QueryTypes.SELECT,
+          }
+        );
+        if (data.length != 0) {
+          error("email", "already exists", next);
+          return;
+        }
+      }
+    }
+    if (updateData.phone_number) {
+      if (updateData.phone_number === user.phone_number) {
+        updateData.phone_number = undefined;
+      } else {
+        if (!validation.checkPhoneNumber(updateData.phone_number, next)) {
+          return;
+        }
+        const data = await sequelize.query(
+          "SELECT phone_number FROM account WHERE phone_number = :phone_number",
+          {
+            replacements: updateData,
+            type: QueryTypes.SELECT,
+          }
+        );
+        if (data.length != 0) {
+          error("phone_number", "already exists", next);
+          return;
+        }
+      }
+    }
+    let updateQuery = "";
+    for (let i in updateData) {
+      if (updateData[i]) {
+        if (updateQuery) {
+          updateQuery += ", ";
+        } else {
+          updateQuery += "SET ";
+        }
+        updateQuery += pgp.as
+          .format("$1:name = $2", [i, updateData[i]])
+          .replace(/"/g, "");
+      }
+    }
+    if (updateQuery) {
+      const data = await sequelize.query(
+        `UPDATE account ${updateQuery} WHERE id=:id`,
+        {
+          replacements: { id: req.body.id },
+          type: QueryTypes.SELECT,
+        }
+      );
+      res.send({ success: true });
+    } else {
+      res.send({ success: true });
+    }
+  } catch (e) {
+    console.log(e);
+    error(e.key, e.message, next);
+    return;
+  }
+});
+router.delete("/account", async (req, res, next) => {
+  try {
+    inputFilter(
+      {
+        accessToken: "string",
+        id: "number",
+      },
+      {},
+      req.body
+    );
+  } catch (e) {
+    error(e.key, e.message, next);
+    return;
+  }
+  let payLoad;
+  try {
+    payLoad = verify(req.body.accessToken, process.env.ACCESS_KEY);
+  } catch (e) {
+    error("accessToken", "Invalid or Expired Access Token", next, 401);
+    return;
+  }
+  const PRIVILEGE_TYPE = "user_delete";
+  if (
+    !(await userHasPrivilegeOver(payLoad.id, req.body.id, PRIVILEGE_TYPE, next))
+  ) {
+    return;
+  }
+  try {
+    sequelize.authenticate();
+    await sequelize.query("DELETE FROM account WHERE id = :id", {
+      replacements: { id: req.body.id },
+      type: QueryTypes.DELETE,
+    });
+    res.send({ success: true });
+  } catch (e) {
+    error(e.key, e.message, next);
+    return;
+  }
 });
 
 module.exports = router;
