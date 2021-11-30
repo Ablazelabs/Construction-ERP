@@ -1,12 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { sign } = require("jsonwebtoken");
-
-const { sequelizer, error, confirmCredential } = require("../../config/config");
-const { sequelize, QueryTypes } = sequelizer();
+const { error } = require("../../config/config");
 
 const inputFilter = require("../../validation/inputFilter");
-
+const sendcode = require("../../services/sendcode");
 router.post("/account/sendcode", async (req, res, next) => {
   try {
     inputFilter(
@@ -26,32 +23,15 @@ router.post("/account/sendcode", async (req, res, next) => {
     ? { key: "phone_number", value: req.body.phone_number }
     : { key: "email", value: req.body.email };
   try {
-    sequelize.authenticate();
-    const codeData = await sequelize.query(
-      `SELECT code, id FROM account WHERE ${identifier.key}=:value`,
-      {
-        replacements: { ...identifier },
-        type: QueryTypes.SELECT,
-      }
-    );
-    if (codeData.length == 0) {
-      error(identifier.key, "doesn't exit", next);
+    let identifier2 = {};
+    identifier2[identifier.key] = identifier.value;
+    const data = await sendcode(identifier2, identifier.key, req.body, next);
+    if (data == false) {
       return;
     }
-    const code = codeData[0].code;
-    if (code !== req.body.code) {
-      error("code", "doesn't match", next);
-      return;
-    }
-    const tempAccessToken = sign(
-      {
-        tempId: codeData[0].id,
-      },
-      process.env.ACCESS_KEY,
-      { expiresIn: "1h" }
-    );
-    res.send({ tempAccessToken });
+    res.json(data);
   } catch (e) {
+    console.log(e);
     error("database", "error", next, 500);
   }
 });

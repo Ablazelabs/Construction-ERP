@@ -4,54 +4,51 @@ const { error, confirmCredential } = require("../config/config");
 const { verify } = require("jsonwebtoken");
 const inputFilter = require("../validation/inputFilter");
 const validation = require("../validation/validation");
-
-const {
-  userHasPrivilege,
-  userHasPrivilegeOver,
-} = require("../validation/auth");
-
-const { post, get, patch, deleter } = require("../services/account");
-
-router.post("/account", async (req, res, next) => {
-  //error messages clearly define what the code fragment is trying to achieve
-
+const { userHasPrivilege } = require("../validation/auth");
+const { post, get, patch, deleter } = require("../services/role");
+router.post("/role", async (req, res, next) => {
   try {
-    inputFilter({}, { phone_number: "string", email: "string" }, req.body);
-    inputFilter({ password: "string" }, {}, req.body, 8);
+    inputFilter(
+      { name: "string", accessToken: "string" },
+      { privileges: "object" },
+      req.body,
+      4
+    );
+    inputFilter({}, { description: "string" }, req.body, 0, 300);
+    if (req.body.privileges) {
+      if (!Array.isArray(updateData.privileges)) {
+        throw { key: "privileges", message: "must be an array" };
+      }
+    }
   } catch (e) {
     error(e.key, e.message, next, 400);
     return;
   }
-  if (!req.body.phone_number && !req.body.email) {
-    error("identifier", "email or phone must be provided", next);
-    return;
-  }
-  const identifier = req.body.phone_number
-    ? { key: "phone_number", value: req.body.phone_number }
-    : { key: "email", value: req.body.email };
-  if (identifier["key"] == "phone_number") {
-    if (!validation.checkPhoneNumber(identifier["value"], next)) return;
-  } else {
-    if (!validation.checkEmail(identifier["value"], next)) return;
-  }
-
-  if (!validation.checkPassword(req.body.password, next)) {
-    return;
-  }
+  let payLoad;
   try {
-    let identifier2 = {};
-    identifier2[identifier.key] = identifier.value;
-    const data = await post(identifier2, identifier.key, req.body, next);
+    payLoad = verify(req.body.accessToken, process.env.ACCESS_KEY);
+  } catch (e) {
+    error("accessToken", "Invalid or Expired Access Token", next, 401);
+    return;
+  }
+  const PRIVILEGE_TYPE = "role_create";
+  if (!(await userHasPrivilege(payLoad.id, PRIVILEGE_TYPE, next))) return;
+  const privileges = req.body.privileges
+    ? req.body.privileges.map((element) => {
+        return { id: element };
+      })
+    : [];
+  try {
+    const data = await post(req.body, privileges, next);
     if (data == false) {
       return;
     }
     res.json(data);
   } catch (e) {
-    console.log(e);
     error("database", "error", next, 500);
   }
 });
-router.get("/account", async (req, res, next) => {
+router.get("/role", async (req, res, next) => {
   let filter = {};
   let sort = {};
   let skip = 0;
@@ -67,12 +64,7 @@ router.get("/account", async (req, res, next) => {
     if (req.body.filter) {
       filter = inputFilter(
         {},
-        {
-          username: "string",
-          email: "string",
-          phone_number: "string",
-          role: "number",
-        },
+        { name: "string", description: "string" },
         req.body.filter
       );
     }
@@ -82,10 +74,9 @@ router.get("/account", async (req, res, next) => {
       sort = inputFilter(
         {},
         {
-          username: "number",
-          email: "number",
-          phone_number: "number",
+          name: "number",
           id: "number",
+          description: "number",
         },
         req.body.sort
       );
@@ -102,26 +93,15 @@ router.get("/account", async (req, res, next) => {
     error("accessToken", "Invalid or Expired Access Token", next, 401);
   }
 
-  const PRIVILEGE_TYPE = "user_read";
+  const PRIVILEGE_TYPE = "role_read";
   if (!(await userHasPrivilege(payLoad.id, PRIVILEGE_TYPE, next))) return;
   const projection = {
-    id: true,
-    username: true,
-    normalized_username: true,
-    email: true,
-    phone_number: true,
-    two_factor_enabled: true,
-    lockout_enabled: true,
+    name: true,
+    description: true,
     concurrency_stamp: true,
-    role: true,
+    id: true,
+    privileges: true,
   };
-  let role = {};
-  if (filter.role) {
-    role = {
-      id: filter.role,
-    };
-    filter.role = undefined;
-  }
   let queryFilter = {};
   for (let i in filter) {
     queryFilter[i] = { contains: filter[i] };
@@ -131,13 +111,12 @@ router.get("/account", async (req, res, next) => {
     querySort[i] = sort[i] ? "asc" : "desc";
   }
   try {
-    res.json(await get(queryFilter, querySort, role, limit, skip, projection));
+    res.json(await get(queryFilter, querySort, limit, skip, projection));
   } catch (e) {
-    console.log(e);
     error("database", "error", next, 500);
   }
 });
-router.patch("/account", async (req, res, next) => {
+router.patch("/role", async (req, res, next) => {
   let updateData = {};
   try {
     inputFilter(
@@ -154,19 +133,21 @@ router.patch("/account", async (req, res, next) => {
     updateData = inputFilter(
       {},
       {
-        username: "string",
-        email: "string",
-        phone_number: "string",
-        two_factor_enabled: "boolean",
-        role: "number",
+        name: "string",
+        description: "string",
+        privileges: "object",
       },
       req.body.updateData
     );
+    if (updateData.privileges) {
+      if (!Array.isArray(updateData.privileges)) {
+        throw { key: "privileges", message: "must be an array" };
+      }
+    }
   } catch (e) {
     error(e.key, e.message, next);
     return;
   }
-
   let payLoad;
   try {
     payLoad = verify(req.body.accessToken, process.env.ACCESS_KEY);
@@ -174,17 +155,15 @@ router.patch("/account", async (req, res, next) => {
     error("accessToken", "Invalid or Expired Access Token", next, 401);
     return;
   }
+
   if (Object.keys(updateData).length == 0) {
     error("updateData", "no data has been sent for update", next);
     return;
   }
 
-  const PRIVILEGE_TYPE = "user_update";
-  if (
-    !(await userHasPrivilegeOver(payLoad.id, req.body.id, PRIVILEGE_TYPE, next))
-  ) {
-    return;
-  }
+  const PRIVILEGE_TYPE = "role_update";
+  if (!(await userHasPrivilege(payLoad.id, PRIVILEGE_TYPE, next))) return;
+
   let updateDataProjection = {};
   for (let i in updateData) {
     if (updateData[i]) {
@@ -203,7 +182,7 @@ router.patch("/account", async (req, res, next) => {
     return;
   }
 });
-router.delete("/account", async (req, res, next) => {
+router.delete("/role", async (req, res, next) => {
   try {
     inputFilter(
       {
@@ -224,12 +203,9 @@ router.delete("/account", async (req, res, next) => {
     error("accessToken", "Invalid or Expired Access Token", next, 401);
     return;
   }
-  const PRIVILEGE_TYPE = "user_delete";
-  if (
-    !(await userHasPrivilegeOver(payLoad.id, req.body.id, PRIVILEGE_TYPE, next))
-  ) {
-    return;
-  }
+  const PRIVILEGE_TYPE = "role_delete";
+  if (!(await userHasPrivilege(payLoad.id, PRIVILEGE_TYPE, next))) return;
+
   try {
     res.json(await deleter(req.body));
   } catch (e) {
@@ -238,5 +214,4 @@ router.delete("/account", async (req, res, next) => {
     return;
   }
 });
-
 module.exports = router;

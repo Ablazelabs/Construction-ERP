@@ -1,11 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-const { sequelizer, error, confirmCredential } = require("../../config/config");
-const { sequelize, QueryTypes } = sequelizer();
+const { error } = require("../../config/config");
 
 const inputFilter = require("../../validation/inputFilter");
-
+const forgotpassword = require("../../services/forgotpassword");
 router.post("/account/forgotpassword", async (req, res, next) => {
   try {
     inputFilter({}, { phone_number: "string", email: "string" }, req.body);
@@ -28,16 +27,9 @@ router.post("/account/forgotpassword", async (req, res, next) => {
   }
 
   try {
-    await sequelize.authenticate();
-    await sequelize.query(
-      `UPDATE account SET code = :code WHERE ${identifier.key}=:value`,
-      {
-        replacements: { ...identifier, code },
-        type: QueryTypes.UPDATE,
-      }
-    );
-    await confirmCredential(identifier.value, code);
-    res.send({ success: true });
+    let identifier2 = {};
+    identifier2[identifier.key] = identifier["value"];
+    res.json(await forgotpassword(identifier2, identifier.value, code));
   } catch (e) {
     error("database", "error", next, 500);
   }

@@ -1,11 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const { verify } = require("jsonwebtoken");
-const { genSalt, hash, compare } = require("bcrypt");
 
-const { sequelizer, error, confirmCredential } = require("../../config/config");
-const { sequelize, QueryTypes } = sequelizer();
+const { error } = require("../../config/config");
 
+const changepassword = require("../../services/changepassword");
 const inputFilter = require("../../validation/inputFilter");
 const { userHasPrivilegeOver } = require("../../validation/auth");
 const validation = require("../../validation/validation");
@@ -39,15 +38,12 @@ router.post("/account/changepassword", async (req, res, next) => {
       process.env.ACCESS_KEY
     );
   } catch (e) {
-    console.log("where 1");
-    console.log(e);
     error(
       req.body.tempAccessToken ? "tempAccessToken" : "accessToken",
       "Invalid or Expired Access Token",
       next,
       401
     );
-    console.log("where 2");
     return;
   }
   let id;
@@ -80,38 +76,11 @@ router.post("/account/changepassword", async (req, res, next) => {
   }
 
   try {
-    await sequelize.authenticate();
-    if (selfUpdate) {
-      const queryResult = await sequelize.query(
-        `SELECT password FROM account WHERE id = :id`,
-        {
-          replacements: { id },
-          type: QueryTypes.SELECT,
-        }
-      );
-      if (queryResult.length == 0) {
-        error(identifier.key, "account doesn't exist", next);
-        return;
-      }
-      const correctPassword = await compare(
-        req.body.password,
-        queryResult[0].password
-      );
-      if (!correctPassword) {
-        error("password", "Wrong password", next);
-        return;
-      }
+    const data = await changepassword(selfUpdate, id, req.body, next);
+    if (data == false) {
+      return;
     }
-    const salt = await genSalt(10);
-    const hashPassword = await hash(req.body.newPassword, salt);
-    await sequelize.query(
-      `UPDATE account SET password = :password WHERE id=:value`,
-      {
-        replacements: { password: hashPassword, value: id },
-        type: QueryTypes.UPDATE,
-      }
-    );
-    res.send({ success: true });
+    res.json(data);
   } catch (e) {
     console.log(e);
     error("database", "error", next, 500);

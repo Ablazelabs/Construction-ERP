@@ -1,13 +1,3 @@
-const { Sequelize, QueryTypes } = require("sequelize");
-const sequelizer = () => {
-  return {
-    sequelize: new Sequelize("erp", "root", "", {
-      host: "localhost",
-      dialect: "mariadb",
-    }),
-    QueryTypes,
-  };
-};
 const confirmCredential = async (to, code) => {
   //TODO
   /**
@@ -15,9 +5,12 @@ const confirmCredential = async (to, code) => {
    * nothing else to worry about
    */
 };
+const randomConcurrencyStamp = () => {
+  return "random";
+};
 const error = (key, message, next, status = 400) => {
   const myError = { status };
   myError[key] = message;
   next(new Error(JSON.stringify(myError)));
 };
-module.exports = { sequelizer, error, confirmCredential };
+module.exports = { error, confirmCredential, randomConcurrencyStamp };
