@@ -74,7 +74,7 @@ const patch = async (updateDataProjection, reqBody, updateData, next) => {
     }
   }
   await privilege.update({
-    data: { ...updateData },
+    data: { ...updateData, concurrency_stamp: randomConcurrencyStamp() },
     where: { id: reqBody.id },
   });
   return { success: true };

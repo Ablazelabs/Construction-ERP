@@ -1,3 +1,32 @@
+/**
+ * @swagger
+ * path:
+ * /account/forgotpassword:
+ *  post:
+ *    summary: sends code to given email address
+ *    tags: [Accounts]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              phone_number:
+ *                type: string
+ *              email:
+ *                type: string
+ *    responses:
+ *      200:
+ *        description: success message
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                success:
+ *                  type: boolean
+ */
 const express = require("express");
 const router = express.Router();
 

@@ -1,3 +1,38 @@
+/**
+ * @swagger
+ * path:
+ * /account/login:
+ *  post:
+ *    summary: sends accessToken
+ *    tags: [Accounts]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              password:
+ *                type: string
+ *                required: true
+ *              email:
+ *                type: string
+ *                required: false
+ *              phone_number:
+ *                type: string
+ *                required: false
+ *                description: countrycode-actual number(251-933221144)
+ *    responses:
+ *      200:
+ *        description: success message
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                accessToken:
+ *                  type: string
+ */
 const express = require("express");
 const router = express.Router();
 const { error } = require("../../config/config");

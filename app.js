@@ -1,6 +1,7 @@
 const express = require("express");
 const { json } = require("body-parser");
-
+const swaggerJsdoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
 require("dotenv").config();
 
 const app = express();
@@ -31,6 +32,44 @@ app.use((err, _req, res, _next) => {
 });
 const port = 3000;
 
+const options = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "LogRocket Express API with Swagger",
+      version: "0.1.0",
+      description:
+        "This is the ERP system made with Express and documented with Swagger",
+      contact: {
+        name: "Ablaze Labs",
+        // url: "https://logrocket.com",
+        email: "info@email.com",
+      },
+    },
+    servers: [
+      {
+        url: "http://localhost:3000",
+      },
+    ],
+  },
+  apis: [
+    "./api-routes/account.js",
+    "./api-routes/privilege.js",
+    "./api-routes/role.js",
+    "./api-routes/account/login.js",
+    "./api-routes/account/sendcode.js",
+    "./api-routes/account/changepassword.js",
+    "./api-routes/account/forgotpassword.js",
+  ],
+};
+
+const specs = swaggerJsdoc(options);
+
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(specs, { explorer: true })
+);
 module.exports = app.listen(port, () => {
   console.log("App listening on port 3000!");
 });

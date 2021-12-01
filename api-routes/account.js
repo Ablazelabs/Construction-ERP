@@ -1,6 +1,214 @@
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    account:
+ *      type: object
+ *      required:
+ *        -password
+ *      properties:
+ *        password:
+ *          type: string
+ *          description: please send a password goddamn it
+ *        email:
+ *          type: string
+ *          description: include @ and .
+ *        username:
+ *          type: string
+ *          description: a short username(normal name)
+ *        id:
+ *          type: integer
+ *          description: The auto-generated id of the book.
+ *        phone_number:
+ *          type: string
+ *          description: countrycode-phone_number format
+ *        concurrency_stamp:
+ *          type: string
+ *          description: a stamp set up to protect multiple update at the same time
+ *        role:
+ *          type: integer
+ *          description: role of a user(admin, normal or otherwise)
+ */
+/**
+ * @swagger
+ * tags:
+ *  name: Accounts
+ *  description: API to manage your users.
+ */
+/**
+ * @swagger
+ * path:
+ * /account:
+ *  post:
+ *    summary: Creates a new user
+ *    tags: [Accounts]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              password:
+ *                type: string
+ *                required: true
+ *              email:
+ *                type: string
+ *                required: false
+ *              phone_number:
+ *                type: string
+ *                required: false
+ *                description: countrycode-actual number(251-933221144)
+ *    responses:
+ *      200:
+ *        description: success message
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                success:
+ *                  type: boolean
+ */
+/**
+ * @swagger
+ * path:
+ * /account:
+ *  get:
+ *    summary: gets selected users
+ *    tags: [Accounts]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              accessToken:
+ *                type: string
+ *                required: true
+ *              limit:
+ *                type: integer
+ *                required: true
+ *              skip:
+ *                type: integer
+ *                required: false
+ *              filter:
+ *                type: object
+ *                required: false
+ *                properties:
+ *                  username:
+ *                    type: string
+ *                  email:
+ *                    type: string
+ *                  phone_number:
+ *                    type: string
+ *                  role:
+ *                    type: number
+ *              sort:
+ *                type: object
+ *                required: false
+ *                properties:
+ *                  username:
+ *                    type: integer
+ *                  email:
+ *                    type: integer
+ *                  phone_number:
+ *                    type: integer
+ *                  id:
+ *                    type: integer
+ *    responses:
+ *      200:
+ *        description: success message
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ */
+/**
+ * @swagger
+ * path:
+ * /account:
+ *  patch:
+ *    summary: updates a user
+ *    tags: [Accounts]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              accessToken:
+ *                type: string
+ *                required: true
+ *              concurrency_stamp:
+ *                type: string
+ *                required: true
+ *              id:
+ *                type: integer
+ *                required: true
+ *              updateData:
+ *                type: object
+ *                required: true
+ *                properties:
+ *                  username:
+ *                    type: string
+ *                  email:
+ *                    type: string
+ *                  phone_number:
+ *                    type: string
+ *                  role:
+ *                    type: number
+ *                  two_factor_enabled:
+ *                    type: boolean
+ *    responses:
+ *      200:
+ *        description: success message
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                success:
+ *                  type: boolean
+ */
+
+/**
+ * @swagger
+ * path:
+ * /account:
+ *  delete:
+ *    summary: updates a user
+ *    tags: [Accounts]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              accessToken:
+ *                type: string
+ *                required: true
+ *              id:
+ *                type: integer
+ *                required: true
+ *    responses:
+ *      200:
+ *        description: success message
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                success:
+ *                  type: boolean
+ */
+
 const express = require("express");
 const router = express.Router();
-const { error, confirmCredential } = require("../config/config");
+const { error } = require("../config/config");
 const { verify } = require("jsonwebtoken");
 const inputFilter = require("../validation/inputFilter");
 const validation = require("../validation/validation");

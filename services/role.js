@@ -99,7 +99,11 @@ const patch = async (updateDataProjection, reqBody, updateData, next) => {
   updateData.privileges = undefined;
   try {
     await role.update({
-      data: { ...updateData, privileges: { set: [], connect: privileges } },
+      data: {
+        ...updateData,
+        privileges: { set: [], connect: privileges },
+        concurrency_stamp: randomConcurrencyStamp(),
+      },
       where: { id: reqBody.id },
     });
   } catch (e) {

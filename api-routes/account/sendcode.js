@@ -1,3 +1,35 @@
+/**
+ * @swagger
+ * path:
+ * /account/sendcode:
+ *  post:
+ *    summary: sends temporary accessToken
+ *    tags: [Accounts]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              phone_number:
+ *                type: string
+ *              email:
+ *                type: string
+ *              code:
+ *                type: integer
+ *                required: true
+ *    responses:
+ *      200:
+ *        description: success message
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                tempAccessToken:
+ *                  type: string
+ */
 const express = require("express");
 const router = express.Router();
 const { error } = require("../../config/config");

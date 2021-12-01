@@ -116,7 +116,7 @@ const patch = async (updateDataProjection, reqBody, updateData, next) => {
   updateData.role = undefined;
   try {
     await user.update({
-      data: { ...updateData },
+      data: { ...updateData, concurrency_stamp: randomConcurrencyStamp() },
       where: { id: reqBody.id },
     });
   } catch (e) {

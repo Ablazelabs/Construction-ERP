@@ -1,3 +1,39 @@
+/**
+ * @swagger
+ * path:
+ * /account/changepassword:
+ *  post:
+ *    summary: changes password((temptoken,id),(password,accesstoken),(accesstoken, id))
+ *    tags: [Accounts]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              newPassword:
+ *                type: string
+ *                required: true
+ *              accessToken:
+ *                type: string
+ *              tempAccessToken:
+ *                type: string
+ *              id:
+ *                type: integer
+ *              password:
+ *                type: string
+ *    responses:
+ *      200:
+ *        description: success message
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                success:
+ *                  type: boolean
+ */
 const express = require("express");
 const router = express.Router();
 const { verify } = require("jsonwebtoken");
