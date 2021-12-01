@@ -29,6 +29,7 @@ model user {
   code                   Int
   role                   role?     @relation(fields: [roleId], references: [id])
   roleId                 Int?
+  deleted_status         Int       @default(0)
 }
 
 model privilege {
@@ -37,6 +38,7 @@ model privilege {
   description       String?
   concurrency_stamp String  @default("random")
   roles             role[]  @relation(references: [id])
+  deleted_status    Int     @default(0)
 }
 
 model role {
@@ -46,4 +48,5 @@ model role {
   description       String?
   privileges        privilege[] @relation(references: [id])
   users             user[]
+  deleted_status    Int         @default(0)
 }

@@ -4,12 +4,22 @@ const { PrismaClient } = require("@prisma/client");
 const { role } = new PrismaClient();
 
 const post = async (reqBody, privileges, next) => {
-  const count = await role.count({
+  const queryData = await role.findUnique({
     where: {
       name: reqBody.name,
     },
+    select: {
+      deleted_status: true,
+    },
   });
-  if (count) {
+  if (queryData) {
+    if (queryData.deleted_status == 1) {
+      await role.update({
+        where: { name: reqBody.name },
+        data: { deleted_status: 0 },
+      });
+      return { success: true };
+    }
     error("name", "role already exists", next);
     return false;
   }
@@ -41,6 +51,7 @@ const get = async (queryFilter, querySort, limit, skip, projection) => {
   const data = await role.findMany({
     where: {
       ...queryFilter,
+      deleted_status: 0,
     },
     orderBy: {
       ...querySort,
@@ -86,11 +97,6 @@ const patch = async (updateDataProjection, reqBody, updateData, next) => {
       })
     : [];
   updateData.privileges = undefined;
-  console.log({
-    data: { ...updateData, privileges: { connect: privileges } },
-    where: { id: reqBody.id },
-  });
-  console.log(privileges);
   try {
     await role.update({
       data: { ...updateData, privileges: { set: [], connect: privileges } },
@@ -110,7 +116,9 @@ const patch = async (updateDataProjection, reqBody, updateData, next) => {
 };
 const deleter = async ({ id }) => {
   try {
+    const deletedRole = await role.findUnique({ where: { id } });
     await role.delete({ where: { id } });
+    await role.create({ data: { ...deletedRole, deleted_status: 1 } });
   } catch (e) {
     console.log(e);
     return { success: false };

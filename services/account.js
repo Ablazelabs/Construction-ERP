@@ -12,9 +12,19 @@ const { user } = new PrismaClient();
 const post = async (identifier, identifierKey, reqBody, next) => {
   const queryResult = await user.findUnique({
     where: { ...identifier },
+    select: {
+      deleted_status: true,
+    },
   });
 
   if (queryResult) {
+    if (queryResult.deleted_status == 1) {
+      await user.update({
+        where: { ...identifier },
+        data: { deleted_status: 0 },
+      });
+      return { success: true };
+    }
     error(identifierKey, "account already registered", next);
     return false;
   }
@@ -37,14 +47,11 @@ const post = async (identifier, identifierKey, reqBody, next) => {
   return { success: true };
 };
 const get = async (queryFilter, querySort, role, limit, skip, projection) => {
-  console.log({
-    ...queryFilter,
-    ...role,
-  });
   const data = await user.findMany({
     where: {
       ...queryFilter,
       ...role,
+      deleted_status: 0,
     },
     orderBy: {
       ...querySort,
@@ -124,7 +131,10 @@ const patch = async (updateDataProjection, reqBody, updateData, next) => {
 
 const deleter = async (reqBody) => {
   try {
-    await user.delete({ where: { id: reqBody.id } });
+    await user.update({
+      where: { id: reqBody.id },
+      data: { deleted_status: 1 },
+    });
   } catch {
     return { success: false };
   }

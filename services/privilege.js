@@ -4,12 +4,19 @@ const { PrismaClient } = require("@prisma/client");
 const { privilege } = new PrismaClient();
 
 const post = async (reqBody, next) => {
-  const count = await privilege.count({
+  const queryResult = await privilege.findUnique({
     where: {
       action: reqBody.action,
     },
   });
-  if (count) {
+  if (queryResult) {
+    if (queryResult.deleted_status == 1) {
+      await privilege.update({
+        where: { action: reqBody.action },
+        data: { deleted_status: 0 },
+      });
+      return { success: true };
+    }
     error("action", "privilege already exists", next);
     return false;
   }
@@ -26,6 +33,7 @@ const get = async (queryFilter, querySort, limit, skip, projection) => {
   const data = await privilege.findMany({
     where: {
       ...queryFilter,
+      deleted_status: 0,
     },
     orderBy: {
       ...querySort,
@@ -65,20 +73,19 @@ const patch = async (updateDataProjection, reqBody, updateData, next) => {
       }
     }
   }
-  console.log({
-    data: { ...updateData },
-    where: { id: reqBody.id },
-  });
   await privilege.update({
     data: { ...updateData },
     where: { id: reqBody.id },
   });
   return { success: true };
 };
-
 const deleter = async ({ id }) => {
   try {
+    const deletedPrivilege = await privilege.findUnique({ where: { id } });
     await privilege.delete({ where: { id } });
+    await privilege.create({
+      data: { ...deletedPrivilege, deleted_status: 1 },
+    });
   } catch {
     return { success: false };
   }
