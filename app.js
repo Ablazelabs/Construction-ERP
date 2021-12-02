@@ -13,6 +13,7 @@ const sendcode = require("./api-routes/account/sendcode");
 const changepassword = require("./api-routes/account/changepassword");
 const role = require("./api-routes/role");
 const privilege = require("./api-routes/privilege");
+const upload = require("./api-routes/upload");
 
 app.use(json());
 
@@ -23,6 +24,7 @@ app.use(sendcode);
 app.use(changepassword);
 app.use(role);
 app.use(privilege);
+app.use(upload);
 
 app.use((err, _req, res, _next) => {
   let myError = JSON.parse(err.message);

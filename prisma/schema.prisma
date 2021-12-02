@@ -50,3 +50,159 @@ model role {
   users             user[]
   deleted_status    Int         @default(0)
 }
+
+model Client {
+  id                 Int      @id @default(autoincrement())
+  name               String
+  tradeName          String   @unique
+  address            String
+  city               String?
+  tel                String   @unique
+  tinNumber          String   @unique
+  subCity            String?
+  woreda             String?
+  contactPersonName  String
+  contactPersonPhone String   @unique
+  contactPersonEmail String   @unique
+  email              String   @unique
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+
+  @@map(name: "client")
+}
+
+model equipment {
+  id                 Int      @id @default(autoincrement())
+  name               String   @unique
+  description        String?
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+}
+
+model evaluation {
+  id                 Int      @id @default(autoincrement())
+  name               String   @unique
+  description        String?
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+}
+
+model instruction {
+  id                 Int      @id @default(autoincrement())
+  name               String   @unique
+  description        String?
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+}
+
+model manpower {
+  id                 Int      @id @default(autoincrement())
+  name               String   @unique
+  description        String?
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+}
+
+model material_category {
+  id                 Int        @id @default(autoincrement())
+  name               String     @unique
+  description        String?
+  materials          material[]
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime   @default(now())
+  createdBy          String
+  revisionDate       DateTime   @updatedAt
+  revisedBy          String
+  status             Int        @default(0)
+  isProtectedForEdit Boolean    @default(false)
+}
+
+model material {
+  id                   Int               @id @default(autoincrement())
+  name                 String            @unique
+  description          String?
+  unit                 String
+  material_category    material_category @relation(fields: [material_category_id], references: [id])
+  material_category_id Int
+  startDate            DateTime
+  endDate              DateTime
+  creationDate         DateTime          @default(now())
+  createdBy            String
+  revisionDate         DateTime          @updatedAt
+  revisedBy            String
+  status               Int               @default(0)
+  isProtectedForEdit   Boolean           @default(false)
+}
+
+model phase {
+  id                 Int      @id @default(autoincrement())
+  name               String   @unique
+  description        String?
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+}
+
+model priority {
+  id                 Int      @id @default(autoincrement())
+  name               String   @unique
+  description        String?
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+}
+
+model category {
+  id                 Int      @id @default(autoincrement())
+  name               String   @unique
+  description        String?
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+}
