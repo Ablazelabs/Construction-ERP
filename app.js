@@ -14,6 +14,9 @@ const changepassword = require("./api-routes/account/changepassword");
 const role = require("./api-routes/role");
 const privilege = require("./api-routes/privilege");
 const upload = require("./api-routes/upload");
+const client = require("./api-routes/client");
+const material = require("./api-routes/material");
+const restMasterData = require("./api-routes/restMasterData");
 
 app.use(json());
 
@@ -25,6 +28,9 @@ app.use(changepassword);
 app.use(role);
 app.use(privilege);
 app.use(upload);
+app.use(client);
+app.use(material);
+app.use(restMasterData);
 
 app.use((err, _req, res, _next) => {
   let myError = JSON.parse(err.message);
@@ -58,6 +64,9 @@ const options = {
     "./api-routes/account.js",
     "./api-routes/privilege.js",
     "./api-routes/role.js",
+    "./api-routes/restMasterData.js",
+    "./api-routes/material.js",
+    "./api-routes/client.js",
     "./api-routes/account/login.js",
     "./api-routes/account/sendcode.js",
     "./api-routes/account/changepassword.js",

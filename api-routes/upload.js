@@ -3,16 +3,11 @@ const router = express.Router();
 const { error } = require("../config/config");
 const { verify } = require("jsonwebtoken");
 const inputFilter = require("../validation/inputFilter");
-const { userHasPrivilege } = require("../validation/auth");
-const { post, get, patch, deleter } = require("../services/role");
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 
 const excelValidation = require("../validation/excelValidation");
 const saveList = require("../services/saveList");
-router.get(["/hi", "/hello"], upload.single("file"), async (req, res, next) => {
-  res.send("hi,hello");
-});
 router.post("/upload", upload.single("file"), async (req, res, next) => {
   try {
     inputFilter(
@@ -30,7 +25,7 @@ router.post("/upload", upload.single("file"), async (req, res, next) => {
       throw { key: "type", message: "please send between 0 and 9" };
     }
   } catch (e) {
-    error(e.key, e.message, next, 400);
+    error(e.key, e.message, next);
     return;
   }
   let payLoad;

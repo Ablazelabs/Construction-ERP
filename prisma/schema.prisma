@@ -183,6 +183,7 @@ model priority {
   id                 Int      @id @default(autoincrement())
   name               String   @unique
   description        String?
+  color              String?
   startDate          DateTime
   endDate            DateTime
   creationDate       DateTime @default(now())

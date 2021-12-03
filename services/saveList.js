@@ -75,8 +75,10 @@ module.exports = async (data, type, creator, next) => {
         ]
       : type == 6
       ? ["name", "description", "unit", "material_category_id"]
+      : type == 8
+      ? ["name", "description", "color"]
       : ["name", "description"];
-  const columnNumber = type == 0 ? 12 : type == 6 ? 4 : 2;
+  const columnNumber = type == 0 ? 12 : type == 6 ? 4 : type == 8 ? 3 : 2;
   if (data[0].length != columnNumber) {
     error(
       "file",
