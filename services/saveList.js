@@ -12,7 +12,7 @@ const {
   material,
   phase,
   priority,
-  category,
+  work_category,
 } = new PrismaClient();
 const hasDuplicates = (array) => {
   return new Set(array).size !== array.length;
@@ -49,7 +49,7 @@ module.exports = async (data, type, creator, next) => {
     material,
     phase,
     priority,
-    category,
+    work_category,
   ];
   if (data.length < 2) {
     error("file", "no data has been sent for creation", next);

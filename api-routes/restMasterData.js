@@ -76,7 +76,7 @@
 /**
  * @swagger
  * tags:
- *  name: Category
+ *  name: Work Category
  *  description: API to manage your Category.
  */
 /**
@@ -85,7 +85,7 @@
  * /tagname:
  *  post:
  *    summary: tagname stands for the name of the header(eg /equipment)
- *    tags: [Equipment,Evaluation,Instruction,ManPower,Material Category,Phase,Priority,Category]
+ *    tags: [Equipment,Evaluation,Instruction,ManPower,Material Category,Phase,Priority,Work Category]
  *    requestBody:
  *      required: true
  *      content:
@@ -125,7 +125,7 @@
  * /tagname:
  *  get:
  *    summary: tagname stands for the name of the header(eg /equipment)
- *    tags: [Equipment,Evaluation,Instruction,ManPower,Material Category,Phase,Priority,Category]
+ *    tags: [Equipment,Evaluation,Instruction,ManPower,Material Category,Phase,Priority,Work Category]
  *    requestBody:
  *      required: true
  *      content:
@@ -187,7 +187,7 @@
  * /tagname:
  *  patch:
  *    summary: tagname stands for the name of the header(eg /equipment)
- *    tags: [Equipment,Evaluation,Instruction,ManPower,Material Category,Phase,Priority,Category]
+ *    tags: [Equipment,Evaluation,Instruction,ManPower,Material Category,Phase,Priority,Work Category]
  *    requestBody:
  *      required: true
  *      content:
@@ -233,7 +233,7 @@
  * /tagname:
  *  delete:
  *    summary: tagname stands for the name of the header(eg /equipment)
- *    tags: [Equipment,Evaluation,Instruction,ManPower,Material Category,Phase,Priority,Category]
+ *    tags: [Equipment,Evaluation,Instruction,ManPower,Material Category,Phase,Priority,Work Category]
  *    requestBody:
  *      required: true
  *      content:
@@ -273,7 +273,7 @@ const allRoutes = [
   "/material_category",
   "/phase",
   "/priority",
-  "/category",
+  "/work_category",
 ];
 router.post(allRoutes, async (req, res, next) => {
   const masterDataType = req.path.split("/")[1];
