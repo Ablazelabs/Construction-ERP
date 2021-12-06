@@ -75,8 +75,8 @@ model Client {
   isProtectedForEdit Boolean   @default(false)
   project            project[]
 
-  @@map(name: "client")
   invoice_tracking invoice_tracking[]
+  @@map(name: "client")
 }
 
 model equipment {
@@ -234,6 +234,14 @@ model project {
   project_address               String
   client                        Client                         @relation(fields: [client_id], references: [id])
   client_id                     Int
+  startDate                     DateTime
+  endDate                       DateTime
+  creationDate                  DateTime                       @default(now())
+  createdBy                     String
+  revisionDate                  DateTime                       @updatedAt
+  revisedBy                     String
+  status                        Int                            @default(0)
+  isProtectedForEdit            Boolean                        @default(false)
   daily_work_logs               daily_work_log[]
   instructions_given_on_project instruction_given_on_project[]
   manpower_requirements         manpower_requirement[]
@@ -258,21 +266,37 @@ model daily_work_log {
   cell_phone                  String
   contract_no                 String
   location                    String
-  Date                        DateTime
+  date                        DateTime
+  startDate                   DateTime
+  endDate                     DateTime
+  creationDate                DateTime                      @default(now())
+  createdBy                   String
+  revisionDate                DateTime                      @updatedAt
+  revisedBy                   String
+  status                      Int                           @default(0)
+  isProtectedForEdit          Boolean                       @default(false)
   project                     project                       @relation(fields: [project_id], references: [id])
   project_id                  Int
   work_log_and_branch_of_work work_log_and_branch_of_work[]
 }
 
 model instruction_given_on_project {
-  id             Int         @id @default(autoincrement())
-  yes_no         Boolean
-  remarks        String?
-  date           DateTime
-  project_id     Int
-  instruction_id Int
-  project        project     @relation(fields: [project_id], references: [id])
-  instruction    instruction @relation(fields: [instruction_id], references: [id])
+  id                 Int         @id @default(autoincrement())
+  yes_no             Boolean
+  remarks            String?
+  date               DateTime
+  project_id         Int
+  instruction_id     Int
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime    @default(now())
+  createdBy          String
+  revisionDate       DateTime    @updatedAt
+  revisedBy          String
+  status             Int         @default(0)
+  isProtectedForEdit Boolean     @default(false)
+  project            project     @relation(fields: [project_id], references: [id])
+  instruction        instruction @relation(fields: [instruction_id], references: [id])
 }
 
 model manpower_requirement {
@@ -287,6 +311,14 @@ model manpower_requirement {
   remark                      String?
   manpower_id                 Int
   project_id                  Int
+  startDate                   DateTime
+  endDate                     DateTime
+  creationDate                DateTime @default(now())
+  createdBy                   String
+  revisionDate                DateTime @updatedAt
+  revisedBy                   String
+  status                      Int      @default(0)
+  isProtectedForEdit          Boolean  @default(false)
   manpower                    manpower @relation(fields: [manpower_id], references: [id])
   project                     project  @relation(fields: [project_id], references: [id])
 }
@@ -303,6 +335,14 @@ model required_equipment {
   remark                   String?
   equipment_id             Int
   project_id               Int
+  startDate                DateTime
+  endDate                  DateTime
+  creationDate             DateTime  @default(now())
+  createdBy                String
+  revisionDate             DateTime  @updatedAt
+  revisedBy                String
+  status                   Int       @default(0)
+  isProtectedForEdit       Boolean   @default(false)
   equipment                equipment @relation(fields: [equipment_id], references: [id])
   project                  project   @relation(fields: [project_id], references: [id])
 }
@@ -320,47 +360,79 @@ model required_material {
   delivery_date          DateTime?
   material_id            Int
   project_id             Int
+  startDate              DateTime
+  endDate                DateTime
+  creationDate           DateTime  @default(now())
+  createdBy              String
+  revisionDate           DateTime  @updatedAt
+  revisedBy              String
+  status                 Int       @default(0)
+  isProtectedForEdit     Boolean   @default(false)
   material               material  @relation(fields: [material_id], references: [id])
   project                project   @relation(fields: [project_id], references: [id])
 }
 
 model risk_tracking {
-  id               Int           @id @default(autoincrement())
-  description      String?
-  impact           String
-  risk_response    String?
-  risk_level       String
-  risk_owner       String
-  remark           String?
-  work_category_id Int
-  project_id       Int
-  work_category    work_category @relation(fields: [work_category_id], references: [id])
-  project          project       @relation(fields: [project_id], references: [id])
+  id                 Int           @id @default(autoincrement())
+  description        String?
+  impact             String
+  risk_response      String?
+  risk_level         String
+  risk_owner         String
+  remark             String?
+  work_category_id   Int
+  project_id         Int
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime      @default(now())
+  createdBy          String
+  revisionDate       DateTime      @updatedAt
+  revisedBy          String
+  status             Int           @default(0)
+  isProtectedForEdit Boolean       @default(false)
+  work_category      work_category @relation(fields: [work_category_id], references: [id])
+  project            project       @relation(fields: [project_id], references: [id])
 }
 
 model task_manager {
-  id               Int        @id @default(autoincrement())
-  name             String
-  description      String?
-  task_start_date  String
-  task_end_date    String?
-  duration_in_days String
-  working_days     String
-  project_id       Int
-  project          project    @relation(fields: [project_id], references: [id])
-  sub_task         sub_task[]
+  id                 Int        @id @default(autoincrement())
+  name               String
+  description        String?
+  task_start_date    String
+  task_end_date      String?
+  duration_in_days   String
+  working_days       String
+  project_id         Int
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime   @default(now())
+  createdBy          String
+  revisionDate       DateTime   @updatedAt
+  revisedBy          String
+  status             Int        @default(0)
+  isProtectedForEdit Boolean    @default(false)
+  project            project    @relation(fields: [project_id], references: [id])
+  sub_task           sub_task[]
 }
 
 model sub_task {
-  id               Int          @id @default(autoincrement())
-  description      String?
-  name             String
-  task_start_date  DateTime
-  task_end_date    DateTime?
-  duration_in_days Int
-  working_days     Int
-  task_manager_id  Int
-  task_manager     task_manager @relation(fields: [task_manager_id], references: [id])
+  id                 Int          @id @default(autoincrement())
+  description        String?
+  name               String
+  task_start_date    DateTime
+  task_end_date      DateTime?
+  duration_in_days   Int
+  working_days       Int
+  task_manager_id    Int
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime     @default(now())
+  createdBy          String
+  revisionDate       DateTime     @updatedAt
+  revisedBy          String
+  status             Int          @default(0)
+  isProtectedForEdit Boolean      @default(false)
+  task_manager       task_manager @relation(fields: [task_manager_id], references: [id])
 }
 
 model simple_task {
@@ -373,19 +445,35 @@ model simple_task {
   estimated_hours      Float
   project_id           Int
   priority_id          Int
+  startDate            DateTime
+  endDate              DateTime
+  creationDate         DateTime  @default(now())
+  createdBy            String
+  revisionDate         DateTime  @updatedAt
+  revisedBy            String
+  status               Int       @default(0)
+  isProtectedForEdit   Boolean   @default(false)
   project              project   @relation(fields: [project_id], references: [id])
   priority             priority  @relation(fields: [priority_id], references: [id])
 }
 
 model work_log_and_branch_of_work {
-  id                Int            @id @default(autoincrement())
-  skilled_worker    Int
-  hours             Float
-  date              DateTime
-  work_category_id  Int
-  daily_work_log_id Int
-  work_category     work_category  @relation(fields: [work_category_id], references: [id])
-  daily_work_log    daily_work_log @relation(fields: [daily_work_log_id], references: [id])
+  id                 Int            @id @default(autoincrement())
+  skilled_worker     Int
+  hours              Float
+  date               DateTime
+  work_category_id   Int
+  daily_work_log_id  Int
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime       @default(now())
+  createdBy          String
+  revisionDate       DateTime       @updatedAt
+  revisedBy          String
+  status             Int            @default(0)
+  isProtectedForEdit Boolean        @default(false)
+  work_category      work_category  @relation(fields: [work_category_id], references: [id])
+  daily_work_log     daily_work_log @relation(fields: [daily_work_log_id], references: [id])
 }
 
 model weather_data {
@@ -397,19 +485,35 @@ model weather_data {
   reference             String
   project_id            Int
   manpower_id           Int
+  startDate             DateTime
+  endDate               DateTime
+  creationDate          DateTime @default(now())
+  createdBy             String
+  revisionDate          DateTime @updatedAt
+  revisedBy             String
+  status                Int      @default(0)
+  isProtectedForEdit    Boolean  @default(false)
   project               project  @relation(fields: [project_id], references: [id])
   manpower              manpower @relation(fields: [manpower_id], references: [id])
 }
 
 model todos {
-  id          Int      @id @default(autoincrement())
-  notes       String
-  name        String
-  date        String
-  project_id  Int
-  priority_id Int
-  project     project  @relation(fields: [project_id], references: [id])
-  priority    priority @relation(fields: [priority_id], references: [id])
+  id                 Int      @id @default(autoincrement())
+  notes              String
+  name               String
+  date               String
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  project_id         Int
+  priority_id        Int
+  project            project  @relation(fields: [project_id], references: [id])
+  priority           priority @relation(fields: [priority_id], references: [id])
 }
 
 model request {
@@ -425,20 +529,36 @@ model request {
   notes               String
   project_id          Int
   priority_id         Int
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime  @default(now())
+  createdBy           String
+  revisionDate        DateTime  @updatedAt
+  revisedBy           String
+  status              Int       @default(0)
+  isProtectedForEdit  Boolean   @default(false)
   project             project   @relation(fields: [project_id], references: [id])
   priority            priority  @relation(fields: [priority_id], references: [id])
 }
 
 model invoice_tracking {
-  id              Int      @id @default(autoincrement())
-  detail          String?
-  amount          Float
-  amount_received Float
-  balance         Float
-  invoice_number  String   @unique
-  dateReceived    DateTime
-  notes           String
-  client_id       Int
-  client          Client   @relation(fields: [client_id], references: [id])
+  id                 Int      @id @default(autoincrement())
+  detail             String?
+  amount             Float
+  amount_received    Float
+  balance            Float
+  invoice_number     String   @unique
+  dateReceived       DateTime
+  notes              String
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  client_id          Int
+  client             Client   @relation(fields: [client_id], references: [id])
 
 }

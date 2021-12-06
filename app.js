@@ -17,7 +17,7 @@ const upload = require("./api-routes/upload");
 const client = require("./api-routes/client");
 const material = require("./api-routes/material");
 const restMasterData = require("./api-routes/restMasterData");
-
+const project = require("./api-routes/project");
 app.use(json());
 
 app.use(account);
@@ -31,56 +31,57 @@ app.use(upload);
 app.use(client);
 app.use(material);
 app.use(restMasterData);
+app.use(project);
 
 app.use((err, _req, res, _next) => {
-  let myError = JSON.parse(err.message);
-  const status = myError.status;
-  myError.status = undefined;
-  res.status(status).send({ error: myError });
+    let myError = JSON.parse(err.message);
+    const status = myError.status;
+    myError.status = undefined;
+    res.status(status).send({ error: myError });
 });
 const port = 3000;
 
 const options = {
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "LogRocket Express API with Swagger",
-      version: "0.1.0",
-      description:
-        "This is the ERP system made with Express and documented with Swagger",
-      contact: {
-        name: "Ablaze Labs",
-        // url: "https://logrocket.com",
-        email: "info@email.com",
-      },
+    definition: {
+        openapi: "3.0.0",
+        info: {
+            title: "LogRocket Express API with Swagger",
+            version: "0.1.0",
+            description:
+                "This is the ERP system made with Express and documented with Swagger",
+            contact: {
+                name: "Ablaze Labs",
+                // url: "https://logrocket.com",
+                email: "info@email.com",
+            },
+        },
+        servers: [
+            {
+                url: "http://localhost:3000",
+            },
+        ],
     },
-    servers: [
-      {
-        url: "http://localhost:3000",
-      },
+    apis: [
+        "./api-routes/account.js",
+        "./api-routes/privilege.js",
+        "./api-routes/role.js",
+        "./api-routes/restMasterData.js",
+        "./api-routes/material.js",
+        "./api-routes/client.js",
+        "./api-routes/account/login.js",
+        "./api-routes/account/sendcode.js",
+        "./api-routes/account/changepassword.js",
+        "./api-routes/account/forgotpassword.js",
     ],
-  },
-  apis: [
-    "./api-routes/account.js",
-    "./api-routes/privilege.js",
-    "./api-routes/role.js",
-    "./api-routes/restMasterData.js",
-    "./api-routes/material.js",
-    "./api-routes/client.js",
-    "./api-routes/account/login.js",
-    "./api-routes/account/sendcode.js",
-    "./api-routes/account/changepassword.js",
-    "./api-routes/account/forgotpassword.js",
-  ],
 };
 
 const specs = swaggerJsdoc(options);
 
 app.use(
-  "/api-docs",
-  swaggerUi.serve,
-  swaggerUi.setup(specs, { explorer: true })
+    "/api-docs",
+    swaggerUi.serve,
+    swaggerUi.setup(specs, { explorer: true })
 );
 module.exports = app.listen(port, () => {
-  console.log("App listening on port 3000!");
+    console.log("App listening on port 3000!");
 });
