@@ -1,0 +1,4013 @@
+openapi: 3.0.0
+info:
+  title: Documentation for the ERP @ablazelabs
+  description: this documentation was made by swagger-ui
+  version: "1.0"
+  contact: 
+    email: 'yaredterefeg@gmail.com'
+  license:
+    name: Ablaze Labs
+    url: https://www.ablazelabs.com
+
+paths:
+  /account:
+    post:
+      summary: Creates a new user
+      tags: [Accounts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                email:
+                  type: string
+                phone_number:
+                  type: string
+                  description: countrycode-actual number(251-933221144)
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected users
+      tags: [Accounts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    username:
+                      type: string
+                    email:
+                      type: string
+                    phone_number:
+                      type: string
+                    role:
+                      type: number
+                sort:
+                  type: object
+                  properties:
+                    username:
+                      type: integer
+                    email:
+                      type: integer
+                    phone_number:
+                      type: integer
+                    id:
+                      type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+                  properties:
+                    id: 
+                      type: integer
+                    username:
+                      type: string
+                    normalized_username:
+                      type: string
+                    email:
+                      type: string
+                    phone_number:
+                      type: string
+                    two_factor_enabled:
+                      type: boolean
+                    lockout_enabled:
+                      type: boolean
+                    concurrency_stamp:
+                      type: string
+                    role: 
+                      type: object
+    patch:
+      summary: updates a user
+      tags: [Accounts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                concurrency_stamp:
+                  type: string
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    username:
+                      type: string
+                    email:
+                      type: string
+                    phone_number:
+                      type: string
+                    role:
+                      type: number
+                    two_factor_enabled:
+                      type: boolean
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a user
+      tags: [Accounts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /account/changepassword:
+    post:
+      summary: changes password((temptoken,id),(password,accesstoken),(accesstoken, id))
+      tags: [Accounts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newPassword:
+                  type: string
+                accessToken:
+                  type: string
+                tempAccessToken:
+                  type: string
+                id:
+                  type: integer
+                password:
+                  type: string
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /account/forgotpassword:
+    post:
+      summary: sends code to given email address
+      tags: [Accounts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phone_number:
+                  type: string
+                email:
+                  type: string
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /account/login:
+    post:
+      summary: sends accessToken
+      tags: [Accounts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                email:
+                  type: string
+                phone_number:
+                  type: string
+                  description: countrycode-actual number(251-933221144)
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+  /account/sendcode:
+    post:
+      summary: sends temporary accessToken
+      tags: [Accounts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phone_number:
+                  type: string
+                email:
+                  type: string
+                code:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tempAccessToken:
+                    type: string
+  /client:
+    post:
+      summary: Creates a new client
+      tags: [Client]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                name:
+                  type: string
+                tradeName:
+                  type: string
+                address:
+                  type: string
+                tel:
+                  type: string
+                tinNumber:
+                  type: string
+                contactPersonName:
+                  type: string
+                contactPersonPhone:
+                  type: string
+                contactPersonEmail:
+                  type: string
+                email:
+                  type: string
+                subCity:
+                  type: string
+                woreda:
+                  type: string
+                city:
+                  type: string
+                startDate:
+                  type: string
+                endDate:
+                  type: string
+                isProtectedForEdit:
+                      type: string
+
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets clients based on given filter and sort
+      tags: [Client]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    tradeName:
+                      type: string
+                    address:
+                      type: string
+                    tel:
+                      type: string
+                    tinNumber:
+                      type: string
+                    contactPersonName:
+                      type: string
+                    contactPersonPhone:
+                      type: string
+                    contactPersonEmail:
+                      type: string
+                    email:
+                      type: string
+                    subCity:
+                      type: string
+                    woreda:
+                      type: string
+                    city:
+                      type: string
+                sort:
+                  type: object
+                  properties:
+                    name:
+                      type: integer
+                    id:
+                      type: integer
+                    startDate:
+                      type: integer
+                    endDate:
+                      type: integer
+                    creationDate:
+                      type: integer
+                    revisionDate:
+                      type: integer
+                    isProtectedForEdit:
+                      type: integer
+                    tradeName:
+                      type: integer
+                    address:
+                      type: integer
+                    tel:
+                      type: integer
+                    tinNumber:
+                      type: integer
+                    contactPersonName:
+                      type: integer
+                    contactPersonPhone:
+                      type: integer
+                    contactPersonEmail:
+                      type: integer
+                    email:
+                      type: integer
+                    subCity:
+                      type: integer
+                    woreda:
+                      type: integer
+                    city:
+                      type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                    name:
+                      type: string
+                    tradeName:
+                      type: string
+                    address:
+                      type: string
+                    city:
+                      type: string
+                    tel:
+                      type: string
+                    tinNumber:
+                      type: string
+                    subCity:
+                      type: string
+                    woreda:
+                      type: string
+                    contactPersonName:
+                      type: string
+                    contactPersonPhone:
+                      type: string
+                    contactPersonEmail:
+                      type: string
+                    email:
+                      type: string
+                    startDate:
+                      type: string
+                    endDate:
+                      type: string
+                    creationDate:
+                      type: string
+                    createdBy:
+                      type: string
+                    revisionDate:
+                      type: string
+                    revisedBy:
+                      type: string
+                    isProtectedForEdit:
+                      type: boolean
+    patch:
+      summary: updates a client
+      tags: [Client]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    endDate:
+                      type: string
+                    startDate:
+                      type: string
+                    isProtectedForEdit:
+                      type: string
+                    tradeName:
+                      type: string
+                    address:
+                      type: string
+                    tel:
+                      type: string
+                    tinNumber:
+                      type: string
+                    contactPersonName:
+                      type: string
+                    contactPersonPhone:
+                      type: string
+                    contactPersonEmail:
+                      type: string
+                    email:
+                      type: string
+                    subCity:
+                      type: string
+                    woreda:
+                      type: string
+                    city:
+                      type: string
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes client
+      tags: [Client]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /material:
+    post:
+      summary: Creates a new material
+      tags: [Material]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                name:
+                  type: string
+                description:
+                  type: string
+                unit:
+                  type: string
+                material_category_id:
+                  type: string
+                startDate:
+                  type: string
+                endDate:
+                  type: string
+                isProtectedForEdit:
+                      type: string
+
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets materials based on given filter and sort
+      tags: [Material]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    unit:
+                      type: string
+                    material_category_name:
+                      type: string
+                sort:
+                  type: object
+                  properties:
+                    name:
+                      type: integer
+                    description:
+                      type: integer
+                    unit:
+                      type: integer
+                    material_category_name:
+                      type: integer
+                    id:
+                      type: integer
+                    startDate:
+                      type: integer
+                    endDate:
+                      type: integer
+                    creationDate:
+                      type: integer
+                    revisionDate:
+                      type: integer
+                    isProtectedForEdit:
+                      type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    unit:
+                      type: number
+                    material_category:
+                      type: object
+                    startDate:
+                      type: string
+                    endDate:
+                      type: string
+                    creationDate:
+                      type: string
+                    createdBy:
+                      type: string
+                    revisionDate:
+                      type: string
+                    revisedBy:
+                      type: string
+                    isProtectedForEdit:
+                      type: boolean                 
+    patch:
+      summary: updates a material
+      tags: [Material]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    unit:
+                      type: string
+                    material_category_id:
+                      type: string
+                    endDate:
+                      type: string
+                    startDate:
+                      type: string
+                    isProtectedForEdit:
+                      type: string
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes material
+      tags: [Material]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /role:
+    post:
+      summary: Creates a new role
+      tags: [Roles]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                accessToken:
+                  type: string
+                privileges:
+                  type: array
+                  items:
+                    type: integer
+                description:
+                  type: string
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected roles
+      tags: [Roles]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    description:
+                      type: string
+                sort:
+                  type: object
+                  properties:
+                    name:
+                      type: integer
+                    description:
+                      type: integer
+                    id:
+                      type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    concurrency_stamp:
+                      type: string
+                    privileges:
+                      type: array
+                      items:
+                        type: object
+    patch:
+      summary: updates a role
+      tags: [Roles]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                concurrency_stamp:
+                  type: string
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    privileges:
+                      type: array
+                      items:
+                        type: integer
+                    description:
+                      type: string
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: updates a role
+      tags: [Roles]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /privilege:
+    post:
+      summary: Creates a new privilege
+      tags: [Privileges]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                action:
+                  type: string
+                accessToken:
+                  type: string
+                description:
+                  type: string
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected privileges
+      tags: [Privileges]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    action:
+                      type: string
+                    description:
+                      type: string
+                sort:
+                  type: object
+                  properties:
+                    action:
+                      type: integer
+                    description:
+                      type: integer
+                    id:
+                      type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    action:
+                      type: string
+                    description:
+                      type: string
+                    concurrency_stamp:
+                      type: string
+                    id:
+                      type: integer
+    patch:
+      summary: updates a privilege
+      tags: [Privileges]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                concurrency_stamp:
+                  type: string
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    action:
+                      type: string
+                    description:
+                      type: string
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: updates a privilege
+      tags: [Privileges]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /tagname:
+    post:
+      summary: tagname stands for the name of the header(eg /equipment)
+      tags: [Equipment,Evaluation,Instruction,ManPower,Material Category,Phase,Priority,Work Category]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                name:
+                  type: string
+                description:
+                  type: string
+                startDate:
+                  type: string
+                endDate:
+                  type: string
+                isProtectedForEdit:
+                  type: boolean
+
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: tagname stands for the name of the header(eg /equipment)
+      tags: [Equipment,Evaluation,Instruction,ManPower,Material Category,Phase,Priority,Work Category]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    description:
+                      type: string
+                sort:
+                  type: object
+                  properties:
+                    name:
+                      type: integer
+                    description:
+                      type: integer
+                    id:
+                      type: integer
+                    startDate:
+                      type: integer
+                    endDate:
+                      type: integer
+                    creationDate:
+                      type: integer
+                    revisionDate:
+                      type: integer
+                    isProtectedForEdit:
+                      type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    id:
+                      type: number
+                    startDate:
+                      type: string
+                    endDate:
+                      type: string
+                    creationDate:
+                      type: string
+                    createdBy:
+                      type: string
+                    revisionDate:
+                      type: string
+                    revisedBy:
+                      type: string
+                    isProtectedForEdit:
+                      type: boolean
+    patch:
+      summary: tagname stands for the name of the header(eg /equipment)
+      tags: [Equipment,Evaluation,Instruction,ManPower,Material Category,Phase,Priority,Work Category]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    endDate:
+                      type: string
+                    startDate:
+                      type: string
+                    isProtectedForEdit:
+                      type: string
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: tagname stands for the name of the header(eg /equipment)
+      tags: [Equipment,Evaluation,Instruction,ManPower,Material Category,Phase,Priority,Work Category]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /project:
+    post: 
+      summary: posts a new project
+      tags: [project]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                accessToken:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                project_description: 
+                  type: "string"
+                name:
+                  type: "string"
+                project_manager:
+                  type: "string"
+                project_start_date:
+                  type: "string"
+                project_end_date:
+                  type: "string"
+                project_id:
+                  type: "string"
+                contract_number:
+                  type: "string"
+                site_engineer:
+                  type: "string"
+                dupty_manager:
+                  type: "string"
+                project_address:
+                  type: "string"
+                client_id:
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected projects
+      tags: [project]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    name:
+                      type: "string"
+                    project_manager:
+                      type: "string"
+                    project_description:
+                      type: "string"
+                    project_id:
+                      type: "string"
+                    contract_number:
+                      type: "string"
+                    site_engineer:
+                      type: "string"
+                    dupty_manager:
+                      type: "string"
+                    project_address:
+                      type: "string"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id:
+                      type: "number"
+                    name:
+                      type: "number"
+                    project_manager:
+                      type: "number"
+                    project_start_date:
+                      type: "number"
+                    project_end_date:
+                      type: "number"
+                    project_description:
+                      type: "number"
+                    project_id:
+                      type: "number"
+                    contract_number:
+                      type: "number"
+                    site_engineer:
+                      type: "number"
+                    dupty_manager:
+                      type: "number"
+                    project_address:
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object  
+    patch:
+      summary: updates a project
+      tags: [project]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate: 
+                      type: "string"
+                    endDate:
+                      type: string
+                    isProtectedForEdit:
+                      type: boolean
+                    project_description: 
+                      type: "string"
+                    name:
+                      type: "string"
+                    project_manager:
+                      type: "string"
+                    project_start_date:
+                      type: "string"
+                    project_end_date:
+                      type: "string"
+                    project_id:
+                      type: "string"
+                    contract_number:
+                      type: "string"
+                    site_engineer:
+                      type: "string"
+                    dupty_manager:
+                      type: "string"
+                    project_address:
+                      type: "string"
+                    client_id:
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: projectes a user
+      tags: [project]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /daily_work_log:
+    post: 
+      summary: posts a new daily_work_log
+      tags: [daily_work_log]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                accessToken:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                weather:
+                  type: "string"
+                day:
+                  type: "string"
+                temprature:
+                  type: "string"
+                time:
+                  type: "string"
+                name_of_employee:
+                  type: "string"
+                contact:
+                  type: "string"
+                cell_phone:
+                  type: "string"
+                contract_no:
+                  type: "string"
+                location:
+                  type: "string"
+                date:
+                  type: "string"
+                project_id:
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected daily_work_logs
+      tags: [daily_work_log]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    weather:
+                      type: "string"
+                    day:
+                      type: "string"
+                    temprature:
+                      type: "string"
+                    time:
+                      type: "string"
+                    name_of_employee:
+                      type: "string"
+                    contact:
+                      type: "string"
+                    cell_phone:
+                      type: "string"
+                    contract_no:
+                      type: "string"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id:
+                      type: "number"
+                    weather:
+                      type: "number"
+                    day:
+                      type: "number"
+                    temprature:
+                      type: "number"
+                    time:
+                      type: "number"
+                    name_of_employee:
+                      type: "number"
+                    contact:
+                      type: "number"
+                    cell_phone:
+                      type: "number"
+                    contract_no:
+                      type: "number"
+                    location:
+                      type: "number"
+                    date:
+                      type: "number"
+                    project_id:
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object  
+    patch:
+      summary: updates a daily_work_log
+      tags: [daily_work_log]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate: 
+                      type: "string"
+                    endDate:
+                      type: string
+                    isProtectedForEdit:
+                      type: boolean
+                    weather:
+                      type: "string"
+                    day:
+                      type: "string"
+                    temprature:
+                      type: "string"
+                    time:
+                      type: "string"
+                    name_of_employee:
+                      type: "string"
+                    contact:
+                      type: "string"
+                    cell_phone:
+                      type: "string"
+                    contract_no:
+                      type: "string"
+                    location:
+                      type: "string"
+                    date:
+                      type: "string"
+                    project_id:
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a daily_work_loger
+      tags: [daily_work_log]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /instruction_given_on_project:
+    post: 
+      summary: posts a new instruction_given_on_project
+      tags: [instruction_given_on_project]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                accessToken:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                remarks: 
+                  type: "string"
+                yes_no:
+                  type: "boolean"
+                date:
+                  type: "string"
+                project_id:
+                  type: "number"
+                instruction_id:
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected instruction_given_on_projects
+      tags: [instruction_given_on_project]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    remarks:
+                      type: "string"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id:
+                      type: "number"
+                    yes_no:
+                      type: "number"
+                    remarks:
+                      type: "number"
+                    date:
+                      type: "number"
+                    project_id:
+                      type: "number"
+                    instruction_id:
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object  
+    patch:
+      summary: updates a instruction_given_on_project
+      tags: [instruction_given_on_project]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate: 
+                      type: "string"
+                    endDate:
+                      type: string
+                    isProtectedForEdit:
+                      type: boolean
+                    remarks: 
+                      type: "string"
+                    yes_no:
+                      type: "boolean"
+                    date:
+                      type: "string"
+                    project_id:
+                      type: "number"
+                    instruction_id:
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a instruction_given_on_project
+      tags: [instruction_given_on_project]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /manpower_requirement:
+    post: 
+      summary: posts a new manpower_requirement
+      tags: [manpower_requirement]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                accessToken:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                number_of_actual_man_power:
+                  type: "number"
+                remark:
+                  type: "string"
+                number_of_planned_man_power:
+                  type: "number"
+                food_expense:
+                  type: "number"
+                wage:
+                  type: "number"
+                house_rent:
+                  type: "number"
+                transportation:
+                  type: "number"
+                total_expense:
+                  type: "number"
+                manpower_id:
+                  type: "number"
+                project_id:
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected manpower_requirements
+      tags: [manpower_requirement]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    remarks:
+                      type: "string"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    number_of_planned_man_power:
+                      type: "number"
+                    number_of_actual_man_power:
+                      type: "number"
+                    food_expense:
+                      type: "number"
+                    wage:
+                      type: "number"
+                    house_rent:
+                      type: "number"
+                    transportation:
+                      type: "number"
+                    total_expense:
+                      type: "number"
+                    remark:
+                      type: "number"
+                    manpower_id:
+                      type: "number"
+                    project_id:
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object  
+    patch:
+      summary: updates a manpower_requirement
+      tags: [manpower_requirement]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate: 
+                      type: "string"
+                    endDate:
+                      type: string
+                    isProtectedForEdit:
+                      type: boolean
+                    number_of_actual_man_power:
+                      type: "number"
+                    remark:
+                      type: "string"
+                    number_of_planned_man_power:
+                      type: "number"
+                    food_expense:
+                      type: "number"
+                    wage:
+                      type: "number"
+                    house_rent:
+                      type: "number"
+                    transportation:
+                      type: "number"
+                    total_expense:
+                      type: "number"
+                    manpower_id:
+                      type: "number"
+                    project_id:
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a manpower_requirement
+      tags: [manpower_requirement]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /required_equipment:
+    post: 
+      summary: posts a new required_equipment
+      tags: [required_equipment]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                accessToken:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                actual_equipment_number:
+                  type: "number"
+                remark:
+                  type: "string"
+                planned_equipment_number:
+                  type: "number"
+                equipment_lifetime:
+                  type: "string"
+                expense:
+                  type: "number"
+                house_rent:
+                  type: "number"
+                transportation:
+                  type: "number"
+                total_expense:
+                  type: "number"
+                equipment_id:
+                  type: "number"
+                project_id:
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected required_equipments
+      tags: [required_equipment]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    equipment_lifetime:
+                      type: "string"
+                    remark:
+                      type: "string"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id:
+                      type: "number"
+                    planned_equipment_number:
+                      type: "number"
+                    actual_equipment_number:
+                      type: "number"
+                    equipment_lifetime:
+                      type: "number"
+                    expense:
+                      type: "number"
+                    house_rent:
+                      type: "number"
+                    transportation:
+                      type: "number"
+                    total_expense:
+                      type: "number"
+                    remark:
+                      type: "number"
+                    equipment_id:
+                      type: "number"
+                    project_id:
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object  
+    patch:
+      summary: updates a required_equipment
+      tags: [required_equipment]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate: 
+                      type: "string"
+                    endDate:
+                      type: string
+                    isProtectedForEdit:
+                      type: boolean
+                    actual_equipment_number:
+                      type: "number"
+                    remark:
+                      type: "string"
+                    planned_equipment_number:
+                      type: "number"
+                    equipment_lifetime:
+                      type: "string"
+                    expense:
+                      type: "number"
+                    house_rent:
+                      type: "number"
+                    transportation:
+                      type: "number"
+                    total_expense:
+                      type: "number"
+                    equipment_id:
+                      type: "number"
+                    project_id:
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a required_equipment
+      tags: [required_equipment]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /required_material:
+    post: 
+      summary: posts a new required_material
+      tags: [required_material]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                accessToken:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                delivered_quantity:
+                  type: "number"
+                delivered_unit_price:
+                  type: "number"
+                delivered_total_amount:
+                  type: "number"
+                total_expense:
+                  type: "number"
+                remark:
+                  type: "string"
+                delivery_date:
+                  type: "string"
+                planned_quantity:
+                  type: "number"
+                planned_unit_price:
+                  type: "number"
+                planned_total_amount:
+                  type: "number"
+                material_id:
+                  type: "number"
+                project_id:
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected required_materials
+      tags: [required_material]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    remark:
+                      type: "string"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id:
+                      type: "number"
+                    planned_quantity:
+                      type: "number"
+                    planned_unit_price:
+                      type: "number"
+                    planned_total_amount:
+                      type: "number"
+                    delivered_quantity:
+                      type: "number"
+                    delivered_unit_price:
+                      type: "number"
+                    delivered_total_amount:
+                      type: "number"
+                    total_expense:
+                      type: "number"
+                    remark:
+                      type: "number"
+                    delivery_date:
+                      type: "number"
+                    material_id:
+                      type: "number"
+                    project_id:
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object  
+    patch:
+      summary: updates a required_material
+      tags: [required_material]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate: 
+                      type: "string"
+                    endDate:
+                      type: string
+                    isProtectedForEdit:
+                      type: boolean
+                    delivered_quantity:
+                      type: "number"
+                    delivered_unit_price:
+                      type: "number"
+                    delivered_total_amount:
+                      type: "number"
+                    total_expense:
+                      type: "number"
+                    remark:
+                      type: "string"
+                    delivery_date:
+                      type: "string"
+                    planned_quantity:
+                      type: "number"
+                    planned_unit_price:
+                      type: "number"
+                    planned_total_amount:
+                      type: "number"
+                    material_id:
+                      type: "number"
+                    project_id:
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a required_material
+      tags: [required_material]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /risk_tracking:
+    post: 
+      summary: posts a new risk_tracking
+      tags: [risk_tracking]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                accessToken:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                description:
+                  type: "string"
+                risk_response:
+                  type: "string"
+                remark:
+                  type: "string"
+                impact:
+                  type: "string"
+                risk_level:
+                  type: "string"
+                risk_owner:
+                  type: "string"
+                work_category_id:
+                  type: "number"
+                project_id:
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected risk_trackings
+      tags: [risk_tracking]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    impact:
+                      type: "string"
+                    risk_level:
+                      type: "string"
+                    risk_owner: 
+                      type: "string"
+                    description:
+                      type: "string"
+                    risk_response: 
+                      type: "string"
+                    remark:
+                      type: "string"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id:
+                      type: "number"
+                    impact:
+                      type: "number"
+                    risk_level:
+                      type: "number"
+                    risk_owner:
+                      type: "number"
+                    work_category_id:
+                      type: "number"
+                    project_id:
+                      type: "number"
+                    description:
+                      type: "number"
+                    risk_response:
+                      type: "number"
+                    remark:
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object  
+    patch:
+      summary: updates a risk_tracking
+      tags: [risk_tracking]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate: 
+                      type: "string"
+                    endDate:
+                      type: string
+                    isProtectedForEdit:
+                      type: boolean
+                    description:
+                      type: "string"
+                    risk_response:
+                      type: "string"
+                    remark:
+                      type: "string"
+                    impact:
+                      type: "string"
+                    risk_level:
+                      type: "string"
+                    risk_owner:
+                      type: "string"
+                    work_category_id:
+                      type: "number"
+                    project_id:
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a risk_trackingser
+      tags: [risk_tracking]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /task_manager:
+    post: 
+      summary: posts a new task_manager
+      tags: [task_manager]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                accessToken:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                description:
+                  type: "string"
+                task_end_date:
+                  type: "string"
+                name:
+                  type: "string"
+                task_start_date:
+                  type: "string"
+                duration_in_days:
+                  type: "string"
+                working_days:
+                  type: "string"
+                project_id:
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected task_managers
+      tags: [task_manager]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    name:
+                      type: "string"
+                    description:
+                      type: "string"
+                    duration_in_days:
+                      type: "string"
+                    working_days:
+                      type: "string"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id:
+                      type: "number"
+                    name:
+                      type: "number"
+                    description:
+                      type: "number"
+                    task_start_date:
+                      type: "number"
+                    task_end_date:
+                      type: "number"
+                    duration_in_days:
+                      type: "number"
+                    working_days:
+                      type: "number"
+                    project_id:
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object  
+    patch:
+      summary: updates a task_manager
+      tags: [task_manager]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate: 
+                      type: "string"
+                    endDate:
+                      type: string
+                    isProtectedForEdit:
+                      type: boolean
+                    description:
+                      type: "string"
+                    task_end_date:
+                      type: "string"
+                    name:
+                      type: "string"
+                    task_start_date:
+                      type: "string"
+                    duration_in_days:
+                      type: "string"
+                    working_days:
+                      type: "string"
+                    project_id:
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes task_manageruser
+      tags: [task_manager]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /sub_task:
+    post: 
+      summary: posts a new sub_task
+      tags: [sub_task]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                accessToken:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                description:
+                  type: "string"
+                task_end_date:
+                  type: "string"
+                name:
+                  type: "string"
+                task_start_date:
+                  type: "string"
+                duration_in_days:
+                  type: "number"
+                working_days:
+                  type: "number"
+                task_manager_id:
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected sub_tasks
+      tags: [sub_task]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    description:
+                      type: "string"
+                    name:
+                      type: "string"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id:
+                      type: "number"
+                    description:
+                      type: "number"
+                    name:
+                      type: "number"
+                    task_start_date:
+                      type: "number"
+                    task_end_date:
+                      type: "number"
+                    duration_in_days:
+                      type: "number"
+                    working_days:
+                      type: "number"
+                    task_manager_id:
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object  
+    patch:
+      summary: updates a sub_task
+      tags: [sub_task]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate: 
+                      type: "string"
+                    endDate:
+                      type: string
+                    isProtectedForEdit:
+                      type: boolean
+                    description:
+                      type: "string"
+                    task_end_date:
+                      type: "string"
+                    name:
+                      type: "string"
+                    task_start_date:
+                      type: "string"
+                    duration_in_days:
+                      type: "number"
+                    working_days:
+                      type: "number"
+                    task_manager_id:
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: sub_tasks a user
+      tags: [sub_task]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /simple_task:
+    post: 
+      summary: posts a new simple_task
+      tags: [simple_task]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                accessToken:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                task_end_date:
+                  type: "string"
+                note:
+                  type: "string"
+                name:
+                  type: "string"
+                task_start_date:
+                  type: "string"
+                completed_percentage:
+                  type: "number"
+                estimated_hours:
+                  type: "number"
+                project_id:
+                  type: "number"
+                priority_id:
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected simple_tasks
+      tags: [simple_task]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    note:
+                      type: "string"
+                    name:
+                      type: "string"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id:
+                      type: "number"
+                    note:
+                      type: "number"
+                    name:
+                      type: "number"
+                    task_start_date:
+                      type: "number"
+                    task_end_date:
+                      type: "number"
+                    completed_percentage:
+                      type: "number"
+                    estimated_hours:
+                      type: "number"
+                    project_id:
+                      type: "number"
+                    priority_id:
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object  
+    patch:
+      summary: updates a simple_task
+      tags: [simple_task]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate: 
+                      type: "string"
+                    endDate:
+                      type: string
+                    isProtectedForEdit:
+                      type: boolean
+                    task_end_date:
+                      type: "string"
+                    note:
+                      type: "string"
+                    name:
+                      type: "string"
+                    task_start_date:
+                      type: "string"
+                    completed_percentage:
+                      type: "number"
+                    estimated_hours:
+                      type: "number"
+                    project_id:
+                      type: "number"
+                    priority_id:
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes simple_task user
+      tags: [simple_task]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /work_log_and_branch_of_work:
+    post: 
+      summary: posts a new work_log_and_branch_of_work
+      tags: [work_log_and_branch_of_work]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                accessToken:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                skilled_worker:
+                  type: "number"
+                hours:
+                  type: "number"
+                date:
+                  type: "string"
+                work_category_id:
+                  type: "number"
+                daily_work_log_id:
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected work_log_and_branch_of_works
+      tags: [work_log_and_branch_of_work]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    skilled_worker: 
+                      type: "number"
+                    hours: 
+                      type: "number"
+                    date: 
+                      type: "number"
+                    work_category_id: 
+                      type: "number"
+                    daily_work_log_id: 
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object  
+    patch:
+      summary: updates a work_log_and_branch_of_work
+      tags: [work_log_and_branch_of_work]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate: 
+                      type: "string"
+                    endDate:
+                      type: string
+                    isProtectedForEdit:
+                      type: boolean
+                    skilled_worker:
+                      type: "number"
+                    hours:
+                      type: "number"
+                    date:
+                      type: "string"
+                    work_category_id:
+                      type: "number"
+                    daily_work_log_id:
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a work_log_and_branch_of_work
+      tags: [work_log_and_branch_of_work]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /weather_data:
+    post: 
+      summary: posts a new weather_data
+      tags: [weather_data]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                accessToken:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                reason:
+                  type: "string"
+                total_lost_hour:
+                  type: "number"
+                duration_of_lost_hour:
+                  type: "number"
+                date:
+                  type: "string"
+                reference:
+                  type: "string"
+                project_id:
+                  type: "number"
+                manpower_id:
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected weather_datas
+      tags: [weather_data]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    reason:
+                      type: "string"
+                    reference:
+                      type: "string"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id:
+                      type: "number"
+                    total_lost_hour:
+                      type: "number"
+                    duration_of_lost_hour:
+                      type: "number"
+                    date:
+                      type: "number"
+                    reason:
+                      type: "number"
+                    reference:
+                      type: "number"
+                    project_id:
+                      type: "number"
+                    manpower_id:
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object  
+    patch:
+      summary: updates a weather_data
+      tags: [weather_data]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate: 
+                      type: "string"
+                    endDate:
+                      type: string
+                    isProtectedForEdit:
+                      type: boolean
+                    reason:
+                      type: "string"
+                    total_lost_hour:
+                      type: "number"
+                    duration_of_lost_hour:
+                      type: "number"
+                    date:
+                      type: "string"
+                    reference:
+                      type: "string"
+                    project_id:
+                      type: "number"
+                    manpower_id:
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes weather_datauser
+      tags: [weather_data]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /todos:
+    post: 
+      summary: posts a new todos
+      tags: [todos]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                accessToken:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                notes:
+                  type: "string"
+                name:
+                  type: "string"
+                date:
+                  type: "string"
+                project_id:
+                  type: "number"
+                priority_id:
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected todoss
+      tags: [todos]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    notes:
+                      type: "string"
+                    name:
+                      type: "string"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id:
+                      type: "number"
+                    notes:
+                      type: "number"
+                    name:
+                      type: "number"
+                    date:
+                      type: "number"
+                    project:
+                      type: "number"
+                    priority:
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object  
+    patch:
+      summary: updates a todos
+      tags: [todos]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate: 
+                      type: "string"
+                    endDate:
+                      type: string
+                    isProtectedForEdit:
+                      type: boolean
+                    notes:
+                      type: "string"
+                    name:
+                      type: "string"
+                    date:
+                      type: "string"
+                    project_id:
+                      type: "number"
+                    priority_id:
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: todosetes a user
+      tags: [todos]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /request:
+    post: 
+      summary: posts a new request
+      tags: [request]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                accessToken:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                request_description:
+                  type: "string"
+                date_required:
+                  type: "string"
+                date_responded:
+                  type: "string"
+                RFI_no:
+                  type: "string"
+                current_status:
+                  type: "string"
+                request_by:
+                  type: "string"
+                assigned_to:
+                  type: "string"
+                date_requested:
+                  type: "string"
+                notes:
+                  type: "string"
+                project_id:
+                  type: "number"
+                priority_id:
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected requests
+      tags: [request]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    RFI_no:
+                      type: "string"
+                    current_status:
+                      type: "string"
+                    request_description:
+                      type: "string"
+                    request_by:
+                      type: "string"
+                    assigned_to:
+                      type: "string"
+                    notes:
+                      type: "string"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id:
+                      type: "number"
+                    RFI_no:
+                      type: "number"
+                    current_status:
+                      type: "number"
+                    request_description:
+                      type: "number"
+                    request_by:
+                      type: "number"
+                    assigned_to:
+                      type: "number"
+                    date_requested:
+                      type: "number"
+                    date_required:
+                      type: "number"
+                    date_responded:
+                      type: "number"
+                    notes:
+                      type: "number"
+                    project:
+                      type: "number"
+                    priority:
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object  
+    patch:
+      summary: updates a request
+      tags: [request]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate: 
+                      type: "string"
+                    endDate:
+                      type: string
+                    isProtectedForEdit:
+                      type: boolean
+                    request_description:
+                      type: "string"
+                    date_required:
+                      type: "string"
+                    date_responded:
+                      type: "string"
+                    RFI_no:
+                      type: "string"
+                    current_status:
+                      type: "string"
+                    request_by:
+                      type: "string"
+                    assigned_to:
+                      type: "string"
+                    date_requested:
+                      type: "string"
+                    notes:
+                      type: "string"
+                    project_id:
+                      type: "number"
+                    priority_id:
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: requestes a user
+      tags: [request]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /invoice_tracking:
+    post: 
+      summary: posts a new invoice_tracking
+      tags: [invoice_tracking]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                accessToken:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                detail: 
+                  type: "string"
+                amount:
+                  type: "number"
+                amount_received:
+                  type: "number"
+                balance:
+                  type: "number"
+                invoice_number:
+                  type: "string"
+                date_received:
+                  type: "string"
+                notes:
+                  type: "string"
+                client_id:
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected invoice_trackings
+      tags: [invoice_tracking]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    detail:
+                      type: "string"
+                    invoice_number:
+                      type: "string"
+                    notes:
+                      type: "string"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id:
+                      type: "string"
+                    detail:
+                      type: "string"
+                    amount:
+                      type: "string"
+                    amount_received:
+                      type: "string"
+                    balance:
+                      type: "string"
+                    invoice_number:
+                      type: "string"
+                    date_received:
+                      type: "string"
+                    notes:
+                      type: "string"
+                    client:
+                      type: "string"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+    patch:
+      summary: updates a invoice_tracking
+      tags: [invoice_tracking]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate: 
+                      type: "string"
+                    endDate:
+                      type: string
+                    isProtectedForEdit:
+                      type: boolean
+                    detail: 
+                      type: "string"
+                    amount:
+                      type: "number"
+                    amount_received:
+                      type: "number"
+                    balance:
+                      type: "number"
+                    invoice_number:
+                      type: "string"
+                    date_received:
+                      type: "string"
+                    notes:
+                      type: "string"
+                    client_id:
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a invoice_tracking
+      tags: [invoice_tracking]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean

@@ -1,214 +1,3 @@
-/**
- * @swagger
- * components:
- *  schemas:
- *    role:
- *      type: object
- *      required:
- *        -name
- *      properties:
- *        name:
- *          type: string
- *          description: name of a role(like admin, standard user)
- *        id:
- *          type: integer
- *          description: The auto-generated id of the book.
- *        concurrency_stamp:
- *          type: string
- *          description: a stamp set up to protect multiple update at the same time
- *        privilege:
- *          type: array
- *          description: privileges the role has
- *        description:
- *          type: string
- *          description: description of the role
- */
-/**
- * @swagger
- * tags:
- *  name: Roles
- *  description: API to manage your Roles.
- */
-/**
- * @swagger
- * path:
- * /role:
- *  post:
- *    summary: Creates a new role
- *    tags: [Roles]
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              name:
- *                type: string
- *                required: true
- *              accessToken:
- *                type: string
- *                required: true
- *              privileges:
- *                type: array
- *                items:
- *                  type: integer
- *              description:
- *                type: string
- *    responses:
- *      200:
- *        description: success message
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                success:
- *                  type: boolean
- */
-/**
- * @swagger
- * path:
- * /role:
- *  get:
- *    summary: gets selected roles
- *    tags: [Roles]
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              accessToken:
- *                type: string
- *                required: true
- *              limit:
- *                type: integer
- *                required: true
- *              skip:
- *                type: integer
- *                required: false
- *              filter:
- *                type: object
- *                required: false
- *                properties:
- *                  name:
- *                    type: string
- *                  description:
- *                    type: string
- *              sort:
- *                type: object
- *                required: false
- *                properties:
- *                  name:
- *                    type: integer
- *                  description:
- *                    type: integer
- *                  id:
- *                    type: integer
- *    responses:
- *      200:
- *        description: success message
- *        content:
- *          application/json:
- *            schema:
- *              type: array
- *              items:
- *                type: object
- *                properties:
- *                  name:
- *                    type: string
- *                  description:
- *                    type: string
- *                  concurrency_stamp:
- *                    type: string
- *                  privileges:
- *                    type: array
- *                    items:
- *                      type: object
- *                      schema:
- *                        $ref: '#/components/schemas/role'
- *
- */
-/**
- * @swagger
- * path:
- * /roles:
- *  patch:
- *    summary: updates a user
- *    tags: [Roles]
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              accessToken:
- *                type: string
- *                required: true
- *              concurrency_stamp:
- *                type: string
- *                required: true
- *              id:
- *                type: integer
- *                required: true
- *              updateData:
- *                type: object
- *                required: true
- *                properties:
- *                  name:
- *                    type: string
- *                  privileges:
- *                    type: array
- *                    items:
- *                      type: integer
- *                  description:
- *                    type: string
- *    responses:
- *      200:
- *        description: success message
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                success:
- *                  type: boolean
- */
-
-/**
- * @swagger
- * path:
- * /role:
- *  delete:
- *    summary: updates a user
- *    tags: [Roles]
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              accessToken:
- *                type: string
- *                required: true
- *              id:
- *                type: integer
- *                required: true
- *    responses:
- *      200:
- *        description: success message
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                success:
- *                  type: boolean
- */
 const express = require("express");
 const router = express.Router();
 const { error } = require("../config/config");
@@ -216,7 +5,7 @@ const { verify } = require("jsonwebtoken");
 const inputFilter = require("../validation/inputFilter");
 const validation = require("../validation/validation");
 const { userHasPrivilege } = require("../validation/auth");
-const { post, get, patch, deleter } = require("../services/project");
+const { post, get, patch, deleter } = require("../services/operational_data");
 
 const defaultDateValues = ["startDate", "endDate"];
 const auditLogProjection = {
@@ -303,6 +92,70 @@ const allInputFilters = {
         work_category_id: "number",
         project_id: "number",
     },
+    task_manager: {
+        name: "string",
+        task_start_date: "string",
+        duration_in_days: "string",
+        working_days: "string",
+        project_id: "number",
+    },
+    sub_task: {
+        name: "string",
+        task_start_date: "string",
+        duration_in_days: "number",
+        working_days: "number",
+        task_manager_id: "number",
+    },
+    simple_task: {
+        note: "string",
+        name: "string",
+        task_start_date: "string",
+        completed_percentage: "number",
+        estimated_hours: "number",
+        project_id: "number",
+        priority_id: "number",
+    },
+    work_log_and_branch_of_work: {
+        skilled_worker: "number",
+        hours: "number",
+        date: "string",
+        work_category_id: "number",
+        daily_work_log_id: "number",
+    },
+    weather_data: {
+        total_lost_hour: "number",
+        duration_of_lost_hour: "number",
+        date: "string",
+        reference: "string",
+        project_id: "number",
+        manpower_id: "number",
+    },
+    todos: {
+        notes: "string",
+        name: "string",
+        date: "string",
+        project_id: "number",
+        priority_id: "number",
+    },
+    request: {
+        RFI_no: "string",
+        current_status: "string",
+        request_by: "string",
+        assigned_to: "string",
+        date_requested: "string",
+        notes: "string",
+        project_id: "number",
+        priority_id: "number",
+    },
+    invoice_tracking: {
+        amount: "number",
+        amount_received: "number",
+        balance: "number",
+        invoice_number: "string",
+        date_received: "string",
+        notes: "string",
+        client_id: "number",
+    },
 };
 const allOptionalInputfilters = {
     project: {
@@ -333,15 +186,52 @@ const allOptionalInputfilters = {
         risk_response: "string",
         remark: "string",
     },
+    task_manager: {
+        description: "string",
+        task_end_date: "string",
+    },
+    sub_task: {
+        description: "string",
+        task_end_date: "string",
+    },
+    simple_task: {
+        task_end_date: "string",
+    },
+    work_log_and_branch_of_work: {},
+    weather_data: {
+        reason: "string",
+    },
+    todos: {},
+    request: {
+        request_description: "string",
+        date_required: "string",
+        date_responded: "string",
+    },
+    invoice_tracking: {
+        detail: "string",
+    },
 };
 const dateValues = {
     project: [...defaultDateValues, "project_start_date", "project_end_date"],
     daily_work_log: [...defaultDateValues, "date"],
     instruction_given_on_project: [...defaultDateValues, "date"],
-    manpower_requirement: [],
-    required_equipment: [],
-    required_material: ["delivery_date"],
-    risk_tracking: [],
+    manpower_requirement: [...defaultDateValues],
+    required_equipment: [...defaultDateValues],
+    required_material: [...defaultDateValues, "delivery_date"],
+    risk_tracking: [...defaultDateValues],
+    task_manager: [...defaultDateValues, "task_end_date", "task_start_date"],
+    sub_task: [...defaultDateValues, "task_end_date", "task_start_date"],
+    simple_task: [...defaultDateValues, "task_end_date", "task_start_date"],
+    work_log_and_branch_of_work: [...defaultDateValues, "date"],
+    weather_data: [...defaultDateValues, "date"],
+    todos: [...defaultDateValues, "date"],
+    request: [
+        ...defaultDateValues,
+        "date_requested",
+        "date_required",
+        "date_responded",
+    ],
+    invoice_tracking: [...defaultDateValues, "date_received"],
 };
 const phoneValues = {
     project: [],
@@ -351,6 +241,14 @@ const phoneValues = {
     required_equipment: [],
     required_material: [],
     risk_tracking: [],
+    task_manager: [],
+    sub_task: [],
+    simple_task: [],
+    work_log_and_branch_of_work: [],
+    weather_data: [],
+    todos: [],
+    request: [],
+    invoice_tracking: [],
 };
 const emailValues = {
     project: [],
@@ -360,6 +258,14 @@ const emailValues = {
     required_equipment: [],
     required_material: [],
     risk_tracking: [],
+    task_manager: [],
+    sub_task: [],
+    simple_task: [],
+    work_log_and_branch_of_work: [],
+    weather_data: [],
+    todos: [],
+    request: [],
+    invoice_tracking: [],
 };
 const allProjections = {
     project: {
@@ -458,6 +364,95 @@ const allProjections = {
         project: true,
         ...auditLogProjection,
     },
+    task_manager: {
+        id: true,
+        name: true,
+        description: true,
+        task_start_date: true,
+        task_end_date: true,
+        duration_in_days: true,
+        working_days: true,
+        project: true,
+        ...auditLogProjection,
+    },
+    sub_task: {
+        id: true,
+        description: true,
+        name: true,
+        task_start_date: true,
+        task_end_date: true,
+        duration_in_days: true,
+        working_days: true,
+        task_manager: true,
+        ...auditLogProjection,
+    },
+    simple_task: {
+        id: true,
+        note: true,
+        name: true,
+        task_start_date: true,
+        task_end_date: true,
+        completed_percentage: true,
+        estimated_hours: true,
+        project: true,
+        priority: true,
+    },
+    work_log_and_branch_of_work: {
+        id: true,
+        skilled_worker: true,
+        hours: true,
+        date: true,
+        work_category: true,
+        daily_work_log: true,
+        ...auditLogProjection,
+    },
+    weather_data: {
+        id: true,
+        total_lost_hour: true,
+        duration_of_lost_hour: true,
+        date: true,
+        reason: true,
+        reference: true,
+        project: true,
+        manpower: true,
+        ...auditLogProjection,
+    },
+    todos: {
+        id: true,
+        notes: true,
+        name: true,
+        date: true,
+        project: true,
+        priority: true,
+        ...auditLogProjection,
+    },
+    request: {
+        id: true,
+        RFI_no: true,
+        current_status: true,
+        request_description: true,
+        request_by: true,
+        assigned_to: true,
+        date_requested: true,
+        date_required: true,
+        date_responded: true,
+        notes: true,
+        project: true,
+        priority: true,
+        ...auditLogProjection,
+    },
+    invoice_tracking: {
+        id: true,
+        detail: true,
+        amount: true,
+        amount_received: true,
+        balance: true,
+        invoice_number: true,
+        date_received: true,
+        notes: true,
+        client: true,
+        ...auditLogProjection,
+    },
 };
 const allFilters = {
     project: {
@@ -500,6 +495,42 @@ const allFilters = {
         description: "string",
         risk_response: "string",
         remark: "string",
+    },
+    task_manager: {
+        name: "string",
+        description: "string",
+        duration_in_days: "string",
+        working_days: "string",
+    },
+    sub_task: {
+        description: "string",
+        name: "string",
+    },
+    simple_task: {
+        note: "string",
+        name: "string",
+    },
+    work_log_and_branch_of_work: {},
+    weather_data: {
+        reason: "string",
+        reference: "string",
+    },
+    todos: {
+        notes: "string",
+        name: "string",
+    },
+    request: {
+        RFI_no: "string",
+        current_status: "string",
+        request_description: "string",
+        request_by: "string",
+        assigned_to: "string",
+        notes: "string",
+    },
+    invoice_tracking: {
+        detail: "string",
+        invoice_number: "string",
+        notes: "string",
     },
 };
 const allSorts = {
@@ -596,8 +627,97 @@ const allSorts = {
         remark: "number",
         ...auditLogSort,
     },
+    task_manager: {
+        id: "number",
+        name: "number",
+        description: "number",
+        task_start_date: "number",
+        task_end_date: "number",
+        duration_in_days: "number",
+        working_days: "number",
+        project_id: "number",
+        ...auditLogSort,
+    },
+    sub_task: {
+        id: "number",
+        description: "number",
+        name: "number",
+        task_start_date: "number",
+        task_end_date: "number",
+        duration_in_days: "number",
+        working_days: "number",
+        task_manager_id: "number",
+        ...auditLogSort,
+    },
+    simple_task: {
+        id: "number",
+        note: "number",
+        name: "number",
+        task_start_date: "number",
+        task_end_date: "number",
+        completed_percentage: "number",
+        estimated_hours: "number",
+        project_id: "number",
+        priority_id: "number",
+        ...auditLogSort,
+    },
+    work_log_and_branch_of_work: {
+        id: "number",
+        skilled_worker: "number",
+        hours: "number",
+        date: "number",
+        work_category_id: "number",
+        daily_work_log_id: "number",
+        ...auditLogSort,
+    },
+    weather_data: {
+        id: "number",
+        total_lost_hour: "number",
+        duration_of_lost_hour: "number",
+        date: "number",
+        reason: "number",
+        reference: "number",
+        project_id: "number",
+        manpower_id: "number",
+        ...auditLogSort,
+    },
+    todos: {
+        id: "number",
+        notes: "number",
+        name: "number",
+        date: "number",
+        project: "number",
+        priority: "number",
+        ...auditLogSort,
+    },
+    request: {
+        id: "number",
+        RFI_no: "number",
+        current_status: "number",
+        request_description: "number",
+        request_by: "number",
+        assigned_to: "number",
+        date_requested: "number",
+        date_required: "number",
+        date_responded: "number",
+        notes: "number",
+        project: "number",
+        priority: "number",
+        ...auditLogSort,
+    },
+    invoice_tracking: {
+        id: "string",
+        detail: "string",
+        amount: "string",
+        amount_received: "string",
+        balance: "string",
+        invoice_number: "string",
+        date_received: "string",
+        notes: "string",
+        client: "string",
+        ...auditLogSort,
+    },
 };
-
 const allRoutes = [
     "/project",
     "/daily_work_log",
@@ -606,7 +726,16 @@ const allRoutes = [
     "/required_equipment",
     "/required_material",
     "/risk_tracking",
+    "/task_manager",
+    "/sub_task",
+    "/simple_task",
+    "/work_log_and_branch_of_work",
+    "/weather_data",
+    "/todos",
+    "/request",
+    "/invoice_tracking",
 ];
+
 router.post(allRoutes, async (req, res, next) => {
     const operationDataType = req.path.split("/")[1];
     let reqBody;
@@ -626,6 +755,9 @@ router.post(allRoutes, async (req, res, next) => {
         );
         reqBody.accessToken = undefined;
         for (let i in dateValues[operationDataType]) {
+            if (!reqBody[dateValues[operationDataType][i]]) {
+                continue;
+            }
             reqBody[dateValues[operationDataType][i]] = new Date(
                 reqBody[dateValues[operationDataType][i]]
             );

@@ -2,6 +2,7 @@ const express = require("express");
 const { json } = require("body-parser");
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
+const YAML = require("yamljs");
 require("dotenv").config();
 
 const app = express();
@@ -17,7 +18,7 @@ const upload = require("./api-routes/upload");
 const client = require("./api-routes/client");
 const material = require("./api-routes/material");
 const restMasterData = require("./api-routes/restMasterData");
-const project = require("./api-routes/project");
+const operational_data = require("./api-routes/operational_data");
 app.use(json());
 
 app.use(account);
@@ -31,7 +32,7 @@ app.use(upload);
 app.use(client);
 app.use(material);
 app.use(restMasterData);
-app.use(project);
+app.use(operational_data);
 
 app.use((err, _req, res, _next) => {
     let myError = JSON.parse(err.message);
@@ -51,7 +52,7 @@ const options = {
                 "This is the ERP system made with Express and documented with Swagger",
             contact: {
                 name: "Ablaze Labs",
-                // url: "https://logrocket.com",
+                url: "https://ablazelabs.com",
                 email: "info@email.com",
             },
         },
@@ -62,7 +63,7 @@ const options = {
         ],
     },
     apis: [
-        "./api-routes/account.js",
+        // "./api-routes/account.js",
         "./api-routes/privilege.js",
         "./api-routes/role.js",
         "./api-routes/restMasterData.js",
@@ -72,6 +73,8 @@ const options = {
         "./api-routes/account/sendcode.js",
         "./api-routes/account/changepassword.js",
         "./api-routes/account/forgotpassword.js",
+        "./api-routes/account/operational_data.js",
+        "./documentation/account.yaml",
     ],
 };
 
@@ -80,7 +83,8 @@ const specs = swaggerJsdoc(options);
 app.use(
     "/api-docs",
     swaggerUi.serve,
-    swaggerUi.setup(specs, { explorer: true })
+    // swaggerUi.setup(specs, { explorer: true })
+    swaggerUi.setup(YAML.load("./documentation/api.yaml"), { explorer: true })
 );
 module.exports = app.listen(port, () => {
     console.log("App listening on port 3000!");

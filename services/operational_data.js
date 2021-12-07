@@ -6,6 +6,17 @@ const {
     daily_work_log,
     instruction_given_on_project,
     manpower_requirement,
+    required_equipment,
+    required_material,
+    risk_tracking,
+    task_manager,
+    sub_task,
+    simple_task,
+    work_log_and_branch_of_work,
+    weather_data,
+    todos,
+    request,
+    invoice_tracking,
 } = new PrismaClient();
 
 const allModels = {
@@ -13,6 +24,17 @@ const allModels = {
     daily_work_log,
     instruction_given_on_project,
     manpower_requirement,
+    required_equipment,
+    required_material,
+    risk_tracking,
+    task_manager,
+    sub_task,
+    simple_task,
+    work_log_and_branch_of_work,
+    weather_data,
+    todos,
+    request,
+    invoice_tracking,
 };
 const uniqueValues = {
     project: ["project_id"],
@@ -22,6 +44,14 @@ const uniqueValues = {
     required_equipment: [],
     required_material: [],
     risk_tracking: [],
+    task_manager: [],
+    sub_task: [],
+    simple_task: [],
+    work_log_and_branch_of_work: [],
+    weather_data: [],
+    todos: [],
+    request: [],
+    invoice_tracking: ["invoice_number"],
 };
 const post = async (reqBody, operationDataType, creator, next) => {
     for (let i in uniqueValues[operationDataType]) {
@@ -109,11 +139,19 @@ const patch = async (
     next
 ) => {
     const myModel = await allModels[operationDataType].findUnique({
-        select: { ...updateDataProjection },
+        select: { ...updateDataProjection, isProtectedForEdit: true },
         where: { id: reqBody.id },
     });
     if (!myModel) {
         error("id", `${operationDataType} doesn't exist`, next);
+        return false;
+    }
+    if (myModel.isProtectedForEdit) {
+        error(
+            "id",
+            `this ${operationDataType} is protected against edit`,
+            next
+        );
         return false;
     }
     for (let i in uniqueValues[operationDataType]) {

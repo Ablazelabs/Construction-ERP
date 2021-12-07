@@ -548,7 +548,7 @@ model invoice_tracking {
   amount_received    Float
   balance            Float
   invoice_number     String   @unique
-  dateReceived       DateTime
+  date_received      DateTime
   notes              String
   startDate          DateTime
   endDate            DateTime

@@ -25,6 +25,7 @@
     "pg-promise": "^10.11.1",
     "prisma": "^3.5.0",
     "swagger-jsdoc": "^6.1.0",
-    "swagger-ui-express": "^4.1.6"
+    "swagger-ui-express": "^4.1.6",
+    "yamljs": "^0.3.0"
   }
 }
