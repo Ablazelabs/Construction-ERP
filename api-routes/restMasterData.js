@@ -1,9 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { error } = require("../config/config");
-const { verify } = require("jsonwebtoken");
 const inputFilter = require("../validation/inputFilter");
-const { userHasPrivilege } = require("../validation/auth");
 const { post, get, patch, deleter } = require("../services/restMasterData");
 const allRoutes = [
     "/equipment",
@@ -14,14 +12,14 @@ const allRoutes = [
     "/phase",
     "/priority",
     "/work_category",
+    "/document_category",
 ];
 router.post(allRoutes, async (req, res, next) => {
-    const masterDataType = req.path.split("/")[1];
+    const masterDataType = req.path.split("/").pop();
     const color = masterDataType == "priority" ? { color: "string" } : {};
     try {
         inputFilter(
             {
-                accessToken: "string",
                 name: "string",
                 startDate: "string",
                 endDate: "string",
@@ -52,17 +50,8 @@ router.post(allRoutes, async (req, res, next) => {
         error(e.key, e.message, next, 400);
         return;
     }
-    let payLoad;
     try {
-        payLoad = verify(req.body.accessToken, process.env.ACCESS_KEY);
-    } catch (e) {
-        error("accessToken", "Invalid or Expired Access Token", next, 401);
-        return;
-    }
-    const PRIVILEGE_TYPE = `${masterDataType}_create`;
-    if (!(await userHasPrivilege(payLoad.id, PRIVILEGE_TYPE, next))) return;
-    try {
-        const data = await post(req.body, payLoad.id, masterDataType, next);
+        const data = await post(req.body, res.locals.id, masterDataType, next);
         if (data == false) {
             return;
         }
@@ -77,14 +66,14 @@ router.get(allRoutes, async (req, res, next) => {
     let sort = {};
     let skip = 0;
     let limit = 0;
-    const masterDataType = req.path.split("/")[1];
+    const masterDataType = req.path.split("/").pop();
     const color =
         masterDataType == "priority"
             ? [{ color: "string" }, { color: "number" }, { color: true }]
             : [{}, {}, {}];
     try {
         inputFilter(
-            { limit: "number", accessToken: "string" },
+            { limit: "number" },
             { skip: "number", filter: "object", sort: "object" },
             req.body
         );
@@ -124,16 +113,6 @@ router.get(allRoutes, async (req, res, next) => {
         error(e.key, e.message, next);
         return;
     }
-
-    let payLoad;
-    try {
-        payLoad = verify(req.body.accessToken, process.env.ACCESS_KEY);
-    } catch (e) {
-        error("accessToken", "Invalid or Expired Access Token", next, 401);
-    }
-
-    const PRIVILEGE_TYPE = `${masterDataType}_read`;
-    if (!(await userHasPrivilege(payLoad.id, PRIVILEGE_TYPE, next))) return;
     const projection = {
         name: true,
         description: true,
@@ -173,18 +152,10 @@ router.get(allRoutes, async (req, res, next) => {
 });
 router.patch(allRoutes, async (req, res, next) => {
     let updateData = {};
-    const masterDataType = req.path.split("/")[1];
+    const masterDataType = req.path.split("/").pop();
     const color = masterDataType == "priority" ? { color: "string" } : {};
     try {
-        inputFilter(
-            {
-                accessToken: "string",
-                id: "number",
-                updateData: "object",
-            },
-            {},
-            req.body
-        );
+        inputFilter({ id: "number", updateData: "object" }, {}, req.body);
 
         updateData = inputFilter(
             {},
@@ -220,22 +191,10 @@ router.patch(allRoutes, async (req, res, next) => {
         error(e.key, e.message, next);
         return;
     }
-    let payLoad;
-    try {
-        payLoad = verify(req.body.accessToken, process.env.ACCESS_KEY);
-    } catch (e) {
-        error("accessToken", "Invalid or Expired Access Token", next, 401);
-        return;
-    }
-
     if (Object.keys(updateData).length == 0) {
         error("updateData", "no data has been sent for update", next);
         return;
     }
-
-    const PRIVILEGE_TYPE = `${masterDataType}_update`;
-    if (!(await userHasPrivilege(payLoad.id, PRIVILEGE_TYPE, next))) return;
-
     let updateDataProjection = {};
     for (let i in updateData) {
         if (updateData[i]) {
@@ -248,7 +207,7 @@ router.patch(allRoutes, async (req, res, next) => {
             req.body,
             updateData,
             masterDataType,
-            payLoad.id,
+            res.locals.id,
             next
         );
         if (data == false) {
@@ -262,30 +221,13 @@ router.patch(allRoutes, async (req, res, next) => {
     }
 });
 router.delete(allRoutes, async (req, res, next) => {
-    const masterDataType = req.path.split("/")[1];
+    const masterDataType = req.path.split("/").pop();
     try {
-        inputFilter(
-            {
-                accessToken: "string",
-                id: "number",
-            },
-            {},
-            req.body
-        );
+        inputFilter({ id: "number" }, {}, req.body);
     } catch (e) {
         error(e.key, e.message, next);
         return;
     }
-    let payLoad;
-    try {
-        payLoad = verify(req.body.accessToken, process.env.ACCESS_KEY);
-    } catch (e) {
-        error("accessToken", "Invalid or Expired Access Token", next, 401);
-        return;
-    }
-    const PRIVILEGE_TYPE = `${masterDataType}_delete`;
-    if (!(await userHasPrivilege(payLoad.id, PRIVILEGE_TYPE, next))) return;
-
     try {
         res.json(await deleter(req.body, masterDataType));
     } catch (e) {

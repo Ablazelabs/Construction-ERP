@@ -220,39 +220,72 @@ model work_category {
   work_log_and_branch_of_work work_log_and_branch_of_work[]
 }
 
+model document_category {
+  id                 Int             @id @default(autoincrement())
+  name               String          @unique
+  description        String?
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime        @default(now())
+  createdBy          String
+  revisionDate       DateTime        @updatedAt
+  revisedBy          String
+  status             Int             @default(0)
+  isProtectedForEdit Boolean         @default(false)
+  documentation      documentation[]
+}
+
+model documentation {
+  id                   Int                 @id @default(autoincrement())
+  name                 String              @unique
+  description          String?
+  document_category_id Int
+  document_category    document_category   @relation(fields: [document_category_id], references: [id])
+  startDate            DateTime
+  endDate              DateTime
+  creationDate         DateTime            @default(now())
+  createdBy            String
+  revisionDate         DateTime            @updatedAt
+  revisedBy            String
+  status               Int                 @default(0)
+  isProtectedForEdit   Boolean             @default(false)
+  required_document    required_document[]
+}
+
 model project {
-  id                            Int                            @id @default(autoincrement())
-  name                          String
-  project_manager               String
-  project_start_date            DateTime
-  project_end_date              DateTime
-  project_description           String?
-  project_id                    String                         @unique
-  contract_number               String
-  site_engineer                 String
-  dupty_manager                 String
-  project_address               String
-  client                        Client                         @relation(fields: [client_id], references: [id])
-  client_id                     Int
-  startDate                     DateTime
-  endDate                       DateTime
-  creationDate                  DateTime                       @default(now())
-  createdBy                     String
-  revisionDate                  DateTime                       @updatedAt
-  revisedBy                     String
-  status                        Int                            @default(0)
-  isProtectedForEdit            Boolean                        @default(false)
-  daily_work_logs               daily_work_log[]
-  instructions_given_on_project instruction_given_on_project[]
-  manpower_requirements         manpower_requirement[]
-  required_equipment            required_equipment[]
-  required_material             required_material[]
-  risk_tracking                 risk_tracking[]
-  task_manager                  task_manager[]
-  simple_task                   simple_task[]
-  weather_data                  weather_data[]
-  todos                         todos[]
-  request                       request[]
+  id                           Int                            @id @default(autoincrement())
+  name                         String
+  project_manager              String
+  project_start_date           DateTime
+  project_end_date             DateTime
+  project_description          String?
+  project_id                   String                         @unique
+  contract_number              String
+  site_engineer                String
+  dupty_manager                String
+  project_address              String
+  client                       Client                         @relation(fields: [client_id], references: [id])
+  client_id                    Int
+  startDate                    DateTime
+  endDate                      DateTime
+  creationDate                 DateTime                       @default(now())
+  createdBy                    String
+  revisionDate                 DateTime                       @updatedAt
+  revisedBy                    String
+  status                       Int                            @default(0)
+  isProtectedForEdit           Boolean                        @default(false)
+  daily_work_log               daily_work_log[]
+  instruction_given_on_project instruction_given_on_project[]
+  manpower_requirement         manpower_requirement[]
+  required_equipment           required_equipment[]
+  required_material            required_material[]
+  risk_tracking                risk_tracking[]
+  task_manager                 task_manager[]
+  simple_task                  simple_task[]
+  weather_data                 weather_data[]
+  todos                        todos[]
+  request                      request[]
+  required_document            required_document[]
 }
 
 model daily_work_log {
@@ -561,4 +594,29 @@ model invoice_tracking {
   client_id          Int
   client             Client   @relation(fields: [client_id], references: [id])
 
+}
+
+model required_document {
+  id                 Int           @id @default(autoincrement())
+  spec_reference     String
+  requested_by       String
+  quantity_needed    Int
+  date_requested     DateTime
+  date_needed        DateTime
+  assigned_to        String
+  received           String?
+  received_date      DateTime?
+  location           String
+  documentation_id   Int
+  project_id         Int
+  project            project       @relation(fields: [project_id], references: [id])
+  documentation      documentation @relation(fields: [documentation_id], references: [id])
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime      @default(now())
+  createdBy          String
+  revisionDate       DateTime      @updatedAt
+  revisedBy          String
+  status             Int           @default(0)
+  isProtectedForEdit Boolean       @default(false)
 }

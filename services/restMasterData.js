@@ -10,6 +10,7 @@ const {
     phase,
     priority,
     work_category,
+    document_category,
 } = new PrismaClient();
 const masterDataModels = {
     equipment,
@@ -20,6 +21,7 @@ const masterDataModels = {
     phase,
     priority,
     work_category,
+    document_category,
 };
 const post = async (reqBody, creator, masterDataType, next) => {
     const queryData = await masterDataModels[masterDataType].findUnique({

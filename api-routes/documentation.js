@@ -1,17 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const { error } = require("../config/config");
-const { verify } = require("jsonwebtoken");
 const inputFilter = require("../validation/inputFilter");
-const { userHasPrivilege } = require("../validation/auth");
-const { post, get, patch, deleter } = require("../services/material");
-router.post("/material", async (req, res, next) => {
+const { post, get, patch, deleter } = require("../services/documentation");
+router.post("/documentation", async (req, res, next) => {
+    console.log(res.locals);
     try {
         inputFilter(
             {
                 name: "string",
-                unit: "string",
-                material_category_id: "number",
+                document_category_id: "number",
                 startDate: "string",
                 endDate: "string",
             },
@@ -51,7 +49,7 @@ router.post("/material", async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
-router.get("/material", async (req, res, next) => {
+router.get("/documentation", async (req, res, next) => {
     let filter = {};
     let sort = {};
     let skip = 0;
@@ -70,8 +68,7 @@ router.get("/material", async (req, res, next) => {
                 {
                     name: "string",
                     description: "string",
-                    unit: "string",
-                    material_category_name: "string",
+                    document_category_name: "string",
                 },
                 req.body.filter
             );
@@ -86,7 +83,7 @@ router.get("/material", async (req, res, next) => {
                     id: "number",
                     description: "number",
                     unit: "number",
-                    material_category_name: "number",
+                    document_category_name: "number",
                 },
                 req.body.sort
             );
@@ -100,7 +97,7 @@ router.get("/material", async (req, res, next) => {
         description: true,
         id: true,
         unit: true,
-        material_category: true,
+        document_category: true,
         startDate: true,
         endDate: true,
         creationDate: true,
@@ -111,8 +108,8 @@ router.get("/material", async (req, res, next) => {
     };
     let queryFilter = {};
     for (let i in filter) {
-        if (i == "material_category_name") {
-            queryFilter["material_category"] = {
+        if (i == "document_category_name") {
+            queryFilter["document_category"] = {
                 name: {
                     contains: filter[i],
                 },
@@ -123,8 +120,8 @@ router.get("/material", async (req, res, next) => {
     }
     let querySort = {};
     for (let i in sort) {
-        if (i === "material_category_name") {
-            querySort["material_category"] = {
+        if (i === "document_category_name") {
+            querySort["document_category"] = {
                 name: sort[i] ? "asc" : "desc",
             };
         } else {
@@ -138,7 +135,7 @@ router.get("/material", async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
-router.patch("/material", async (req, res, next) => {
+router.patch("/documentation", async (req, res, next) => {
     let updateData = {};
     try {
         inputFilter({ id: "number", updateData: "object" }, {}, req.body);
@@ -147,8 +144,7 @@ router.patch("/material", async (req, res, next) => {
             {
                 name: "string",
                 description: "string",
-                unit: "string",
-                material_category_id: "number",
+                document_category_id: "number",
                 startDate: "string",
                 endDate: "string",
                 isProtectedForEdit: "boolean",
@@ -163,7 +159,6 @@ router.patch("/material", async (req, res, next) => {
         error("updateData", "no data has been sent for update", next);
         return;
     }
-
     let updateDataProjection = {};
     for (let i in updateData) {
         if (updateData[i]) {
@@ -188,9 +183,15 @@ router.patch("/material", async (req, res, next) => {
         return;
     }
 });
-router.delete("/material", async (req, res, next) => {
+router.delete("/documentation", async (req, res, next) => {
     try {
-        inputFilter({ id: "number" }, {}, req.body);
+        inputFilter(
+            {
+                id: "number",
+            },
+            {},
+            req.body
+        );
     } catch (e) {
         error(e.key, e.message, next);
         return;

@@ -1,14 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const { error } = require("../config/config");
-const { verify } = require("jsonwebtoken");
 const inputFilter = require("../validation/inputFilter");
 const validation = require("../validation/validation");
-
-const {
-    userHasPrivilege,
-    userHasPrivilegeOver,
-} = require("../validation/auth");
 
 const { post, get, patch, deleter } = require("../services/account");
 
@@ -58,7 +52,7 @@ router.get("/account", async (req, res, next) => {
     let limit = 0;
     try {
         inputFilter(
-            { limit: "number", accessToken: "string" },
+            { limit: "number" },
             { skip: "number", filter: "object", sort: "object" },
             req.body
         );
@@ -94,16 +88,6 @@ router.get("/account", async (req, res, next) => {
         error(e.key, e.message, next);
         return;
     }
-
-    let payLoad;
-    try {
-        payLoad = verify(req.body.accessToken, process.env.ACCESS_KEY);
-    } catch (e) {
-        error("accessToken", "Invalid or Expired Access Token", next, 401);
-    }
-
-    const PRIVILEGE_TYPE = "user_read";
-    if (!(await userHasPrivilege(payLoad.id, PRIVILEGE_TYPE, next))) return;
     const projection = {
         id: true,
         username: true,
@@ -144,7 +128,6 @@ router.patch("/account", async (req, res, next) => {
     try {
         inputFilter(
             {
-                accessToken: "string",
                 id: "number",
                 updateData: "object",
                 concurrency_stamp: "string",
@@ -168,28 +151,8 @@ router.patch("/account", async (req, res, next) => {
         error(e.key, e.message, next);
         return;
     }
-
-    let payLoad;
-    try {
-        payLoad = verify(req.body.accessToken, process.env.ACCESS_KEY);
-    } catch (e) {
-        error("accessToken", "Invalid or Expired Access Token", next, 401);
-        return;
-    }
     if (Object.keys(updateData).length == 0) {
         error("updateData", "no data has been sent for update", next);
-        return;
-    }
-
-    const PRIVILEGE_TYPE = "user_update";
-    if (
-        !(await userHasPrivilegeOver(
-            payLoad.id,
-            req.body.id,
-            PRIVILEGE_TYPE,
-            next
-        ))
-    ) {
         return;
     }
     let updateDataProjection = {};
@@ -219,7 +182,6 @@ router.delete("/account", async (req, res, next) => {
     try {
         inputFilter(
             {
-                accessToken: "string",
                 id: "number",
             },
             {},
@@ -227,24 +189,6 @@ router.delete("/account", async (req, res, next) => {
         );
     } catch (e) {
         error(e.key, e.message, next);
-        return;
-    }
-    let payLoad;
-    try {
-        payLoad = verify(req.body.accessToken, process.env.ACCESS_KEY);
-    } catch (e) {
-        error("accessToken", "Invalid or Expired Access Token", next, 401);
-        return;
-    }
-    const PRIVILEGE_TYPE = "user_delete";
-    if (
-        !(await userHasPrivilegeOver(
-            payLoad.id,
-            req.body.id,
-            PRIVILEGE_TYPE,
-            next
-        ))
-    ) {
         return;
     }
     try {

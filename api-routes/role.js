@@ -1,18 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const { error } = require("../config/config");
-const { verify } = require("jsonwebtoken");
 const inputFilter = require("../validation/inputFilter");
-const { userHasPrivilege } = require("../validation/auth");
 const { post, get, patch, deleter } = require("../services/role");
 router.post("/role", async (req, res, next) => {
     try {
-        inputFilter(
-            { name: "string", accessToken: "string" },
-            { privileges: "object" },
-            req.body,
-            4
-        );
+        inputFilter({ name: "string" }, { privileges: "object" }, req.body, 4);
         inputFilter({}, { description: "string" }, req.body, 0, 300);
         if (req.body.privileges) {
             if (!Array.isArray(updateData.privileges)) {
@@ -23,15 +16,6 @@ router.post("/role", async (req, res, next) => {
         error(e.key, e.message, next, 400);
         return;
     }
-    let payLoad;
-    try {
-        payLoad = verify(req.body.accessToken, process.env.ACCESS_KEY);
-    } catch (e) {
-        error("accessToken", "Invalid or Expired Access Token", next, 401);
-        return;
-    }
-    const PRIVILEGE_TYPE = "role_create";
-    if (!(await userHasPrivilege(payLoad.id, PRIVILEGE_TYPE, next))) return;
     const privileges = req.body.privileges
         ? req.body.privileges.map((element) => {
               return { id: element };
@@ -54,7 +38,7 @@ router.get("/role", async (req, res, next) => {
     let limit = 0;
     try {
         inputFilter(
-            { limit: "number", accessToken: "string" },
+            { limit: "number" },
             { skip: "number", filter: "object", sort: "object" },
             req.body
         );
@@ -84,16 +68,6 @@ router.get("/role", async (req, res, next) => {
         error(e.key, e.message, next);
         return;
     }
-
-    let payLoad;
-    try {
-        payLoad = verify(req.body.accessToken, process.env.ACCESS_KEY);
-    } catch (e) {
-        error("accessToken", "Invalid or Expired Access Token", next, 401);
-    }
-
-    const PRIVILEGE_TYPE = "role_read";
-    if (!(await userHasPrivilege(payLoad.id, PRIVILEGE_TYPE, next))) return;
     const projection = {
         name: true,
         description: true,
@@ -120,7 +94,6 @@ router.patch("/role", async (req, res, next) => {
     try {
         inputFilter(
             {
-                accessToken: "string",
                 id: "number",
                 updateData: "object",
                 concurrency_stamp: "string",
@@ -147,22 +120,10 @@ router.patch("/role", async (req, res, next) => {
         error(e.key, e.message, next);
         return;
     }
-    let payLoad;
-    try {
-        payLoad = verify(req.body.accessToken, process.env.ACCESS_KEY);
-    } catch (e) {
-        error("accessToken", "Invalid or Expired Access Token", next, 401);
-        return;
-    }
-
     if (Object.keys(updateData).length == 0) {
         error("updateData", "no data has been sent for update", next);
         return;
     }
-
-    const PRIVILEGE_TYPE = "role_update";
-    if (!(await userHasPrivilege(payLoad.id, PRIVILEGE_TYPE, next))) return;
-
     let updateDataProjection = {};
     for (let i in updateData) {
         if (updateData[i]) {
@@ -188,28 +149,11 @@ router.patch("/role", async (req, res, next) => {
 });
 router.delete("/role", async (req, res, next) => {
     try {
-        inputFilter(
-            {
-                accessToken: "string",
-                id: "number",
-            },
-            {},
-            req.body
-        );
+        inputFilter({ id: "number" }, {}, req.body);
     } catch (e) {
         error(e.key, e.message, next);
         return;
     }
-    let payLoad;
-    try {
-        payLoad = verify(req.body.accessToken, process.env.ACCESS_KEY);
-    } catch (e) {
-        error("accessToken", "Invalid or Expired Access Token", next, 401);
-        return;
-    }
-    const PRIVILEGE_TYPE = "role_delete";
-    if (!(await userHasPrivilege(payLoad.id, PRIVILEGE_TYPE, next))) return;
-
     try {
         res.json(await deleter(req.body));
     } catch (e) {

@@ -1,10 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const { error } = require("../config/config");
-const { verify } = require("jsonwebtoken");
 const inputFilter = require("../validation/inputFilter");
 const validation = require("../validation/validation");
-const { userHasPrivilege } = require("../validation/auth");
 const { post, get, patch, deleter } = require("../services/operational_data");
 
 const defaultDateValues = ["startDate", "endDate"];
@@ -156,6 +154,17 @@ const allInputFilters = {
         notes: "string",
         client_id: "number",
     },
+    required_document: {
+        spec_reference: "string",
+        requested_by: "string",
+        quantity_needed: "number",
+        date_requested: "string",
+        date_needed: "string",
+        assigned_to: "string",
+        location: "string",
+        documentation_id: "number",
+        project_id: "number",
+    },
 };
 const allOptionalInputfilters = {
     project: {
@@ -210,6 +219,10 @@ const allOptionalInputfilters = {
     invoice_tracking: {
         detail: "string",
     },
+    required_document: {
+        received: "string",
+        received_date: "string",
+    },
 };
 const dateValues = {
     project: [...defaultDateValues, "project_start_date", "project_end_date"],
@@ -232,6 +245,12 @@ const dateValues = {
         "date_responded",
     ],
     invoice_tracking: [...defaultDateValues, "date_received"],
+    required_document: [
+        ...defaultDateValues,
+        "date_requested",
+        "date_needed",
+        "received_date",
+    ],
 };
 const phoneValues = {
     project: [],
@@ -249,6 +268,7 @@ const phoneValues = {
     todos: [],
     request: [],
     invoice_tracking: [],
+    required_document: [],
 };
 const emailValues = {
     project: [],
@@ -266,6 +286,7 @@ const emailValues = {
     todos: [],
     request: [],
     invoice_tracking: [],
+    required_document: [],
 };
 const allProjections = {
     project: {
@@ -453,6 +474,21 @@ const allProjections = {
         client: true,
         ...auditLogProjection,
     },
+    required_document: {
+        id: true,
+        spec_reference: true,
+        requested_by: true,
+        quantity_needed: true,
+        date_requested: true,
+        date_needed: true,
+        assigned_to: true,
+        received: true,
+        received_date: true,
+        location: true,
+        project: true,
+        documentation: true,
+        ...auditLogProjection,
+    },
 };
 const allFilters = {
     project: {
@@ -531,6 +567,13 @@ const allFilters = {
         detail: "string",
         invoice_number: "string",
         notes: "string",
+    },
+    required_document: {
+        spec_reference: "string",
+        requested_by: "string",
+        assigned_to: "string",
+        received: "string",
+        location: "string",
     },
 };
 const allSorts = {
@@ -717,6 +760,21 @@ const allSorts = {
         client: "string",
         ...auditLogSort,
     },
+    required_document: {
+        id: "number",
+        spec_reference: "number",
+        requested_by: "number",
+        quantity_needed: "number",
+        date_requested: "number",
+        date_needed: "number",
+        assigned_to: "number",
+        received: "number",
+        received_date: "number",
+        location: "number",
+        project: "number",
+        documentation: "number",
+        ...auditLogSort,
+    },
 };
 const allRoutes = [
     "/project",
@@ -734,10 +792,11 @@ const allRoutes = [
     "/todos",
     "/request",
     "/invoice_tracking",
+    "/required_document",
 ];
 
 router.post(allRoutes, async (req, res, next) => {
-    const operationDataType = req.path.split("/")[1];
+    const operationDataType = req.path.split("/").pop();
     let reqBody;
     const requiredInputFilter = allInputFilters[operationDataType];
     const optionalInputFilter = allOptionalInputfilters[operationDataType];
@@ -746,14 +805,12 @@ router.post(allRoutes, async (req, res, next) => {
             {
                 startDate: "string",
                 endDate: "string",
-                accessToken: "string",
                 ...requiredInputFilter,
             },
             { isProtectedForEdit: "boolean", ...optionalInputFilter },
             req.body,
             2
         );
-        reqBody.accessToken = undefined;
         for (let i in dateValues[operationDataType]) {
             if (!reqBody[dateValues[operationDataType][i]]) {
                 continue;
@@ -794,17 +851,13 @@ router.post(allRoutes, async (req, res, next) => {
             )
                 return;
     }
-    let payLoad;
     try {
-        payLoad = verify(req.body.accessToken, process.env.ACCESS_KEY);
-    } catch (e) {
-        error("accessToken", "Invalid or Expired Access Token", next, 401);
-        return;
-    }
-    const PRIVILEGE_TYPE = `${operationDataType}_create`;
-    if (!(await userHasPrivilege(payLoad.id, PRIVILEGE_TYPE, next))) return;
-    try {
-        const data = await post(reqBody, operationDataType, payLoad.id, next);
+        const data = await post(
+            reqBody,
+            operationDataType,
+            res.locals.id,
+            next
+        );
         if (data == false) {
             return;
         }
@@ -815,14 +868,14 @@ router.post(allRoutes, async (req, res, next) => {
     }
 });
 router.get(allRoutes, async (req, res, next) => {
-    const operationDataType = req.path.split("/")[1];
+    const operationDataType = req.path.split("/").pop();
     let filter = {};
     let sort = {};
     let skip = 0;
     let limit = 0;
     try {
         inputFilter(
-            { limit: "number", accessToken: "string" },
+            { limit: "number" },
             { skip: "number", filter: "object", sort: "object" },
             req.body
         );
@@ -850,16 +903,6 @@ router.get(allRoutes, async (req, res, next) => {
         error(e.key, e.message, next);
         return;
     }
-
-    let payLoad;
-    try {
-        payLoad = verify(req.body.accessToken, process.env.ACCESS_KEY);
-    } catch (e) {
-        error("accessToken", "Invalid or Expired Access Token", next, 401);
-    }
-
-    const PRIVILEGE_TYPE = `${operationDataType}_read`;
-    if (!(await userHasPrivilege(payLoad.id, PRIVILEGE_TYPE, next))) return;
     const projection = {
         ...allProjections[operationDataType],
     };
@@ -888,18 +931,10 @@ router.get(allRoutes, async (req, res, next) => {
     }
 });
 router.patch(allRoutes, async (req, res, next) => {
-    const operationDataType = req.path.split("/")[1];
+    const operationDataType = req.path.split("/").pop();
     let updateData = {};
     try {
-        inputFilter(
-            {
-                accessToken: "string",
-                id: "number",
-                updateData: "object",
-            },
-            {},
-            req.body
-        );
+        inputFilter({ id: "number", updateData: "object" }, {}, req.body);
 
         updateData = inputFilter(
             {},
@@ -931,14 +966,6 @@ router.patch(allRoutes, async (req, res, next) => {
         error(e.key, e.message, next);
         return;
     }
-    let payLoad;
-    try {
-        payLoad = verify(req.body.accessToken, process.env.ACCESS_KEY);
-    } catch (e) {
-        error("accessToken", "Invalid or Expired Access Token", next, 401);
-        return;
-    }
-
     if (Object.keys(updateData).length == 0) {
         error("updateData", "no data has been sent for update", next);
         return;
@@ -964,9 +991,6 @@ router.patch(allRoutes, async (req, res, next) => {
             )
                 return;
     }
-    const PRIVILEGE_TYPE = `${operationDataType}_update`;
-    if (!(await userHasPrivilege(payLoad.id, PRIVILEGE_TYPE, next))) return;
-
     let updateDataProjection = {};
     for (let i in updateData) {
         if (updateData[i]) {
@@ -979,7 +1003,7 @@ router.patch(allRoutes, async (req, res, next) => {
             req.body,
             updateData,
             operationDataType,
-            payLoad.id,
+            res.locals.id,
             next
         );
         if (data == false) {
@@ -993,29 +1017,13 @@ router.patch(allRoutes, async (req, res, next) => {
     }
 });
 router.delete(allRoutes, async (req, res, next) => {
-    const operationDataType = req.path.split("/")[1];
+    const operationDataType = req.path.split("/").pop();
     try {
-        inputFilter(
-            {
-                accessToken: "string",
-                id: "number",
-            },
-            {},
-            req.body
-        );
+        inputFilter({ id: "number" }, {}, req.body);
     } catch (e) {
         error(e.key, e.message, next);
         return;
     }
-    let payLoad;
-    try {
-        payLoad = verify(req.body.accessToken, process.env.ACCESS_KEY);
-    } catch (e) {
-        error("accessToken", "Invalid or Expired Access Token", next, 401);
-        return;
-    }
-    const PRIVILEGE_TYPE = `${operationDataType}_delete`;
-    if (!(await userHasPrivilege(payLoad.id, PRIVILEGE_TYPE, next))) return;
     try {
         res.json(await deleter(req.body, operationDataType));
     } catch (e) {

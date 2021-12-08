@@ -1,10 +1,9 @@
 const express = require("express");
 const { json } = require("body-parser");
-const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
 require("dotenv").config();
-
+const { authenticate } = require("./validation/auth");
 const app = express();
 
 const account = require("./api-routes/account");
@@ -17,12 +16,17 @@ const privilege = require("./api-routes/privilege");
 const upload = require("./api-routes/upload");
 const client = require("./api-routes/client");
 const material = require("./api-routes/material");
+const documentation = require("./api-routes/documentation");
 const restMasterData = require("./api-routes/restMasterData");
 const operational_data = require("./api-routes/operational_data");
+
 app.use(json());
 
-app.use(account);
+app.use(authenticate);
+
 app.use(login);
+
+app.use(account);
 app.use(forgotpassword);
 app.use(sendcode);
 app.use(changepassword);
@@ -31,8 +35,15 @@ app.use(privilege);
 app.use(upload);
 app.use(client);
 app.use(material);
+app.use(documentation);
 app.use(restMasterData);
 app.use(operational_data);
+// app.use("/project/master", upload);
+// app.use("/project/master", client);
+// app.use("/project/master", material);
+// app.use("/project/master", documentation);
+// app.use("/project/master", restMasterData);
+// app.use("/project/operational", operational_data);
 
 app.use((err, _req, res, _next) => {
     let myError = JSON.parse(err.message);
@@ -42,50 +53,12 @@ app.use((err, _req, res, _next) => {
 });
 const port = 3000;
 
-const options = {
-    definition: {
-        openapi: "3.0.0",
-        info: {
-            title: "LogRocket Express API with Swagger",
-            version: "0.1.0",
-            description:
-                "This is the ERP system made with Express and documented with Swagger",
-            contact: {
-                name: "Ablaze Labs",
-                url: "https://ablazelabs.com",
-                email: "info@email.com",
-            },
-        },
-        servers: [
-            {
-                url: "http://localhost:3000",
-            },
-        ],
-    },
-    apis: [
-        // "./api-routes/account.js",
-        "./api-routes/privilege.js",
-        "./api-routes/role.js",
-        "./api-routes/restMasterData.js",
-        "./api-routes/material.js",
-        "./api-routes/client.js",
-        "./api-routes/account/login.js",
-        "./api-routes/account/sendcode.js",
-        "./api-routes/account/changepassword.js",
-        "./api-routes/account/forgotpassword.js",
-        "./api-routes/account/operational_data.js",
-        "./documentation/account.yaml",
-    ],
-};
-
-const specs = swaggerJsdoc(options);
-
 app.use(
     "/api-docs",
     swaggerUi.serve,
-    // swaggerUi.setup(specs, { explorer: true })
     swaggerUi.setup(YAML.load("./documentation/api.yaml"), { explorer: true })
 );
+
 module.exports = app.listen(port, () => {
     console.log("App listening on port 3000!");
 });

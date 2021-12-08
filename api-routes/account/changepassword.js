@@ -13,8 +13,6 @@ router.post("/account/changepassword", async (req, res, next) => {
         inputFilter(
             { newPassword: "string" },
             {
-                accessToken: "string",
-                tempAccessToken: "string",
                 id: "number",
                 password: "string",
             },
@@ -24,37 +22,18 @@ router.post("/account/changepassword", async (req, res, next) => {
         error(e.key, e.message, next);
         return;
     }
-    if (!req.body.accessToken && !req.body.tempAccessToken) {
-        error("access", "temp or full access token must be provided", next);
-        return;
-    }
     if (!validation.checkPassword(req.body.newPassword, next)) {
-        return;
-    }
-    let payLoad;
-    try {
-        payLoad = verify(
-            req.body.tempAccessToken || req.body.accessToken,
-            process.env.ACCESS_KEY
-        );
-    } catch (e) {
-        error(
-            req.body.tempAccessToken ? "tempAccessToken" : "accessToken",
-            "Invalid or Expired Access Token",
-            next,
-            401
-        );
         return;
     }
     let id;
     let selfUpdate = false;
-    if (req.body.tempAccessToken) {
-        id = payLoad.tempId;
+    if (res.locals.tempId) {
+        id = res.locals.tempId;
     } else {
         if (!req.body.id && req.body.id != 0) {
             if (req.body.password) {
                 selfUpdate = true;
-                id = payLoad.id;
+                id = res.locals.id;
             } else {
                 error("id", "must be given with access token", next);
                 return;
@@ -62,10 +41,10 @@ router.post("/account/changepassword", async (req, res, next) => {
         } else {
             id = req.body.id;
         }
-        const PRIVILEGE_TYPE = "user_update";
+        const PRIVILEGE_TYPE = "password_PATCH";
         if (
             !(await userHasPrivilegeOver(
-                payLoad.id,
+                res.locals.id,
                 req.body.id,
                 PRIVILEGE_TYPE,
                 next
