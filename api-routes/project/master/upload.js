@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const { error } = require("../config/config");
-const inputFilter = require("../validation/inputFilter");
+const { error } = require("../../../config/config");
+const inputFilter = require("../../../validation/inputFilter");
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 
-const excelValidation = require("../validation/excelValidation");
-const saveList = require("../services/saveList");
+const excelValidation = require("../../../validation/excelValidation");
+const saveList = require("../../../services/saveList");
 router.post("/upload", upload.single("file"), async (req, res, next) => {
     try {
         inputFilter({}, {}, req.body);

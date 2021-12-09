@@ -8,23 +8,25 @@ const app = express();
 
 const account = require("./api-routes/account");
 const login = require("./api-routes/account/login");
+const refresh = require("./api-routes/account/refresh");
 const forgotpassword = require("./api-routes/account/forgotpassword");
 const sendcode = require("./api-routes/account/sendcode");
 const changepassword = require("./api-routes/account/changepassword");
 const role = require("./api-routes/role");
 const privilege = require("./api-routes/privilege");
-const upload = require("./api-routes/upload");
-const client = require("./api-routes/client");
-const material = require("./api-routes/material");
-const documentation = require("./api-routes/documentation");
-const restMasterData = require("./api-routes/restMasterData");
-const operational_data = require("./api-routes/operational_data");
+const upload = require("./api-routes/project/master/upload");
+const client = require("./api-routes/project/master/client");
+const material = require("./api-routes/project/master/material");
+const documentation = require("./api-routes/project/master/documentation");
+const restMasterData = require("./api-routes/project/master/restMasterData");
+const operational_data = require("./api-routes/project/operational/operational_data");
 
 app.use(json());
 
 app.use(authenticate);
 
 app.use(login);
+app.use(refresh);
 
 app.use(account);
 app.use(forgotpassword);
@@ -32,18 +34,13 @@ app.use(sendcode);
 app.use(changepassword);
 app.use(role);
 app.use(privilege);
-app.use(upload);
-app.use(client);
-app.use(material);
-app.use(documentation);
-app.use(restMasterData);
-app.use(operational_data);
-// app.use("/project/master", upload);
-// app.use("/project/master", client);
-// app.use("/project/master", material);
-// app.use("/project/master", documentation);
-// app.use("/project/master", restMasterData);
-// app.use("/project/operational", operational_data);
+
+app.use("/project/master", upload);
+app.use("/project/master", client);
+app.use("/project/master", material);
+app.use("/project/master", documentation);
+app.use("/project/master", restMasterData);
+app.use("/project/operational", operational_data);
 
 app.use((err, _req, res, _next) => {
     let myError = JSON.parse(err.message);

@@ -1,10 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { error } = require("../config/config");
-const { verify } = require("jsonwebtoken");
-const inputFilter = require("../validation/inputFilter");
-const { userHasPrivilege } = require("../validation/auth");
-const { post, get, patch, deleter } = require("../services/material");
+const { error } = require("../../../config/config");
+const inputFilter = require("../../../validation/inputFilter");
+const { post, get, patch, deleter } = require("../../../services/material");
 router.post("/material", async (req, res, next) => {
     try {
         inputFilter(
@@ -155,6 +153,24 @@ router.patch("/material", async (req, res, next) => {
             },
             req.body.updateData
         );
+        if (updateData.startDate) {
+            updateData.startDate = new Date(updateData.startDate);
+            if (!updateData.startDate.getTime()) {
+                throw {
+                    key: "startDate",
+                    message: "please send date in yyyy/mm/dd format",
+                };
+            }
+        }
+        if (updateData.endDate) {
+            updateData.endDate = new Date(updateData.endDate);
+            if (!updateData.endDate.getTime()) {
+                throw {
+                    key: "endDate",
+                    message: "please send date in yyyy/mm/dd format",
+                };
+            }
+        }
     } catch (e) {
         error(e.key, e.message, next);
         return;

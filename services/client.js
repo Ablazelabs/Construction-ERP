@@ -13,84 +13,38 @@ const post = async (reqBody, creator, next) => {
         { contactPersonPhone: reqBody.contactPersonPhone },
         { email: reqBody.email },
     ];
-    let uniqueExists = false;
-    for (let i in uniqueValues) {
-        const queryResult = await client.findUnique({
-            where: { ...uniqueValues[i] },
-            select: {
-                status: true,
-            },
-        });
-        if (queryResult) {
-            if (queryResult.status == 1) {
-                uniqueExists = true;
-                break;
-            }
-            let identifierKey;
-            for (let k in uniqueValues[i]) {
-                identifierKey = k;
-                break;
-            }
-            error(identifierKey, "account already registered", next);
-            return false;
-        }
-    }
-    if (uniqueExists) {
-        const exactClient = await client.findUnique({
-            where: {
-                tradeName: reqBody.tradeName,
-                tel: reqBody.tel,
-                tinNumber: reqBody.tinNumber,
-                contactPersonEmail: reqBody.contactPersonEmail,
-                contactPersonPhone: reqBody.contactPersonPhone,
-                email: reqBody.email,
-            },
-            select: {
-                status: true,
-                id: true,
-            },
-        });
-        if (exactClient && exactClient.status == 1) {
-            await client.update({
-                where: { id: exactClient.id },
-                data: { status: 0 },
-            });
-            return { success: true, message: "client created successfully" };
-        } else {
-            error(
-                "allData",
-                "conflicting data( registered on more than one place) detected",
-                next
-            );
-            return false;
-        }
-    }
     const defaultData = {
         createdBy: String(creator),
         revisedBy: String(creator),
         status: 0,
     };
-    await client.create({
-        data: {
-            name: reqBody.name,
-            tradeName: reqBody.tradeName,
-            address: reqBody.address,
-            tel: reqBody.tel,
-            tinNumber: reqBody.tinNumber,
-            contactPersonName: reqBody.contactPersonName,
-            contactPersonPhone: reqBody.contactPersonPhone,
-            contactPersonEmail: reqBody.contactPersonEmail,
-            email: reqBody.email,
-            subCity: reqBody.subCity,
-            woreda: reqBody.woreda,
-            city: reqBody.city,
-            startDate: reqBody.startDate,
-            endDate: reqBody.endDate,
-            isProtectedForEdit: reqBody.isProtectedForEdit,
-            ...defaultData,
-        },
-    });
-    return { success: true, message: "client created successfully" };
+    try {
+        await client.create({
+            data: {
+                name: reqBody.name,
+                tradeName: reqBody.tradeName,
+                address: reqBody.address,
+                tel: reqBody.tel,
+                tinNumber: reqBody.tinNumber,
+                contactPersonName: reqBody.contactPersonName,
+                contactPersonPhone: reqBody.contactPersonPhone,
+                contactPersonEmail: reqBody.contactPersonEmail,
+                email: reqBody.email,
+                subCity: reqBody.subCity,
+                woreda: reqBody.woreda,
+                city: reqBody.city,
+                startDate: reqBody.startDate,
+                endDate: reqBody.endDate,
+                isProtectedForEdit: reqBody.isProtectedForEdit,
+                ...defaultData,
+            },
+        });
+        return { success: true, message: "client created successfully" };
+    } catch (e) {
+        const key = e.meta.target.split("_")[1]; //this works if the unique keys don't have underscore
+        error(key, "client already exists", next);
+        return false;
+    }
 };
 const get = async (queryFilter, querySort, limit, skip, projection) => {
     const data = await client.findMany({
@@ -194,13 +148,13 @@ const patch = async (
         }
     }
     if (updateData.tel) {
-        if (updateData.tel === myClient.phone_number) {
+        if (updateData.tel === myClient.tel) {
             updateData.tel = undefined;
         } else {
             if (!validation.checkPhoneNumber(updateData.tel, next, "tel")) {
                 return false;
             }
-            const data = await user.findUnique({
+            const data = await client.findUnique({
                 select: { tel: true },
                 where: { tel: updateData.tel },
             });

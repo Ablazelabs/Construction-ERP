@@ -1,9 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const { error } = require("../config/config");
-const inputFilter = require("../validation/inputFilter");
-const validation = require("../validation/validation");
-const { post, get, patch, deleter } = require("../services/operational_data");
+const { error } = require("../../../config/config");
+const inputFilter = require("../../../validation/inputFilter");
+const validation = require("../../../validation/validation");
+const {
+    post,
+    get,
+    patch,
+    deleter,
+} = require("../../../services/operational_data");
 
 const defaultDateValues = ["startDate", "endDate"];
 const auditLogProjection = {

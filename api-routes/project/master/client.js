@@ -1,37 +1,36 @@
 const express = require("express");
 const router = express.Router();
-const { error } = require("../config/config");
-const inputFilter = require("../validation/inputFilter");
-const { post, get, patch, deleter } = require("../services/restMasterData");
-const allRoutes = [
-    "/equipment",
-    "/evaluation",
-    "/instruction",
-    "/manpower",
-    "/material_category",
-    "/phase",
-    "/priority",
-    "/work_category",
-    "/document_category",
-];
-router.post(allRoutes, async (req, res, next) => {
-    const masterDataType = req.path.split("/").pop();
-    const color = masterDataType == "priority" ? { color: "string" } : {};
+const { error } = require("../../../config/config");
+const inputFilter = require("../../../validation/inputFilter");
+const validation = require("../../../validation/validation");
+
+const { post, get, patch, deleter } = require("../../../services/client");
+
+router.post("/client", async (req, res, next) => {
     try {
         inputFilter(
             {
                 name: "string",
+                tradeName: "string",
+                address: "string",
+                tel: "string",
+                tinNumber: "string",
+                contactPersonName: "string",
+                contactPersonPhone: "string",
+                contactPersonEmail: "string",
+                email: "string",
                 startDate: "string",
                 endDate: "string",
             },
             {
                 isProtectedForEdit: "boolean",
-                ...color,
+                subCity: "string",
+                woreda: "string",
+                city: "string",
             },
             req.body,
             4
         );
-        inputFilter({}, { description: "string" }, req.body, 0, 300);
         req.body.startDate = new Date(req.body.startDate);
         req.body.endDate = new Date(req.body.endDate);
         if (!req.body.startDate.getTime()) {
@@ -50,8 +49,32 @@ router.post(allRoutes, async (req, res, next) => {
         error(e.key, e.message, next, 400);
         return;
     }
+    if (
+        !validation.checkEmail(
+            req.body.contactPersonEmail,
+            next,
+            "contactPersonEmail"
+        )
+    ) {
+        return;
+    }
+    if (!validation.checkEmail(req.body.email, next)) {
+        return;
+    }
+    if (
+        !validation.checkPhoneNumber(
+            req.body.contactPersonPhone,
+            next,
+            "contactPersonPhone"
+        )
+    ) {
+        return;
+    }
+    if (!validation.checkPhoneNumber(req.body.tel, next, "tel")) {
+        return;
+    }
     try {
-        const data = await post(req.body, res.locals.id, masterDataType, next);
+        const data = await post(req.body, res.locals.id, next);
         if (data == false) {
             return;
         }
@@ -61,16 +84,11 @@ router.post(allRoutes, async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
-router.get(allRoutes, async (req, res, next) => {
+router.get("/client", async (req, res, next) => {
     let filter = {};
     let sort = {};
     let skip = 0;
     let limit = 0;
-    const masterDataType = req.path.split("/").pop();
-    const color =
-        masterDataType == "priority"
-            ? [{ color: "string" }, { color: "number" }, { color: true }]
-            : [{}, {}, {}];
     try {
         inputFilter(
             { limit: "number" },
@@ -84,8 +102,17 @@ router.get(allRoutes, async (req, res, next) => {
                 {},
                 {
                     name: "string",
-                    description: "string",
-                    ...color[0],
+                    tradeName: "string",
+                    address: "string",
+                    tel: "string",
+                    tinNumber: "string",
+                    contactPersonName: "string",
+                    contactPersonPhone: "string",
+                    contactPersonEmail: "string",
+                    email: "string",
+                    subCity: "string",
+                    woreda: "string",
+                    city: "string",
                 },
                 req.body.filter
             );
@@ -96,15 +123,24 @@ router.get(allRoutes, async (req, res, next) => {
             sort = inputFilter(
                 {},
                 {
-                    name: "number",
                     id: "number",
-                    description: "number",
                     startDate: "number",
                     endDate: "number",
-                    creationDate: "number",
-                    revisionDate: "number",
+                    name: "number",
                     isProtectedForEdit: "number",
-                    ...color[1],
+                    tradeName: "number",
+                    address: "number",
+                    tel: "number",
+                    tinNumber: "number",
+                    contactPersonName: "number",
+                    contactPersonPhone: "number",
+                    contactPersonEmail: "number",
+                    email: "number",
+                    subCity: "number",
+                    woreda: "number",
+                    city: "number",
+                    revisionDate: "number",
+                    creationDate: "number",
                 },
                 req.body.sort
             );
@@ -114,9 +150,19 @@ router.get(allRoutes, async (req, res, next) => {
         return;
     }
     const projection = {
-        name: true,
-        description: true,
         id: true,
+        name: true,
+        tradeName: true,
+        address: true,
+        city: true,
+        tel: true,
+        tinNumber: true,
+        subCity: true,
+        woreda: true,
+        contactPersonName: true,
+        contactPersonPhone: true,
+        contactPersonEmail: true,
+        email: true,
         startDate: true,
         endDate: true,
         creationDate: true,
@@ -124,7 +170,6 @@ router.get(allRoutes, async (req, res, next) => {
         revisionDate: true,
         revisedBy: true,
         isProtectedForEdit: true,
-        ...color[2],
     };
     let queryFilter = {};
     for (let i in filter) {
@@ -135,37 +180,42 @@ router.get(allRoutes, async (req, res, next) => {
         querySort[i] = sort[i] ? "asc" : "desc";
     }
     try {
-        res.json(
-            await get(
-                queryFilter,
-                querySort,
-                limit,
-                skip,
-                projection,
-                masterDataType
-            )
-        );
+        res.json(await get(queryFilter, querySort, limit, skip, projection));
     } catch (e) {
         console.log(e);
         error("database", "error", next, 500);
     }
 });
-router.patch(allRoutes, async (req, res, next) => {
+router.patch("/client", async (req, res, next) => {
     let updateData = {};
-    const masterDataType = req.path.split("/").pop();
-    const color = masterDataType == "priority" ? { color: "string" } : {};
     try {
-        inputFilter({ id: "number", updateData: "object" }, {}, req.body);
+        inputFilter(
+            {
+                id: "number",
+                updateData: "object",
+            },
+            {},
+            req.body
+        );
 
         updateData = inputFilter(
             {},
             {
                 name: "string",
-                description: "string",
+                tradeName: "string",
+                address: "string",
+                tel: "string",
+                tinNumber: "string",
+                contactPersonName: "string",
+                contactPersonPhone: "string",
+                contactPersonEmail: "string",
+                email: "string",
                 startDate: "string",
                 endDate: "string",
                 isProtectedForEdit: "boolean",
-                ...color,
+                subCity: "string",
+                woreda: "string",
+                city: "string",
             },
             req.body.updateData
         );
@@ -206,7 +256,6 @@ router.patch(allRoutes, async (req, res, next) => {
             updateDataProjection,
             req.body,
             updateData,
-            masterDataType,
             res.locals.id,
             next
         );
@@ -220,8 +269,7 @@ router.patch(allRoutes, async (req, res, next) => {
         return;
     }
 });
-router.delete(allRoutes, async (req, res, next) => {
-    const masterDataType = req.path.split("/").pop();
+router.delete("/client", async (req, res, next) => {
     try {
         inputFilter({ id: "number" }, {}, req.body);
     } catch (e) {
@@ -229,11 +277,12 @@ router.delete(allRoutes, async (req, res, next) => {
         return;
     }
     try {
-        res.json(await deleter(req.body, masterDataType));
+        res.json(await deleter(req.body));
     } catch (e) {
         console.log(e);
         error("database", "error", next, 500);
         return;
     }
 });
+
 module.exports = router;

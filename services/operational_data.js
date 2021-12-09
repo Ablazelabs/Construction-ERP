@@ -1,4 +1,4 @@
-const { error, randomConcurrencyStamp } = require("../config/config");
+const { error } = require("../config/config");
 const { PrismaClient } = require("@prisma/client");
 
 const {
@@ -17,6 +17,7 @@ const {
     todos,
     request,
     invoice_tracking,
+    required_document,
 } = new PrismaClient();
 
 const allModels = {
@@ -35,6 +36,7 @@ const allModels = {
     todos,
     request,
     invoice_tracking,
+    required_document,
 };
 const uniqueValues = {
     project: ["project_id"],
@@ -52,6 +54,7 @@ const uniqueValues = {
     todos: [],
     request: [],
     invoice_tracking: ["invoice_number"],
+    required_document: [],
 };
 const post = async (reqBody, operationDataType, creator, next) => {
     for (let i in uniqueValues[operationDataType]) {

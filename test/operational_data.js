@@ -5,6 +5,11 @@ chai.should();
 
 chai.use(chaiHttp);
 
+const { readFileSync } = require("fs");
+let accessToken = readFileSync("./test/accessToken.txt", "utf-8");
+
+const url = "/project/operational/project";
+
 describe("operational data Test 1(project)", () => {
     /**
      * Test the post
@@ -13,10 +18,9 @@ describe("operational data Test 1(project)", () => {
     describe("/project post test", () => {
         it("Should post a new project", (done) => {
             chai.request(server)
-                .post("/project")
+                .post(url)
+                .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
-                    accessToken:
-                        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjgsImlhdCI6MTYzODE3OTQzNSwiZXhwIjoxNjY5NzM3MDM1fQ.Q2wyNA9R1k9ETyR63cAZtYlxsIP-9ck9bm_AIhJppeo",
                     startDate: "2000/10/22",
                     endDate: "2000/10/23",
                     name: "string",
@@ -39,10 +43,9 @@ describe("operational data Test 1(project)", () => {
         });
         it("should return error 400, project already exists", (done) => {
             chai.request(server)
-                .post("/project")
+                .post(url)
+                .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
-                    accessToken:
-                        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjgsImlhdCI6MTYzODE3OTQzNSwiZXhwIjoxNjY5NzM3MDM1fQ.Q2wyNA9R1k9ETyR63cAZtYlxsIP-9ck9bm_AIhJppeo",
                     startDate: "2000/10/22",
                     endDate: "2000/10/23",
                     name: "string",
@@ -71,11 +74,10 @@ describe("operational data Test 1(project)", () => {
     describe("Get Test", () => {
         it("should get projects", (done) => {
             chai.request(server)
-                .get("/project")
+                .get(url)
+                .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
                     limit: 10,
-                    accessToken:
-                        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwiaWF0IjoxNjM3NzQxMjQ4LCJleHAiOjE2NjkyOTg4NDh9.y8G0PzSr4MYYelohErx9SHec9d3PVyQtZzVnA_Uq1g8",
                 })
                 .end((_err, response) => {
                     response.should.have.status(200);
@@ -86,12 +88,12 @@ describe("operational data Test 1(project)", () => {
         });
         it("should return 400, and no access token", (done) => {
             chai.request(server)
-                .get("/project")
+                .get(url)
                 .send({
                     limit: 10,
                 })
                 .end((_err, response) => {
-                    response.should.have.status(400);
+                    response.should.have.status(401);
                     response.body.should.be.a("object");
                     response.body.should.have.property("error");
                     response.body.error.should.have.property("accessToken");
@@ -107,11 +109,10 @@ describe("operational data Test 1(project)", () => {
     describe("/material delete", () => {
         it("Should delete a project", (done) => {
             chai.request(server)
-                .delete("/project")
+                .delete(url)
+                .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
                     id: randomGottenId,
-                    accessToken:
-                        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwiaWF0IjoxNjM3NzQxMjQ4LCJleHAiOjE2NjkyOTg4NDh9.y8G0PzSr4MYYelohErx9SHec9d3PVyQtZzVnA_Uq1g8",
                 })
                 .end((err, response) => {
                     response.should.have.status(200);
@@ -122,11 +123,9 @@ describe("operational data Test 1(project)", () => {
         });
         it("Should return error 400(no project id sent)", (done) => {
             chai.request(server)
-                .delete("/project")
-                .send({
-                    accessToken:
-                        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwiaWF0IjoxNjM3NzQxMjQ4LCJleHAiOjE2NjkyOTg4NDh9.y8G0PzSr4MYYelohErx9SHec9d3PVyQtZzVnA_Uq1g8",
-                })
+                .delete(url)
+                .set({ Authorization: `Bearer ${accessToken}` })
+                .send({})
                 .end((err, response) => {
                     response.should.have.status(400);
                     response.body.should.be.a("object");
@@ -144,11 +143,11 @@ describe("operational data Test 1(project)", () => {
     describe("/project patch", () => {
         it("Should update a project", (done) => {
             chai.request(server)
-                .patch("/project")
+                .patch(url)
+                .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
                     id: randomGottenId,
-                    accessToken:
-                        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwiaWF0IjoxNjM3NzQxMjQ4LCJleHAiOjE2NjkyOTg4NDh9.y8G0PzSr4MYYelohErx9SHec9d3PVyQtZzVnA_Uq1g8",
+
                     updateData: {
                         startDate: "2000/10/22",
                         endDate: "2000/10/23",
@@ -172,10 +171,9 @@ describe("operational data Test 1(project)", () => {
         });
         it("Should send 400 error message", (done) => {
             chai.request(server)
-                .patch("/project")
+                .patch(url)
+                .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
-                    accessToken:
-                        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwiaWF0IjoxNjM3NzQxMjQ4LCJleHAiOjE2NjkyOTg4NDh9.y8G0PzSr4MYYelohErx9SHec9d3PVyQtZzVnA_Uq1g8",
                     updateData: {
                         name: "yared terefe",
                     },
@@ -190,7 +188,7 @@ describe("operational data Test 1(project)", () => {
         });
         it("Should send 400 error message", (done) => {
             chai.request(server)
-                .patch("/project")
+                .patch(url)
                 .send({
                     id: 1,
                     updateData: {
@@ -198,7 +196,7 @@ describe("operational data Test 1(project)", () => {
                     },
                 })
                 .end((err, response) => {
-                    response.should.have.status(400);
+                    response.should.have.status(401);
                     response.body.should.be.a("object");
                     response.body.should.have.property("error");
                     response.body.error.should.have.property("accessToken");
@@ -208,6 +206,8 @@ describe("operational data Test 1(project)", () => {
     });
 });
 
+const url2 = "/project/operational/daily_work_log";
+
 describe("operational data Test 2(daily work log)", () => {
     /**
      * Test the post
@@ -216,10 +216,9 @@ describe("operational data Test 2(daily work log)", () => {
     describe("/daily_work_log post test", () => {
         it("Should post a new daily_work_log", (done) => {
             chai.request(server)
-                .post("/daily_work_log")
+                .post(url2)
+                .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
-                    accessToken:
-                        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjgsImlhdCI6MTYzODE3OTQzNSwiZXhwIjoxNjY5NzM3MDM1fQ.Q2wyNA9R1k9ETyR63cAZtYlxsIP-9ck9bm_AIhJppeo",
                     startDate: "2000/10/22",
                     endDate: "2000/10/23",
                     weather: "string",
@@ -249,11 +248,10 @@ describe("operational data Test 2(daily work log)", () => {
     describe("Get Test", () => {
         it("should get daily_work_logs", (done) => {
             chai.request(server)
-                .get("/daily_work_log")
+                .get(url2)
+                .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
                     limit: 10,
-                    accessToken:
-                        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwiaWF0IjoxNjM3NzQxMjQ4LCJleHAiOjE2NjkyOTg4NDh9.y8G0PzSr4MYYelohErx9SHec9d3PVyQtZzVnA_Uq1g8",
                 })
                 .end((_err, response) => {
                     response.should.have.status(200);
@@ -264,12 +262,12 @@ describe("operational data Test 2(daily work log)", () => {
         });
         it("should return 400, and no access token", (done) => {
             chai.request(server)
-                .get("/daily_work_log")
+                .get(url2)
                 .send({
                     limit: 10,
                 })
                 .end((_err, response) => {
-                    response.should.have.status(400);
+                    response.should.have.status(401);
                     response.body.should.be.a("object");
                     response.body.should.have.property("error");
                     response.body.error.should.have.property("accessToken");
@@ -285,11 +283,10 @@ describe("operational data Test 2(daily work log)", () => {
     describe("/daily_work_log delete", () => {
         it("Should delete a daily_work_log", (done) => {
             chai.request(server)
-                .delete("/daily_work_log")
+                .delete(url2)
+                .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
                     id: randomGottenId,
-                    accessToken:
-                        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwiaWF0IjoxNjM3NzQxMjQ4LCJleHAiOjE2NjkyOTg4NDh9.y8G0PzSr4MYYelohErx9SHec9d3PVyQtZzVnA_Uq1g8",
                 })
                 .end((err, response) => {
                     response.should.have.status(200);
@@ -300,11 +297,9 @@ describe("operational data Test 2(daily work log)", () => {
         });
         it("Should return error 400(no daily_work_log id sent)", (done) => {
             chai.request(server)
-                .delete("/daily_work_log")
-                .send({
-                    accessToken:
-                        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwiaWF0IjoxNjM3NzQxMjQ4LCJleHAiOjE2NjkyOTg4NDh9.y8G0PzSr4MYYelohErx9SHec9d3PVyQtZzVnA_Uq1g8",
-                })
+                .delete(url2)
+                .set({ Authorization: `Bearer ${accessToken}` })
+                .send({})
                 .end((err, response) => {
                     response.should.have.status(400);
                     response.body.should.be.a("object");
@@ -322,11 +317,11 @@ describe("operational data Test 2(daily work log)", () => {
     describe("/daily_work_log patch", () => {
         it("Should update a daily_work_log", (done) => {
             chai.request(server)
-                .patch("/daily_work_log")
+                .patch(url2)
+                .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
                     id: randomGottenId,
-                    accessToken:
-                        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwiaWF0IjoxNjM3NzQxMjQ4LCJleHAiOjE2NjkyOTg4NDh9.y8G0PzSr4MYYelohErx9SHec9d3PVyQtZzVnA_Uq1g8",
+
                     updateData: {
                         startDate: "2000/10/22",
                         endDate: "2000/10/23",
@@ -352,10 +347,9 @@ describe("operational data Test 2(daily work log)", () => {
         });
         it("Should send 400 error message", (done) => {
             chai.request(server)
-                .patch("/daily_work_log")
+                .patch(url2)
+                .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
-                    accessToken:
-                        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwiaWF0IjoxNjM3NzQxMjQ4LCJleHAiOjE2NjkyOTg4NDh9.y8G0PzSr4MYYelohErx9SHec9d3PVyQtZzVnA_Uq1g8",
                     updateData: {
                         name: "yared terefe",
                     },
@@ -370,7 +364,7 @@ describe("operational data Test 2(daily work log)", () => {
         });
         it("Should send 400 error message", (done) => {
             chai.request(server)
-                .patch("/daily_work_log")
+                .patch(url2)
                 .send({
                     id: 1,
                     updateData: {
@@ -378,7 +372,7 @@ describe("operational data Test 2(daily work log)", () => {
                     },
                 })
                 .end((err, response) => {
-                    response.should.have.status(400);
+                    response.should.have.status(401);
                     response.body.should.be.a("object");
                     response.body.should.have.property("error");
                     response.body.error.should.have.property("accessToken");

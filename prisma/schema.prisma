@@ -10,26 +10,34 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model refresh_tokens {
+  id            Int    @id @default(autoincrement())
+  refresh_token String @db.VarChar(300)
+  user_id       Int
+  user          user   @relation(fields: [user_id], references: [id])
+}
+
 model user {
-  id                     Int       @id @default(autoincrement())
+  id                     Int              @id @default(autoincrement())
   username               String?
   normalized_username    String?
-  email                  String?   @unique
+  email                  String?          @unique
   password               String
-  email_confirmed        Boolean?  @default(false)
+  email_confirmed        Boolean?         @default(false)
   security_stamp         String?
   concurrency_stamp      String
-  phone_number           String?   @unique
+  phone_number           String?          @unique
   phone_number_confirmed Boolean?
   lockout_end            DateTime?
-  two_factor_enabled     Boolean?  @default(false)
+  two_factor_enabled     Boolean?         @default(false)
   lockout_enabled        Boolean?
-  access_failed_count    Int       @default(0)
+  access_failed_count    Int              @default(0)
   first_login            Boolean?
   code                   Int
-  role                   role?     @relation(fields: [roleId], references: [id])
+  role                   role?            @relation(fields: [roleId], references: [id])
   roleId                 Int?
-  deleted_status         Int       @default(0)
+  deleted_status         Int              @default(0)
+  refresh_tokens         refresh_tokens[]
 }
 
 model privilege {

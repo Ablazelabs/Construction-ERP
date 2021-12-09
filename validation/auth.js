@@ -16,6 +16,7 @@ const authorization = {
         if (
             requestRoute == "login" ||
             requestRoute == "forgotpassword" ||
+            requestRoute == "refresh" ||
             requestRoute == "sendcode"
         ) {
             next();
