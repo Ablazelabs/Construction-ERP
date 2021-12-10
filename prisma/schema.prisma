@@ -1,4 +1,4 @@
-// This is your Prisma schema file,
+// This is your Prisma schema file
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
@@ -38,6 +38,7 @@ model user {
   roleId                 Int?
   deleted_status         Int              @default(0)
   refresh_tokens         refresh_tokens[]
+  journal_users          journal_users[]
 }
 
 model privilege {
@@ -627,4 +628,353 @@ model required_document {
   revisedBy          String
   status             Int           @default(0)
   isProtectedForEdit Boolean       @default(false)
+}
+
+model currency {
+  id                   Int                  @id @default(autoincrement())
+  currency_code        String
+  currency_description String
+  name                 String
+  symbol               String
+  price_precision      Int
+  currency_format      Int
+  is_base_currency     Boolean
+  bank                 bank[]
+  exchange_rate        exchange_rate[]
+  financial_settings   financial_settings[]
+  chart_of_account     chart_of_account[]
+  contact              contact[]
+}
+
+model account_category {
+  id           Int            @id @default(autoincrement())
+  code         String
+  description  String?
+  is_debit     String?
+  account_type account_type[]
+}
+
+model closing_note {
+  id            Int     @id @default(autoincrement())
+  closing_type  Int //[both,month_end,year_end]
+  title         String
+  note          String?
+  consideration Int //[closing_note,closing_effect]
+}
+
+model financial_statement_section {
+  id                       Int     @id @default(autoincrement())
+  name                     String
+  description              String?
+  sequence_on_report       Int
+  financial_statement_type Int //[income_statement,balance_sheet,cash_flow_statement,owners_equity]
+}
+
+model cost_center {
+  id                   Int                    @id @default(autoincrement())
+  cost_center_code     String
+  section_name         String?
+  remark               String?
+  cost_center_accounts cost_center_accounts[]
+}
+
+model payment_term {
+  id             Int       @id @default(autoincrement())
+  show_it_as     String
+  number_of_days Int
+  contact        contact[]
+}
+
+model date_format_type {
+  id                        Int                  @id @default(autoincrement())
+  date_format               String
+  date_format_type_category Int //[short,medium,long]
+  financial_settings        financial_settings[]
+}
+
+model industry {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+}
+
+model foot_note {
+  id                       Int     @id @default(autoincrement())
+  title                    String
+  description              String?
+  financial_statement_type Int //[income_statement,balance_sheet,cash_flow_statement,owners_equity]
+}
+
+model tax_authority {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  tax         tax[]
+}
+
+model tax_exemption {
+  id                   Int     @id @default(autoincrement())
+  tax_exemption_reason String?
+  code                 String
+  description          String?
+  tax_exemption_type   Int //[customer,item]
+}
+
+model tax_group {
+  id                   Int                    @id @default(autoincrement())
+  tax_group_name       String
+  tax_group_percentage Float
+  associated_tax_group associated_tax_group[]
+}
+
+model transaction_type {
+  id          Int     @id @default(autoincrement())
+  type        Int //[Matched,Manually_Added,Categorized,Reconciled,Unreconciled]
+  description String?
+}
+
+model accounting_period {
+  id                        Int      @id @default(autoincrement())
+  months                    Int //[january,february,march,april,may,june,july,augest,september,october,november,december,other]
+  period_number             Int
+  status                    Int //[open,closed,future,access_locked]
+  is_current_posting_period Boolean
+  is_year_end_closing       Boolean
+  period_starting_date      DateTime
+  period_ending_date        DateTime
+}
+
+model journal_type {
+  id          Int     @id @default(autoincrement())
+  type        String
+  description String?
+}
+
+model country {
+  id           Int    @id @default(autoincrement())
+  country_code String
+  country_name String
+}
+
+model title {
+  id         Int    @id @default(autoincrement())
+  short_code String
+  name       String
+}
+
+model language {
+  id                 Int                  @id @default(autoincrement())
+  code               String
+  name               String
+  financial_settings financial_settings[]
+}
+
+model account_type {
+  id                                      Int                @id @default(autoincrement())
+  code                                    String
+  type                                    String
+  description                             String?
+  can_be_sub_account                      Boolean?
+  contain_account_number                  Boolean?
+  contain_currency                        Boolean?
+  tool_tip_description                    String?
+  can_have_more_than_one_chart_of_account Boolean?
+  account_category_id                     Int
+  account_category                        account_category   @relation(fields: [account_category_id], references: [id])
+  //needs account_category
+  //inside schema
+  chart_of_account                        chart_of_account[]
+}
+
+model bank {
+  id             Int      @id @default(autoincrement())
+  account_type   Int //[bank,credit_card]
+  account_name   String
+  account_number String
+  account_code   String
+  IBAN           String
+  bank_name      String
+  description    String
+  is_primary     Boolean
+  currency_id    Int
+  currency       currency @relation(fields: [currency_id], references: [id])
+  //needs currency
+  //inside schema
+}
+
+model exchange_rate {
+  id          Int      @id @default(autoincrement())
+  rate        Float
+  date        DateTime
+  currency_id Int
+  currency    currency @relation(fields: [currency_id], references: [id])
+  //needs currency
+  //inside schema
+}
+
+model financial_settings {
+  id                               Int               @id @default(autoincrement())
+  report_basis                     Int //[accrual,cash,both]
+  fiscal_year                      Int //[january_december,february_january,march_february,april_march,may_april,june_may,july_june,august_july,september_august,october_september,november_october,december_november]
+  closing_type                     Int //[both,month_end,year_end]
+  timezone                         String
+  company_id                       Int //[ACN,BN,CN,CPR,CVR,DIW,KT,ORG,SEC,company_id]
+  tax_id                           Int //[ABN,BN,CST,ORG,TAX,VST,tax_id]
+  auto_generate_journal_preference Boolean
+  is_acc_code_mandatory            Boolean
+  enter_unique_acc_code            Boolean
+  is_profile_tax_applied           Boolean
+  is_legal_reserve_applied         Boolean
+  profit_tax                       Float
+  legal_reserve                    Float
+  company_id_number                String
+  time_format_id                   Int
+  language_id                      Int
+  base_currency_id                 Int
+  currency                         currency          @relation(fields: [base_currency_id], references: [id])
+  time_format                      date_format_type  @relation(fields: [time_format_id], references: [id])
+  language                         language          @relation(fields: [language_id], references: [id])
+  //needs currency
+  //needs date_format_type
+  //needs language
+  //inside schema
+  company_address                  company_address[]
+}
+
+model journal_users {
+  id          Int  @id @default(autoincrement())
+  access_name Int //[manual_journal,recurring_journal]
+  user_id     Int
+  user        user @relation(fields: [user_id], references: [id])
+  //needs user
+  //inside schema
+}
+
+model chart_of_account {
+  id                          Int                    @id @default(autoincrement())
+  account_name                String?
+  account_code                String?
+  account_number              String?
+  is_active                   Boolean?
+  description                 String?
+  add_to_dashboard_watch_list Boolean?
+  attachment_path             Int?
+  is_sub_account              Boolean?
+  is_default                  Boolean?
+  is_employee_account         Boolean?
+  has_opening_balance         Boolean?
+  is_bank_account             Boolean?
+  parent_account_id           Int?
+  head_account_id             Int?
+  currency_id                 Int
+  account_type_id             Int
+  account_type                account_type           @relation(fields: [account_type_id], references: [id])
+  currency                    currency               @relation(fields: [currency_id], references: [id])
+  parent_account              chart_of_account?      @relation(name: "parent_account", fields: [parent_account_id], references: [id])
+  head_account                chart_of_account?      @relation(name: "head_account", fields: [head_account_id], references: [id])
+  //needs account_type
+  //needs currency
+  //needs chart_of_account
+  parent_accounts             chart_of_account[]     @relation("parent_account")
+  head_accounts               chart_of_account[]     @relation("head_account")
+  contact                     contact[]
+  cost_center_accounts        cost_center_accounts[]
+  tax_debits                  tax[]                  @relation("chart_of_account_debit")
+  tax_credits                 tax[]                  @relation("chart_of_account_credit")
+  tax_chart_of_account        tax_chart_of_account[]
+}
+
+model contact {
+  id                   Int              @id @default(autoincrement())
+  contact_type         Int //[customer,vendor]
+  company_name         String
+  contact_display_name String
+  remark               String
+  chart_of_account_id  Int
+  currency_id          Int
+  payment_term_id      Int
+  chart_of_account     chart_of_account @relation(fields: [chart_of_account_id], references: [id])
+  currency             currency         @relation(fields: [currency_id], references: [id])
+  payment_term         payment_term     @relation(fields: [payment_term_id], references: [id])
+  //needs chart_of_account
+  //needs currency
+  //needs payment_term
+}
+
+model cost_center_accounts {
+  id                  Int              @id @default(autoincrement())
+  remark              String
+  chart_of_account_id Int
+  cost_center_id      Int
+  cost_center         cost_center      @relation(fields: [cost_center_id], references: [id])
+  chart_of_account    chart_of_account @relation(fields: [chart_of_account_id], references: [id])
+  //needs cost_center
+  //needs chart_of_account
+}
+
+model company_address {
+  id                      Int                @id @default(autoincrement())
+  address1                String //only this required(from address data)
+  address2                String?
+  city                    String?
+  state_or_province       String?
+  zip_or_portal_code      String?
+  phone                   String?
+  fax                     String?
+  website                 String?
+  organization_profile_id Int
+  organization_profile    financial_settings @relation(fields: [organization_profile_id], references: [id])
+  //needs financial_settings
+}
+
+model associated_tax_group {
+  id           Int       @id @default(autoincrement())
+  tax_id       Int
+  tax_group_id Int
+  tax          tax       @relation(fields: [tax_id], references: [id])
+  tax_group    tax_group @relation(fields: [tax_group_id], references: [id])
+}
+
+model tax {
+  id                         Int              @id @default(autoincrement())
+  tax_name                   String
+  tax_percentage             Float
+  is_value_added             Boolean
+  is_editable                Boolean
+  is_default_tax             Boolean
+  tax_type                   Int //[tax,compound_tax]
+  chart_of_account_debit_id  Int
+  chart_of_account_credit_id Int
+  tax_authority_id           Int
+  tax_authority              tax_authority    @relation(fields: [tax_authority_id], references: [id])
+  chart_of_account_debit     chart_of_account @relation(name: "chart_of_account_debit", fields: [chart_of_account_debit_id], references: [id])
+  chart_of_account_credit    chart_of_account @relation(name: "chart_of_account_credit", fields: [chart_of_account_credit_id], references: [id])
+
+  //needs tax_authority
+  //needs chart_of_account
+  associated_tax_group associated_tax_group[]
+  tax_chart_of_account tax_chart_of_account[]
+  tax_rule             tax_rule[]
+}
+
+model tax_chart_of_account {
+  id                  Int              @id @default(autoincrement())
+  tax_id              Int
+  chart_of_account_id Int
+  tax                 tax              @relation(fields: [tax_id], references: [id])
+  chart_of_account    chart_of_account @relation(fields: [chart_of_account_id], references: [id])
+  //needs tax
+  //needs chart_of_account
+}
+
+model tax_rule {
+  id         Int    @id @default(autoincrement())
+  operator   Int //[greater_than,less_than,equals_to,greater_than_or_equals_to,less_than_equals_to]
+  amount     Float
+  remark     String
+  sales_type Int //[product,service]
+  tax_id     Int
+  tax        tax    @relation(fields: [tax_id], references: [id])
+
+  //needs tax
 }

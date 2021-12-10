@@ -20,9 +20,10 @@ const material = require("./api-routes/project/master/material");
 const documentation = require("./api-routes/project/master/documentation");
 const restMasterData = require("./api-routes/project/master/restMasterData");
 const operational_data = require("./api-routes/project/operational/operational_data");
+const cors = require("cors");
 
 app.use(json());
-
+app.use(cors());
 app.use(authenticate);
 
 app.use(login);
@@ -50,8 +51,23 @@ app.use((err, _req, res, _next) => {
 });
 const port = 3000;
 
+const basicAuth = require("express-basic-auth");
+
+// app.use(
+//     "/api-docs",
+//     basicAuth({
+//         users: { yourUser: "yourPassword" },
+//         challenge: true,
+//     }),
+//     swaggerUi.serve,
+//     swaggerUi.setup(swaggerDocument)
+// );
 app.use(
     "/api-docs",
+    basicAuth({
+        users: { yourUser: "yourPassword" },
+        challenge: true,
+    }),
     swaggerUi.serve,
     swaggerUi.setup(YAML.load("./documentation/api.yaml"), { explorer: true })
 );

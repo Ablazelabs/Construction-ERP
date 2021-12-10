@@ -8,8 +8,13 @@ module.exports = async (identifier, reqBody, next) => {
         where: { ...identifier },
         select: { password: true, id: true, access_failed_count: true },
     });
+    let key;
+    for (let i in identifier) {
+        key = i;
+        break;
+    }
     if (!queryResult) {
-        error(identifier.key, "account doesn't exist", next);
+        error(key, "account doesn't exist", next);
         return false;
     }
     if (queryResult.access_failed_count >= 5) {

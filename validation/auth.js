@@ -12,12 +12,14 @@ const authorization = {
     },
     authenticate: async (req, res, next) => {
         const requestRoute = req.path.split("/").pop();
+        const pass = req.path.search("api-docs") == -1 ? false : true;
         const method = req.method;
         if (
             requestRoute == "login" ||
             requestRoute == "forgotpassword" ||
             requestRoute == "refresh" ||
-            requestRoute == "sendcode"
+            requestRoute == "sendcode" ||
+            pass
         ) {
             next();
             return;
