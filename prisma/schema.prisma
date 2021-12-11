@@ -631,6 +631,14 @@ model required_document {
 }
 
 model currency {
+  startDate            DateTime
+  endDate              DateTime
+  creationDate         DateTime             @default(now())
+  createdBy            String
+  revisionDate         DateTime             @updatedAt
+  revisedBy            String
+  status               Int                  @default(0)
+  isProtectedForEdit   Boolean              @default(false)
   id                   Int                  @id @default(autoincrement())
   currency_code        String
   currency_description String
@@ -647,23 +655,47 @@ model currency {
 }
 
 model account_category {
-  id           Int            @id @default(autoincrement())
-  code         String
-  description  String?
-  is_debit     String?
-  account_type account_type[]
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime       @default(now())
+  createdBy          String
+  revisionDate       DateTime       @updatedAt
+  revisedBy          String
+  status             Int            @default(0)
+  isProtectedForEdit Boolean        @default(false)
+  id                 Int            @id @default(autoincrement())
+  code               String
+  description        String?
+  is_debit           String?
+  account_type       account_type[]
 }
 
 model closing_note {
-  id            Int     @id @default(autoincrement())
-  closing_type  Int //[both,month_end,year_end]
-  title         String
-  note          String?
-  consideration Int //[closing_note,closing_effect]
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  closing_type       Int //[both,month_end,year_end]
+  title              String
+  note               String?
+  consideration      Int //[closing_note,closing_effect]
 }
 
 model financial_statement_section {
-  id                       Int     @id @default(autoincrement())
+  startDate                DateTime
+  endDate                  DateTime
+  creationDate             DateTime @default(now())
+  createdBy                String
+  revisionDate             DateTime @updatedAt
+  revisedBy                String
+  status                   Int      @default(0)
+  isProtectedForEdit       Boolean  @default(false)
+  id                       Int      @id @default(autoincrement())
   name                     String
   description              String?
   sequence_on_report       Int
@@ -671,6 +703,14 @@ model financial_statement_section {
 }
 
 model cost_center {
+  startDate            DateTime
+  endDate              DateTime
+  creationDate         DateTime               @default(now())
+  createdBy            String
+  revisionDate         DateTime               @updatedAt
+  revisedBy            String
+  status               Int                    @default(0)
+  isProtectedForEdit   Boolean                @default(false)
   id                   Int                    @id @default(autoincrement())
   cost_center_code     String
   section_name         String?
@@ -679,13 +719,29 @@ model cost_center {
 }
 
 model payment_term {
-  id             Int       @id @default(autoincrement())
-  show_it_as     String
-  number_of_days Int
-  contact        contact[]
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime  @default(now())
+  createdBy          String
+  revisionDate       DateTime  @updatedAt
+  revisedBy          String
+  status             Int       @default(0)
+  isProtectedForEdit Boolean   @default(false)
+  id                 Int       @id @default(autoincrement())
+  show_it_as         String?
+  number_of_days     Int?
+  contact            contact[]
 }
 
 model date_format_type {
+  startDate                 DateTime
+  endDate                   DateTime
+  creationDate              DateTime             @default(now())
+  createdBy                 String
+  revisionDate              DateTime             @updatedAt
+  revisedBy                 String
+  status                    Int                  @default(0)
+  isProtectedForEdit        Boolean              @default(false)
   id                        Int                  @id @default(autoincrement())
   date_format               String
   date_format_type_category Int //[short,medium,long]
@@ -693,27 +749,59 @@ model date_format_type {
 }
 
 model industry {
-  id          Int     @id @default(autoincrement())
-  name        String
-  description String?
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  name               String
+  description        String?
 }
 
 model foot_note {
-  id                       Int     @id @default(autoincrement())
+  startDate                DateTime
+  endDate                  DateTime
+  creationDate             DateTime @default(now())
+  createdBy                String
+  revisionDate             DateTime @updatedAt
+  revisedBy                String
+  status                   Int      @default(0)
+  isProtectedForEdit       Boolean  @default(false)
+  id                       Int      @id @default(autoincrement())
   title                    String
   description              String?
-  financial_statement_type Int //[income_statement,balance_sheet,cash_flow_statement,owners_equity]
+  financial_statement_type Int? //[income_statement,balance_sheet,cash_flow_statement,owners_equity]
 }
 
 model tax_authority {
-  id          Int     @id @default(autoincrement())
-  name        String
-  description String?
-  tax         tax[]
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  name               String
+  description        String?
+  tax                tax[]
 }
 
 model tax_exemption {
-  id                   Int     @id @default(autoincrement())
+  startDate            DateTime
+  endDate              DateTime
+  creationDate         DateTime @default(now())
+  createdBy            String
+  revisionDate         DateTime @updatedAt
+  revisedBy            String
+  status               Int      @default(0)
+  isProtectedForEdit   Boolean  @default(false)
+  id                   Int      @id @default(autoincrement())
   tax_exemption_reason String?
   code                 String
   description          String?
@@ -721,23 +809,39 @@ model tax_exemption {
 }
 
 model tax_group {
+  startDate            DateTime
+  endDate              DateTime
+  creationDate         DateTime               @default(now())
+  createdBy            String
+  revisionDate         DateTime               @updatedAt
+  revisedBy            String
+  status               Int                    @default(0)
+  isProtectedForEdit   Boolean                @default(false)
   id                   Int                    @id @default(autoincrement())
   tax_group_name       String
   tax_group_percentage Float
   associated_tax_group associated_tax_group[]
 }
 
-model transaction_type {
-  id          Int     @id @default(autoincrement())
-  type        Int //[Matched,Manually_Added,Categorized,Reconciled,Unreconciled]
-  description String?
-}
+// model transaction_type {
+//   id          Int     @id @default(autoincrement())
+//   type        Int //[Matched,Manually_Added,Categorized,Reconciled,Unreconciled]
+//   description String?
+// }
 
 model accounting_period {
+  startDate                 DateTime
+  endDate                   DateTime
+  creationDate              DateTime @default(now())
+  createdBy                 String
+  revisionDate              DateTime @updatedAt
+  revisedBy                 String
+  status                    Int      @default(0)
+  isProtectedForEdit        Boolean  @default(false)
   id                        Int      @id @default(autoincrement())
   months                    Int //[january,february,march,april,may,june,july,augest,september,october,november,december,other]
   period_number             Int
-  status                    Int //[open,closed,future,access_locked]
+  accounting_period_status  Int //[open,closed,future,access_locked]
   is_current_posting_period Boolean
   is_year_end_closing       Boolean
   period_starting_date      DateTime
@@ -745,24 +849,58 @@ model accounting_period {
 }
 
 model journal_type {
-  id          Int     @id @default(autoincrement())
-  type        String
-  description String?
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  type               String
+  description        String?
 }
 
 model country {
-  id           Int    @id @default(autoincrement())
-  country_code String
-  country_name String
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime          @default(now())
+  createdBy          String
+  revisionDate       DateTime          @updatedAt
+  revisedBy          String
+  status             Int               @default(0)
+  isProtectedForEdit Boolean           @default(false)
+  id                 Int               @id @default(autoincrement())
+  country_code       String
+  country_name       String
+  contact_address    contact_address[]
 }
 
 model title {
-  id         Int    @id @default(autoincrement())
-  short_code String
-  name       String
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime         @default(now())
+  createdBy          String
+  revisionDate       DateTime         @updatedAt
+  revisedBy          String
+  status             Int              @default(0)
+  isProtectedForEdit Boolean          @default(false)
+  id                 Int              @id @default(autoincrement())
+  short_code         String
+  name               String
+  contact_person     contact_person[]
 }
 
 model language {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime             @default(now())
+  createdBy          String
+  revisionDate       DateTime             @updatedAt
+  revisedBy          String
+  status             Int                  @default(0)
+  isProtectedForEdit Boolean              @default(false)
   id                 Int                  @id @default(autoincrement())
   code               String
   name               String
@@ -770,6 +908,14 @@ model language {
 }
 
 model account_type {
+  startDate                               DateTime
+  endDate                                 DateTime
+  creationDate                            DateTime           @default(now())
+  createdBy                               String
+  revisionDate                            DateTime           @updatedAt
+  revisedBy                               String
+  status                                  Int                @default(0)
+  isProtectedForEdit                      Boolean            @default(false)
   id                                      Int                @id @default(autoincrement())
   code                                    String
   type                                    String
@@ -787,70 +933,112 @@ model account_type {
 }
 
 model bank {
-  id             Int      @id @default(autoincrement())
-  account_type   Int //[bank,credit_card]
-  account_name   String
-  account_number String
-  account_code   String
-  IBAN           String
-  bank_name      String
-  description    String
-  is_primary     Boolean
-  currency_id    Int
-  currency       currency @relation(fields: [currency_id], references: [id])
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  account_type       Int //[bank,credit_card]
+  account_name       String
+  account_number     String?
+  account_code       String?
+  IBAN               String?
+  bank_name          String?
+  description        String?
+  is_primary         Boolean?
+  currency_id        Int
+  currency           currency @relation(fields: [currency_id], references: [id])
   //needs currency
   //inside schema
 }
 
 model exchange_rate {
-  id          Int      @id @default(autoincrement())
-  rate        Float
-  date        DateTime
-  currency_id Int
-  currency    currency @relation(fields: [currency_id], references: [id])
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  rate               Float
+  date               DateTime
+  currency_id        Int
+  currency           currency @relation(fields: [currency_id], references: [id])
   //needs currency
   //inside schema
 }
 
 model financial_settings {
+  startDate                        DateTime
+  endDate                          DateTime
+  creationDate                     DateTime          @default(now())
+  createdBy                        String
+  revisionDate                     DateTime          @updatedAt
+  revisedBy                        String
+  status                           Int               @default(0)
+  isProtectedForEdit               Boolean           @default(false)
   id                               Int               @id @default(autoincrement())
   report_basis                     Int //[accrual,cash,both]
   fiscal_year                      Int //[january_december,february_january,march_february,april_march,may_april,june_may,july_june,august_july,september_august,october_september,november_october,december_november]
   closing_type                     Int //[both,month_end,year_end]
-  timezone                         String
-  company_id                       Int //[ACN,BN,CN,CPR,CVR,DIW,KT,ORG,SEC,company_id]
-  tax_id                           Int //[ABN,BN,CST,ORG,TAX,VST,tax_id]
-  auto_generate_journal_preference Boolean
-  is_acc_code_mandatory            Boolean
-  enter_unique_acc_code            Boolean
-  is_profile_tax_applied           Boolean
-  is_legal_reserve_applied         Boolean
-  profit_tax                       Float
-  legal_reserve                    Float
-  company_id_number                String
-  time_format_id                   Int
-  language_id                      Int
+  timezone                         String?
+  company_id                       Int? //[ACN,BN,CN,CPR,CVR,DIW,KT,ORG,SEC,company_id]
+  tax_id                           Int? //[ABN,BN,CST,ORG,TAX,VST,tax_id]
+  tax_id_number                    String?
+  auto_generate_journal_preference Boolean?
+  is_acc_code_mandatory            Boolean?
+  enter_unique_acc_code            Boolean?
+  is_profile_tax_applied           Boolean?
+  is_legal_reserve_applied         Boolean?
+  profit_tax                       Float?
+  legal_reserve                    Float?
+  company_id_number                String?
+  time_format_id                   Int?
+  language_id                      Int?
   base_currency_id                 Int
   currency                         currency          @relation(fields: [base_currency_id], references: [id])
-  time_format                      date_format_type  @relation(fields: [time_format_id], references: [id])
-  language                         language          @relation(fields: [language_id], references: [id])
+  time_format                      date_format_type? @relation(fields: [time_format_id], references: [id])
+  language                         language?         @relation(fields: [language_id], references: [id])
   //needs currency
   //needs date_format_type
   //needs language
   //inside schema
   company_address                  company_address[]
+  primary_contact                  primary_contact[]
 }
 
 model journal_users {
-  id          Int  @id @default(autoincrement())
-  access_name Int //[manual_journal,recurring_journal]
-  user_id     Int
-  user        user @relation(fields: [user_id], references: [id])
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  access_name        Int? //[manual_journal,recurring_journal]
+  user_id            Int?
+  user               user?    @relation(fields: [user_id], references: [id])
   //needs user
   //inside schema
 }
 
 model chart_of_account {
+  startDate                   DateTime
+  endDate                     DateTime
+  creationDate                DateTime               @default(now())
+  createdBy                   String
+  revisionDate                DateTime               @updatedAt
+  revisedBy                   String
+  status                      Int                    @default(0)
+  isProtectedForEdit          Boolean                @default(false)
   id                          Int                    @id @default(autoincrement())
   account_name                String?
   account_code                String?
@@ -881,29 +1069,47 @@ model chart_of_account {
   cost_center_accounts        cost_center_accounts[]
   tax_debits                  tax[]                  @relation("chart_of_account_debit")
   tax_credits                 tax[]                  @relation("chart_of_account_credit")
-  tax_chart_of_account        tax_chart_of_account[]
+  // tax_chart_of_account        tax_chart_of_account[]
 }
 
 model contact {
-  id                   Int              @id @default(autoincrement())
+  startDate            DateTime
+  endDate              DateTime
+  creationDate         DateTime          @default(now())
+  createdBy            String
+  revisionDate         DateTime          @updatedAt
+  revisedBy            String
+  status               Int               @default(0)
+  isProtectedForEdit   Boolean           @default(false)
+  id                   Int               @id @default(autoincrement())
   contact_type         Int //[customer,vendor]
   company_name         String
   contact_display_name String
-  remark               String
-  chart_of_account_id  Int
-  currency_id          Int
-  payment_term_id      Int
-  chart_of_account     chart_of_account @relation(fields: [chart_of_account_id], references: [id])
-  currency             currency         @relation(fields: [currency_id], references: [id])
-  payment_term         payment_term     @relation(fields: [payment_term_id], references: [id])
+  remark               String?
+  chart_of_account_id  Int?
+  currency_id          Int?
+  payment_term_id      Int?
+  chart_of_account     chart_of_account? @relation(fields: [chart_of_account_id], references: [id])
+  currency             currency?         @relation(fields: [currency_id], references: [id])
+  payment_term         payment_term?     @relation(fields: [payment_term_id], references: [id])
   //needs chart_of_account
   //needs currency
   //needs payment_term
+  contact_address      contact_address[]
+  contact_person       contact_person[]
 }
 
 model cost_center_accounts {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime         @default(now())
+  createdBy           String
+  revisionDate        DateTime         @updatedAt
+  revisedBy           String
+  status              Int              @default(0)
+  isProtectedForEdit  Boolean          @default(false)
   id                  Int              @id @default(autoincrement())
-  remark              String
+  remark              String?
   chart_of_account_id Int
   cost_center_id      Int
   cost_center         cost_center      @relation(fields: [cost_center_id], references: [id])
@@ -913,6 +1119,14 @@ model cost_center_accounts {
 }
 
 model company_address {
+  startDate               DateTime
+  endDate                 DateTime
+  creationDate            DateTime           @default(now())
+  createdBy               String
+  revisionDate            DateTime           @updatedAt
+  revisedBy               String
+  status                  Int                @default(0)
+  isProtectedForEdit      Boolean            @default(false)
   id                      Int                @id @default(autoincrement())
   address1                String //only this required(from address data)
   address2                String?
@@ -928,53 +1142,148 @@ model company_address {
 }
 
 model associated_tax_group {
-  id           Int       @id @default(autoincrement())
-  tax_id       Int
-  tax_group_id Int
-  tax          tax       @relation(fields: [tax_id], references: [id])
-  tax_group    tax_group @relation(fields: [tax_group_id], references: [id])
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime  @default(now())
+  createdBy          String
+  revisionDate       DateTime  @updatedAt
+  revisedBy          String
+  status             Int       @default(0)
+  isProtectedForEdit Boolean   @default(false)
+  id                 Int       @id @default(autoincrement())
+  tax_id             Int
+  tax_group_id       Int
+  tax                tax       @relation(fields: [tax_id], references: [id])
+  tax_group          tax_group @relation(fields: [tax_group_id], references: [id])
 }
 
 model tax {
-  id                         Int              @id @default(autoincrement())
+  startDate                  DateTime
+  endDate                    DateTime
+  creationDate               DateTime          @default(now())
+  createdBy                  String
+  revisionDate               DateTime          @updatedAt
+  revisedBy                  String
+  status                     Int               @default(0)
+  isProtectedForEdit         Boolean           @default(false)
+  id                         Int               @id @default(autoincrement())
   tax_name                   String
   tax_percentage             Float
-  is_value_added             Boolean
-  is_editable                Boolean
-  is_default_tax             Boolean
-  tax_type                   Int //[tax,compound_tax]
-  chart_of_account_debit_id  Int
-  chart_of_account_credit_id Int
+  is_value_added             Boolean?
+  is_editable                Boolean?
+  is_default_tax             Boolean?
+  tax_type                   Int? //[tax,compound_tax]
+  chart_of_account_debit_id  Int?
+  chart_of_account_credit_id Int?
   tax_authority_id           Int
-  tax_authority              tax_authority    @relation(fields: [tax_authority_id], references: [id])
-  chart_of_account_debit     chart_of_account @relation(name: "chart_of_account_debit", fields: [chart_of_account_debit_id], references: [id])
-  chart_of_account_credit    chart_of_account @relation(name: "chart_of_account_credit", fields: [chart_of_account_credit_id], references: [id])
+  tax_authority              tax_authority     @relation(fields: [tax_authority_id], references: [id])
+  chart_of_account_debit     chart_of_account? @relation(name: "chart_of_account_debit", fields: [chart_of_account_debit_id], references: [id])
+  chart_of_account_credit    chart_of_account? @relation(name: "chart_of_account_credit", fields: [chart_of_account_credit_id], references: [id])
 
   //needs tax_authority
   //needs chart_of_account
   associated_tax_group associated_tax_group[]
-  tax_chart_of_account tax_chart_of_account[]
+  // tax_chart_of_account tax_chart_of_account[]
   tax_rule             tax_rule[]
 }
 
-model tax_chart_of_account {
-  id                  Int              @id @default(autoincrement())
-  tax_id              Int
-  chart_of_account_id Int
-  tax                 tax              @relation(fields: [tax_id], references: [id])
-  chart_of_account    chart_of_account @relation(fields: [chart_of_account_id], references: [id])
-  //needs tax
-  //needs chart_of_account
-}
+// model tax_chart_of_account {
+//   id                  Int              @id @default(autoincrement())
+//   tax_id              Int
+//   chart_of_account_id Int
+//   tax                 tax              @relation(fields: [tax_id], references: [id])
+//   chart_of_account    chart_of_account @relation(fields: [chart_of_account_id], references: [id])
+//   //needs tax
+//   //needs chart_of_account
+// }
 
 model tax_rule {
-  id         Int    @id @default(autoincrement())
-  operator   Int //[greater_than,less_than,equals_to,greater_than_or_equals_to,less_than_equals_to]
-  amount     Float
-  remark     String
-  sales_type Int //[product,service]
-  tax_id     Int
-  tax        tax    @relation(fields: [tax_id], references: [id])
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  operator           Int //[greater_than,less_than,equals_to,greater_than_or_equals_to,less_than_equals_to]
+  amount             Float
+  remark             String?
+  sales_type         Int? //[product,service]
+  tax_id             Int
+  tax                tax      @relation(fields: [tax_id], references: [id])
 
   //needs tax
+}
+
+model contact_address {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  address_type       Int //[billing_address,shipping_address]
+  attention          String?
+  street1            String?
+  street2            String?
+  city               String?
+  state              String?
+  phone              String?
+  fax                String?
+  zip_code           String?
+  contact_id         Int?
+  country_id         Int?
+  contact            contact? @relation(fields: [contact_id], references: [id])
+  country            country? @relation(fields: [country_id], references: [id])
+  //needs contact
+  //needs country
+}
+
+model contact_person {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  first_name         String
+  last_name          String?
+  work_phone         String?
+  mobile             String?
+  email              String?
+  designation        String?
+  department         String?
+  is_primary_contact Boolean?
+  contact_id         Int?
+  title_id           Int?
+  contact            contact? @relation(fields: [contact_id], references: [id])
+  title              title?   @relation(fields: [title_id], references: [id])
+
+  //needs contact
+  //needs title
+}
+
+model primary_contact {
+  startDate               DateTime
+  endDate                 DateTime
+  creationDate            DateTime            @default(now())
+  createdBy               String
+  revisionDate            DateTime            @updatedAt
+  revisedBy               String
+  status                  Int                 @default(0)
+  isProtectedForEdit      Boolean             @default(false)
+  id                      Int                 @id @default(autoincrement())
+  name                    String
+  email                   String
+  organization_profile_id Int?
+  organization_profile    financial_settings? @relation(fields: [organization_profile_id], references: [id])
+  //needs financial_settings
 }
