@@ -73,6 +73,7 @@ router.get("/documentation", async (req, res, next) => {
                     name: "string",
                     description: "string",
                     document_category_name: "string",
+                    document_category_id: "number",
                 },
                 req.body.filter
             );
@@ -88,6 +89,7 @@ router.get("/documentation", async (req, res, next) => {
                     description: "number",
                     unit: "number",
                     document_category_name: "number",
+                    document_category_id: "number",
                 },
                 req.body.sort
             );
@@ -119,7 +121,9 @@ router.get("/documentation", async (req, res, next) => {
                 },
             };
         } else {
-            queryFilter[i] = { contains: filter[i] };
+            if (typeof filter[i] == "number")
+                queryFilter[i] = { equals: filter[i] };
+            else queryFilter[i] = { contains: filter[i] };
         }
     }
     let querySort = {};

@@ -66,6 +66,7 @@ router.get("/account", async (req, res, next) => {
                     email: "string",
                     phone_number: "string",
                     role: "number",
+                    id: "number",
                 },
                 req.body.filter
             );
@@ -108,7 +109,9 @@ router.get("/account", async (req, res, next) => {
     }
     let queryFilter = {};
     for (let i in filter) {
-        queryFilter[i] = { contains: filter[i] };
+        if (typeof filter[i] == "number")
+            queryFilter[i] = { equals: filter[i] };
+        else queryFilter[i] = { contains: filter[i] };
     }
     let querySort = {};
     for (let i in sort) {

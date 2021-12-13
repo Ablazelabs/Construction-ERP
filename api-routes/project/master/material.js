@@ -70,6 +70,7 @@ router.get("/material", async (req, res, next) => {
                     description: "string",
                     unit: "string",
                     material_category_name: "string",
+                    material_category_id: "number",
                 },
                 req.body.filter
             );
@@ -85,6 +86,7 @@ router.get("/material", async (req, res, next) => {
                     description: "number",
                     unit: "number",
                     material_category_name: "number",
+                    material_category_id: "number",
                 },
                 req.body.sort
             );
@@ -116,7 +118,9 @@ router.get("/material", async (req, res, next) => {
                 },
             };
         } else {
-            queryFilter[i] = { contains: filter[i] };
+            if (typeof filter[i] == "number")
+                queryFilter[i] = { equals: filter[i] };
+            else queryFilter[i] = { contains: filter[i] };
         }
     }
     let querySort = {};

@@ -505,6 +505,7 @@ const allFilters = {
         site_engineer: "string",
         dupty_manager: "string",
         project_address: "string",
+        client_id: "number",
     },
     daily_work_log: {
         weather: "string",
@@ -515,19 +516,28 @@ const allFilters = {
         contact: "string",
         cell_phone: "string",
         contract_no: "string",
+        project_id: "number",
     },
     instruction_given_on_project: {
         remarks: "string",
+        project_id: "number",
+        instruction_id: "number",
     },
     manpower_requirement: {
         remarks: "string",
+        manpower_id: "number",
+        project_id: "number",
     },
     required_equipment: {
         equipment_lifetime: "string",
         remark: "string",
+        equipment_id: "number",
+        project_id: "number",
     },
     required_material: {
         remark: "string",
+        material_id: "number",
+        project_id: "number",
     },
     risk_tracking: {
         impact: "string",
@@ -536,29 +546,43 @@ const allFilters = {
         description: "string",
         risk_response: "string",
         remark: "string",
+        work_category_id: "number",
+        project_id: "number",
     },
     task_manager: {
         name: "string",
         description: "string",
         duration_in_days: "string",
         working_days: "string",
+        working_days: "string",
+        project_id: "number",
     },
     sub_task: {
         description: "string",
         name: "string",
+        task_manager_id: "number",
     },
     simple_task: {
         note: "string",
         name: "string",
+        project_id: "number",
+        priority_id: "number",
     },
-    work_log_and_branch_of_work: {},
+    work_log_and_branch_of_work: {
+        work_category_id: "number",
+        daily_work_log_id: "number",
+    },
     weather_data: {
         reason: "string",
         reference: "string",
+        project_id: "number",
+        manpower_id: "number",
     },
     todos: {
         notes: "string",
         name: "string",
+        project_id: "number",
+        priority_id: "number",
     },
     request: {
         RFI_no: "string",
@@ -567,11 +591,14 @@ const allFilters = {
         request_by: "string",
         assigned_to: "string",
         notes: "string",
+        project_id: "number",
+        priority_id: "number",
     },
     invoice_tracking: {
         detail: "string",
         invoice_number: "string",
         notes: "string",
+        client_id: "number",
     },
     required_document: {
         spec_reference: "string",
@@ -579,6 +606,8 @@ const allFilters = {
         assigned_to: "string",
         received: "string",
         location: "string",
+        documentation_id: "number",
+        project_id: "number",
     },
 };
 const allSorts = {
@@ -913,7 +942,9 @@ router.get(allRoutes, async (req, res, next) => {
     };
     let queryFilter = {};
     for (let i in filter) {
-        queryFilter[i] = { contains: filter[i] };
+        if (typeof filter[i] == "number")
+            queryFilter[i] = { equals: filter[i] };
+        else queryFilter[i] = { contains: filter[i] };
     }
     let querySort = {};
     for (let i in sort) {

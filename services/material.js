@@ -14,7 +14,7 @@ const post = async (reqBody, creator, next) => {
     });
     if (queryData) {
         if (queryData.status == 1) {
-            await role.update({
+            await material.update({
                 where: { name: reqBody.name },
                 data: { status: 0 },
             });

@@ -64,5 +64,5 @@ module.exports = async (identifier, reqBody, next) => {
             ...identifier,
         },
     });
-    return { accessToken, refreshToken };
+    return { accessToken, refreshToken, id: queryResult.id };
 };

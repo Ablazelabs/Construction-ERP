@@ -47,7 +47,7 @@ router.get("/role", async (req, res, next) => {
         if (req.body.filter) {
             filter = inputFilter(
                 {},
-                { name: "string", description: "string" },
+                { name: "string", description: "string", id: "number" },
                 req.body.filter
             );
         }
@@ -77,7 +77,9 @@ router.get("/role", async (req, res, next) => {
     };
     let queryFilter = {};
     for (let i in filter) {
-        queryFilter[i] = { contains: filter[i] };
+        if (typeof filter[i] == "number")
+            queryFilter[i] = { equals: filter[i] };
+        else queryFilter[i] = { contains: filter[i] };
     }
     let querySort = {};
     for (let i in sort) {

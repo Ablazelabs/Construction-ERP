@@ -76,7 +76,7 @@ const allInputFilters = {
     payment_term: {},
     exchange_rate: {
         rate: "number",
-        date: "Datetime",
+        date: "string",
         currency_id: "number",
     },
     company_address: {
@@ -138,8 +138,8 @@ const allInputFilters = {
         accounting_period_status: "number", //["open","closed","future","access_locked"],
         is_current_posting_period: "boolean",
         is_year_end_closing: "boolean",
-        period_starting_date: "Datetime",
-        period_ending_date: "Datetime",
+        period_starting_date: "string",
+        period_ending_date: "string",
     },
     journal_type: {
         type: "string",
@@ -504,7 +504,7 @@ const allProjections = {
         contain_currency: true,
         tool_tip_description: true,
         can_have_more_than_one_chart_of_account: true,
-        account_category_id: true,
+        account_category: true,
         ...auditLogProjection,
     },
     closing_note: {
@@ -533,7 +533,7 @@ const allProjections = {
         bank_name: true,
         description: true,
         is_primary: true,
-        currency_id: true,
+        currency: true,
         ...auditLogProjection,
     },
     contact: {
@@ -543,8 +543,8 @@ const allProjections = {
         contact_display_name: true,
         remark: true,
         chart_of_account_id: true,
-        currency_id: true,
-        payment_term_id: true,
+        currency: true,
+        payment_term: true,
         ...auditLogProjection,
     },
     contact_address: {
@@ -558,8 +558,8 @@ const allProjections = {
         phone: true,
         fax: true,
         zip_code: true,
-        contact_id: true,
-        country_id: true,
+        contact: true,
+        country: true,
         ...auditLogProjection,
     },
     contact_person: {
@@ -572,8 +572,8 @@ const allProjections = {
         designation: true,
         department: true,
         is_primary_contact: true,
-        contact_id: true,
-        title_id: true,
+        contact: true,
+        title: true,
         ...auditLogProjection,
     },
     cost_center: {
@@ -586,8 +586,8 @@ const allProjections = {
     cost_center_accounts: {
         id: true,
         remark: true,
-        chart_of_account_id: true,
-        cost_center_id: true,
+        chart_of_account: true,
+        cost_center: true,
         ...auditLogProjection,
     },
     payment_term: {
@@ -600,7 +600,7 @@ const allProjections = {
         id: true,
         rate: true,
         date: true,
-        currency_id: true,
+        currency: true,
         ...auditLogProjection,
     },
     company_address: {
@@ -613,7 +613,7 @@ const allProjections = {
         phone: true,
         fax: true,
         website: true,
-        organization_profile_id: true,
+        organization_profile: true,
         ...auditLogProjection,
     },
     date_format_type: {
@@ -639,9 +639,9 @@ const allProjections = {
         profit_tax: true,
         legal_reserve: true,
         company_id_number: true,
-        time_format_id: true,
-        language_id: true,
-        base_currency_id: true,
+        time_format: true,
+        language: true,
+        base_currency: true,
         ...auditLogProjection,
     },
     industry: {
@@ -653,14 +653,14 @@ const allProjections = {
     journal_users: {
         id: true,
         access_name: true,
-        user_id: true,
+        user: true,
         ...auditLogProjection,
     },
     primary_contact: {
         id: true,
         name: true,
         email: true,
-        organization_profile_id: true,
+        organization_profile: true,
         ...auditLogProjection,
     },
     foot_note: {
@@ -672,8 +672,8 @@ const allProjections = {
     },
     associated_tax_group: {
         id: true,
-        tax_id: true,
-        tax_group_id: true,
+        tax: true,
+        tax: true,
         ...auditLogProjection,
     },
     tax: {
@@ -684,9 +684,9 @@ const allProjections = {
         is_editable: true,
         is_default_tax: true,
         tax_type: true,
-        chart_of_account_debit_id: true,
-        chart_of_account_credit_id: true,
-        tax_authority_id: true,
+        chart_of_account_debit: true,
+        chart_of_account_credit: true,
+        tax_authority: true,
         ...auditLogProjection,
     },
     tax_authority: {
@@ -715,7 +715,7 @@ const allProjections = {
         amount: true,
         remark: true,
         sales_type: true,
-        tax_id: true,
+        tax: true,
         ...auditLogProjection,
     },
     accounting_period: {
@@ -738,123 +738,148 @@ const allProjections = {
 };
 const allFilters = {
     account_category: {
-        code: "String",
-        description: "String",
-        is_debit: "String",
+        code: "string",
+        description: "string",
+        is_debit: "string",
     },
     account_type: {
-        code: "String",
-        type: "String",
-        description: "String",
+        code: "string",
+        type: "string",
+        description: "string",
+        account_category_id: "number",
     },
     closing_note: {
-        title: "String",
-        note: "String",
+        title: "string",
+        note: "string",
     },
     financial_statement_section: {
-        name: "String",
-        description: "String",
+        name: "string",
+        description: "string",
     },
     bank: {
-        account_name: "String",
-        account_number: "String",
-        account_code: "String",
-        IBAN: "String",
-        bank_name: "String",
-        description: "String",
-        is_primary: "Boolean",
-        currency_id: "Int",
+        account_name: "string",
+        account_number: "string",
+        account_code: "string",
+        IBAN: "string",
+        bank_name: "string",
+        description: "string",
+        currency_id: "Number",
     },
     contact: {
-        company_name: "String",
-        contact_display_name: "String",
-        remark: "String",
+        company_name: "string",
+        contact_display_name: "string",
+        remark: "string",
+        chart_of_account_id: "number",
+        currency_id: "number",
+        payment_term_id: "number",
     },
     contact_address: {
-        attention: "String",
-        street1: "String",
-        street2: "String",
-        city: "String",
-        state: "String",
-        phone: "String",
-        fax: "String",
-        zip_code: "String",
+        attention: "string",
+        street1: "string",
+        street2: "string",
+        city: "string",
+        state: "string",
+        phone: "string",
+        fax: "string",
+        zip_code: "string",
+        contact_id: "number",
+        country_id: "number",
     },
     contact_person: {
-        first_name: "String",
-        last_name: "String",
-        work_phone: "String",
-        mobile: "String",
-        email: "String",
-        designation: "String",
-        department: "String",
+        first_name: "string",
+        last_name: "string",
+        work_phone: "string",
+        mobile: "string",
+        email: "string",
+        designation: "string",
+        department: "string",
+        contact_id: "number",
+        title_id: "number",
     },
     cost_center: {
-        cost_center_code: "String",
-        section_name: "String",
-        remark: "String",
+        cost_center_code: "string",
+        section_name: "string",
+        remark: "string",
     },
     cost_center_accounts: {
-        remark: "String",
+        remark: "string",
+        chart_of_account_id: "number",
+        cost_center_id: "number",
     },
     payment_term: {
-        show_it_as: "String",
+        show_it_as: "string",
     },
-    exchange_rate: {},
+    exchange_rate: {
+        currency_id: "number",
+    },
     company_address: {
-        address1: "String", //only this required(from address data)
-        address2: "String",
-        city: "String",
-        state_or_province: "String",
-        zip_or_portal_code: "String",
-        phone: "String",
-        fax: "String",
-        website: "String",
+        address1: "string", //only this required(from address data)
+        address2: "string",
+        city: "string",
+        state_or_province: "string",
+        zip_or_portal_code: "string",
+        phone: "string",
+        fax: "string",
+        website: "string",
+        organization_profile_id: "number",
     },
     date_format_type: {
-        date_format: "String",
+        date_format: "string",
     },
     financial_settings: {
-        timezone: "String",
-        tax_id_number: "String",
-        company_id_number: "String",
+        timezone: "string",
+        tax_id_number: "string",
+        company_id_number: "string",
+        base_currency_id: "number",
+        time_format_id: "number",
+        language_id: "number",
     },
     industry: {
-        name: "String",
-        description: "String",
+        name: "string",
+        description: "string",
     },
-    journal_users: {},
+    journal_users: {
+        user_id: "number",
+    },
     primary_contact: {
-        name: "String",
-        email: "String",
+        name: "string",
+        email: "string",
+        organization_profile_id: "number",
     },
     foot_note: {
-        title: "String",
-        description: "String",
+        title: "string",
+        description: "string",
     },
-    associated_tax_group: {},
+    associated_tax_group: {
+        tax_id: "number",
+        tax_group_id: "number",
+    },
     tax: {
-        tax_name: "String",
+        tax_authority_id: "number",
+        tax_name: "string",
+        chart_of_account_debit_id: "number",
+        chart_of_account_credit_id: "number",
     },
     tax_authority: {
-        name: "String",
-        description: "String",
+        name: "string",
+        description: "string",
     },
     tax_exemption: {
-        tax_exemption_reason: "String",
-        code: "String",
-        description: "String",
+        tax_exemption_reason: "string",
+        code: "string",
+        description: "string",
     },
     tax_group: {
-        tax_group_name: "String",
+        tax_group_name: "string",
     },
     tax_rule: {
-        remark: "String",
+        remark: "string",
+        tax_id: "number",
     },
     accounting_period: {},
     journal_type: {
-        type: "String",
-        description: "String",
+        type: "string",
+        description: "string",
     },
 };
 const allSorts = {
@@ -1268,7 +1293,9 @@ router.get(allRoutes, async (req, res, next) => {
     };
     let queryFilter = {};
     for (let i in filter) {
-        queryFilter[i] = { contains: filter[i] };
+        if (typeof filter[i] == "number")
+            queryFilter[i] = { equals: filter[i] };
+        else queryFilter[i] = { contains: filter[i] };
     }
     let querySort = {};
     for (let i in sort) {

@@ -48,8 +48,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 limit:
                   type: integer
                 skip:
@@ -114,8 +112,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 concurrency_stamp:
                   type: string
                 id:
@@ -153,8 +149,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
       responses:
@@ -180,10 +174,7 @@ paths:
               properties:
                 newPassword:
                   type: string
-                accessToken:
-                  type: string
-                tempAccessToken:
-                  type: string
+              
                 id:
                   type: integer
                 password:
@@ -278,7 +269,7 @@ paths:
                 properties:
                   tempAccessToken:
                     type: string
-  /client:
+  /project/master/client:
     post:
       summary: Creates a new client
       tags: [Client]
@@ -289,8 +280,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 name:
                   type: string
                 tradeName:
@@ -342,8 +331,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 limit:
                   type: integer
                 skip:
@@ -474,8 +461,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
                 updateData:
@@ -531,8 +516,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
       responses:
@@ -545,7 +528,7 @@ paths:
                 properties:
                   success:
                     type: boolean
-  /material:
+  /project/master/material:
     post:
       summary: Creates a new material
       tags: [Material]
@@ -556,8 +539,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 name:
                   type: string
                 description:
@@ -593,8 +574,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 limit:
                   type: integer
                 skip:
@@ -677,8 +656,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
                 updateData:
@@ -718,8 +695,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
       responses:
@@ -744,8 +719,6 @@ paths:
               type: object
               properties:
                 name:
-                  type: string
-                accessToken:
                   type: string
                 privileges:
                   type: array
@@ -773,8 +746,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 limit:
                   type: integer
                 skip:
@@ -827,8 +798,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 concurrency_stamp:
                   type: string
                 id:
@@ -864,8 +833,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
       responses:
@@ -891,8 +858,6 @@ paths:
               properties:
                 action:
                   type: string
-                accessToken:
-                  type: string
                 description:
                   type: string
       responses:
@@ -915,8 +880,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 limit:
                   type: integer
                 skip:
@@ -965,8 +928,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 concurrency_stamp:
                   type: string
                 id:
@@ -998,8 +959,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
       responses:
@@ -1012,7 +971,7 @@ paths:
                 properties:
                   success:
                     type: boolean
-  /tagname:
+  /project/master/tagname:
     post:
       summary: tagname stands for the name of the header(eg /equipment)
       tags: [Equipment,Evaluation,Instruction,ManPower,Material Category,Phase,Priority,Work Category]
@@ -1023,8 +982,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 name:
                   type: string
                 description:
@@ -1056,8 +1013,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 limit:
                   type: integer
                 skip:
@@ -1128,8 +1083,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
                 updateData:
@@ -1165,8 +1118,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
       responses:
@@ -1179,7 +1130,7 @@ paths:
                 properties:
                   success:
                     type: boolean
-  /project:
+  /project/operational/project:
     post: 
       summary: posts a new project
       tags: [project]
@@ -1193,8 +1144,6 @@ paths:
                 startDate:
                   type: "string"
                 endDate:
-                  type: "string"
-                accessToken:
                   type: "string"
                 isProtectedForEdit:
                   type: boolean
@@ -1240,8 +1189,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 limit:
                   type: integer
                 skip:
@@ -1323,8 +1270,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
                 updateData:
@@ -1378,8 +1323,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
       responses:
@@ -1392,7 +1335,7 @@ paths:
                 properties:
                   success:
                     type: boolean
-  /daily_work_log:
+  /project/operational/daily_work_log:
     post: 
       summary: posts a new daily_work_log
       tags: [daily_work_log]
@@ -1406,8 +1349,6 @@ paths:
                 startDate:
                   type: "string"
                 endDate:
-                  type: "string"
-                accessToken:
                   type: "string"
                 isProtectedForEdit:
                   type: boolean
@@ -1453,8 +1394,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 limit:
                   type: integer
                 skip:
@@ -1538,8 +1477,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
                 updateData:
@@ -1593,8 +1530,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
       responses:
@@ -1607,7 +1542,7 @@ paths:
                 properties:
                   success:
                     type: boolean
-  /instruction_given_on_project:
+  /project/operational/instruction_given_on_project:
     post: 
       summary: posts a new instruction_given_on_project
       tags: [instruction_given_on_project]
@@ -1621,8 +1556,6 @@ paths:
                 startDate:
                   type: "string"
                 endDate:
-                  type: "string"
-                accessToken:
                   type: "string"
                 isProtectedForEdit:
                   type: boolean
@@ -1656,8 +1589,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 limit:
                   type: integer
                 skip:
@@ -1715,8 +1646,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
                 updateData:
@@ -1758,8 +1687,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
       responses:
@@ -1772,7 +1699,7 @@ paths:
                 properties:
                   success:
                     type: boolean
-  /manpower_requirement:
+  /project/operational/manpower_requirement:
     post: 
       summary: posts a new manpower_requirement
       tags: [manpower_requirement]
@@ -1786,8 +1713,6 @@ paths:
                 startDate:
                   type: "string"
                 endDate:
-                  type: "string"
-                accessToken:
                   type: "string"
                 isProtectedForEdit:
                   type: boolean
@@ -1831,8 +1756,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 limit:
                   type: integer
                 skip:
@@ -1900,8 +1823,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
                 updateData:
@@ -1953,8 +1874,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
       responses:
@@ -1967,7 +1886,7 @@ paths:
                 properties:
                   success:
                     type: boolean
-  /required_equipment:
+  /project/operational/required_equipment:
     post: 
       summary: posts a new required_equipment
       tags: [required_equipment]
@@ -1981,8 +1900,6 @@ paths:
                 startDate:
                   type: "string"
                 endDate:
-                  type: "string"
-                accessToken:
                   type: "string"
                 isProtectedForEdit:
                   type: boolean
@@ -2026,8 +1943,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 limit:
                   type: integer
                 skip:
@@ -2097,8 +2012,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
                 updateData:
@@ -2150,8 +2063,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
       responses:
@@ -2164,7 +2075,7 @@ paths:
                 properties:
                   success:
                     type: boolean
-  /required_material:
+  /project/operational/required_material:
     post: 
       summary: posts a new required_material
       tags: [required_material]
@@ -2178,8 +2089,6 @@ paths:
                 startDate:
                   type: "string"
                 endDate:
-                  type: "string"
-                accessToken:
                   type: "string"
                 isProtectedForEdit:
                   type: boolean
@@ -2225,8 +2134,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 limit:
                   type: integer
                 skip:
@@ -2296,8 +2203,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
                 updateData:
@@ -2351,8 +2256,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
       responses:
@@ -2365,7 +2268,7 @@ paths:
                 properties:
                   success:
                     type: boolean
-  /risk_tracking:
+  /project/operational/risk_tracking:
     post: 
       summary: posts a new risk_tracking
       tags: [risk_tracking]
@@ -2379,8 +2282,6 @@ paths:
                 startDate:
                   type: "string"
                 endDate:
-                  type: "string"
-                accessToken:
                   type: "string"
                 isProtectedForEdit:
                   type: boolean
@@ -2420,8 +2321,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 limit:
                   type: integer
                 skip:
@@ -2495,8 +2394,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
                 updateData:
@@ -2544,8 +2441,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
       responses:
@@ -2558,7 +2453,7 @@ paths:
                 properties:
                   success:
                     type: boolean
-  /task_manager:
+  /project/operational/task_manager:
     post: 
       summary: posts a new task_manager
       tags: [task_manager]
@@ -2572,8 +2467,6 @@ paths:
                 startDate:
                   type: "string"
                 endDate:
-                  type: "string"
-                accessToken:
                   type: "string"
                 isProtectedForEdit:
                   type: boolean
@@ -2611,8 +2504,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 limit:
                   type: integer
                 skip:
@@ -2680,8 +2571,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
                 updateData:
@@ -2727,8 +2616,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
       responses:
@@ -2741,7 +2628,7 @@ paths:
                 properties:
                   success:
                     type: boolean
-  /sub_task:
+  /project/operational/sub_task:
     post: 
       summary: posts a new sub_task
       tags: [sub_task]
@@ -2755,8 +2642,6 @@ paths:
                 startDate:
                   type: "string"
                 endDate:
-                  type: "string"
-                accessToken:
                   type: "string"
                 isProtectedForEdit:
                   type: boolean
@@ -2794,8 +2679,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 limit:
                   type: integer
                 skip:
@@ -2859,8 +2742,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
                 updateData:
@@ -2906,8 +2787,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
       responses:
@@ -2920,7 +2799,7 @@ paths:
                 properties:
                   success:
                     type: boolean
-  /simple_task:
+  /project/operational/simple_task:
     post: 
       summary: posts a new simple_task
       tags: [simple_task]
@@ -2934,8 +2813,6 @@ paths:
                 startDate:
                   type: "string"
                 endDate:
-                  type: "string"
-                accessToken:
                   type: "string"
                 isProtectedForEdit:
                   type: boolean
@@ -2975,8 +2852,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 limit:
                   type: integer
                 skip:
@@ -3042,8 +2917,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
                 updateData:
@@ -3091,8 +2964,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
       responses:
@@ -3105,7 +2976,7 @@ paths:
                 properties:
                   success:
                     type: boolean
-  /work_log_and_branch_of_work:
+  /project/operational/work_log_and_branch_of_work:
     post: 
       summary: posts a new work_log_and_branch_of_work
       tags: [work_log_and_branch_of_work]
@@ -3119,8 +2990,6 @@ paths:
                 startDate:
                   type: "string"
                 endDate:
-                  type: "string"
-                accessToken:
                   type: "string"
                 isProtectedForEdit:
                   type: boolean
@@ -3154,8 +3023,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 limit:
                   type: integer
                 skip:
@@ -3210,8 +3077,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
                 updateData:
@@ -3253,8 +3118,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
       responses:
@@ -3267,7 +3130,7 @@ paths:
                 properties:
                   success:
                     type: boolean
-  /weather_data:
+  /project/operational/weather_data:
     post: 
       summary: posts a new weather_data
       tags: [weather_data]
@@ -3281,8 +3144,6 @@ paths:
                 startDate:
                   type: "string"
                 endDate:
-                  type: "string"
-                accessToken:
                   type: "string"
                 isProtectedForEdit:
                   type: boolean
@@ -3320,8 +3181,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 limit:
                   type: integer
                 skip:
@@ -3385,8 +3244,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
                 updateData:
@@ -3432,8 +3289,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
       responses:
@@ -3446,7 +3301,7 @@ paths:
                 properties:
                   success:
                     type: boolean
-  /todos:
+  /project/operational/todos:
     post: 
       summary: posts a new todos
       tags: [todos]
@@ -3460,8 +3315,6 @@ paths:
                 startDate:
                   type: "string"
                 endDate:
-                  type: "string"
-                accessToken:
                   type: "string"
                 isProtectedForEdit:
                   type: boolean
@@ -3495,8 +3348,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 limit:
                   type: integer
                 skip:
@@ -3556,8 +3407,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
                 updateData:
@@ -3599,8 +3448,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
       responses:
@@ -3613,7 +3460,7 @@ paths:
                 properties:
                   success:
                     type: boolean
-  /request:
+  /project/operational/request:
     post: 
       summary: posts a new request
       tags: [request]
@@ -3627,8 +3474,6 @@ paths:
                 startDate:
                   type: "string"
                 endDate:
-                  type: "string"
-                accessToken:
                   type: "string"
                 isProtectedForEdit:
                   type: boolean
@@ -3674,8 +3519,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 limit:
                   type: integer
                 skip:
@@ -3755,8 +3598,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
                 updateData:
@@ -3810,8 +3651,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
       responses:
@@ -3824,7 +3663,7 @@ paths:
                 properties:
                   success:
                     type: boolean
-  /invoice_tracking:
+  /project/operational/invoice_tracking:
     post: 
       summary: posts a new invoice_tracking
       tags: [invoice_tracking]
@@ -3838,8 +3677,6 @@ paths:
                 startDate:
                   type: "string"
                 endDate:
-                  type: "string"
-                accessToken:
                   type: "string"
                 isProtectedForEdit:
                   type: boolean
@@ -3879,8 +3716,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 limit:
                   type: integer
                 skip:
@@ -3948,8 +3783,6 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
                 id:
                   type: integer
                 updateData:
@@ -3997,8 +3830,4436 @@ paths:
             schema:
               type: object
               properties:
-                accessToken:
-                  type: string
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /finance/master/account_category:
+    post: 
+      summary: posts a new account_category
+      tags: [account_category]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                description: 
+                  type: "string"
+                is_debit: 
+                  type: "string"
+                code: 
+                  type: "string"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected account_category
+      tags: [account_category]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    code: 
+                      type: "string"
+                    description: 
+                      type: "string"
+                    is_debit: 
+                      type: "string"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    code: 
+                      type: "number"
+                    description: 
+                      type: "number"
+                    is_debit: 
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+    patch:
+      summary: updates a account_category
+      tags: [account_category]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "string"
+                    endDate:
+                      type: "string"
+                    isProtectedForEdit:
+                      type: boolean
+                    description: 
+                      type: "string"
+                    is_debit: 
+                      type: "string"
+                    code: 
+                      type: "string"
+                    
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a account_category
+      tags: [account_category]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /finance/master/account_type:
+    post: 
+      summary: posts a new account_type
+      tags: [account_type]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                description: 
+                  type: "string"
+                can_be_sub_account: 
+                  type: "boolean"
+                contain_account_number: 
+                  type: "boolean"
+                contain_currency: 
+                  type: "boolean"
+                tool_tip_description: 
+                  type: "string"
+                can_have_more_than_one_chart_of_account: 
+                  type: "boolean"
+                code: 
+                  type: "string"
+                type: 
+                  type: "string"
+                account_category_id: 
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected account_type
+      tags: [account_type]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    code: 
+                      type: "string"
+                    type: 
+                      type: "string"
+                    description: 
+                      type: "string"
+                    account_category_id: 
+                      type: "number"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    code: 
+                      type: "number"
+                    type: 
+                      type: "number"
+                    description: 
+                      type: "number"
+                    can_be_sub_account: 
+                      type: "number"
+                    contain_account_number: 
+                      type: "number"
+                    contain_currency: 
+                      type: "number"
+                    tool_tip_description: 
+                      type: "number"
+                    can_have_more_than_one_chart_of_account: 
+                      type: "number"
+                    account_category_id: 
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+    patch:
+      summary: updates a account_type
+      tags: [account_type]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "string"
+                    endDate:
+                      type: "string"
+                    isProtectedForEdit:
+                      type: boolean
+                    description: 
+                      type: "string"
+                    can_be_sub_account: 
+                      type: "boolean"
+                    contain_account_number: 
+                      type: "boolean"
+                    contain_currency: 
+                      type: "boolean"
+                    tool_tip_description: 
+                      type: "string"
+                    can_have_more_than_one_chart_of_account: 
+                      type: "boolean"
+                    code: 
+                      type: "string"
+                    type: 
+                      type: "string"
+                    account_category_id: 
+                      type: "number"
+                    
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a account_type
+      tags: [account_type]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /finance/master/closing_note:
+    post:   
+      summary: posts a new closing_note
+      tags: [closing_note]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                closing_type: 
+                  type: "number"
+                title: 
+                  type: "string"
+                consideration: 
+                  type: "number"
+                note: 
+                  type: "string"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected closing_note
+      tags: [closing_note]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    title: 
+                      type: "string"
+                    note: 
+                      type: "string"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    closing_type: 
+                      type: "number"
+                    title: 
+                      type: "number"
+                    note: 
+                      type: "number"
+                    consideration: 
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+    patch:
+      summary: updates a closing_note
+      tags: [closing_note]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "string"
+                    endDate:
+                      type: "string"
+                    isProtectedForEdit:
+                      type: boolean
+                    closing_type: 
+                      type: "number"
+                    title: 
+                      type: "string"
+                    consideration: 
+                      type: "number"
+                    note: 
+                      type: "string"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a closing_note
+      tags: [closing_note]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /finance/master/financial_statement_section:
+    post: 
+      summary: posts a new financial_statement_section
+      tags: [financial_statement_section]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                name: 
+                  type: "string"
+                sequence_on_report: 
+                  type: "number"
+                financial_statement_type: 
+                  type: "number"
+                description: 
+                  type: "string"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected financial_statement_section
+      tags: [financial_statement_section]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    name: 
+                      type: "string"
+                    description: 
+                      type: "string"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    name: 
+                      type: "number"
+                    description: 
+                      type: "number"
+                    sequence_on_report: 
+                      type: "number"
+                    financial_statement_type: 
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+    patch:
+      summary: updates a financial_statement_section
+      tags: [financial_statement_section]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "string"
+                    endDate:
+                      type: "string"
+                    isProtectedForEdit:
+                      type: boolean
+                    name: 
+                      type: "string"
+                    sequence_on_report: 
+                      type: "number"
+                    financial_statement_type: 
+                      type: "number"
+                    description: 
+                      type: "string"
+                    
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a financial_statement_section
+      tags: [financial_statement_section]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /finance/master/bank:
+    post: 
+      summary: posts a new bank
+      tags: [bank]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                account_type: 
+                  type: "number"
+                account_name: 
+                  type: "string"
+                currency_id: 
+                  type: "number"
+                account_number: 
+                  type: "string"
+                account_code: 
+                  type: "string"
+                IBAN: 
+                  type: "string"
+                bank_name: 
+                  type: "string"
+                description: 
+                  type: "string"
+                is_primary: 
+                  type: "boolean"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected bank
+      tags: [bank]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    account_name: 
+                      type: "string"
+                    account_number: 
+                      type: "string"
+                    account_code: 
+                      type: "string"
+                    IBAN: 
+                      type: "string"
+                    bank_name: 
+                      type: "string"
+                    description: 
+                      type: "string"
+                    currency_id: 
+                      type: "number"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    account_type: 
+                      type: "number"
+                    account_name: 
+                      type: "number"
+                    account_number: 
+                      type: "number"
+                    account_code: 
+                      type: "number"
+                    IBAN: 
+                      type: "number"
+                    bank_name: 
+                      type: "number"
+                    description: 
+                      type: "number"
+                    is_primary: 
+                      type: "number"
+                    currency_id: 
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+    patch:
+      summary: updates a bank
+      tags: [bank]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "string"
+                    endDate:
+                      type: "string"
+                    isProtectedForEdit:
+                      type: boolean
+                    account_type: 
+                      type: "number"
+                    account_name: 
+                      type: "string"
+                    currency_id: 
+                      type: "number"
+                    account_number: 
+                      type: "string"
+                    account_code: 
+                      type: "string"
+                    IBAN: 
+                      type: "string"
+                    bank_name: 
+                      type: "string"
+                    description: 
+                      type: "string"
+                    is_primary: 
+                      type: "boolean"
+                    
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a bank
+      tags: [bank]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /finance/master/contact:
+    post: 
+      summary: posts a new contact
+      tags: [contact]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                contact_type: 
+                  type: "number"
+                company_name: 
+                  type: "string"
+                contact_display_name: 
+                  type: "string"
+                remark: 
+                  type: "string"
+                chart_of_account_id: 
+                  type: "number"
+                currency_id: 
+                  type: "number"
+                payment_term_id: 
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected contact
+      tags: [contact]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    company_name: 
+                      type: "string"
+                    contact_display_name: 
+                      type: "string"
+                    remark: 
+                      type: "string"
+                    chart_of_account_id: 
+                      type: "number"
+                    currency_id: 
+                      type: "number"
+                    payment_term_id: 
+                      type: "number"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    contact_type: 
+                      type: "number"
+                    company_name: 
+                      type: "number"
+                    contact_display_name: 
+                      type: "number"
+                    remark: 
+                      type: "number"
+                    chart_of_account_id: 
+                      type: "number"
+                    currency_id: 
+                      type: "number"
+                    payment_term_id: 
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+    patch:
+      summary: updates a contact
+      tags: [contact]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "string"
+                    endDate:
+                      type: "string"
+                    isProtectedForEdit:
+                      type: boolean
+                    contact_type: 
+                      type: "number"
+                    company_name: 
+                      type: "string"
+                    contact_display_name: 
+                      type: "string"
+                    remark: 
+                      type: "string"
+                    chart_of_account_id: 
+                      type: "number"
+                    currency_id: 
+                      type: "number"
+                    payment_term_id: 
+                      type: "number"
+                    
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a contact
+      tags: [contact]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /finance/master/contact_address:
+    post: 
+      summary: posts a new contact_address
+      tags: [contact_address]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                address_type: 
+                  type: "number"
+                attention: 
+                  type: "string"
+                street1: 
+                  type: "string"
+                street2: 
+                  type: "string"
+                city: 
+                  type: "string"
+                state: 
+                  type: "string"
+                phone: 
+                  type: "string"
+                fax: 
+                  type: "string"
+                zip_code: 
+                  type: "string"
+                contact_id: 
+                  type: "number"
+                country_id: 
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected contact_address
+      tags: [contact_address]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    attention: 
+                      type: "string"
+                    street1: 
+                      type: "string"
+                    street2: 
+                      type: "string"
+                    city: 
+                      type: "string"
+                    state: 
+                      type: "string"
+                    phone: 
+                      type: "string"
+                    fax: 
+                      type: "string"
+                    zip_code: 
+                      type: "string"
+                    contact_id: 
+                      type: "number"
+                    country_id: 
+                      type: "number"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    address_type: 
+                      type: "number"
+                    attention: 
+                      type: "number"
+                    street1: 
+                      type: "number"
+                    street2: 
+                      type: "number"
+                    city: 
+                      type: "number"
+                    state: 
+                      type: "number"
+                    phone: 
+                      type: "number"
+                    fax: 
+                      type: "number"
+                    zip_code: 
+                      type: "number"
+                    contact_id: 
+                      type: "number"
+                    country_id: 
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+    patch:
+      summary: updates a contact_address
+      tags: [contact_address]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "string"
+                    endDate:
+                      type: "string"
+                    isProtectedForEdit:
+                      type: boolean
+                    address_type: 
+                      type: "number"
+                    attention: 
+                      type: "string"
+                    street1: 
+                      type: "string"
+                    street2: 
+                      type: "string"
+                    city: 
+                      type: "string"
+                    state: 
+                      type: "string"
+                    phone: 
+                      type: "string"
+                    fax: 
+                      type: "string"
+                    zip_code: 
+                      type: "string"
+                    contact_id: 
+                      type: "number"
+                    country_id: 
+                      type: "number"
+                    
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a contact_address
+      tags: [contact_address]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /finance/master/contact_person:
+    post: 
+      summary: posts a new contact_person
+      tags: [contact_person]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                first_name: 
+                  type: "string"
+                last_name: 
+                  type: "string"
+                work_phone: 
+                  type: "string"
+                mobile: 
+                  type: "string"
+                email: 
+                  type: "string"
+                designation: 
+                  type: "string"
+                department: 
+                  type: "string"
+                is_primary_contact: 
+                  type: "boolean"
+                contact_id: 
+                  type: "number"
+                title_id: 
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected contact_person
+      tags: [contact_person]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    first_name: 
+                      type: "string"
+                    last_name: 
+                      type: "string"
+                    work_phone: 
+                      type: "string"
+                    mobile: 
+                      type: "string"
+                    email: 
+                      type: "string"
+                    designation: 
+                      type: "string"
+                    department: 
+                      type: "string"
+                    contact_id: 
+                      type: "number"
+                    title_id: 
+                      type: "number"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    first_name: 
+                      type: "number"
+                    last_name: 
+                      type: "number"
+                    work_phone: 
+                      type: "number"
+                    mobile: 
+                      type: "number"
+                    email: 
+                      type: "number"
+                    designation: 
+                      type: "number"
+                    department: 
+                      type: "number"
+                    is_primary_contact: 
+                      type: "number"
+                    contact_id: 
+                      type: "number"
+                    title_id: 
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+    patch:
+      summary: updates a contact_person
+      tags: [contact_person]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "string"
+                    endDate:
+                      type: "string"
+                    isProtectedForEdit:
+                      type: boolean
+                    first_name: 
+                      type: "string"
+                    last_name: 
+                      type: "string"
+                    work_phone: 
+                      type: "string"
+                    mobile: 
+                      type: "string"
+                    email: 
+                      type: "string"
+                    designation: 
+                      type: "string"
+                    department: 
+                      type: "string"
+                    is_primary_contact: 
+                      type: "boolean"
+                    contact_id: 
+                      type: "number"
+                    title_id: 
+                      type: "number"
+                    
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a contact_person
+      tags: [contact_person]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /finance/master/cost_center:
+    post: 
+      summary: posts a new cost_center
+      tags: [cost_center]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                cost_center_code: 
+                  type: "string"
+                section_name: 
+                  type: "string"
+                remark: 
+                  type: "string"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected cost_center
+      tags: [cost_center]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    cost_center_code: 
+                      type: "string"
+                    section_name: 
+                      type: "string"
+                    remark: 
+                      type: "string"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    cost_center_code: 
+                      type: "number"
+                    section_name: 
+                      type: "number"
+                    remark: 
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+    patch:
+      summary: updates a cost_center
+      tags: [cost_center]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "string"
+                    endDate:
+                      type: "string"
+                    isProtectedForEdit:
+                      type: boolean
+                    cost_center_code: 
+                      type: "string"
+                    section_name: 
+                      type: "string"
+                    remark: 
+                      type: "string"
+                    
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a cost_center
+      tags: [cost_center]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /finance/master/cost_center_accounts:
+    post: 
+      summary: posts a new cost_center_accounts
+      tags: [cost_center_accounts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                chart_of_account_id: 
+                  type: "number"
+                cost_center_id: 
+                  type: "number"
+                remark: 
+                  type: "string"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected cost_center_accounts
+      tags: [cost_center_accounts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    remark: 
+                      type: "string"
+                    chart_of_account_id: 
+                      type: "number"
+                    cost_center_id: 
+                      type: "number"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    remark: 
+                      type: "number"
+                    chart_of_account_id: 
+                      type: "number"
+                    cost_center_id: 
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+    patch:
+      summary: updates a cost_center_accounts
+      tags: [cost_center_accounts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "string"
+                    endDate:
+                      type: "string"
+                    isProtectedForEdit:
+                      type: boolean
+                    chart_of_account_id: 
+                      type: "number"
+                    cost_center_id: 
+                      type: "number"
+                    remark: 
+                      type: "string"
+                    
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a cost_center_accounts
+      tags: [cost_center_accounts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /finance/master/payment_term:
+    post: 
+      summary: posts a new payment_term
+      tags: [payment_term]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                show_it_as: 
+                  type: "string"
+                number_of_days: 
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected payment_term
+      tags: [payment_term]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    show_it_as: 
+                      type: "string"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    show_it_as: 
+                      type: "number"
+                    number_of_days: 
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+    patch:
+      summary: updates a payment_term
+      tags: [payment_term]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "string"
+                    endDate:
+                      type: "string"
+                    isProtectedForEdit:
+                      type: boolean
+                    show_it_as: 
+                      type: "string"
+                    number_of_days: 
+                      type: "number"
+                    
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a payment_term
+      tags: [payment_term]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /finance/master/exchange_rate:
+    post: 
+      summary: posts a new exchange_rate
+      tags: [exchange_rate]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                rate: 
+                  type: "number"
+                date: 
+                  type: "string"
+                currency_id: 
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected exchange_rate
+      tags: [exchange_rate]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    currency_id: 
+                      type: "number"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    rate: 
+                      type: "number"
+                    date: 
+                      type: "number"
+                    currency_id: 
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+    patch:
+      summary: updates a exchange_rate
+      tags: [exchange_rate]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "string"
+                    endDate:
+                      type: "string"
+                    isProtectedForEdit:
+                      type: boolean
+                    rate: 
+                      type: "number"
+                    date: 
+                      type: "string"
+                    currency_id: 
+                      type: "number"
+                    
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a exchange_rate
+      tags: [exchange_rate]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /finance/master/company_address:
+    post: 
+      summary: posts a new company_address
+      tags: [company_address]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                address1: 
+                  type: "string"
+                organization_profile_id: 
+                  type: "number"
+                address2: 
+                  type: "string"
+                city: 
+                  type: "string"
+                state_or_province: 
+                  type: "string"
+                zip_or_portal_code: 
+                  type: "string"
+                phone: 
+                  type: "string"
+                fax: 
+                  type: "string"
+                website: 
+                  type: "string"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected company_address
+      tags: [company_address]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    address1: 
+                      type: "string"
+                    address2: 
+                      type: "string"
+                    city: 
+                      type: "string"
+                    state_or_province: 
+                      type: "string"
+                    zip_or_portal_code: 
+                      type: "string"
+                    phone: 
+                      type: "string"
+                    fax: 
+                      type: "string"
+                    website: 
+                      type: "string"
+                    organization_profile_id: 
+                      type: "number"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    address1: 
+                      type: "number"
+                    address2: 
+                      type: "number"
+                    city: 
+                      type: "number"
+                    state_or_province: 
+                      type: "number"
+                    zip_or_portal_code: 
+                      type: "number"
+                    phone: 
+                      type: "number"
+                    fax: 
+                      type: "number"
+                    website: 
+                      type: "number"
+                    organization_profile_id: 
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+    patch:
+      summary: updates a company_address
+      tags: [company_address]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "string"
+                    endDate:
+                      type: "string"
+                    isProtectedForEdit:
+                      type: boolean
+                    address1: 
+                      type: "string"
+                    organization_profile_id: 
+                      type: "number"
+                    address2: 
+                      type: "string"
+                    city: 
+                      type: "string"
+                    state_or_province: 
+                      type: "string"
+                    zip_or_portal_code: 
+                      type: "string"
+                    phone: 
+                      type: "string"
+                    fax: 
+                      type: "string"
+                    website: 
+                      type: "string"
+                    
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a company_address
+      tags: [company_address]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /finance/master/date_format_type:
+    post: 
+      summary: posts a new date_format_type
+      tags: [date_format_type]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                id: 
+                  type: "number"
+                date_format: 
+                  type: "string"
+                date_format_type_category: 
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected date_format_type
+      tags: [date_format_type]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    date_format: 
+                      type: "string"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    date_format: 
+                      type: "number"
+                    date_format_type_category: 
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+    patch:
+      summary: updates a date_format_type
+      tags: [date_format_type]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "string"
+                    endDate:
+                      type: "string"
+                    isProtectedForEdit:
+                      type: boolean
+                    id: 
+                      type: "number"
+                    date_format: 
+                      type: "string"
+                    date_format_type_category: 
+                      type: "number"
+                    
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a date_format_type
+      tags: [date_format_type]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /finance/master/financial_settings:
+    post: 
+      summary: posts a new financial_settings
+      tags: [financial_settings]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                id: 
+                  type: "number"
+                report_basis: 
+                  type: "number"
+                fiscal_year: 
+                  type: "number"
+                closing_type: 
+                  type: "number"
+                base_currency_id: 
+                  type: "number"
+                timezone: 
+                  type: "string"
+                company_id: 
+                  type: "number"
+                tax_id: 
+                  type: "number"
+                tax_id_number: 
+                  type: "string"
+                auto_generate_journal_preference: 
+                  type: "boolean"
+                is_acc_code_mandatory: 
+                  type: "boolean"
+                enter_unique_acc_code: 
+                  type: "boolean"
+                is_profile_tax_applied: 
+                  type: "boolean"
+                is_legal_reserve_applied: 
+                  type: "boolean"
+                profit_tax: 
+                  type: "number"
+                legal_reserve: 
+                  type: "number"
+                company_id_number: 
+                  type: "string"
+                time_format_id: 
+                  type: "number"
+                language_id: 
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected financial_settings
+      tags: [financial_settings]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    timezone: 
+                      type: "string"
+                    tax_id_number: 
+                      type: "string"
+                    company_id_number: 
+                      type: "string"
+                    base_currency_id: 
+                      type: "number"
+                    time_format_id: 
+                      type: "number"
+                    language_id: 
+                      type: "number"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    report_basis: 
+                      type: "number"
+                    fiscal_year: 
+                      type: "number"
+                    closing_type: 
+                      type: "number"
+                    timezone: 
+                      type: "number"
+                    company_id: 
+                      type: "number"
+                    tax_id: 
+                      type: "number"
+                    tax_id_number: 
+                      type: "number"
+                    auto_generate_journal_preference: 
+                      type: "number"
+                    is_acc_code_mandatory: 
+                      type: "number"
+                    enter_unique_acc_code: 
+                      type: "number"
+                    is_profile_tax_applied: 
+                      type: "number"
+                    is_legal_reserve_applied: 
+                      type: "number"
+                    profit_tax: 
+                      type: "number"
+                    legal_reserve: 
+                      type: "number"
+                    company_id_number: 
+                      type: "number"
+                    time_format_id: 
+                      type: "number"
+                    language_id: 
+                      type: "number"
+                    base_currency_id: 
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+    patch:
+      summary: updates a financial_settings
+      tags: [financial_settings]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "string"
+                    endDate:
+                      type: "string"
+                    isProtectedForEdit:
+                      type: boolean
+                    id: 
+                      type: "number"
+                    report_basis: 
+                      type: "number"
+                    fiscal_year: 
+                      type: "number"
+                    closing_type: 
+                      type: "number"
+                    base_currency_id: 
+                      type: "number"
+                    timezone: 
+                      type: "string"
+                    company_id: 
+                      type: "number"
+                    tax_id: 
+                      type: "number"
+                    tax_id_number: 
+                      type: "string"
+                    auto_generate_journal_preference: 
+                      type: "boolean"
+                    is_acc_code_mandatory: 
+                      type: "boolean"
+                    enter_unique_acc_code: 
+                      type: "boolean"
+                    is_profile_tax_applied: 
+                      type: "boolean"
+                    is_legal_reserve_applied: 
+                      type: "boolean"
+                    profit_tax: 
+                      type: "number"
+                    legal_reserve: 
+                      type: "number"
+                    company_id_number: 
+                      type: "string"
+                    time_format_id: 
+                      type: "number"
+                    language_id: 
+                      type: "number"
+                    
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a financial_settings
+      tags: [financial_settings]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /finance/master/industry:
+    post: 
+      summary: posts a new industry
+      tags: [industry]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                name: 
+                  type: "string"
+                description: 
+                  type: "string"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected industry
+      tags: [industry]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    name: 
+                      type: "string"
+                    description: 
+                      type: "string"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    name: 
+                      type: "number"
+                    description: 
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+    patch:
+      summary: updates a industry
+      tags: [industry]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "string"
+                    endDate:
+                      type: "string"
+                    isProtectedForEdit:
+                      type: boolean
+                    name: 
+                      type: "string"
+                    description: 
+                      type: "string"
+                    
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a industry
+      tags: [industry]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /finance/master/journal_users:
+    post: 
+      summary: posts a new journal_users
+      tags: [journal_users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                access_name: 
+                  type: "number"
+                user_id: 
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected journal_users
+      tags: [journal_users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    user_id: 
+                      type: "number"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    access_name: 
+                      type: "number"
+                    user_id: 
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+    patch:
+      summary: updates a journal_users
+      tags: [journal_users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "string"
+                    endDate:
+                      type: "string"
+                    isProtectedForEdit:
+                      type: boolean
+                    access_name: 
+                      type: "number"
+                    user_id: 
+                      type: "number"
+                    
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a journal_users
+      tags: [journal_users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /finance/master/primary_contact:
+    post: 
+      summary: posts a new primary_contact
+      tags: [primary_contact]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                name: 
+                  type: "string"
+                email: 
+                  type: "string"
+                organization_profile_id: 
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected primary_contact
+      tags: [primary_contact]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    name: 
+                      type: "string"
+                    email: 
+                      type: "string"
+                    organization_profile_id: 
+                      type: "number"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    name: 
+                      type: "number"
+                    email: 
+                      type: "number"
+                    organization_profile_id: 
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+    patch:
+      summary: updates a primary_contact
+      tags: [primary_contact]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "string"
+                    endDate:
+                      type: "string"
+                    isProtectedForEdit:
+                      type: boolean
+                    name: 
+                      type: "string"
+                    email: 
+                      type: "string"
+                    organization_profile_id: 
+                      type: "number"
+                    
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a primary_contact
+      tags: [primary_contact]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /finance/master/foot_note:
+    post: 
+      summary: posts a new foot_note
+      tags: [foot_note]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                title: 
+                  type: "string"
+                description: 
+                  type: "string"
+                financial_statement_type: 
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected foot_note
+      tags: [foot_note]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    title: 
+                      type: "string"
+                    description: 
+                      type: "string"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    title: 
+                      type: "number"
+                    description: 
+                      type: "number"
+                    financial_statement_type: 
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+    patch:
+      summary: updates a foot_note
+      tags: [foot_note]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "string"
+                    endDate:
+                      type: "string"
+                    isProtectedForEdit:
+                      type: boolean
+                    title: 
+                      type: "string"
+                    description: 
+                      type: "string"
+                    financial_statement_type: 
+                      type: "number"
+                    
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a foot_note
+      tags: [foot_note]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /finance/master/associated_tax_group:
+    post: 
+      summary: posts a new associated_tax_group
+      tags: [associated_tax_group]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                tax_id: 
+                  type: "number"
+                tax_group_id: 
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected associated_tax_group
+      tags: [associated_tax_group]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    tax_id: 
+                      type: "number"
+                    tax_group_id: 
+                      type: "number"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    tax_id: 
+                      type: "number"
+                    tax_group_id: 
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+    patch:
+      summary: updates a associated_tax_group
+      tags: [associated_tax_group]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "string"
+                    endDate:
+                      type: "string"
+                    isProtectedForEdit:
+                      type: boolean
+                    tax_id: 
+                      type: "number"
+                    tax_group_id: 
+                      type: "number"
+                    
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a associated_tax_group
+      tags: [associated_tax_group]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /finance/master/tax:
+    post: 
+      summary: posts a new tax
+      tags: [tax]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                tax_name: 
+                  type: "string"
+                tax_percentage: 
+                  type: "number"
+                tax_authority_id: 
+                  type: "number"
+                is_value_added: 
+                  type: "boolean"
+                is_editable: 
+                  type: "boolean"
+                is_default_tax: 
+                  type: "boolean"
+                tax_type: 
+                  type: "number"
+                chart_of_account_debit_id: 
+                  type: "number"
+                chart_of_account_credit_id: 
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected tax
+      tags: [tax]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    tax_authority_id: 
+                      type: "number"
+                    tax_name: 
+                      type: "string"
+                    chart_of_account_debit_id: 
+                      type: "number"
+                    chart_of_account_credit_id: 
+                      type: "number"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    tax_name: 
+                      type: "number"
+                    tax_percentage: 
+                      type: "number"
+                    is_value_added: 
+                      type: "number"
+                    is_editable: 
+                      type: "number"
+                    is_default_tax: 
+                      type: "number"
+                    tax_type: 
+                      type: "number"
+                    chart_of_account_debit_id: 
+                      type: "number"
+                    chart_of_account_credit_id: 
+                      type: "number"
+                    tax_authority_id: 
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+    patch:
+      summary: updates a tax
+      tags: [tax]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "string"
+                    endDate:
+                      type: "string"
+                    isProtectedForEdit:
+                      type: boolean
+                    tax_name: 
+                      type: "string"
+                    tax_percentage: 
+                      type: "number"
+                    tax_authority_id: 
+                      type: "number"
+                    is_value_added: 
+                      type: "boolean"
+                    is_editable: 
+                      type: "boolean"
+                    is_default_tax: 
+                      type: "boolean"
+                    tax_type: 
+                      type: "number"
+                    chart_of_account_debit_id: 
+                      type: "number"
+                    chart_of_account_credit_id: 
+                      type: "number"
+                    
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a tax
+      tags: [tax]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /finance/master/tax_authority:
+    post: 
+      summary: posts a new tax_authority
+      tags: [tax_authority]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                name: 
+                  type: "string"
+                description: 
+                  type: "string"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected tax_authority
+      tags: [tax_authority]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    name: 
+                      type: "string"
+                    description: 
+                      type: "string"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    name: 
+                      type: "number"
+                    description: 
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+    patch:
+      summary: updates a tax_authority
+      tags: [tax_authority]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "string"
+                    endDate:
+                      type: "string"
+                    isProtectedForEdit:
+                      type: boolean
+                    name: 
+                      type: "string"
+                    description: 
+                      type: "string"
+                    
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a tax_authority
+      tags: [tax_authority]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /finance/master/tax_exemption:
+    post: 
+      summary: posts a new tax_exemption
+      tags: [tax_exemption]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                code: 
+                  type: "string"
+                tax_exemption_type: 
+                  type: "number"
+                tax_exemption_reason: 
+                  type: "string"
+                description: 
+                  type: "string"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected tax_exemption
+      tags: [tax_exemption]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    tax_exemption_reason: 
+                      type: "string"
+                    code: 
+                      type: "string"
+                    description: 
+                      type: "string"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    tax_exemption_reason: 
+                      type: "number"
+                    code: 
+                      type: "number"
+                    description: 
+                      type: "number"
+                    tax_exemption_type: 
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+    patch:
+      summary: updates a tax_exemption
+      tags: [tax_exemption]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "string"
+                    endDate:
+                      type: "string"
+                    isProtectedForEdit:
+                      type: boolean
+                    code: 
+                      type: "string"
+                    tax_exemption_type: 
+                      type: "number"
+                    tax_exemption_reason: 
+                      type: "string"
+                    description: 
+                      type: "string"
+                    
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a tax_exemption
+      tags: [tax_exemption]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /finance/master/tax_group:
+    post: 
+      summary: posts a new tax_group
+      tags: [tax_group]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                tax_group_name: 
+                  type: "string"
+                tax_group_percentage: 
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected tax_group
+      tags: [tax_group]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    tax_group_name: 
+                      type: "string"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    tax_group_name: 
+                      type: "number"
+                    tax_group_percentage: 
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+    patch:
+      summary: updates a tax_group
+      tags: [tax_group]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "string"
+                    endDate:
+                      type: "string"
+                    isProtectedForEdit:
+                      type: boolean
+                    tax_group_name: 
+                      type: "string"
+                    tax_group_percentage: 
+                      type: "number"
+                    
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a tax_group
+      tags: [tax_group]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /finance/master/tax_rule:
+    post: 
+      summary: posts a new tax_rule
+      tags: [tax_rule]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                operator: 
+                  type: "number"
+                amount: 
+                  type: "number"
+                tax_id: 
+                  type: "number"
+                remark: 
+                  type: "string"
+                sales_type: 
+                  type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected tax_rule
+      tags: [tax_rule]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    remark: 
+                      type: "string"
+                    tax_id: 
+                      type: "number"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    operator: 
+                      type: "number"
+                    amount: 
+                      type: "number"
+                    remark: 
+                      type: "number"
+                    sales_type: 
+                      type: "number"
+                    tax_id: 
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+    patch:
+      summary: updates a tax_rule
+      tags: [tax_rule]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "string"
+                    endDate:
+                      type: "string"
+                    isProtectedForEdit:
+                      type: boolean
+                    operator: 
+                      type: "number"
+                    amount: 
+                      type: "number"
+                    tax_id: 
+                      type: "number"
+                    remark: 
+                      type: "string"
+                    sales_type: 
+                      type: "number"
+                    
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a tax_rule
+      tags: [tax_rule]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /finance/master/accounting_period:
+    post: 
+      summary: posts a new accounting_period
+      tags: [accounting_period]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                months: 
+                  type: "number"
+                period_number: 
+                  type: "number"
+                accounting_period_status: 
+                  type: "number"
+                is_current_posting_period: 
+                  type: "boolean"
+                is_year_end_closing: 
+                  type: "boolean"
+                period_starting_date: 
+                  type: "string"
+                period_ending_date: 
+                  type: "string"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected accounting_period
+      tags: [accounting_period]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    months: 
+                      type: "number"
+                    period_number: 
+                      type: "number"
+                    accounting_period_status: 
+                      type: "number"
+                    is_current_posting_period: 
+                      type: "number"
+                    is_year_end_closing: 
+                      type: "number"
+                    period_starting_date: 
+                      type: "number"
+                    period_ending_date: 
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+    patch:
+      summary: updates a accounting_period
+      tags: [accounting_period]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "string"
+                    endDate:
+                      type: "string"
+                    isProtectedForEdit:
+                      type: boolean
+                    months: 
+                      type: "number"
+                    period_number: 
+                      type: "number"
+                    accounting_period_status:
+                      type: "number"
+                    is_current_posting_period: 
+                      type: "boolean"
+                    is_year_end_closing: 
+                      type: "boolean"
+                    period_starting_date: 
+                      type: "string"
+                    period_ending_date: 
+                      type: "string"
+                    
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a accounting_period
+      tags: [accounting_period]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /finance/master/journal_type:
+    post: 
+      summary: posts a new journal_type
+      tags: [journal_type]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: "string"
+                endDate:
+                  type: "string"
+                isProtectedForEdit:
+                  type: boolean
+                type: 
+                  type: "string"
+                description: 
+                  type: "string"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected journal_type
+      tags: [journal_type]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    type: 
+                      type: "string"
+                    description: 
+                      type: "string"
+                sort:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "number"
+                    endDate:
+                      type: "number"
+                    creationDate:
+                      type: "number"
+                    createdBy:
+                      type: "number"
+                    revisionDate: 
+                      type: "number"
+                    revisedBy: 
+                      type: "number"
+                    isProtectedForEdit: 
+                      type: "number"
+                    id: 
+                      type: "number"
+                    type: 
+                      type: "number"
+                    description: 
+                      type: "number"
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+    patch:
+      summary: updates a journal_type
+      tags: [journal_type]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    startDate:
+                      type: "string"
+                    endDate:
+                      type: "string"
+                    isProtectedForEdit:
+                      type: boolean
+                    type: 
+                      type: "string"
+                    description: 
+                      type: "string"
+                    
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a journal_type
+      tags: [journal_type]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
                 id:
                   type: integer
       responses:

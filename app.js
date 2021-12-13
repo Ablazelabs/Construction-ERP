@@ -27,6 +27,21 @@ app.use(json());
 app.use(cors());
 app.use(authenticate);
 
+app.use((req, _res, next) => {
+    // this code is a hack
+    // we used req.body to get data from requests, but get doesn't allow, so stringify the json u want to send and send it as a param (parameter name must be body)
+    if (req.method == "GET") {
+        if (Object.keys(req.body).length == 0) {
+            if (req.query.body) {
+                try {
+                    req.body = JSON.parse(req.query.body);
+                } catch {}
+            }
+        }
+    }
+    next();
+});
+
 app.use(login);
 app.use(refresh);
 

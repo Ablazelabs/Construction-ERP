@@ -24,11 +24,11 @@ describe("client Test", () => {
                     name: `${randomName}`,
                     tradeName: `${randomName}`,
                     address: "address",
-                    tel: `251-9341752${Math.floor(randomName / 10000)}`,
+                    tel: `251-93417${Math.floor(randomName / 100)}`,
                     tinNumber: `${randomName}`,
                     contactPersonName: "string",
-                    contactPersonPhone: `251-9341752${Math.floor(
-                        randomName / 10000
+                    contactPersonPhone: `251-93417${Math.floor(
+                        randomName / 100
                     )}`,
                     contactPersonEmail: `${randomName}@email.com`,
                     email: `${randomName}@email.com`,

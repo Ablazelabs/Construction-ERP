@@ -1002,7 +1002,7 @@ model financial_settings {
   time_format_id                   Int?
   language_id                      Int?
   base_currency_id                 Int
-  currency                         currency          @relation(fields: [base_currency_id], references: [id])
+  base_currency                    currency          @relation(fields: [base_currency_id], references: [id])
   time_format                      date_format_type? @relation(fields: [time_format_id], references: [id])
   language                         language?         @relation(fields: [language_id], references: [id])
   //needs currency
