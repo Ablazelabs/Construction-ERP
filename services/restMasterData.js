@@ -36,7 +36,11 @@ const post = async (reqBody, creator, masterDataType, next) => {
         if (queryData.status == 1) {
             await role.update({
                 where: { name: reqBody.name },
-                data: { status: 0 },
+                data: {
+                    status: 0,
+                    startDate: reqBody.startDate,
+                    endDate: reqBody.endDate,
+                },
             });
             return { success: true };
         }
@@ -131,16 +135,12 @@ const patch = async (
 };
 const deleter = async ({ id }, masterDataType) => {
     try {
-        const deletedMaterial = await masterDataModels[
-            masterDataType
-        ].findUnique({
+        await masterDataModels[masterDataType].update({
             where: { id },
-        });
-        await masterDataModels[masterDataType].delete({ where: { id } });
-        await masterDataModels[masterDataType].create({
-            data: { ...deletedMaterial, status: 1 },
+            data: { status: 1, endDate: new Date() },
         });
     } catch (e) {
+        console.log(e);
         return { success: false };
     }
     return { success: true };

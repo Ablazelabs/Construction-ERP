@@ -16,7 +16,11 @@ const post = async (reqBody, creator, next) => {
         if (queryData.status == 1) {
             await documentation.update({
                 where: { name: reqBody.name },
-                data: { status: 0 },
+                data: {
+                    status: 0,
+                    endDate: reqBody.endDate,
+                    startDate: reqBody.startDate,
+                },
             });
             return { success: true };
         }
@@ -132,7 +136,7 @@ const deleter = async ({ id }) => {
     try {
         await documentation.update({
             where: { id },
-            data: { status: 1 },
+            data: { status: 1, endDate: new Date() },
         });
     } catch (e) {
         console.log(e);

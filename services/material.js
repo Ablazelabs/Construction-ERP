@@ -16,7 +16,11 @@ const post = async (reqBody, creator, next) => {
         if (queryData.status == 1) {
             await material.update({
                 where: { name: reqBody.name },
-                data: { status: 0 },
+                data: {
+                    status: 0,
+                    startDate: reqBody.startDate,
+                    endDate: reqBody.endDate,
+                },
             });
             return { success: true };
         }
@@ -133,7 +137,7 @@ const deleter = async ({ id }) => {
     try {
         await material.update({
             where: { id },
-            data: { status: 1 },
+            data: { status: 1, endDate: new Date() },
         });
     } catch (e) {
         console.log(e);

@@ -5,18 +5,20 @@ const validation = require("../validation/validation");
 const { client } = new PrismaClient();
 
 const post = async (reqBody, creator, next) => {
-    const uniqueValues = [
-        { tradeName: reqBody.tradeName },
-        { tel: reqBody.tel },
-        { tinNumber: reqBody.tinNumber },
-        { contactPersonEmail: reqBody.contactPersonEmail },
-        { contactPersonPhone: reqBody.contactPersonPhone },
-        { email: reqBody.email },
-    ];
+    reqBody.startDate = new Date();
+    reqBody.endDate = new Date("9999/12/31");
     const defaultData = {
         createdBy: String(creator),
         revisedBy: String(creator),
         status: 0,
+    };
+    const uniqueValues = {
+        tradeName: reqBody.tradeName,
+        tel: reqBody.tel,
+        tinNumber: reqBody.tinNumber,
+        contactPersonEmail: reqBody.contactPersonEmail,
+        contactPersonPhone: reqBody.contactPersonPhone,
+        email: reqBody.email,
     };
     try {
         await client.create({
@@ -41,9 +43,31 @@ const post = async (reqBody, creator, next) => {
         });
         return { success: true, message: "client created successfully" };
     } catch (e) {
-        const key = e.meta.target.split("_")[1]; //this works if the unique keys don't have underscore
-        error(key, "client already exists", next);
-        return false;
+        const data = await client.findFirst({
+            where: {
+                ...uniqueValues,
+            },
+            select: {
+                status: true,
+            },
+        });
+        if (data && data.status == 1) {
+            await client.update({
+                where: {
+                    tradeName: reqBody.tradeName,
+                },
+                data: {
+                    status: 0,
+                    endDate: reqBody.endDate,
+                    startDate: reqBody.startDate,
+                },
+            });
+            return { success: true, message: "client created successfully" };
+        } else {
+            const key = e.meta.target.split("_")[1]; //this works if the unique keys don't have underscore
+            error(key, "client already exists", next);
+            return false;
+        }
     }
 };
 const get = async (queryFilter, querySort, limit, skip, projection) => {
@@ -174,7 +198,7 @@ const deleter = async (reqBody) => {
     try {
         await client.update({
             where: { id: reqBody.id },
-            data: { status: 1 },
+            data: { status: 1, endDate: new Date() },
         });
     } catch {
         return { success: false };

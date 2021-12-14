@@ -19,8 +19,6 @@ router.post("/client", async (req, res, next) => {
                 contactPersonPhone: "string",
                 contactPersonEmail: "string",
                 email: "string",
-                startDate: "string",
-                endDate: "string",
             },
             {
                 isProtectedForEdit: "boolean",
@@ -31,20 +29,6 @@ router.post("/client", async (req, res, next) => {
             req.body,
             4
         );
-        req.body.startDate = new Date(req.body.startDate);
-        req.body.endDate = new Date(req.body.endDate);
-        if (!req.body.startDate.getTime()) {
-            throw {
-                key: "startDate",
-                message: "please send date in yyyy/mm/dd format",
-            };
-        }
-        if (!req.body.endDate.getTime()) {
-            throw {
-                key: "endDate",
-                message: "please send date in yyyy/mm/dd format",
-            };
-        }
     } catch (e) {
         error(e.key, e.message, next, 400);
         return;
@@ -210,8 +194,6 @@ router.patch("/client", async (req, res, next) => {
                 contactPersonPhone: "string",
                 contactPersonEmail: "string",
                 email: "string",
-                startDate: "string",
-                endDate: "string",
                 isProtectedForEdit: "boolean",
                 subCity: "string",
                 woreda: "string",
@@ -219,24 +201,6 @@ router.patch("/client", async (req, res, next) => {
             },
             req.body.updateData
         );
-        if (updateData.startDate) {
-            updateData.startDate = new Date(updateData.startDate);
-            if (!updateData.startDate.getTime()) {
-                throw {
-                    key: "startDate",
-                    message: "please send date in yyyy/mm/dd format",
-                };
-            }
-        }
-        if (updateData.endDate) {
-            updateData.endDate = new Date(updateData.endDate);
-            if (!updateData.endDate.getTime()) {
-                throw {
-                    key: "endDate",
-                    message: "please send date in yyyy/mm/dd format",
-                };
-            }
-        }
     } catch (e) {
         error(e.key, e.message, next);
         return;

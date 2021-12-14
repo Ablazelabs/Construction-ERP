@@ -10,8 +10,6 @@ router.post("/material", async (req, res, next) => {
                 name: "string",
                 unit: "string",
                 material_category_id: "number",
-                startDate: "string",
-                endDate: "string",
             },
             {
                 isProtectedForEdit: "boolean",
@@ -20,8 +18,8 @@ router.post("/material", async (req, res, next) => {
             4
         );
         inputFilter({}, { description: "string" }, req.body, 0, 300);
-        req.body.startDate = new Date(req.body.startDate);
-        req.body.endDate = new Date(req.body.endDate);
+        req.body.startDate = new Date();
+        req.body.endDate = new Date("9999/12/31");
         if (!req.body.startDate.getTime()) {
             throw {
                 key: "startDate",
@@ -151,30 +149,10 @@ router.patch("/material", async (req, res, next) => {
                 description: "string",
                 unit: "string",
                 material_category_id: "number",
-                startDate: "string",
-                endDate: "string",
                 isProtectedForEdit: "boolean",
             },
             req.body.updateData
         );
-        if (updateData.startDate) {
-            updateData.startDate = new Date(updateData.startDate);
-            if (!updateData.startDate.getTime()) {
-                throw {
-                    key: "startDate",
-                    message: "please send date in yyyy/mm/dd format",
-                };
-            }
-        }
-        if (updateData.endDate) {
-            updateData.endDate = new Date(updateData.endDate);
-            if (!updateData.endDate.getTime()) {
-                throw {
-                    key: "endDate",
-                    message: "please send date in yyyy/mm/dd format",
-                };
-            }
-        }
     } catch (e) {
         error(e.key, e.message, next);
         return;

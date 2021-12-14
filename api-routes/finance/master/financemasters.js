@@ -10,7 +10,7 @@ const {
     deleter,
 } = require("../../../services/financemasters");
 
-const defaultDateValues = ["startDate", "endDate"];
+const defaultDateValues = [];
 const auditLogProjection = {
     startDate: true,
     endDate: true,
@@ -1170,14 +1170,14 @@ router.post(allRoutes, async (req, res, next) => {
     try {
         reqBody = inputFilter(
             {
-                startDate: "string",
-                endDate: "string",
                 ...requiredInputFilter,
             },
             { isProtectedForEdit: "boolean", ...optionalInputFilter },
             req.body,
             2
         );
+        reqBody.startDate = new Date();
+        reqBody.endDate = new Date("9999/12/31");
         for (let i in dateValues[operationDataType]) {
             if (!reqBody[dateValues[operationDataType][i]]) {
                 continue;
@@ -1328,8 +1328,6 @@ router.patch(allRoutes, async (req, res, next) => {
             {
                 ...allInputFilters[operationDataType],
                 ...allOptionalInputfilters[operationDataType],
-                startDate: "string",
-                endDate: "string",
                 isProtectedForEdit: "boolean",
             },
             req.body.updateData

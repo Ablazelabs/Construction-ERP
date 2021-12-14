@@ -18,27 +18,29 @@ model refresh_tokens {
 }
 
 model user {
-  id                     Int              @id @default(autoincrement())
+  id                     Int                      @id @default(autoincrement())
   username               String?
   normalized_username    String?
-  email                  String?          @unique
+  email                  String?                  @unique
   password               String
-  email_confirmed        Boolean?         @default(false)
+  email_confirmed        Boolean?                 @default(false)
   security_stamp         String?
   concurrency_stamp      String
-  phone_number           String?          @unique
+  phone_number           String?                  @unique
   phone_number_confirmed Boolean?
   lockout_end            DateTime?
-  two_factor_enabled     Boolean?         @default(false)
+  two_factor_enabled     Boolean?                 @default(false)
   lockout_enabled        Boolean?
-  access_failed_count    Int              @default(0)
+  access_failed_count    Int                      @default(0)
   first_login            Boolean?
   code                   Int
-  role                   role?            @relation(fields: [roleId], references: [id])
+  role                   role?                    @relation(fields: [roleId], references: [id])
   roleId                 Int?
-  deleted_status         Int              @default(0)
+  deleted_status         Int                      @default(0)
   refresh_tokens         refresh_tokens[]
   journal_users          journal_users[]
+  general_journal_header general_journal_header[]
+  journal_comment        journal_comment[]
 }
 
 model privilege {
@@ -631,27 +633,30 @@ model required_document {
 }
 
 model currency {
-  startDate            DateTime
-  endDate              DateTime
-  creationDate         DateTime             @default(now())
-  createdBy            String
-  revisionDate         DateTime             @updatedAt
-  revisedBy            String
-  status               Int                  @default(0)
-  isProtectedForEdit   Boolean              @default(false)
-  id                   Int                  @id @default(autoincrement())
-  currency_code        String
-  currency_description String
-  name                 String
-  symbol               String
-  price_precision      Int
-  currency_format      Int
-  is_base_currency     Boolean
-  bank                 bank[]
-  exchange_rate        exchange_rate[]
-  financial_settings   financial_settings[]
-  chart_of_account     chart_of_account[]
-  contact              contact[]
+  startDate              DateTime
+  endDate                DateTime
+  creationDate           DateTime                 @default(now())
+  createdBy              String
+  revisionDate           DateTime                 @updatedAt
+  revisedBy              String
+  status                 Int                      @default(0)
+  isProtectedForEdit     Boolean                  @default(false)
+  id                     Int                      @id @default(autoincrement())
+  currency_code          String
+  currency_description   String
+  name                   String
+  symbol                 String
+  price_precision        Int
+  currency_format        Int
+  is_base_currency       Boolean
+  bank                   bank[]
+  exchange_rate          exchange_rate[]
+  financial_settings     financial_settings[]
+  chart_of_account       chart_of_account[]
+  contact                contact[]
+  general_journal_header general_journal_header[]
+  general_ledger         general_ledger[]
+  asset                  asset[]
 }
 
 model account_category {
@@ -687,35 +692,38 @@ model closing_note {
 }
 
 model financial_statement_section {
-  startDate                DateTime
-  endDate                  DateTime
-  creationDate             DateTime @default(now())
-  createdBy                String
-  revisionDate             DateTime @updatedAt
-  revisedBy                String
-  status                   Int      @default(0)
-  isProtectedForEdit       Boolean  @default(false)
-  id                       Int      @id @default(autoincrement())
-  name                     String
-  description              String?
-  sequence_on_report       Int
-  financial_statement_type Int //[income_statement,balance_sheet,cash_flow_statement,owners_equity]
+  startDate                                DateTime
+  endDate                                  DateTime
+  creationDate                             DateTime                                   @default(now())
+  createdBy                                String
+  revisionDate                             DateTime                                   @updatedAt
+  revisedBy                                String
+  status                                   Int                                        @default(0)
+  isProtectedForEdit                       Boolean                                    @default(false)
+  id                                       Int                                        @id @default(autoincrement())
+  name                                     String
+  description                              String?
+  sequence_on_report                       Int
+  financial_statement_type                 Int //[income_statement,balance_sheet,cash_flow_statement,owners_equity]
+  account_type_financial_statement_section account_type_financial_statement_section[]
 }
 
 model cost_center {
-  startDate            DateTime
-  endDate              DateTime
-  creationDate         DateTime               @default(now())
-  createdBy            String
-  revisionDate         DateTime               @updatedAt
-  revisedBy            String
-  status               Int                    @default(0)
-  isProtectedForEdit   Boolean                @default(false)
-  id                   Int                    @id @default(autoincrement())
-  cost_center_code     String
-  section_name         String?
-  remark               String?
-  cost_center_accounts cost_center_accounts[]
+  startDate              DateTime
+  endDate                DateTime
+  creationDate           DateTime                 @default(now())
+  createdBy              String
+  revisionDate           DateTime                 @updatedAt
+  revisedBy              String
+  status                 Int                      @default(0)
+  isProtectedForEdit     Boolean                  @default(false)
+  id                     Int                      @id @default(autoincrement())
+  cost_center_code       String
+  section_name           String?
+  remark                 String?
+  cost_center_accounts   cost_center_accounts[]
+  budget                 budget[]
+  general_journal_detail general_journal_detail[]
 }
 
 model payment_term {
@@ -821,6 +829,7 @@ model tax_group {
   tax_group_name       String
   tax_group_percentage Float
   associated_tax_group associated_tax_group[]
+  general_ledger       general_ledger[]
 }
 
 // model transaction_type {
@@ -849,17 +858,18 @@ model accounting_period {
 }
 
 model journal_type {
-  startDate          DateTime
-  endDate            DateTime
-  creationDate       DateTime @default(now())
-  createdBy          String
-  revisionDate       DateTime @updatedAt
-  revisedBy          String
-  status             Int      @default(0)
-  isProtectedForEdit Boolean  @default(false)
-  id                 Int      @id @default(autoincrement())
-  type               String
-  description        String?
+  startDate              DateTime
+  endDate                DateTime
+  creationDate           DateTime                 @default(now())
+  createdBy              String
+  revisionDate           DateTime                 @updatedAt
+  revisedBy              String
+  status                 Int                      @default(0)
+  isProtectedForEdit     Boolean                  @default(false)
+  id                     Int                      @id @default(autoincrement())
+  type                   String
+  description            String?
+  general_journal_header general_journal_header[]
 }
 
 model country {
@@ -908,28 +918,29 @@ model language {
 }
 
 model account_type {
-  startDate                               DateTime
-  endDate                                 DateTime
-  creationDate                            DateTime           @default(now())
-  createdBy                               String
-  revisionDate                            DateTime           @updatedAt
-  revisedBy                               String
-  status                                  Int                @default(0)
-  isProtectedForEdit                      Boolean            @default(false)
-  id                                      Int                @id @default(autoincrement())
-  code                                    String
-  type                                    String
-  description                             String?
-  can_be_sub_account                      Boolean?
-  contain_account_number                  Boolean?
-  contain_currency                        Boolean?
-  tool_tip_description                    String?
-  can_have_more_than_one_chart_of_account Boolean?
-  account_category_id                     Int
-  account_category                        account_category   @relation(fields: [account_category_id], references: [id])
+  startDate                                DateTime
+  endDate                                  DateTime
+  creationDate                             DateTime                                   @default(now())
+  createdBy                                String
+  revisionDate                             DateTime                                   @updatedAt
+  revisedBy                                String
+  status                                   Int                                        @default(0)
+  isProtectedForEdit                       Boolean                                    @default(false)
+  id                                       Int                                        @id @default(autoincrement())
+  code                                     String
+  type                                     String
+  description                              String?
+  can_be_sub_account                       Boolean?
+  contain_account_number                   Boolean?
+  contain_currency                         Boolean?
+  tool_tip_description                     String?
+  can_have_more_than_one_chart_of_account  Boolean?
+  account_category_id                      Int
+  account_category                         account_category                           @relation(fields: [account_category_id], references: [id])
   //needs account_category
   //inside schema
-  chart_of_account                        chart_of_account[]
+  chart_of_account                         chart_of_account[]
+  account_type_financial_statement_section account_type_financial_statement_section[]
 }
 
 model bank {
@@ -1033,15 +1044,15 @@ model journal_users {
 model chart_of_account {
   startDate                   DateTime
   endDate                     DateTime
-  creationDate                DateTime               @default(now())
+  creationDate                DateTime                 @default(now())
   createdBy                   String
-  revisionDate                DateTime               @updatedAt
+  revisionDate                DateTime                 @updatedAt
   revisedBy                   String
-  status                      Int                    @default(0)
-  isProtectedForEdit          Boolean                @default(false)
-  id                          Int                    @id @default(autoincrement())
-  account_name                String?
-  account_code                String?
+  status                      Int                      @default(0)
+  isProtectedForEdit          Boolean                  @default(false)
+  id                          Int                      @id @default(autoincrement())
+  account_name                String
+  account_code                String                   @unique
   account_number              String?
   is_active                   Boolean?
   description                 String?
@@ -1054,49 +1065,58 @@ model chart_of_account {
   is_bank_account             Boolean?
   parent_account_id           Int?
   head_account_id             Int?
-  currency_id                 Int
+  currency_id                 Int?
   account_type_id             Int
-  account_type                account_type           @relation(fields: [account_type_id], references: [id])
-  currency                    currency               @relation(fields: [currency_id], references: [id])
-  parent_account              chart_of_account?      @relation(name: "parent_account", fields: [parent_account_id], references: [id])
-  head_account                chart_of_account?      @relation(name: "head_account", fields: [head_account_id], references: [id])
+  account_type                account_type             @relation(fields: [account_type_id], references: [id])
+  currency                    currency?                @relation(fields: [currency_id], references: [id])
+  parent_account              chart_of_account?        @relation(name: "parent_account", fields: [parent_account_id], references: [id])
+  head_account                chart_of_account?        @relation(name: "head_account", fields: [head_account_id], references: [id])
   //needs account_type
   //needs currency
   //needs chart_of_account
-  parent_accounts             chart_of_account[]     @relation("parent_account")
-  head_accounts               chart_of_account[]     @relation("head_account")
+  parent_accounts             chart_of_account[]       @relation("parent_account")
+  head_accounts               chart_of_account[]       @relation("head_account")
   contact                     contact[]
   cost_center_accounts        cost_center_accounts[]
-  tax_debits                  tax[]                  @relation("chart_of_account_debit")
-  tax_credits                 tax[]                  @relation("chart_of_account_credit")
+  tax_debits                  tax[]                    @relation("chart_of_account_debit")
+  tax_credits                 tax[]                    @relation("chart_of_account_credit")
   // tax_chart_of_account        tax_chart_of_account[]
+  bank_reconcilation          bank_reconcilation[]
+  chart_of_account_files      chart_of_account_files[]
+  budget_account              budget_account[]
+  general_ledger              general_ledger[]
+  asset_depreciation          asset[]                  @relation("depreciation_account")
+  asset_accounts              asset[]                  @relation("asset_account")
+  general_journal_detail      general_journal_detail[]
 }
 
 model contact {
-  startDate            DateTime
-  endDate              DateTime
-  creationDate         DateTime          @default(now())
-  createdBy            String
-  revisionDate         DateTime          @updatedAt
-  revisedBy            String
-  status               Int               @default(0)
-  isProtectedForEdit   Boolean           @default(false)
-  id                   Int               @id @default(autoincrement())
-  contact_type         Int //[customer,vendor]
-  company_name         String
-  contact_display_name String
-  remark               String?
-  chart_of_account_id  Int?
-  currency_id          Int?
-  payment_term_id      Int?
-  chart_of_account     chart_of_account? @relation(fields: [chart_of_account_id], references: [id])
-  currency             currency?         @relation(fields: [currency_id], references: [id])
-  payment_term         payment_term?     @relation(fields: [payment_term_id], references: [id])
+  startDate              DateTime
+  endDate                DateTime
+  creationDate           DateTime                 @default(now())
+  createdBy              String
+  revisionDate           DateTime                 @updatedAt
+  revisedBy              String
+  status                 Int                      @default(0)
+  isProtectedForEdit     Boolean                  @default(false)
+  id                     Int                      @id @default(autoincrement())
+  contact_type           Int //[customer,vendor]
+  company_name           String
+  contact_display_name   String
+  remark                 String?
+  chart_of_account_id    Int?
+  currency_id            Int?
+  payment_term_id        Int?
+  chart_of_account       chart_of_account?        @relation(fields: [chart_of_account_id], references: [id])
+  currency               currency?                @relation(fields: [currency_id], references: [id])
+  payment_term           payment_term?            @relation(fields: [payment_term_id], references: [id])
   //needs chart_of_account
   //needs currency
   //needs payment_term
-  contact_address      contact_address[]
-  contact_person       contact_person[]
+  contact_address        contact_address[]
+  contact_person         contact_person[]
+  journal_comment        journal_comment[]
+  general_journal_detail general_journal_detail[]
 }
 
 model cost_center_accounts {
@@ -1182,20 +1202,12 @@ model tax {
 
   //needs tax_authority
   //needs chart_of_account
-  associated_tax_group associated_tax_group[]
+  associated_tax_group   associated_tax_group[]
   // tax_chart_of_account tax_chart_of_account[]
-  tax_rule             tax_rule[]
+  tax_rule               tax_rule[]
+  general_ledger         general_ledger[]
+  general_journal_detail general_journal_detail[]
 }
-
-// model tax_chart_of_account {
-//   id                  Int              @id @default(autoincrement())
-//   tax_id              Int
-//   chart_of_account_id Int
-//   tax                 tax              @relation(fields: [tax_id], references: [id])
-//   chart_of_account    chart_of_account @relation(fields: [chart_of_account_id], references: [id])
-//   //needs tax
-//   //needs chart_of_account
-// }
 
 model tax_rule {
   startDate          DateTime
@@ -1286,4 +1298,290 @@ model primary_contact {
   organization_profile_id Int?
   organization_profile    financial_settings? @relation(fields: [organization_profile_id], references: [id])
   //needs financial_settings
+}
+
+model account_type_financial_statement_section {
+  id                             Int                         @id @default(autoincrement())
+  account_type_id                Int
+  financial_statement_section_id Int
+  account_type                   account_type                @relation(fields: [account_type_id], references: [id])
+  financial_statement_section    financial_statement_section @relation(fields: [financial_statement_section_id], references: [id])
+  //needs account_type
+  //needs financial_statement_section
+}
+
+model bank_reconcilation {
+  id                  Int              @id @default(autoincrement())
+  from_date           DateTime?
+  to_date             DateTime?
+  closing_amount      Float?
+  chart_of_account_id Int
+  chart_of_account    chart_of_account @relation(fields: [chart_of_account_id], references: [id])
+
+  //needs chart_of_account
+  reconcilation_transaction reconcilation_transaction[]
+}
+
+model chart_of_account_files {
+  id                  Int              @id @default(autoincrement())
+  path                String //needs file care
+  name                String?
+  type                String?
+  chart_of_account_id Int
+  chart_of_account    chart_of_account @relation(fields: [chart_of_account_id], references: [id])
+  //needs chart_of_account
+}
+
+model estimated_total_production_unit {
+  id          Int     @id @default(autoincrement())
+  unit_name   String
+  unit_symbol String
+  //needs no one
+  asset       asset[]
+}
+
+model recurring_journal_occurrence {
+  id                        Int                         @id @default(autoincrement())
+  repeat_every_number       Int?
+  repeat_every_label        Int
+  name                      String
+  //needs no one
+  asset                     asset[]
+  recurring_general_journal recurring_general_journal[]
+}
+
+model budget {
+  id             Int              @id @default(autoincrement())
+  name           String?
+  fiscal_year    DateTime         @default(now())
+  budget_reason  Int
+  project_name   String?
+  cost_center_id Int?
+  cost_center    cost_center?     @relation(fields: [cost_center_id], references: [id])
+  //needs cost center
+  budget_account budget_account[]
+}
+
+model budget_account {
+  id                    Int                     @id @default(autoincrement())
+  budget_total_amount   Float
+  budget_id             Int?
+  chart_of_account_id   Int?
+  budget                budget?                 @relation(fields: [budget_id], references: [id])
+  chart_of_account      chart_of_account?       @relation(fields: [chart_of_account_id], references: [id])
+  //needs budget
+  //needs cost_center
+  budget_account_period budget_account_period[]
+}
+
+model budget_account_period {
+  id                Int             @id @default(autoincrement())
+  budget_amount     Float
+  period_month      Int
+  budget_account_id Int?
+  budget_account    budget_account? @relation(fields: [budget_account_id], references: [id])
+  //needs budget_account
+}
+
+model budget_control_action {
+  id                                         Int @id @default(autoincrement())
+  type                                       Int
+  action_accumulated_monthly_budget_exceeded Int
+  //needs no one
+}
+
+model general_journal_header {
+  id                           Int                        @id @default(autoincrement())
+  journal_date                 DateTime
+  posting_reference            String                     @unique //needs its own implementation  ( sequential string
+  reference_number             String?
+  journal_status               Int?
+  notes                        String
+  report_basis                 Int?
+  journal_source               Int?
+  journal_posting_status       Int?
+  journal_type_reference       String?
+  total_amount                 Float?
+  journal_type_id              Int?
+  recurring_general_journal_id Int?
+  currency_id                  Int
+  posting_responsible_user_id  Int
+  journal_type                 journal_type?              @relation(fields: [journal_type_id], references: [id])
+  recurring_general_journal    recurring_general_journal? @relation(fields: [recurring_general_journal_id], references: [id])
+  currency                     currency                   @relation(fields: [currency_id], references: [id])
+  posting_responsible_user     user                       @relation(fields: [posting_responsible_user_id], references: [id])
+
+  //needs journal_type
+  //needs recurring_general_journal
+  //needs currency
+  //needs user
+  general_ledger         general_ledger[]
+  journal_comment        journal_comment[]
+  general_journal_detail general_journal_detail[]
+  general_journal_files  general_journal_files[]
+}
+
+model general_ledger {
+  id                        Int                         @id @default(autoincrement())
+  amount_credit             Float?
+  amount_debit              Float?
+  ledger_status             Int?
+  posting_reference         String                      @unique //needs its own implementation  ( sequential string
+  group_posting_reference   String                      @unique //needs its own implementation  ( sequential string
+  description               String?
+  journal_date              DateTime //this is in the allowed unlocked transaction
+  posting_date              DateTime                    @default(now())
+  currency_id               Int
+  tax_id                    Int?
+  tax_group_id              Int?
+  general_journal_header_id Int?
+  chart_of_account_id       Int
+  currency                  currency                    @relation(fields: [currency_id], references: [id])
+  tax                       tax?                        @relation(fields: [tax_id], references: [id])
+  tax_group                 tax_group?                  @relation(fields: [tax_group_id], references: [id])
+  general_journal_header    general_journal_header?     @relation(fields: [general_journal_header_id], references: [id])
+  chart_of_account          chart_of_account            @relation(fields: [chart_of_account_id], references: [id])
+  //needs currency
+  //needs tax
+  //needs group_tax
+  //needs general_journal_header
+  //needs chart_of_account
+  reconcilation_transaction reconcilation_transaction[]
+}
+
+model journal_comment {
+  id                           Int                        @id @default(autoincrement())
+  commented_date               DateTime                   @default(now())
+  comment                      String
+  application_user_id          Int
+  contact_id                   Int?
+  general_journal_header_id    Int?
+  recurring_general_journal_id Int?
+  application_user             user                       @relation(fields: [application_user_id], references: [id])
+  contact                      contact?                   @relation(fields: [contact_id], references: [id])
+  general_journal_header       general_journal_header?    @relation(fields: [general_journal_header_id], references: [id])
+  recurring_general_journal    recurring_general_journal? @relation(fields: [recurring_general_journal_id], references: [id])
+
+  //needs user
+  //needs contact
+  //needs general_journal_header
+  //needs recurring_journal
+}
+
+model number_tracker {
+  Id              Int     @id @default(autoincrement())
+  prefix          String?
+  starting_number Int
+  next_number     Int
+  reason          Int?
+}
+
+model transaction_lock {
+  id                         Int      @id @default(autoincrement())
+  lock_date                  DateTime
+  reason                     String
+  enable_transaction_locking Boolean?
+}
+
+model opening_balance {
+  id                   Int      @id @default(autoincrement())
+  opening_balance_date DateTime
+  price_precision      Int?
+  amount               Float?
+  month                Int
+}
+
+model reconcilation_transaction {
+  id                    Int                @id @default(autoincrement())
+  bank_reconcilation_id Int
+  general_ledger_id     Int
+  general_ledger        general_ledger     @relation(fields: [general_ledger_id], references: [id])
+  bank_reconcilation    bank_reconcilation @relation(fields: [bank_reconcilation_id], references: [id])
+  //needs general_ledger
+  //needs bank_reconcilation
+}
+
+model asset {
+  id                                 Int                              @id @default(autoincrement())
+  name                               String
+  tag_number                         String
+  acquisition_date                   DateTime?
+  description                        String
+  economic_value                     Float
+  depreciation_methods               Int
+  useful_life                        DateTime
+  current_value                      Float
+  asset_type                         Int
+  asset_status                       Int?
+  estimated_total_production         Float?
+  scrap_value                        Float
+  estimated_total_production_unit_id Int?
+  currency_id                        Int
+  asset_account_id                   Int
+  depreciation_account_id            Int
+  recurring_journal_occurrence_id    Int?
+  estimated_total_production_unit    estimated_total_production_unit? @relation(fields: [estimated_total_production_unit_id], references: [id])
+  currency                           currency                         @relation(fields: [currency_id], references: [id])
+  depreciation_account               chart_of_account                 @relation(name: "depreciation_account", fields: [depreciation_account_id], references: [id])
+  asset_account                      chart_of_account                 @relation(name: "asset_account", fields: [asset_account_id], references: [id])
+  recurring_journal_occurrence       recurring_journal_occurrence?    @relation(fields: [recurring_journal_occurrence_id], references: [id])
+  //needs estimated_total_production_unit
+  //needs currency
+  //needs chart_of_account
+  //needs recurring_journal_occurrence
+  recurring_general_journal          recurring_general_journal[]
+}
+
+model general_journal_detail {
+  id                        Int                    @id @default(autoincrement())
+  description               String?
+  debit_or_credit           Int
+  tax_group_id              Int?
+  amount_credit             Float?
+  posting_reference         String                 @unique //needs its own implementation  ( sequential string
+  reference_code            String
+  amount_debit              Float?
+  tax_id                    Int?
+  contact_id                Int?
+  general_journal_header_id Int
+  cost_center_id            Int
+  chart_of_account_id       Int
+  tax                       tax?                   @relation(fields: [tax_id], references: [id])
+  contact                   contact?               @relation(fields: [contact_id], references: [id])
+  general_journal_header    general_journal_header @relation(fields: [general_journal_header_id], references: [id])
+  cost_center               cost_center            @relation(fields: [cost_center_id], references: [id])
+  chart_of_account          chart_of_account       @relation(fields: [chart_of_account_id], references: [id])
+  //needs tax
+  //needs contact
+  //needs general_journal_header
+  //needs cost_center
+  //needs chart_of_account
+}
+
+model general_journal_files {
+  id                        Int                    @id @default(autoincrement())
+  path                      String //needs file care
+  name                      String?
+  type                      String?
+  general_journal_header_id Int
+  general_journal_header    general_journal_header @relation(fields: [general_journal_header_id], references: [id])
+  //needs general_journal_header
+}
+
+model recurring_general_journal {
+  id                               Int                           @id @default(autoincrement())
+  profile_name                     String
+  start_on                         DateTime?
+  end_on                           DateTime?
+  never_expires                    Boolean?
+  depreciable_value                Float?
+  recurring_general_journal_status Int?
+  asset_id                         Int?
+  recurring_journal_occurrence_id  Int?
+  asset                            asset?                        @relation(fields: [asset_id], references: [id])
+  recurring_journal_occurrence     recurring_journal_occurrence? @relation(fields: [recurring_journal_occurrence_id], references: [id])
+  //needs asset
+  //needs recurring_journal_occurrence
+  general_journal_header           general_journal_header[]
+  journal_comment                  journal_comment[]
 }

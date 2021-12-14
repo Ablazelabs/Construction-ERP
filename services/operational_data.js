@@ -73,7 +73,11 @@ const post = async (reqBody, operationDataType, creator, next) => {
             if (queryData.deleted_status == 1) {
                 await allModels[operationDataType].update({
                     where: { ...whereData },
-                    data: { status: 0 },
+                    data: {
+                        status: 0,
+                        startDate: reqBody.startDate,
+                        endDate: reqBody.endDate,
+                    },
                 });
                 return { success: true };
             }
@@ -204,7 +208,7 @@ const deleter = async ({ id }, operationDataType) => {
     try {
         await allModels[operationDataType].update({
             where: { id },
-            data: { status: 1 },
+            data: { status: 1, endDate: new Date() },
         });
     } catch (e) {
         console.log(e);
