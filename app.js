@@ -21,6 +21,7 @@ const documentation = require("./api-routes/project/master/documentation");
 const restMasterData = require("./api-routes/project/master/restMasterData");
 const operational_data = require("./api-routes/project/operational/operational_data");
 const financemasters = require("./api-routes/finance/master/financemasters");
+const rest_finance_operational = require("./api-routes/finance/operational/rest_finance_operational");
 const cors = require("cors");
 
 app.use(json());
@@ -60,6 +61,7 @@ app.use("/project/master", restMasterData);
 app.use("/project/operational", operational_data);
 app.use("/project/operational", operational_data);
 app.use("/finance/master", financemasters);
+app.use("/finance/operational", rest_finance_operational);
 
 app.use((err, _req, res, _next) => {
     let myError = JSON.parse(err.message);

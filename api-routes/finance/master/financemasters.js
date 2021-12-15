@@ -132,15 +132,6 @@ const allInputFilters = {
         tax_id: "number",
         //needs tax
     },
-    accounting_period: {
-        months: "number", //["january","february","march","april","may","june","july","augest","september","october","november","december","other"],
-        period_number: "number",
-        accounting_period_status: "number", //["open","closed","future","access_locked"],
-        is_current_posting_period: "boolean",
-        is_year_end_closing: "boolean",
-        period_starting_date: "string",
-        period_ending_date: "string",
-    },
     journal_type: {
         type: "string",
     },
@@ -1114,17 +1105,6 @@ const allSorts = {
         tax_id: "number",
         ...auditLogSort,
     },
-    accounting_period: {
-        id: "number",
-        months: "number",
-        period_number: "number",
-        accounting_period_status: "number",
-        is_current_posting_period: "number",
-        is_year_end_closing: "number",
-        period_starting_date: "number",
-        period_ending_date: "number",
-        ...auditLogSort,
-    },
     journal_type: {
         id: "number",
         type: "number",
@@ -1158,7 +1138,6 @@ const allRoutes = [
     "/tax_exemption",
     "/tax_group",
     "/tax_rule",
-    "/accounting_period",
     "/journal_type",
 ];
 

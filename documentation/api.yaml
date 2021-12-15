@@ -174,7 +174,6 @@ paths:
               properties:
                 newPassword:
                   type: string
-              
                 id:
                   type: integer
                 password:
@@ -269,6 +268,30 @@ paths:
                 properties:
                   tempAccessToken:
                     type: string
+  /account/refresh:
+    post:
+      summary: sends accessToken, if refreshToken registered
+      tags: [Accounts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  type: string
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+  
   /project/master/client:
     post:
       summary: Creates a new client
@@ -303,10 +326,6 @@ paths:
                 woreda:
                   type: string
                 city:
-                  type: string
-                startDate:
-                  type: string
-                endDate:
                   type: string
                 isProtectedForEdit:
                       type: string
@@ -468,10 +487,6 @@ paths:
                   properties:
                     name:
                       type: string
-                    endDate:
-                      type: string
-                    startDate:
-                      type: string
                     isProtectedForEdit:
                       type: string
                     tradeName:
@@ -509,185 +524,6 @@ paths:
     delete:
       summary: deletes client
       tags: [Client]
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                id:
-                  type: integer
-      responses:
-        200:
-          description: success message
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-  /project/master/material:
-    post:
-      summary: Creates a new material
-      tags: [Material]
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                description:
-                  type: string
-                unit:
-                  type: string
-                material_category_id:
-                  type: string
-                startDate:
-                  type: string
-                endDate:
-                  type: string
-                isProtectedForEdit:
-                      type: string
-
-      responses:
-        200:
-          description: success message
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-    get:
-      summary: gets materials based on given filter and sort
-      tags: [Material]
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                limit:
-                  type: integer
-                skip:
-                  type: integer
-                filter:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                    description:
-                      type: string
-                    unit:
-                      type: string
-                    material_category_name:
-                      type: string
-                sort:
-                  type: object
-                  properties:
-                    name:
-                      type: integer
-                    description:
-                      type: integer
-                    unit:
-                      type: integer
-                    material_category_name:
-                      type: integer
-                    id:
-                      type: integer
-                    startDate:
-                      type: integer
-                    endDate:
-                      type: integer
-                    creationDate:
-                      type: integer
-                    revisionDate:
-                      type: integer
-                    isProtectedForEdit:
-                      type: integer
-      responses:
-        200:
-          description: success message
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: number
-                    name:
-                      type: string
-                    description:
-                      type: string
-                    unit:
-                      type: number
-                    material_category:
-                      type: object
-                    startDate:
-                      type: string
-                    endDate:
-                      type: string
-                    creationDate:
-                      type: string
-                    createdBy:
-                      type: string
-                    revisionDate:
-                      type: string
-                    revisedBy:
-                      type: string
-                    isProtectedForEdit:
-                      type: boolean                 
-    patch:
-      summary: updates a material
-      tags: [Material]
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                id:
-                  type: integer
-                updateData:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                    description:
-                      type: string
-                    unit:
-                      type: string
-                    material_category_id:
-                      type: string
-                    endDate:
-                      type: string
-                    startDate:
-                      type: string
-                    isProtectedForEdit:
-                      type: string
-      responses:
-        200:
-          description: success message
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-    delete:
-      summary: deletes material
-      tags: [Material]
       requestBody:
         required: true
         content:
@@ -971,10 +807,11 @@ paths:
                 properties:
                   success:
                     type: boolean
-  /project/master/tagname:
+  
+  /project/master/material:
     post:
-      summary: tagname stands for the name of the header(eg /equipment)
-      tags: [Equipment,Evaluation,Instruction,ManPower,Material Category,Phase,Priority,Work Category]
+      summary: Creates a new material
+      tags: [Material]
       requestBody:
         required: true
         content:
@@ -986,12 +823,12 @@ paths:
                   type: string
                 description:
                   type: string
-                startDate:
+                unit:
                   type: string
-                endDate:
+                material_category_id:
                   type: string
                 isProtectedForEdit:
-                  type: boolean
+                      type: string
 
       responses:
         200:
@@ -1004,8 +841,174 @@ paths:
                   success:
                     type: boolean
     get:
+      summary: gets materials based on given filter and sort
+      tags: [Material]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    unit:
+                      type: string
+                    material_category_name:
+                      type: string
+                sort:
+                  type: object
+                  properties:
+                    name:
+                      type: integer
+                    description:
+                      type: integer
+                    unit:
+                      type: integer
+                    material_category_name:
+                      type: integer
+                    id:
+                      type: integer
+                    startDate:
+                      type: integer
+                    endDate:
+                      type: integer
+                    creationDate:
+                      type: integer
+                    revisionDate:
+                      type: integer
+                    isProtectedForEdit:
+                      type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    unit:
+                      type: number
+                    material_category:
+                      type: object
+                    startDate:
+                      type: string
+                    endDate:
+                      type: string
+                    creationDate:
+                      type: string
+                    createdBy:
+                      type: string
+                    revisionDate:
+                      type: string
+                    revisedBy:
+                      type: string
+                    isProtectedForEdit:
+                      type: boolean                 
+    patch:
+      summary: updates a material
+      tags: [Material]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    unit:
+                      type: string
+                    material_category_id:
+                      type: string
+                    isProtectedForEdit:
+                      type: string
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes material
+      tags: [Material]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /project/master/tagname:
+    post:
       summary: tagname stands for the name of the header(eg /equipment)
-      tags: [Equipment,Evaluation,Instruction,ManPower,Material Category,Phase,Priority,Work Category]
+      tags: [Equipment,Evaluation,Instruction,ManPower,Material Category,Phase,Work Category]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                isProtectedForEdit:
+                  type: boolean
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: tagname stands for the name of the header(eg /equipment)
+      tags: [Equipment,Evaluation,Instruction,ManPower,Material Category,Phase,Work Category]
       requestBody:
         required: true
         content:
@@ -1075,7 +1078,7 @@ paths:
                       type: boolean
     patch:
       summary: tagname stands for the name of the header(eg /equipment)
-      tags: [Equipment,Evaluation,Instruction,ManPower,Material Category,Phase,Priority,Work Category]
+      tags: [Equipment,Evaluation,Instruction,ManPower,Material Category,Phase,Work Category]
       requestBody:
         required: true
         content:
@@ -1092,10 +1095,6 @@ paths:
                       type: string
                     description:
                       type: string
-                    endDate:
-                      type: string
-                    startDate:
-                      type: string
                     isProtectedForEdit:
                       type: string
       responses:
@@ -1110,7 +1109,168 @@ paths:
                     type: boolean
     delete:
       summary: tagname stands for the name of the header(eg /equipment)
-      tags: [Equipment,Evaluation,Instruction,ManPower,Material Category,Phase,Priority,Work Category]
+      tags: [Equipment,Evaluation,Instruction,ManPower,Material Category,Phase,Work Category]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /project/master/priority:
+    post:
+      summary: gets priority(different from other master projects cause it has color)
+      tags: [Priority]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                color:
+                  type: string
+                isProtectedForEdit:
+                  type: boolean
+
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    get:
+      summary: gets selected priorities
+      tags: [Priority]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                skip:
+                  type: integer
+                filter:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    color:
+                      type: string
+                sort:
+                  type: object
+                  properties:
+                    name:
+                      type: integer
+                    description:
+                      type: integer
+                    color:
+                      type: string
+                    id:
+                      type: integer
+                    startDate:
+                      type: integer
+                    endDate:
+                      type: integer
+                    creationDate:
+                      type: integer
+                    revisionDate:
+                      type: integer
+                    isProtectedForEdit:
+                      type: integer
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    color:
+                      type: string
+                    id:
+                      type: number
+                    startDate:
+                      type: string
+                    endDate:
+                      type: string
+                    creationDate:
+                      type: string
+                    createdBy:
+                      type: string
+                    revisionDate:
+                      type: string
+                    revisedBy:
+                      type: string
+                    isProtectedForEdit:
+                      type: boolean
+    patch:
+      summary: updates a priority
+      tags: [Priority]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                updateData:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    color:
+                      type: string
+                    isProtectedForEdit:
+                      type: string
+      responses:
+        200:
+          description: success message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    delete:
+      summary: deletes a Priority
+      tags: [Priority]
       requestBody:
         required: true
         content:
@@ -1141,10 +1301,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 project_description: 
@@ -1275,10 +1431,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate: 
-                      type: "string"
-                    endDate:
-                      type: string
                     isProtectedForEdit:
                       type: boolean
                     project_description: 
@@ -1346,10 +1498,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 weather:
@@ -1482,10 +1630,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate: 
-                      type: "string"
-                    endDate:
-                      type: string
                     isProtectedForEdit:
                       type: boolean
                     weather:
@@ -1553,10 +1697,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 remarks: 
@@ -1651,10 +1791,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate: 
-                      type: "string"
-                    endDate:
-                      type: string
                     isProtectedForEdit:
                       type: boolean
                     remarks: 
@@ -1710,10 +1846,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 number_of_actual_man_power:
@@ -1828,10 +1960,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate: 
-                      type: "string"
-                    endDate:
-                      type: string
                     isProtectedForEdit:
                       type: boolean
                     number_of_actual_man_power:
@@ -1897,10 +2025,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 actual_equipment_number:
@@ -2017,10 +2141,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate: 
-                      type: "string"
-                    endDate:
-                      type: string
                     isProtectedForEdit:
                       type: boolean
                     actual_equipment_number:
@@ -2086,10 +2206,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 delivered_quantity:
@@ -2208,10 +2324,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate: 
-                      type: "string"
-                    endDate:
-                      type: string
                     isProtectedForEdit:
                       type: boolean
                     delivered_quantity:
@@ -2279,10 +2391,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 description:
@@ -2399,10 +2507,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate: 
-                      type: "string"
-                    endDate:
-                      type: string
                     isProtectedForEdit:
                       type: boolean
                     description:
@@ -2464,10 +2568,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 description:
@@ -2576,10 +2676,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate: 
-                      type: "string"
-                    endDate:
-                      type: string
                     isProtectedForEdit:
                       type: boolean
                     description:
@@ -2639,10 +2735,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 description:
@@ -2747,10 +2839,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate: 
-                      type: "string"
-                    endDate:
-                      type: string
                     isProtectedForEdit:
                       type: boolean
                     description:
@@ -2810,10 +2898,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 task_end_date:
@@ -2922,10 +3006,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate: 
-                      type: "string"
-                    endDate:
-                      type: string
                     isProtectedForEdit:
                       type: boolean
                     task_end_date:
@@ -2987,10 +3067,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 skilled_worker:
@@ -3082,10 +3158,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate: 
-                      type: "string"
-                    endDate:
-                      type: string
                     isProtectedForEdit:
                       type: boolean
                     skilled_worker:
@@ -3141,10 +3213,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 reason:
@@ -3249,10 +3317,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate: 
-                      type: "string"
-                    endDate:
-                      type: string
                     isProtectedForEdit:
                       type: boolean
                     reason:
@@ -3312,10 +3376,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 notes:
@@ -3412,10 +3472,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate: 
-                      type: "string"
-                    endDate:
-                      type: string
                     isProtectedForEdit:
                       type: boolean
                     notes:
@@ -3471,10 +3527,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 request_description:
@@ -3603,10 +3655,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate: 
-                      type: "string"
-                    endDate:
-                      type: string
                     isProtectedForEdit:
                       type: boolean
                     request_description:
@@ -3674,10 +3722,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 detail: 
@@ -3788,10 +3832,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate: 
-                      type: "string"
-                    endDate:
-                      type: string
                     isProtectedForEdit:
                       type: boolean
                     detail: 
@@ -3853,10 +3893,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 description: 
@@ -3947,10 +3983,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate:
-                      type: "string"
-                    endDate:
-                      type: "string"
                     isProtectedForEdit:
                       type: boolean
                     description: 
@@ -4003,10 +4035,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 description: 
@@ -4123,10 +4151,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate:
-                      type: "string"
-                    endDate:
-                      type: "string"
                     isProtectedForEdit:
                       type: boolean
                     description: 
@@ -4191,10 +4215,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 closing_type: 
@@ -4287,10 +4307,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate:
-                      type: "string"
-                    endDate:
-                      type: "string"
                     isProtectedForEdit:
                       type: boolean
                     closing_type: 
@@ -4344,10 +4360,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 name: 
@@ -4440,10 +4452,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate:
-                      type: "string"
-                    endDate:
-                      type: "string"
                     isProtectedForEdit:
                       type: boolean
                     name: 
@@ -4498,10 +4506,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 account_type: 
@@ -4624,10 +4628,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate:
-                      type: "string"
-                    endDate:
-                      type: "string"
                     isProtectedForEdit:
                       type: boolean
                     account_type: 
@@ -4692,10 +4692,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 contact_type: 
@@ -4808,10 +4804,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate:
-                      type: "string"
-                    endDate:
-                      type: "string"
                     isProtectedForEdit:
                       type: boolean
                     contact_type: 
@@ -4872,10 +4864,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 address_type: 
@@ -5012,10 +5000,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate:
-                      type: "string"
-                    endDate:
-                      type: "string"
                     isProtectedForEdit:
                       type: boolean
                     address_type: 
@@ -5084,10 +5068,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 first_name: 
@@ -5218,10 +5198,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate:
-                      type: "string"
-                    endDate:
-                      type: "string"
                     isProtectedForEdit:
                       type: boolean
                     first_name: 
@@ -5288,10 +5264,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 cost_center_code: 
@@ -5382,10 +5354,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate:
-                      type: "string"
-                    endDate:
-                      type: "string"
                     isProtectedForEdit:
                       type: boolean
                     cost_center_code: 
@@ -5438,10 +5406,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 chart_of_account_id: 
@@ -5532,10 +5496,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate:
-                      type: "string"
-                    endDate:
-                      type: "string"
                     isProtectedForEdit:
                       type: boolean
                     chart_of_account_id: 
@@ -5588,10 +5548,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 show_it_as: 
@@ -5674,10 +5630,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate:
-                      type: "string"
-                    endDate:
-                      type: "string"
                     isProtectedForEdit:
                       type: boolean
                     show_it_as: 
@@ -5728,10 +5680,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 rate: 
@@ -5818,10 +5766,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate:
-                      type: "string"
-                    endDate:
-                      type: "string"
                     isProtectedForEdit:
                       type: boolean
                     rate: 
@@ -5874,10 +5818,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 address1: 
@@ -6004,10 +5944,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate:
-                      type: "string"
-                    endDate:
-                      type: "string"
                     isProtectedForEdit:
                       type: boolean
                     address1: 
@@ -6072,10 +6008,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 id: 
@@ -6160,10 +6092,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate:
-                      type: "string"
-                    endDate:
-                      type: "string"
                     isProtectedForEdit:
                       type: boolean
                     id: 
@@ -6216,10 +6144,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 id: 
@@ -6378,10 +6302,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate:
-                      type: "string"
-                    endDate:
-                      type: "string"
                     isProtectedForEdit:
                       type: boolean
                     id: 
@@ -6466,10 +6386,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 name: 
@@ -6554,10 +6470,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate:
-                      type: "string"
-                    endDate:
-                      type: "string"
                     isProtectedForEdit:
                       type: boolean
                     name: 
@@ -6608,10 +6520,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 access_name: 
@@ -6694,10 +6602,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate:
-                      type: "string"
-                    endDate:
-                      type: "string"
                     isProtectedForEdit:
                       type: boolean
                     access_name: 
@@ -6748,10 +6652,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 name: 
@@ -6842,10 +6742,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate:
-                      type: "string"
-                    endDate:
-                      type: "string"
                     isProtectedForEdit:
                       type: boolean
                     name: 
@@ -6898,10 +6794,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 title: 
@@ -6990,10 +6882,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate:
-                      type: "string"
-                    endDate:
-                      type: "string"
                     isProtectedForEdit:
                       type: boolean
                     title: 
@@ -7046,10 +6934,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 tax_id: 
@@ -7134,10 +7018,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate:
-                      type: "string"
-                    endDate:
-                      type: "string"
                     isProtectedForEdit:
                       type: boolean
                     tax_id: 
@@ -7188,10 +7068,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 tax_name: 
@@ -7308,10 +7184,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate:
-                      type: "string"
-                    endDate:
-                      type: "string"
                     isProtectedForEdit:
                       type: boolean
                     tax_name: 
@@ -7376,10 +7248,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 name: 
@@ -7464,10 +7332,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate:
-                      type: "string"
-                    endDate:
-                      type: "string"
                     isProtectedForEdit:
                       type: boolean
                     name: 
@@ -7518,10 +7382,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 code: 
@@ -7616,10 +7476,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate:
-                      type: "string"
-                    endDate:
-                      type: "string"
                     isProtectedForEdit:
                       type: boolean
                     code: 
@@ -7674,10 +7530,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 tax_group_name: 
@@ -7760,10 +7612,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate:
-                      type: "string"
-                    endDate:
-                      type: "string"
                     isProtectedForEdit:
                       type: boolean
                     tax_group_name: 
@@ -7814,10 +7662,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 operator: 
@@ -7914,10 +7758,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate:
-                      type: "string"
-                    endDate:
-                      type: "string"
                     isProtectedForEdit:
                       type: boolean
                     operator: 
@@ -7974,10 +7814,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 months: 
@@ -8077,10 +7913,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate:
-                      type: "string"
-                    endDate:
-                      type: "string"
                     isProtectedForEdit:
                       type: boolean
                     months: 
@@ -8141,10 +7973,6 @@ paths:
             schema:
               type: object
               properties:
-                startDate:
-                  type: "string"
-                endDate:
-                  type: "string"
                 isProtectedForEdit:
                   type: boolean
                 type: 
@@ -8229,10 +8057,6 @@ paths:
                 updateData:
                   type: object
                   properties:
-                    startDate:
-                      type: "string"
-                    endDate:
-                      type: "string"
                     isProtectedForEdit:
                       type: boolean
                     type: 

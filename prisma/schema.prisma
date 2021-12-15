@@ -1041,55 +1041,6 @@ model journal_users {
   //inside schema
 }
 
-model chart_of_account {
-  startDate                   DateTime
-  endDate                     DateTime
-  creationDate                DateTime                 @default(now())
-  createdBy                   String
-  revisionDate                DateTime                 @updatedAt
-  revisedBy                   String
-  status                      Int                      @default(0)
-  isProtectedForEdit          Boolean                  @default(false)
-  id                          Int                      @id @default(autoincrement())
-  account_name                String
-  account_code                String                   @unique
-  account_number              String?
-  is_active                   Boolean?
-  description                 String?
-  add_to_dashboard_watch_list Boolean?
-  attachment_path             Int?
-  is_sub_account              Boolean?
-  is_default                  Boolean?
-  is_employee_account         Boolean?
-  has_opening_balance         Boolean?
-  is_bank_account             Boolean?
-  parent_account_id           Int?
-  head_account_id             Int?
-  currency_id                 Int?
-  account_type_id             Int
-  account_type                account_type             @relation(fields: [account_type_id], references: [id])
-  currency                    currency?                @relation(fields: [currency_id], references: [id])
-  parent_account              chart_of_account?        @relation(name: "parent_account", fields: [parent_account_id], references: [id])
-  head_account                chart_of_account?        @relation(name: "head_account", fields: [head_account_id], references: [id])
-  //needs account_type
-  //needs currency
-  //needs chart_of_account
-  parent_accounts             chart_of_account[]       @relation("parent_account")
-  head_accounts               chart_of_account[]       @relation("head_account")
-  contact                     contact[]
-  cost_center_accounts        cost_center_accounts[]
-  tax_debits                  tax[]                    @relation("chart_of_account_debit")
-  tax_credits                 tax[]                    @relation("chart_of_account_credit")
-  // tax_chart_of_account        tax_chart_of_account[]
-  bank_reconcilation          bank_reconcilation[]
-  chart_of_account_files      chart_of_account_files[]
-  budget_account              budget_account[]
-  general_ledger              general_ledger[]
-  asset_depreciation          asset[]                  @relation("depreciation_account")
-  asset_accounts              asset[]                  @relation("asset_account")
-  general_journal_detail      general_journal_detail[]
-}
-
 model contact {
   startDate              DateTime
   endDate                DateTime
@@ -1300,7 +1251,64 @@ model primary_contact {
   //needs financial_settings
 }
 
+model chart_of_account {
+  startDate                   DateTime
+  endDate                     DateTime
+  creationDate                DateTime                 @default(now())
+  createdBy                   String
+  revisionDate                DateTime                 @updatedAt
+  revisedBy                   String
+  status                      Int                      @default(0)
+  isProtectedForEdit          Boolean                  @default(false)
+  id                          Int                      @id @default(autoincrement())
+  account_name                String
+  account_code                String                   @unique
+  account_number              String?
+  is_active                   Boolean?
+  description                 String?
+  add_to_dashboard_watch_list Boolean?
+  attachment_path             Int?
+  is_sub_account              Boolean?
+  is_default                  Boolean?
+  is_employee_account         Boolean?
+  has_opening_balance         Boolean?
+  is_bank_account             Boolean?
+  parent_account_id           Int?
+  head_account_id             Int?
+  currency_id                 Int?
+  account_type_id             Int
+  account_type                account_type             @relation(fields: [account_type_id], references: [id])
+  currency                    currency?                @relation(fields: [currency_id], references: [id])
+  parent_account              chart_of_account?        @relation(name: "parent_account", fields: [parent_account_id], references: [id])
+  head_account                chart_of_account?        @relation(name: "head_account", fields: [head_account_id], references: [id])
+  //needs account_type
+  //needs currency
+  //needs chart_of_account
+  parent_accounts             chart_of_account[]       @relation("parent_account")
+  head_accounts               chart_of_account[]       @relation("head_account")
+  contact                     contact[]
+  cost_center_accounts        cost_center_accounts[]
+  tax_debits                  tax[]                    @relation("chart_of_account_debit")
+  tax_credits                 tax[]                    @relation("chart_of_account_credit")
+  // tax_chart_of_account        tax_chart_of_account[]
+  bank_reconcilation          bank_reconcilation[]
+  chart_of_account_files      chart_of_account_files[]
+  budget_account              budget_account[]
+  general_ledger              general_ledger[]
+  asset_depreciation          asset[]                  @relation("depreciation_account")
+  asset_accounts              asset[]                  @relation("asset_account")
+  general_journal_detail      general_journal_detail[]
+}
+
 model account_type_financial_statement_section {
+  startDate                      DateTime
+  endDate                        DateTime
+  creationDate                   DateTime                    @default(now())
+  createdBy                      String
+  revisionDate                   DateTime                    @updatedAt
+  revisedBy                      String
+  status                         Int                         @default(0)
+  isProtectedForEdit             Boolean                     @default(false)
   id                             Int                         @id @default(autoincrement())
   account_type_id                Int
   financial_statement_section_id Int
@@ -1311,6 +1319,14 @@ model account_type_financial_statement_section {
 }
 
 model bank_reconcilation {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime         @default(now())
+  createdBy           String
+  revisionDate        DateTime         @updatedAt
+  revisedBy           String
+  status              Int              @default(0)
+  isProtectedForEdit  Boolean          @default(false)
   id                  Int              @id @default(autoincrement())
   from_date           DateTime?
   to_date             DateTime?
@@ -1323,6 +1339,14 @@ model bank_reconcilation {
 }
 
 model chart_of_account_files {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime         @default(now())
+  createdBy           String
+  revisionDate        DateTime         @updatedAt
+  revisedBy           String
+  status              Int              @default(0)
+  isProtectedForEdit  Boolean          @default(false)
   id                  Int              @id @default(autoincrement())
   path                String //needs file care
   name                String?
@@ -1333,14 +1357,30 @@ model chart_of_account_files {
 }
 
 model estimated_total_production_unit {
-  id          Int     @id @default(autoincrement())
-  unit_name   String
-  unit_symbol String
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  unit_name          String
+  unit_symbol        String
   //needs no one
-  asset       asset[]
+  asset              asset[]
 }
 
 model recurring_journal_occurrence {
+  startDate                 DateTime
+  endDate                   DateTime
+  creationDate              DateTime                    @default(now())
+  createdBy                 String
+  revisionDate              DateTime                    @updatedAt
+  revisedBy                 String
+  status                    Int                         @default(0)
+  isProtectedForEdit        Boolean                     @default(false)
   id                        Int                         @id @default(autoincrement())
   repeat_every_number       Int?
   repeat_every_label        Int
@@ -1351,18 +1391,34 @@ model recurring_journal_occurrence {
 }
 
 model budget {
-  id             Int              @id @default(autoincrement())
-  name           String?
-  fiscal_year    DateTime         @default(now())
-  budget_reason  Int
-  project_name   String?
-  cost_center_id Int?
-  cost_center    cost_center?     @relation(fields: [cost_center_id], references: [id])
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime         @default(now())
+  createdBy          String
+  revisionDate       DateTime         @updatedAt
+  revisedBy          String
+  status             Int              @default(0)
+  isProtectedForEdit Boolean          @default(false)
+  id                 Int              @id @default(autoincrement())
+  name               String?
+  fiscal_year        DateTime         @default(now())
+  budget_reason      Int
+  project_name       String?
+  cost_center_id     Int?
+  cost_center        cost_center?     @relation(fields: [cost_center_id], references: [id])
   //needs cost center
-  budget_account budget_account[]
+  budget_account     budget_account[]
 }
 
 model budget_account {
+  startDate             DateTime
+  endDate               DateTime
+  creationDate          DateTime                @default(now())
+  createdBy             String
+  revisionDate          DateTime                @updatedAt
+  revisedBy             String
+  status                Int                     @default(0)
+  isProtectedForEdit    Boolean                 @default(false)
   id                    Int                     @id @default(autoincrement())
   budget_total_amount   Float
   budget_id             Int?
@@ -1375,22 +1431,46 @@ model budget_account {
 }
 
 model budget_account_period {
-  id                Int             @id @default(autoincrement())
-  budget_amount     Float
-  period_month      Int
-  budget_account_id Int?
-  budget_account    budget_account? @relation(fields: [budget_account_id], references: [id])
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime        @default(now())
+  createdBy          String
+  revisionDate       DateTime        @updatedAt
+  revisedBy          String
+  status             Int             @default(0)
+  isProtectedForEdit Boolean         @default(false)
+  id                 Int             @id @default(autoincrement())
+  budget_amount      Float
+  period_month       Int
+  budget_account_id  Int?
+  budget_account     budget_account? @relation(fields: [budget_account_id], references: [id])
   //needs budget_account
 }
 
 model budget_control_action {
-  id                                         Int @id @default(autoincrement())
+  startDate                                  DateTime
+  endDate                                    DateTime
+  creationDate                               DateTime @default(now())
+  createdBy                                  String
+  revisionDate                               DateTime @updatedAt
+  revisedBy                                  String
+  status                                     Int      @default(0)
+  isProtectedForEdit                         Boolean  @default(false)
+  id                                         Int      @id @default(autoincrement())
   type                                       Int
   action_accumulated_monthly_budget_exceeded Int
   //needs no one
 }
 
 model general_journal_header {
+  startDate                    DateTime
+  endDate                      DateTime
+  creationDate                 DateTime                   @default(now())
+  createdBy                    String
+  revisionDate                 DateTime                   @updatedAt
+  revisedBy                    String
+  status                       Int                        @default(0)
+  isProtectedForEdit           Boolean                    @default(false)
   id                           Int                        @id @default(autoincrement())
   journal_date                 DateTime
   posting_reference            String                     @unique //needs its own implementation  ( sequential string
@@ -1422,6 +1502,14 @@ model general_journal_header {
 }
 
 model general_ledger {
+  startDate                 DateTime
+  endDate                   DateTime
+  creationDate              DateTime                    @default(now())
+  createdBy                 String
+  revisionDate              DateTime                    @updatedAt
+  revisedBy                 String
+  status                    Int                         @default(0)
+  isProtectedForEdit        Boolean                     @default(false)
   id                        Int                         @id @default(autoincrement())
   amount_credit             Float?
   amount_debit              Float?
@@ -1450,6 +1538,14 @@ model general_ledger {
 }
 
 model journal_comment {
+  startDate                    DateTime
+  endDate                      DateTime
+  creationDate                 DateTime                   @default(now())
+  createdBy                    String
+  revisionDate                 DateTime                   @updatedAt
+  revisedBy                    String
+  status                       Int                        @default(0)
+  isProtectedForEdit           Boolean                    @default(false)
   id                           Int                        @id @default(autoincrement())
   commented_date               DateTime                   @default(now())
   comment                      String
@@ -1469,14 +1565,30 @@ model journal_comment {
 }
 
 model number_tracker {
-  Id              Int     @id @default(autoincrement())
-  prefix          String?
-  starting_number Int
-  next_number     Int
-  reason          Int?
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  Id                 Int      @id @default(autoincrement())
+  prefix             String?
+  starting_number    Int
+  next_number        Int
+  reason             Int?
 }
 
 model transaction_lock {
+  startDate                  DateTime
+  endDate                    DateTime
+  creationDate               DateTime @default(now())
+  createdBy                  String
+  revisionDate               DateTime @updatedAt
+  revisedBy                  String
+  status                     Int      @default(0)
+  isProtectedForEdit         Boolean  @default(false)
   id                         Int      @id @default(autoincrement())
   lock_date                  DateTime
   reason                     String
@@ -1484,6 +1596,14 @@ model transaction_lock {
 }
 
 model opening_balance {
+  startDate            DateTime
+  endDate              DateTime
+  creationDate         DateTime @default(now())
+  createdBy            String
+  revisionDate         DateTime @updatedAt
+  revisedBy            String
+  status               Int      @default(0)
+  isProtectedForEdit   Boolean  @default(false)
   id                   Int      @id @default(autoincrement())
   opening_balance_date DateTime
   price_precision      Int?
@@ -1492,6 +1612,14 @@ model opening_balance {
 }
 
 model reconcilation_transaction {
+  startDate             DateTime
+  endDate               DateTime
+  creationDate          DateTime           @default(now())
+  createdBy             String
+  revisionDate          DateTime           @updatedAt
+  revisedBy             String
+  status                Int                @default(0)
+  isProtectedForEdit    Boolean            @default(false)
   id                    Int                @id @default(autoincrement())
   bank_reconcilation_id Int
   general_ledger_id     Int
@@ -1502,6 +1630,14 @@ model reconcilation_transaction {
 }
 
 model asset {
+  startDate                          DateTime
+  endDate                            DateTime
+  creationDate                       DateTime                         @default(now())
+  createdBy                          String
+  revisionDate                       DateTime                         @updatedAt
+  revisedBy                          String
+  status                             Int                              @default(0)
+  isProtectedForEdit                 Boolean                          @default(false)
   id                                 Int                              @id @default(autoincrement())
   name                               String
   tag_number                         String
@@ -1533,6 +1669,14 @@ model asset {
 }
 
 model general_journal_detail {
+  startDate                 DateTime
+  endDate                   DateTime
+  creationDate              DateTime               @default(now())
+  createdBy                 String
+  revisionDate              DateTime               @updatedAt
+  revisedBy                 String
+  status                    Int                    @default(0)
+  isProtectedForEdit        Boolean                @default(false)
   id                        Int                    @id @default(autoincrement())
   description               String?
   debit_or_credit           Int
@@ -1559,6 +1703,14 @@ model general_journal_detail {
 }
 
 model general_journal_files {
+  startDate                 DateTime
+  endDate                   DateTime
+  creationDate              DateTime               @default(now())
+  createdBy                 String
+  revisionDate              DateTime               @updatedAt
+  revisedBy                 String
+  status                    Int                    @default(0)
+  isProtectedForEdit        Boolean                @default(false)
   id                        Int                    @id @default(autoincrement())
   path                      String //needs file care
   name                      String?
@@ -1569,6 +1721,14 @@ model general_journal_files {
 }
 
 model recurring_general_journal {
+  startDate                        DateTime
+  endDate                          DateTime
+  creationDate                     DateTime                      @default(now())
+  createdBy                        String
+  revisionDate                     DateTime                      @updatedAt
+  revisedBy                        String
+  status                           Int                           @default(0)
+  isProtectedForEdit               Boolean                       @default(false)
   id                               Int                           @id @default(autoincrement())
   profile_name                     String
   start_on                         DateTime?
