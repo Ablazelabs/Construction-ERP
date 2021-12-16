@@ -35,7 +35,7 @@ const enums = {
         "may",
         "june",
         "july",
-        "augest",
+        "august",
         "september",
         "october",
         "november",
@@ -78,8 +78,9 @@ const data_sort = {
 };
 const url = "/accounting_period";
 router.post(url, async (req, res, next) => {
+    let reqBody = {};
     try {
-        let reqBody = inputFilter(
+        reqBody = inputFilter(
             {
                 months: "number",
                 period_number: "number",
@@ -98,7 +99,7 @@ router.post(url, async (req, res, next) => {
         reqBody.startDate = new Date();
         reqBody.endDate = new Date("9999/12/31");
         for (let i in data_dates) {
-            const key = i;
+            const key = data_dates[i];
             if (!reqBody[key]) {
                 continue;
             }
@@ -237,6 +238,7 @@ router.patch(url, async (req, res, next) => {
             req.body,
             updateData,
             res.locals.id,
+            enums,
             next
         );
         if (data == false) {

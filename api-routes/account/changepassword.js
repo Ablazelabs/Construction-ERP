@@ -22,7 +22,7 @@ router.post("/account/changepassword", async (req, res, next) => {
         error(e.key, e.message, next);
         return;
     }
-    if (!validation.checkPassword(req.body.newPassword, next)) {
+    if (!validation.checkPassword(req.body.newPassword, next, "newPassword")) {
         return;
     }
     let id;

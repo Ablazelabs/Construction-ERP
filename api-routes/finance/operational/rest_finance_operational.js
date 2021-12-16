@@ -42,7 +42,6 @@ const allInputFilters = {
     bank_reconcilation: {
         chart_of_account_id: "number",
     },
-
     reconcilation_transaction: {
         bank_reconcilation_id: "number",
         general_ledger_id: "number",
@@ -386,6 +385,20 @@ const phoneValues = {
 };
 const emailValues = phoneValues;
 const allProjections = {
+    chart_of_account_files: {
+        id: true,
+        path: true,
+        name: true,
+        type: true,
+        chart_of_account_id: true,
+    },
+    general_journal_files: {
+        id: true,
+        path: true,
+        name: true,
+        type: true,
+        general_journal_header_id: true,
+    },
     chart_of_account: {
         id: true,
         account_name: true,
@@ -587,6 +600,20 @@ const allProjections = {
     },
 };
 const allFilters = {
+    chart_of_account_files: {
+        id: "number",
+        path: "string", //needs file care
+        name: "string",
+        type: "string",
+        chart_of_account_id: "number",
+    },
+    general_journal_files: {
+        id: "number",
+        path: "string", //needs file care
+        name: "string",
+        type: "string",
+        general_journal_header_id: "number",
+    },
     chart_of_account: {
         id: "number",
         account_name: "number",
@@ -755,6 +782,20 @@ const allFilters = {
     },
 };
 const allSorts = {
+    chart_of_account_files: {
+        id: "number",
+        path: "number", //needs file care
+        name: "number",
+        type: "number",
+        chart_of_account_id: "number",
+    },
+    general_journal_files: {
+        id: "number",
+        path: "number", //needs file care
+        name: "number",
+        type: "number",
+        general_journal_header_id: "number",
+    },
     chart_of_account: {
         id: "number",
         account_name: "number",
@@ -959,7 +1000,7 @@ const allRoutes = [
     "/chart_of_account",
     "/account_type_financial_statement_section",
     "/bank_reconcilation",
-    // "/chart_of_account_files",
+    "/chart_of_account_files",
     "/estimated_total_production_unit",
     "/recurring_journal_occurrence",
     "/budget",
@@ -975,11 +1016,31 @@ const allRoutes = [
     "/reconcilation_transaction",
     "/asset",
     "/general_journal_detail",
-    // "/general_journal_files",
+    "/general_journal_files",
     "/recurring_general_journal",
 ];
-
-router.post(allRoutes, async (req, res, next) => {
+const allPostRoutes = [
+    "/chart_of_account",
+    "/account_type_financial_statement_section",
+    "/bank_reconcilation",
+    "/estimated_total_production_unit",
+    "/recurring_journal_occurrence",
+    "/budget",
+    "/budget_account",
+    "/budget_account_period",
+    "/budget_control_action",
+    "/general_journal_header",
+    "/general_ledger",
+    "/journal_comment",
+    "/number_tracker",
+    "/transaction_lock",
+    "/opening_balance",
+    "/reconcilation_transaction",
+    "/asset",
+    "/general_journal_detail",
+    "/recurring_general_journal",
+];
+router.post(allPostRoutes, async (req, res, next) => {
     const operationDataType = req.path.split("/").pop();
     let reqBody;
     const requiredInputFilter = allInputFilters[operationDataType];
@@ -1134,7 +1195,7 @@ router.get(allRoutes, async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
-router.patch(allRoutes, async (req, res, next) => {
+router.patch(allPostRoutes, async (req, res, next) => {
     const operationDataType = req.path.split("/").pop();
     let updateData = {};
     try {

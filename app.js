@@ -19,9 +19,11 @@ const client = require("./api-routes/project/master/client");
 const material = require("./api-routes/project/master/material");
 const documentation = require("./api-routes/project/master/documentation");
 const restMasterData = require("./api-routes/project/master/restMasterData");
-const operational_data = require("./api-routes/project/operational/operational_data");
+const operationalData = require("./api-routes/project/operational/operational_data");
 const financemasters = require("./api-routes/finance/master/financemasters");
-const rest_finance_operational = require("./api-routes/finance/operational/rest_finance_operational");
+const accountingPeriod = require("./api-routes/finance/master/accountingPeriod");
+const restFinanceOperational = require("./api-routes/finance/operational/rest_finance_operational");
+const financeUpload = require("./api-routes/finance/operational/upload");
 const cors = require("cors");
 
 app.use(json());
@@ -58,11 +60,12 @@ app.use("/project/master", client);
 app.use("/project/master", material);
 app.use("/project/master", documentation);
 app.use("/project/master", restMasterData);
-app.use("/project/operational", operational_data);
-app.use("/project/operational", operational_data);
+app.use("/project/operational", operationalData);
 app.use("/finance/master", financemasters);
-app.use("/finance/operational", rest_finance_operational);
-
+app.use("/finance/master", accountingPeriod);
+app.use("/finance/operational", restFinanceOperational);
+app.use("/finance/operational", financeUpload);
+app.use(express.static("uploads"));
 app.use((err, _req, res, _next) => {
     let myError = JSON.parse(err.message);
     const status = myError.status;

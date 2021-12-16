@@ -642,10 +642,10 @@ model currency {
   status                 Int                      @default(0)
   isProtectedForEdit     Boolean                  @default(false)
   id                     Int                      @id @default(autoincrement())
-  currency_code          String
+  currency_code          String                   @unique
   currency_description   String
   name                   String
-  symbol                 String
+  symbol                 String                   @unique
   price_precision        Int
   currency_format        Int
   is_base_currency       Boolean
