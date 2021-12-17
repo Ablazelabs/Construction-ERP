@@ -6,6 +6,7 @@ const {
     chart_of_account,
     chart_of_account_files,
     general_journal_files,
+    general_journal_header,
     account_type,
     currency,
 } = new PrismaClient();
@@ -34,7 +35,6 @@ const checkUnique = async (data, model, key, ignored, rowIndex) => {
     return true;
 };
 const allModels = {
-    chart_of_account,
     chart_of_account_files,
     general_journal_files,
 };
@@ -50,11 +50,12 @@ module.exports = async (
     const myModel =
         type == "chart_of_account_files"
             ? chart_of_account
-            : general_journal_files;
+            : general_journal_header;
     if (data.length < 2) {
         error("file", "no data has been sent for creation", next);
         return false;
     }
+    let continueDbCheck = true;
     let ignoredRows = {};
     const firstRow =
         type == "chart_of_account_files"
@@ -69,12 +70,13 @@ module.exports = async (
               ]
             : [
                   "journal_date",
-                  "reference",
+                  "posting_reference",
                   "notes",
-                  "account_id",
+                  "chart_of_account_id",
                   "description",
                   "credit_amount",
                   "debit_amount",
+                  "currency_id",
               ];
     const columnNumber = 7;
     if (data[0].length != columnNumber) {
@@ -108,13 +110,11 @@ module.exports = async (
                           1: "string",
                           2: "string",
                           3: "string",
-                          5: "string",
-                          6: "string",
                       };
             const optionalColumns =
                 type == "chart_of_account_files"
                     ? { 6: "string" }
-                    : { 4: "string" };
+                    : { 4: "string", 5: "number", 6: "number" };
             inputFilter(requiredColumns, optionalColumns, data[i]);
         } catch (e) {
             allErrors.push({
@@ -123,6 +123,20 @@ module.exports = async (
                 message: e.message,
             });
             continueDbCheck = false;
+        }
+        if (type == "general_journal_files") {
+            data[i][0] = new Date(data[i][0]);
+            if (!data[i][0].getTime()) {
+                continueDbCheck = false;
+                allErrors.push({
+                    row: Number(i) + 1,
+                    column: 1,
+                    message: "please send a valid date format yyyy/mm/dd",
+                });
+            }
+        }
+        if (!continueDbCheck) {
+            continue;
         }
         const uniqueRows = type == "chart_of_account_files" ? [0] : [];
         for (let k in uniqueRows) {
@@ -184,24 +198,51 @@ module.exports = async (
         } else {
             const myCurrency = await currency.findFirst({
                 where: {
-                    currency_code: data[i][4],
+                    is_base_currency: true,
                 },
                 select: {
                     id: true,
                     status: true,
                 },
             });
+            //we assume data[i][7] stands for currency id(for base currency)
             if (myCurrency && myCurrency.status == 0) {
-                data[i][4] = myCurrency.id;
+                data[i][7] = myCurrency.id;
             } else {
                 allErrors.push({
                     row: Number(i) + 1,
-                    column: 4 + 1,
-                    message: `no currency exists with this name`,
+                    column: "all",
+                    message: `no currency is registered as base`,
+                });
+            }
+            const myChart = await chart_of_account.findFirst({
+                where: {
+                    account_code: data[i][3],
+                },
+                select: {
+                    id: true,
+                    status: true,
+                },
+            });
+            if (myChart && myChart.status == 0) {
+                data[i][3] = myChart.id;
+            } else {
+                allErrors.push({
+                    row: Number(i) + 1,
+                    column: 3 + 1,
+                    message: `no account exists with this code`,
+                });
+            }
+            if (data[i][5] && data[i][6]) {
+                allErrors.push({
+                    row: Number(i) + 1,
+                    column: 5,
+                    message: `both credit and debit can't have an amount`,
                 });
             }
         }
     }
+
     if (allErrors.length > 0) {
         error("file", allErrors, next);
         return false;
@@ -256,6 +297,32 @@ module.exports = async (
         for (let i in firstRow) {
             returnedObj[firstRow[i]] = row[i];
         }
+        if (type == "general_journal_files") {
+            returnedObj["general_journal_detail"] = {};
+            returnedObj["general_journal_detail"]["create"] = [
+                {
+                    ...defaultData,
+                    debit_or_credit: row[5] ? 1 : 2,
+                    posting_reference: row[1],
+                    chart_of_account_id: row[3],
+                    description: row[4],
+                },
+            ];
+            returnedObj["journal_comment"] = {};
+            returnedObj["journal_comment"]["create"] = [
+                {
+                    ...defaultData,
+                    comment: "Journal imported from excel",
+                    application_user_id: creator,
+                },
+            ];
+            returnedObj["posting_responsible_user_id"] = creator;
+            returnedObj["chart_of_account_id"] = undefined;
+            returnedObj["credit_amount"] = undefined;
+            returnedObj["debit_amount"] = undefined;
+            returnedObj["description"] = undefined;
+        }
+
         return { ...returnedObj, ...defaultData };
     });
 
@@ -271,10 +338,24 @@ module.exports = async (
             id: ignoredArrayValues[rowIndex],
         };
     });
-    const returnData = await myModel.createMany({
-        data: [...createRows],
-        skipDuplicates: true,
-    });
+    let count;
+    if (type == "chart_of_account_files") {
+        count = await myModel.createMany({
+            data: [...createRows],
+            skipDuplicates: true,
+        });
+        count = count.count;
+    } else {
+        count = 0;
+        try {
+            for (let i in createRows) {
+                await myModel.create({
+                    data: { ...createRows[i] },
+                });
+                count++;
+            }
+        } catch {}
+    }
     const { id } = await myModel.findFirst({
         select: {
             id: true,
@@ -303,5 +384,6 @@ module.exports = async (
             ...foreignKeyId,
         },
     });
-    return true;
+    console.log(count);
+    return count;
 };

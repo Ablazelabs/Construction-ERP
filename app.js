@@ -24,6 +24,7 @@ const financemasters = require("./api-routes/finance/master/financemasters");
 const accountingPeriod = require("./api-routes/finance/master/accountingPeriod");
 const restFinanceOperational = require("./api-routes/finance/operational/rest_finance_operational");
 const financeUpload = require("./api-routes/finance/operational/upload");
+const hcmMasters = require("./api-routes/hcm/master/hcmMasters");
 const cors = require("cors");
 
 app.use(json());
@@ -65,6 +66,7 @@ app.use("/finance/master", financemasters);
 app.use("/finance/master", accountingPeriod);
 app.use("/finance/operational", restFinanceOperational);
 app.use("/finance/operational", financeUpload);
+app.use("/hcm/master", hcmMasters);
 app.use(express.static("uploads"));
 app.use((err, _req, res, _next) => {
     let myError = JSON.parse(err.message);

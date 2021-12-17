@@ -2,94 +2,81 @@ const { error } = require("../config/config");
 const { PrismaClient } = require("@prisma/client");
 
 const {
-    account_category,
-    account_type,
-    closing_note,
-    financial_statement_section,
-    bank,
-    contact,
-    contact_address,
-    contact_person,
-    cost_center,
-    cost_center_accounts,
-    payment_term,
-    exchange_rate,
-    company_address,
-    date_format_type,
-    financial_settings,
-    industry,
-    journal_users,
-    primary_contact,
-    foot_note,
-    associated_tax_group,
-    tax,
-    tax_authority,
-    tax_exemption,
-    tax_group,
-    tax_rule,
-    journal_type,
+    currency,
+    country,
+    title,
+    language,
+    action_reason,
+    action_type,
+    address_type,
+    commitment,
+    custom_report,
+    discipline_case_type,
+    duration_measure,
+    employee_group,
+    employee_type,
+    field_of_study,
+    hcm_configuration,
+    employee_transaction_lock,
+    license_type,
+    nationality,
+    religion,
+    training_type,
 } = new PrismaClient();
 
 const allModels = {
-    account_category,
-    account_type,
-    closing_note,
-    financial_statement_section,
-    bank,
-    contact,
-    contact_address,
-    contact_person,
-    cost_center,
-    cost_center_accounts,
-    payment_term,
-    exchange_rate,
-    company_address,
-    date_format_type,
-    financial_settings,
-    industry,
-    journal_users,
-    primary_contact,
-    foot_note,
-    associated_tax_group,
-    tax,
-    tax_authority,
-    tax_exemption,
-    tax_group,
-    tax_rule,
-    journal_type,
+    currency,
+    country,
+    title,
+    language,
+    action_reason,
+    action_type,
+    address_type,
+    commitment,
+    custom_report,
+    discipline_case_type,
+    duration_measure,
+    employee_group,
+    employee_type,
+    field_of_study,
+    hcm_configuration,
+    employee_transaction_lock,
+    license_type,
+    nationality,
+    religion,
+    training_type,
 };
 const uniqueValues = {
-    account_category: [],
-    account_type: [],
-    closing_note: [],
-    financial_statement_section: [],
-    bank: [],
-    contact: [],
-    contact_address: [],
-    contact_person: [],
-    cost_center: [],
-    cost_center_accounts: [],
-    payment_term: [],
-    exchange_rate: [],
-    company_address: [],
-    date_format_type: [],
-    financial_settings: [],
-    industry: [],
-    journal_users: [],
-    primary_contact: [],
-    foot_note: [],
-    associated_tax_group: [],
-    tax: [],
-    tax_authority: [],
-    tax_exemption: [],
-    tax_group: [],
-    tax_rule: [],
-    accounting_period: [],
-    journal_type: [],
+    currency: ["currency_code", "symbol"],
+    country: ["country_code"],
+    title: ["name"],
+    language: ["name"],
+    action_reason: ["reason_description"],
+    action_type: ["action_type_description"],
+    address_type: ["type_name"],
+    commitment: ["type_name"],
+    custom_report: ["query"],
+    discipline_case_type: ["case_description"],
+    duration_measure: ["measure"],
+    employee_group: ["group_description"],
+    employee_type: ["description"],
+    field_of_study: ["field_of_study_name"],
+    hcm_configuration: [],
+    employee_transaction_lock: [],
+    license_type: ["license_type_name"],
+    nationality: ["nationality_name"],
+    religion: ["name"],
+    training_type: ["training_type_name"],
 };
 const post = async (reqBody, operationDataType, creator, next) => {
     for (let i in uniqueValues[operationDataType]) {
         const uniqueKey = uniqueValues[operationDataType][i];
+        if (
+            !reqBody[uniqueKey] &&
+            reqBody[uniqueKey] != 0 &&
+            reqBody[uniqueKey] != false
+        )
+            continue;
         let whereData = {};
         whereData[uniqueKey] = reqBody[uniqueKey];
         const queryData = await allModels[operationDataType].findUnique({
@@ -194,7 +181,11 @@ const patch = async (
     }
     for (let i in uniqueValues[operationDataType]) {
         const key = uniqueValues[operationDataType][i];
-        if (updateData[key]) {
+        if (
+            updateData[key] ||
+            updateData[key] == 0 ||
+            updateData[key] == false
+        ) {
             if (updateData[key] === myModel[key]) {
                 updateData[key] = undefined;
             } else {

@@ -632,33 +632,6 @@ model required_document {
   isProtectedForEdit Boolean       @default(false)
 }
 
-model currency {
-  startDate              DateTime
-  endDate                DateTime
-  creationDate           DateTime                 @default(now())
-  createdBy              String
-  revisionDate           DateTime                 @updatedAt
-  revisedBy              String
-  status                 Int                      @default(0)
-  isProtectedForEdit     Boolean                  @default(false)
-  id                     Int                      @id @default(autoincrement())
-  currency_code          String                   @unique
-  currency_description   String
-  name                   String
-  symbol                 String                   @unique
-  price_precision        Int
-  currency_format        Int
-  is_base_currency       Boolean
-  bank                   bank[]
-  exchange_rate          exchange_rate[]
-  financial_settings     financial_settings[]
-  chart_of_account       chart_of_account[]
-  contact                contact[]
-  general_journal_header general_journal_header[]
-  general_ledger         general_ledger[]
-  asset                  asset[]
-}
-
 model account_category {
   startDate          DateTime
   endDate            DateTime
@@ -870,51 +843,6 @@ model journal_type {
   type                   String
   description            String?
   general_journal_header general_journal_header[]
-}
-
-model country {
-  startDate          DateTime
-  endDate            DateTime
-  creationDate       DateTime          @default(now())
-  createdBy          String
-  revisionDate       DateTime          @updatedAt
-  revisedBy          String
-  status             Int               @default(0)
-  isProtectedForEdit Boolean           @default(false)
-  id                 Int               @id @default(autoincrement())
-  country_code       String
-  country_name       String
-  contact_address    contact_address[]
-}
-
-model title {
-  startDate          DateTime
-  endDate            DateTime
-  creationDate       DateTime         @default(now())
-  createdBy          String
-  revisionDate       DateTime         @updatedAt
-  revisedBy          String
-  status             Int              @default(0)
-  isProtectedForEdit Boolean          @default(false)
-  id                 Int              @id @default(autoincrement())
-  short_code         String
-  name               String
-  contact_person     contact_person[]
-}
-
-model language {
-  startDate          DateTime
-  endDate            DateTime
-  creationDate       DateTime             @default(now())
-  createdBy          String
-  revisionDate       DateTime             @updatedAt
-  revisedBy          String
-  status             Int                  @default(0)
-  isProtectedForEdit Boolean              @default(false)
-  id                 Int                  @id @default(autoincrement())
-  code               String
-  name               String
-  financial_settings financial_settings[]
 }
 
 model account_type {
@@ -1683,17 +1611,17 @@ model general_journal_detail {
   tax_group_id              Int?
   amount_credit             Float?
   posting_reference         String                 @unique //needs its own implementation  ( sequential string
-  reference_code            String
+  reference_code            String?
   amount_debit              Float?
   tax_id                    Int?
   contact_id                Int?
   general_journal_header_id Int
-  cost_center_id            Int
+  cost_center_id            Int?
   chart_of_account_id       Int
   tax                       tax?                   @relation(fields: [tax_id], references: [id])
   contact                   contact?               @relation(fields: [contact_id], references: [id])
   general_journal_header    general_journal_header @relation(fields: [general_journal_header_id], references: [id])
-  cost_center               cost_center            @relation(fields: [cost_center_id], references: [id])
+  cost_center               cost_center?           @relation(fields: [cost_center_id], references: [id])
   chart_of_account          chart_of_account       @relation(fields: [chart_of_account_id], references: [id])
   //needs tax
   //needs contact
@@ -1744,4 +1672,307 @@ model recurring_general_journal {
   //needs recurring_journal_occurrence
   general_journal_header           general_journal_header[]
   journal_comment                  journal_comment[]
+}
+
+model currency {
+  startDate              DateTime
+  endDate                DateTime
+  creationDate           DateTime                 @default(now())
+  createdBy              String
+  revisionDate           DateTime                 @updatedAt
+  revisedBy              String
+  status                 Int                      @default(0)
+  isProtectedForEdit     Boolean                  @default(false)
+  id                     Int                      @id @default(autoincrement())
+  currency_code          String                   @unique
+  currency_description   String
+  name                   String
+  symbol                 String                   @unique
+  price_precision        Int?
+  currency_format        Int?
+  is_base_currency       Boolean
+  bank                   bank[]
+  exchange_rate          exchange_rate[]
+  financial_settings     financial_settings[]
+  chart_of_account       chart_of_account[]
+  contact                contact[]
+  general_journal_header general_journal_header[]
+  general_ledger         general_ledger[]
+  asset                  asset[]
+}
+
+model country {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime          @default(now())
+  createdBy          String
+  revisionDate       DateTime          @updatedAt
+  revisedBy          String
+  status             Int               @default(0)
+  isProtectedForEdit Boolean           @default(false)
+  id                 Int               @id @default(autoincrement())
+  country_code       String            @unique
+  country_name       String
+  contact_address    contact_address[]
+}
+
+model title {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime         @default(now())
+  createdBy          String
+  revisionDate       DateTime         @updatedAt
+  revisedBy          String
+  status             Int              @default(0)
+  isProtectedForEdit Boolean          @default(false)
+  id                 Int              @id @default(autoincrement())
+  short_code         String
+  name               String           @unique
+  contact_person     contact_person[]
+}
+
+model language {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime             @default(now())
+  createdBy          String
+  revisionDate       DateTime             @updatedAt
+  revisedBy          String
+  status             Int                  @default(0)
+  isProtectedForEdit Boolean              @default(false)
+  id                 Int                  @id @default(autoincrement())
+  code               String
+  name               String               @unique
+  financial_settings financial_settings[]
+}
+
+model action_reason {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime     @default(now())
+  createdBy          String
+  revisionDate       DateTime     @updatedAt
+  revisedBy          String
+  status             Int          @default(0)
+  isProtectedForEdit Boolean      @default(false)
+  id                 Int          @id @default(autoincrement())
+  reason_description String       @unique
+  action_type_code   String
+  action_type_id     Int?
+  action_type        action_type? @relation(fields: [action_type_id], references: [id])
+  //needs action_type
+}
+
+model action_type {
+  startDate                DateTime
+  endDate                  DateTime
+  creationDate             DateTime        @default(now())
+  createdBy                String
+  revisionDate             DateTime        @updatedAt
+  revisedBy                String
+  status                   Int             @default(0)
+  isProtectedForEdit       Boolean         @default(false)
+  id                       Int             @id @default(autoincrement())
+  action_type_description  String?         @unique
+  is_initial_hiring        Boolean?
+  is_with_org_assignment   Boolean?
+  default_action_type_code String?
+  is_promotion             Boolean?
+  employee_status          Int //[active Inactive Retired Withdraw]//optional
+  //needs no one
+  action_reason            action_reason[]
+}
+
+model address_type {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  type_name          String   @unique
+  //needs no one
+}
+
+model commitment {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  type_name          String   @unique
+  //needs no one
+}
+
+model custom_report {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  query_name         String
+  query              String   @unique
+  //needs no one
+}
+
+model discipline_case_type {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  case_description   String   @unique
+  //needs no one
+}
+
+model duration_measure {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  measure            String   @unique
+}
+
+model employee_group {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  group_description  String   @unique
+}
+
+model employee_type {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  description        String   @unique
+}
+
+model field_of_study {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime @default(now())
+  createdBy           String
+  revisionDate        DateTime @updatedAt
+  revisedBy           String
+  status              Int      @default(0)
+  isProtectedForEdit  Boolean  @default(false)
+  id                  Int      @id @default(autoincrement())
+  field_of_study_name String   @unique
+}
+
+model hcm_configuration {
+  startDate                   DateTime
+  endDate                     DateTime
+  creationDate                DateTime @default(now())
+  createdBy                   String
+  revisionDate                DateTime @updatedAt
+  revisedBy                   String
+  status                      Int      @default(0)
+  isProtectedForEdit          Boolean  @default(false)
+  id                          Int      @id @default(autoincrement())
+  income_tax_payable_id       Int?
+  employer_tax_id             Int?
+  employer_tax_control_id     Int?
+  employer_pension_account_id Int?
+  employer_pension            Float? //[120]
+  employee_pension            Float? //[120]
+  employee_retirement_age     Int? //[40100]
+}
+
+model employee_transaction_lock {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  payroll_lock       Boolean
+}
+
+model license_type {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  license_type_name  String   @unique
+}
+
+model nationality {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  nationality_code   String
+  nationality_name   String   @unique
+}
+
+model religion {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  name               String   @unique
+}
+
+model training_type {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  training_type_name String   @unique
 }

@@ -33,12 +33,14 @@ router.post(
                 fileUrl,
                 next
             );
-            if (saved == false) {
+            if (saved === false) {
                 return;
             } else {
                 res.json({
                     success: true,
-                    message: "all rows have been created successfully",
+                    message: `${
+                        saved || saved === 0 ? saved : "all"
+                    } rows have been created successfully`,
                 });
             }
         } catch (e) {
