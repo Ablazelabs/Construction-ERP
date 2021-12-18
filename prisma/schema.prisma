@@ -697,6 +697,7 @@ model cost_center {
   cost_center_accounts   cost_center_accounts[]
   budget                 budget[]
   general_journal_detail general_journal_detail[]
+  business_unit          business_unit[]
 }
 
 model payment_term {
@@ -1226,6 +1227,7 @@ model chart_of_account {
   asset_depreciation          asset[]                  @relation("depreciation_account")
   asset_accounts              asset[]                  @relation("asset_account")
   general_journal_detail      general_journal_detail[]
+  salary_component            salary_component[]
 }
 
 model account_type_financial_statement_section {
@@ -1714,6 +1716,7 @@ model country {
   country_code       String            @unique
   country_name       String
   contact_address    contact_address[]
+  employee           employee[]
 }
 
 model title {
@@ -1729,6 +1732,7 @@ model title {
   short_code         String
   name               String           @unique
   contact_person     contact_person[]
+  employee           employee[]
 }
 
 model language {
@@ -1744,23 +1748,25 @@ model language {
   code               String
   name               String               @unique
   financial_settings financial_settings[]
+  employee           employee[]
 }
 
 model action_reason {
   startDate          DateTime
   endDate            DateTime
-  creationDate       DateTime     @default(now())
+  creationDate       DateTime          @default(now())
   createdBy          String
-  revisionDate       DateTime     @updatedAt
+  revisionDate       DateTime          @updatedAt
   revisedBy          String
-  status             Int          @default(0)
-  isProtectedForEdit Boolean      @default(false)
-  id                 Int          @id @default(autoincrement())
-  reason_description String       @unique
+  status             Int               @default(0)
+  isProtectedForEdit Boolean           @default(false)
+  id                 Int               @id @default(autoincrement())
+  reason_description String            @unique
   action_type_code   String
   action_type_id     Int?
-  action_type        action_type? @relation(fields: [action_type_id], references: [id])
+  action_type        action_type?      @relation(fields: [action_type_id], references: [id])
   //needs action_type
+  employee_action    employee_action[]
 }
 
 model action_type {
@@ -1786,15 +1792,16 @@ model action_type {
 model address_type {
   startDate          DateTime
   endDate            DateTime
-  creationDate       DateTime @default(now())
+  creationDate       DateTime  @default(now())
   createdBy          String
-  revisionDate       DateTime @updatedAt
+  revisionDate       DateTime  @updatedAt
   revisedBy          String
-  status             Int      @default(0)
-  isProtectedForEdit Boolean  @default(false)
-  id                 Int      @id @default(autoincrement())
-  type_name          String   @unique
+  status             Int       @default(0)
+  isProtectedForEdit Boolean   @default(false)
+  id                 Int       @id @default(autoincrement())
+  type_name          String    @unique
   //needs no one
+  address            address[]
 }
 
 model commitment {
@@ -1829,67 +1836,73 @@ model custom_report {
 model discipline_case_type {
   startDate          DateTime
   endDate            DateTime
-  creationDate       DateTime @default(now())
+  creationDate       DateTime     @default(now())
   createdBy          String
-  revisionDate       DateTime @updatedAt
+  revisionDate       DateTime     @updatedAt
   revisedBy          String
-  status             Int      @default(0)
-  isProtectedForEdit Boolean  @default(false)
-  id                 Int      @id @default(autoincrement())
-  case_description   String   @unique
+  status             Int          @default(0)
+  isProtectedForEdit Boolean      @default(false)
+  id                 Int          @id @default(autoincrement())
+  case_description   String       @unique
   //needs no one
+  discipline         discipline[]
 }
 
 model duration_measure {
   startDate          DateTime
   endDate            DateTime
-  creationDate       DateTime @default(now())
+  creationDate       DateTime    @default(now())
   createdBy          String
-  revisionDate       DateTime @updatedAt
+  revisionDate       DateTime    @updatedAt
   revisedBy          String
-  status             Int      @default(0)
-  isProtectedForEdit Boolean  @default(false)
-  id                 Int      @id @default(autoincrement())
-  measure            String   @unique
+  status             Int         @default(0)
+  isProtectedForEdit Boolean     @default(false)
+  id                 Int         @id @default(autoincrement())
+  measure            String      @unique
+  education          education[]
 }
 
 model employee_group {
   startDate          DateTime
   endDate            DateTime
-  creationDate       DateTime @default(now())
+  creationDate       DateTime         @default(now())
   createdBy          String
-  revisionDate       DateTime @updatedAt
+  revisionDate       DateTime         @updatedAt
   revisedBy          String
-  status             Int      @default(0)
-  isProtectedForEdit Boolean  @default(false)
-  id                 Int      @id @default(autoincrement())
-  group_description  String   @unique
+  status             Int              @default(0)
+  isProtectedForEdit Boolean          @default(false)
+  id                 Int              @id @default(autoincrement())
+  group_description  String           @unique
+  org_assignment     org_assignment[]
 }
 
 model employee_type {
   startDate          DateTime
   endDate            DateTime
-  creationDate       DateTime @default(now())
+  creationDate       DateTime            @default(now())
   createdBy          String
-  revisionDate       DateTime @updatedAt
+  revisionDate       DateTime            @updatedAt
   revisedBy          String
-  status             Int      @default(0)
-  isProtectedForEdit Boolean  @default(false)
-  id                 Int      @id @default(autoincrement())
-  description        String   @unique
+  status             Int                 @default(0)
+  isProtectedForEdit Boolean             @default(false)
+  id                 Int                 @id @default(autoincrement())
+  description        String              @unique
+  employee           employee[]
+  employee_id_range  employee_id_range[]
 }
 
 model field_of_study {
   startDate           DateTime
   endDate             DateTime
-  creationDate        DateTime @default(now())
+  creationDate        DateTime    @default(now())
   createdBy           String
-  revisionDate        DateTime @updatedAt
+  revisionDate        DateTime    @updatedAt
   revisedBy           String
-  status              Int      @default(0)
-  isProtectedForEdit  Boolean  @default(false)
-  id                  Int      @id @default(autoincrement())
-  field_of_study_name String   @unique
+  status              Int         @default(0)
+  isProtectedForEdit  Boolean     @default(false)
+  id                  Int         @id @default(autoincrement())
+  field_of_study_name String      @unique
+  education           education[]
 }
 
 model hcm_configuration {
@@ -1927,44 +1940,441 @@ model employee_transaction_lock {
 model license_type {
   startDate          DateTime
   endDate            DateTime
-  creationDate       DateTime @default(now())
+  creationDate       DateTime  @default(now())
   createdBy          String
-  revisionDate       DateTime @updatedAt
+  revisionDate       DateTime  @updatedAt
   revisedBy          String
-  status             Int      @default(0)
-  isProtectedForEdit Boolean  @default(false)
-  id                 Int      @id @default(autoincrement())
-  license_type_name  String   @unique
+  status             Int       @default(0)
+  isProtectedForEdit Boolean   @default(false)
+  id                 Int       @id @default(autoincrement())
+  license_type_name  String    @unique
+  license            license[]
 }
 
 model nationality {
   startDate          DateTime
   endDate            DateTime
-  creationDate       DateTime @default(now())
+  creationDate       DateTime   @default(now())
   createdBy          String
-  revisionDate       DateTime @updatedAt
+  revisionDate       DateTime   @updatedAt
   revisedBy          String
-  status             Int      @default(0)
-  isProtectedForEdit Boolean  @default(false)
-  id                 Int      @id @default(autoincrement())
+  status             Int        @default(0)
+  isProtectedForEdit Boolean    @default(false)
+  id                 Int        @id @default(autoincrement())
   nationality_code   String
-  nationality_name   String   @unique
+  nationality_name   String     @unique
+  employee           employee[]
 }
 
 model religion {
   startDate          DateTime
   endDate            DateTime
-  creationDate       DateTime @default(now())
+  creationDate       DateTime   @default(now())
   createdBy          String
-  revisionDate       DateTime @updatedAt
+  revisionDate       DateTime   @updatedAt
   revisedBy          String
-  status             Int      @default(0)
-  isProtectedForEdit Boolean  @default(false)
-  id                 Int      @id @default(autoincrement())
-  name               String   @unique
+  status             Int        @default(0)
+  isProtectedForEdit Boolean    @default(false)
+  id                 Int        @id @default(autoincrement())
+  name               String     @unique
+  employee           employee[]
 }
 
 model training_type {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime    @default(now())
+  createdBy          String
+  revisionDate       DateTime    @updatedAt
+  revisedBy          String
+  status             Int         @default(0)
+  isProtectedForEdit Boolean     @default(false)
+  id                 Int         @id @default(autoincrement())
+  training_type_name String      @unique
+  job_title          job_title[]
+  education          education[]
+}
+
+//today start
+
+model salary_component {
+  startDate                 DateTime
+  endDate                   DateTime
+  creationDate              DateTime                    @default(now())
+  createdBy                 String
+  revisionDate              DateTime                    @updatedAt
+  revisedBy                 String
+  status                    Int                         @default(0)
+  isProtectedForEdit        Boolean                     @default(false)
+  id                        Int                         @id @default(autoincrement())
+  name                      String
+  salary_component_type     Int?
+  value_type                Int
+  value                     Float?
+  taxable                   Boolean?
+  chart_of_account_id       Int
+  chart_of_account          chart_of_account?           @relation(fields: [chart_of_account_id], references: [id])
+  employee_loan_repayment   employee_loan_repayment[]
+  employee_salary_component employee_salary_component[]
+}
+
+model payroll_frequency_type {
+  startDate              DateTime
+  endDate                DateTime
+  creationDate           DateTime                 @default(now())
+  createdBy              String
+  revisionDate           DateTime                 @updatedAt
+  revisedBy              String
+  status                 Int                      @default(0)
+  isProtectedForEdit     Boolean                  @default(false)
+  id                     Int                      @id @default(autoincrement())
+  payroll_frequency_desc String
+  employee_pay_frequency employee_pay_frequency[]
+}
+
+model paygrade {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime            @default(now())
+  createdBy          String
+  revisionDate       DateTime            @updatedAt
+  revisedBy          String
+  status             Int                 @default(0)
+  isProtectedForEdit Boolean             @default(false)
+  id                 Int                 @id @default(autoincrement())
+  paygrade_name      String
+  min_salary         Float
+  max_salary         Float
+  job_title          job_title[]
+  employee_paygrade  employee_paygrade[]
+}
+
+model attendance_abscence_type {
+  startDate             DateTime
+  endDate               DateTime
+  creationDate          DateTime            @default(now())
+  createdBy             String
+  revisionDate          DateTime            @updatedAt
+  revisedBy             String
+  status                Int                 @default(0)
+  isProtectedForEdit    Boolean             @default(false)
+  id                    Int                 @id @default(autoincrement())
+  aa_description        String
+  is_with_quota         Boolean?
+  is_with_pay           Boolean?
+  is_annual_leave       Boolean?
+  is_with_entitlement   Boolean?
+  is_regular_attendance Boolean?
+  number_of_days        Int
+  leave_assignment      leave_assignment[]
+  leave_entitlement     leave_entitlement[]
+}
+
+model shift_schedule_hdr {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime           @default(now())
+  createdBy          String
+  revisionDate       DateTime           @updatedAt
+  revisedBy          String
+  status             Int                @default(0)
+  isProtectedForEdit Boolean            @default(false)
+  id                 Int                @id @default(autoincrement())
+  shift_name         String
+  sub_shift_group_id Int
+  sub_shift_group    sub_shift_group?   @relation(fields: [sub_shift_group_id], references: [id])
+  shift_assignment   shift_assignment[]
+}
+
+model sub_shift_group {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime             @default(now())
+  createdBy          String
+  revisionDate       DateTime             @updatedAt
+  revisedBy          String
+  status             Int                  @default(0)
+  isProtectedForEdit Boolean              @default(false)
+  id                 Int                  @id @default(autoincrement())
+  sub_shift_name     String
+  morning_out        Float
+  afternoon_in       Float
+  tolerance_minutes  Int?
+  shift_schedule_hdr shift_schedule_hdr[]
+}
+
+model business_unit {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime         @default(now())
+  createdBy          String
+  revisionDate       DateTime         @updatedAt
+  revisedBy          String
+  status             Int              @default(0)
+  isProtectedForEdit Boolean          @default(false)
+  id                 Int              @id @default(autoincrement())
+  name               String
+  parent_id          Int?
+  is_root            Boolean?
+  cost_center_id     Int?
+  employee_id        Int?
+  employee           employee?        @relation(fields: [employee_id], references: [id])
+  cost_center        cost_center?     @relation(fields: [cost_center_id], references: [id])
+  org_assignment     org_assignment[]
+}
+
+model location {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime         @default(now())
+  createdBy          String
+  revisionDate       DateTime         @updatedAt
+  revisedBy          String
+  status             Int              @default(0)
+  isProtectedForEdit Boolean          @default(false)
+  id                 Int              @id @default(autoincrement())
+  location_name      String
+  address_1          String
+  address_2          String?
+  city               String?
+  state_or_province  String?
+  zip_or_portal_code String?
+  phone              String?
+  fax                String?
+  website            String?
+  email              String?
+  org_assignment     org_assignment[]
+}
+
+model job_title {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime         @default(now())
+  createdBy          String
+  revisionDate       DateTime         @updatedAt
+  revisedBy          String
+  status             Int              @default(0)
+  isProtectedForEdit Boolean          @default(false)
+  id                 Int              @id @default(autoincrement())
+  title_name         String
+  job_specification  String?
+  min_experience     Int?
+  paygrade_id        Int?
+  training_type_id   Int?
+  job_category_id    Int?
+  paygrade           paygrade?        @relation(fields: [paygrade_id], references: [id])
+  training_type      training_type?   @relation(fields: [training_type_id], references: [id])
+  job_category       job_category?    @relation(fields: [job_category_id], references: [id])
+  org_assignment     org_assignment[]
+}
+
+model job_category {
+  startDate            DateTime
+  endDate              DateTime
+  creationDate         DateTime    @default(now())
+  createdBy            String
+  revisionDate         DateTime    @updatedAt
+  revisedBy            String
+  status               Int         @default(0)
+  isProtectedForEdit   Boolean     @default(false)
+  id                   Int         @id @default(autoincrement())
+  category_description String
+  job_title            job_title[]
+}
+
+model address {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime      @default(now())
+  createdBy          String
+  revisionDate       DateTime      @updatedAt
+  revisedBy          String
+  status             Int           @default(0)
+  isProtectedForEdit Boolean       @default(false)
+  id                 Int           @id @default(autoincrement())
+  address_line_1     String
+  address_line_2     String?
+  region             String?
+  city               String?
+  mobile_number      String?
+  house_number       String?
+  postal_box         String?
+  email              String?
+  employee_id        Int
+  address_type_id    Int?
+  address_type       address_type? @relation(fields: [address_type_id], references: [id])
+}
+
+model attachment {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime          @default(now())
+  createdBy          String
+  revisionDate       DateTime          @updatedAt
+  revisedBy          String
+  status             Int               @default(0)
+  isProtectedForEdit Boolean           @default(false)
+  id                 Int               @id @default(autoincrement())
+  description        String?
+  type               String?
+  name               String?
+  size               Int?
+  path               String
+  employee_id        Int?
+  employee           employee?         @relation(fields: [employee_id], references: [id])
+  discipline         discipline[]
+  employee_action    employee_action[]
+}
+
+model dependent {
+  startDate               DateTime
+  endDate                 DateTime
+  creationDate            DateTime  @default(now())
+  createdBy               String
+  revisionDate            DateTime  @updatedAt
+  revisedBy               String
+  status                  Int       @default(0)
+  isProtectedForEdit      Boolean   @default(false)
+  id                      Int       @id @default(autoincrement())
+  fullname                String
+  relationship            Int?
+  dependent_date_of_birth DateTime?
+  employee_id             Int
+  employee                employee  @relation(fields: [employee_id], references: [id])
+
+  //needs employee
+}
+
+model discipline {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime              @default(now())
+  createdBy          String
+  revisionDate       DateTime              @updatedAt
+  revisedBy          String
+  status             Int                   @default(0)
+  isProtectedForEdit Boolean               @default(false)
+  id                 Int                   @id @default(autoincrement())
+  case_description   String
+  attachment_id      Int?
+  case_type_id       Int?
+  employee_id        Int
+  employee           employee              @relation(fields: [employee_id], references: [id])
+  case_type          discipline_case_type? @relation(fields: [case_type_id], references: [id])
+  attachment         attachment?           @relation(fields: [attachment_id], references: [id])
+}
+
+model education {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime         @default(now())
+  createdBy           String
+  revisionDate        DateTime         @updatedAt
+  revisedBy           String
+  status              Int              @default(0)
+  isProtectedForEdit  Boolean          @default(false)
+  id                  Int              @id @default(autoincrement())
+  duration            Int
+  score               String?
+  field_of_study_id   Int
+  duration_measure_id Int
+  training_type_id    Int
+  employee_id         Int
+  training_type       training_type    @relation(fields: [training_type_id], references: [id])
+  employee            employee         @relation(fields: [employee_id], references: [id])
+  duration_measure    duration_measure @relation(fields: [duration_measure_id], references: [id])
+  field_of_study      field_of_study   @relation(fields: [field_of_study_id], references: [id])
+
+  //needs training_type
+  //needs employee
+  //needs duration_measure
+  //needs field_of_study
+}
+
+model employee {
+  startDate                  DateTime
+  endDate                    DateTime
+  creationDate               DateTime  @default(now())
+  createdBy                  String
+  revisionDate               DateTime  @updatedAt
+  revisedBy                  String
+  status                     Int       @default(0)
+  isProtectedForEdit         Boolean   @default(false)
+  id                         Int       @id @default(autoincrement())
+  id_number                  Int
+  first_name                 String
+  middle_name                String
+  last_name                  String?
+  gender                     Int
+  date_of_birth              DateTime?
+  employment_start_date      DateTime?
+  date_of_joining            DateTime?
+  marital_status             Int?
+  marital_since              DateTime?
+  place_of_birth             String?
+  photo                      String?
+  is_employee_active         Boolean?
+  type                       String?
+  prev_employment_leave_days Float?
+  bank_account_number        String?
+  document_ref               String?
+  pension_ref                String?
+  nationality_id             Int?
+  country_id                 Int?
+  language_id                Int?
+  title_id                   Int?
+  religion_id                Int?
+  employee_type_id           Int?
+
+  employee_type employee_type? @relation(fields: [employee_type_id], references: [id])
+  nationality   nationality?   @relation(fields: [nationality_id], references: [id])
+  country       country?       @relation(fields: [country_id], references: [id])
+  language      language?      @relation(fields: [language_id], references: [id])
+  title         title?         @relation(fields: [title_id], references: [id])
+  religion      religion?      @relation(fields: [religion_id], references: [id])
+
+  business_unit             business_unit[]
+  attachment                attachment[]
+  dependent                 dependent[]
+  discipline                discipline[]
+  education                 education[]
+  employee_action           employee_action[]
+  employee_attachment       employee_attachment[]
+  employee_contact          employee_contact[]
+  employee_loan_repayment   employee_loan_repayment[]
+  employee_pay_frequency    employee_pay_frequency[]
+  employee_paygrade         employee_paygrade[]
+  employee_salary_component employee_salary_component[]
+  experience                experience[]
+  leave_assignment          leave_assignment[]
+  leave_entitlement         leave_entitlement[]
+  leave_transfer            leave_transfer[]
+  license                   license[]
+  service_allowance_pay     service_allowance_pay[]
+  shift_assignment          shift_assignment[]
+}
+
+model employee_action {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime         @default(now())
+  createdBy          String
+  revisionDate       DateTime         @updatedAt
+  revisedBy          String
+  status             Int              @default(0)
+  isProtectedForEdit Boolean          @default(false)
+  id                 Int              @id @default(autoincrement())
+  employee_status    Int?
+  attachment_id      Int?
+  employee_id        Int
+  action_reason_id   Int
+  employee           employee         @relation(fields: [employee_id], references: [id])
+  attachment         attachment?      @relation(fields: [attachment_id], references: [id])
+  action_reason      action_reason    @relation(fields: [action_reason_id], references: [id])
+  org_assignment     org_assignment[]
+}
+
+model employee_attachment {
   startDate          DateTime
   endDate            DateTime
   creationDate       DateTime @default(now())
@@ -1974,5 +2384,275 @@ model training_type {
   status             Int      @default(0)
   isProtectedForEdit Boolean  @default(false)
   id                 Int      @id @default(autoincrement())
-  training_type_name String   @unique
+  description        String
+  path               String?
+  employee_id        Int
+  employee           employee @relation(fields: [employee_id], references: [id])
+}
+
+// model employee_commitment {
+//   id                 Int     @id @default(autoincrement())
+//   commitment_type_id Int
+//   remark             String?
+//   employee_id        Int
+//   employee    employee @relation(fields: [employee_id], references: [id])
+//   commitment_type    commitment_type @relation(fields: [commitment_type_id], references: [id])
+
+//   //needs employee
+//   //needs commitment_type
+// }
+
+model employee_contact {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  name               String
+  relationship       String
+  address_line_1     String
+  address_line_2     String?
+  mobile_number      String
+  employee_id        Int
+  employee           employee @relation(fields: [employee_id], references: [id])
+}
+
+model employee_id_range {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime       @default(now())
+  createdBy          String
+  revisionDate       DateTime       @updatedAt
+  revisedBy          String
+  status             Int            @default(0)
+  isProtectedForEdit Boolean        @default(false)
+  id                 Int            @id @default(autoincrement())
+  start              Int
+  end                Int
+  number_of_digit    Int?
+  employee_type_id   Int?
+  employee_type      employee_type? @relation(fields: [employee_type_id], references: [id])
+}
+
+model employee_loan_repayment {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime          @default(now())
+  createdBy           String
+  revisionDate        DateTime          @updatedAt
+  revisedBy           String
+  status              Int               @default(0)
+  isProtectedForEdit  Boolean           @default(false)
+  id                  Int               @id @default(autoincrement())
+  repayment_amount    Float
+  total_amount        Float
+  employee_id         Int?
+  salary_component_id Int?
+  employee            employee?         @relation(fields: [employee_id], references: [id])
+  salary_component    salary_component? @relation(fields: [salary_component_id], references: [id])
+}
+
+model employee_pay_frequency {
+  startDate                 DateTime
+  endDate                   DateTime
+  creationDate              DateTime                @default(now())
+  createdBy                 String
+  revisionDate              DateTime                @updatedAt
+  revisedBy                 String
+  status                    Int                     @default(0)
+  isProtectedForEdit        Boolean                 @default(false)
+  id                        Int                     @id @default(autoincrement())
+  expected_working_hrs      Int
+  employee_id               Int?
+  payroll_frequency_type_id Int?
+  employee                  employee?               @relation(fields: [employee_id], references: [id])
+  payroll_frequency_type    payroll_frequency_type? @relation(fields: [payroll_frequency_type_id], references: [id])
+}
+
+model employee_paygrade {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  employee_id        Int
+  paygrade_id        Int
+  employee           employee @relation(fields: [employee_id], references: [id])
+  paygrade           paygrade @relation(fields: [paygrade_id], references: [id])
+}
+
+model employee_salary_component {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime         @default(now())
+  createdBy           String
+  revisionDate        DateTime         @updatedAt
+  revisedBy           String
+  status              Int              @default(0)
+  isProtectedForEdit  Boolean          @default(false)
+  id                  Int              @id @default(autoincrement())
+  amount              Float?
+  employee_id         Int
+  salary_component_id Int
+  employee            employee         @relation(fields: [employee_id], references: [id])
+  salary_component    salary_component @relation(fields: [salary_component_id], references: [id])
+}
+
+model experience {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  company            String
+  job_title          String
+  salary             Float?
+  comment            String?
+  employee_id        Int
+  employee           employee @relation(fields: [employee_id], references: [id])
+}
+
+model leave_assignment {
+  startDate                   DateTime
+  endDate                     DateTime
+  creationDate                DateTime                  @default(now())
+  createdBy                   String
+  revisionDate                DateTime                  @updatedAt
+  revisedBy                   String
+  status                      Int                       @default(0)
+  isProtectedForEdit          Boolean                   @default(false)
+  id                          Int                       @id @default(autoincrement())
+  is_half_day                 Boolean?
+  leave_assignment_type       Int?
+  leave_request_status        Int?
+  action_date                 DateTime?
+  delegated_user_name         String?
+  employee_id                 Int
+  attendance_abscence_type_id Int?
+  employee                    employee                  @relation(fields: [employee_id], references: [id])
+  attendance_abscence_type    attendance_abscence_type? @relation(fields: [attendance_abscence_type_id], references: [id])
+}
+
+model leave_entitlement {
+  startDate                   DateTime
+  endDate                     DateTime
+  creationDate                DateTime                 @default(now())
+  createdBy                   String
+  revisionDate                DateTime                 @updatedAt
+  revisedBy                   String
+  status                      Int                      @default(0)
+  isProtectedForEdit          Boolean                  @default(false)
+  id                          Int                      @id @default(autoincrement())
+  employee_id                 Int
+  attendance_abscence_type_id Int
+  employee                    employee                 @relation(fields: [employee_id], references: [id])
+  attendance_abscence_type    attendance_abscence_type @relation(fields: [attendance_abscence_type_id], references: [id])
+}
+
+model leave_transfer {
+  startDate            DateTime
+  endDate              DateTime
+  creationDate         DateTime  @default(now())
+  createdBy            String
+  revisionDate         DateTime  @updatedAt
+  revisedBy            String
+  status               Int       @default(0)
+  isProtectedForEdit   Boolean   @default(false)
+  id                   Int       @id @default(autoincrement())
+  from_year            Int?
+  to_year              Int?
+  number_of_days       Int?
+  leave_request_status Int?
+  remark               String
+  action_date          DateTime?
+  delegated_user_name  String?
+  employee_id          Int
+  employee             employee  @relation(fields: [employee_id], references: [id])
+}
+
+model license {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime      @default(now())
+  createdBy          String
+  revisionDate       DateTime      @updatedAt
+  revisedBy          String
+  status             Int           @default(0)
+  isProtectedForEdit Boolean       @default(false)
+  id                 Int           @id @default(autoincrement())
+  license_number     String?
+  issued_date        DateTime?
+  expiry_date        DateTime
+  license_type_id    Int?
+  employee_id        Int?
+  employee           employee?     @relation(fields: [employee_id], references: [id])
+  license_type       license_type? @relation(fields: [license_type_id], references: [id])
+}
+
+model org_assignment {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime         @default(now())
+  createdBy          String
+  revisionDate       DateTime         @updatedAt
+  revisedBy          String
+  status             Int              @default(0)
+  isProtectedForEdit Boolean          @default(false)
+  id                 Int              @id @default(autoincrement())
+  employee_group_id  Int?
+  location_id        Int?
+  employee_action_id Int?
+  job_title_id       Int
+  business_unit_id   Int
+  business_unit      business_unit    @relation(fields: [business_unit_id], references: [id])
+  job_title          job_title        @relation(fields: [job_title_id], references: [id])
+  employee_action    employee_action? @relation(fields: [employee_action_id], references: [id])
+  employee_group     employee_group?  @relation(fields: [employee_group_id], references: [id])
+  location           location?        @relation(fields: [location_id], references: [id])
+}
+
+model service_allowance_pay {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime  @default(now())
+  createdBy          String
+  revisionDate       DateTime  @updatedAt
+  revisedBy          String
+  status             Int       @default(0)
+  isProtectedForEdit Boolean   @default(false)
+  id                 Int       @id @default(autoincrement())
+  allowance_pay      Float //[0+]
+  employee_id        Int?
+  employee           employee? @relation(fields: [employee_id], references: [id])
+}
+
+model shift_assignment {
+  startDate             DateTime
+  endDate               DateTime
+  creationDate          DateTime           @default(now())
+  createdBy             String
+  revisionDate          DateTime           @updatedAt
+  revisedBy             String
+  status                Int                @default(0)
+  isProtectedForEdit    Boolean            @default(false)
+  id                    Int                @id @default(autoincrement())
+  shift_schedule_hdr_id Int
+  employee_id           Int
+  employee              employee           @relation(fields: [employee_id], references: [id])
+  shift_schedule_hdr    shift_schedule_hdr @relation(fields: [shift_schedule_hdr_id], references: [id])
+
+  //needs employee
+  //needs shift_schedule_hdr -- inside hcm/timeandleave
 }

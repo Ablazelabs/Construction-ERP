@@ -208,7 +208,7 @@ const allProjections = {
         id: true,
         reason_description: true,
         action_type_code: true,
-        action_type_id: true,
+        action_type: true,
     },
     action_type: {
         ...auditLogProjection,
