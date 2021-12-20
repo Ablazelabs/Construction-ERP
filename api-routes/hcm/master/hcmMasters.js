@@ -825,6 +825,51 @@ router.patch(allRoutes, async (req, res, next) => {
             )
                 return;
     }
+    if (operationDataType === "hcm_configuration") {
+        if (
+            updateData.employer_pension ||
+            updateData.employer_pension == 0 ||
+            updateData.employer_pension == false
+        ) {
+            if (
+                updateData.employer_pension < 1 ||
+                updateData.employer_pension > 20
+            ) {
+                error("employer_pension", "must be below 20 and above 1", next);
+                return;
+            }
+        }
+        if (
+            updateData.employee_pension ||
+            updateData.employee_pension == 0 ||
+            updateData.employee_pension == false
+        ) {
+            if (
+                updateData.employee_pension < 1 ||
+                updateData.employee_pension > 20
+            ) {
+                error("employee_pension", "must be below 20 and above 1", next);
+                return;
+            }
+        }
+        if (
+            updateData.employee_retirement_age ||
+            updateData.employee_retirement_age == 0 ||
+            updateData.employee_retirement_age == false
+        ) {
+            if (
+                updateData.employee_retirement_age < 40 ||
+                updateData.employee_retirement_age > 100
+            ) {
+                error(
+                    "employee_retirement_age",
+                    "must be below 20 and above 1",
+                    next
+                );
+                return;
+            }
+        }
+    }
     let updateDataProjection = {};
     for (let i in updateData) {
         if (updateData[i]) {

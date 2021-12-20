@@ -2,6 +2,7 @@ const express = require("express");
 const { json } = require("body-parser");
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
+const path = require("path");
 require("dotenv").config();
 const { authenticate } = require("./validation/auth");
 const app = express();
@@ -25,7 +26,8 @@ const accountingPeriod = require("./api-routes/finance/master/accountingPeriod")
 const restFinanceOperational = require("./api-routes/finance/operational/rest_finance_operational");
 const financeUpload = require("./api-routes/finance/operational/upload");
 const hcmMasters = require("./api-routes/hcm/master/hcmMasters");
-const hcmEmployeeMasters = require("./api-routes/hcm/master/hcmEmployeeMasters");
+const hcmEmployeeMasters = require("./api-routes/hcm/employee_master/hcmEmployeeMasters");
+const fileEmployeeMasters = require("./api-routes/hcm/employee_master/fileEmployeeMasters");
 const cors = require("cors");
 
 app.use(json());
@@ -69,7 +71,8 @@ app.use("/finance/operational", restFinanceOperational);
 app.use("/finance/operational", financeUpload);
 app.use("/hcm/master", hcmMasters);
 app.use("/hcm/employee_master/", hcmEmployeeMasters);
-app.use(express.static("uploads"));
+app.use("/hcm/employee_master/", fileEmployeeMasters);
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use((err, _req, res, _next) => {
     let myError = JSON.parse(err.message);
     const status = myError.status;
@@ -80,15 +83,6 @@ const port = 3000;
 
 const basicAuth = require("express-basic-auth");
 
-// app.use(
-//     "/api-docs",
-//     basicAuth({
-//         users: { yourUser: "yourPassword" },
-//         challenge: true,
-//     }),
-//     swaggerUi.serve,
-//     swaggerUi.setup(swaggerDocument)
-// );
 app.use(
     "/api-docs",
     basicAuth({
@@ -96,9 +90,9 @@ app.use(
         challenge: true,
     }),
     swaggerUi.serve,
-    swaggerUi.setup(YAML.load("./documentation/api.yaml"), { explorer: true })
+    swaggerUi.setup(require("./documentation/allApis"), { explorer: true })
 );
 
 module.exports = app.listen(port, () => {
-    console.log("App listening on port 3000!");
+    console.log(`App listening on port ${port}!`);
 });

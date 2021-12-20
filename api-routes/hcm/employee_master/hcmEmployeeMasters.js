@@ -10,7 +10,6 @@ const {
     deleter,
 } = require("../../../services/hcmEmployeeMasters");
 
-const defaultDateValues = [];
 const auditLogProjection = {
     startDate: true,
     endDate: true,
@@ -35,7 +34,7 @@ const allInputFilters = {
         employee_id: "number",
     },
 
-    //attachment skipped because it involeves upload
+    //attachment skipped because it envolves upload
     dependent: {
         fullname: "string",
         employee_id: "number",
@@ -66,14 +65,12 @@ const allInputFilters = {
     },
 
     //employee attachment is skipped bc it envolves file upload
-    // employee_commitment: {
-    //     commitment_type_id: "number",
-    //     employee_id: "number",
-    // },
-    // employee_commitment: {
-    //     remark: "string",
-    // },
-    //employee_commitment has been skipped
+
+    employee_commitment: {
+        commitment_type_id: "number",
+        employee_id: "number",
+    },
+
     employee_contact: {
         name: "string",
         relationship: "string",
@@ -157,6 +154,7 @@ const enums = {
     employee_action: {
         employee_status: ["Active", "Inactive", "Retired", "Withdraw"], //optional
     },
+    employee_commitment: {},
     employee_contact: {},
     employee_id_range: {},
     employee_loan_repayment: {},
@@ -238,6 +236,9 @@ const allOptionalInputfilters = {
         employee_status: "number", //["Active", "Inactive", "Retired", "Withdraw"],//optional
         attachment_id: "number",
     },
+    employee_commitment: {
+        remark: "string",
+    },
     employee_contact: {
         address_line_2: "string",
     },
@@ -293,6 +294,20 @@ const allOptionalInputfilters = {
         employee_id: "number",
     },
     shift_assignment: {},
+};
+const allRangeValues = {
+    employee_id_range: {
+        start: [0, Infinity],
+        end: [0, Infinity],
+    },
+
+    employee_loan_repayment: {
+        repayment_amount: [0, Infinity],
+        total_amount: [0, Infinity],
+    },
+    service_allowance_pay: {
+        allowance_pay: [0, Infinity],
+    },
 };
 const phoneValues = {
     address: ["mobile_number"],
@@ -376,6 +391,7 @@ const dateValues = {
 };
 const allProjections = {
     address: {
+        ...auditLogProjection,
         id: true,
         address_line_1: true,
         address_line_2: true,
@@ -389,6 +405,7 @@ const allProjections = {
         address_type: true,
     },
     attachment: {
+        ...auditLogProjection,
         id: true,
         description: true,
         type: true,
@@ -398,6 +415,7 @@ const allProjections = {
         employee: true,
     },
     dependent: {
+        ...auditLogProjection,
         id: true,
         fullname: true,
         relationship: true,
@@ -405,6 +423,7 @@ const allProjections = {
         employee: true,
     },
     discipline: {
+        ...auditLogProjection,
         id: true,
         case_description: true,
         attachment: true,
@@ -412,6 +431,7 @@ const allProjections = {
         employee: true,
     },
     education: {
+        ...auditLogProjection,
         id: true,
         duration: true,
         score: true,
@@ -421,6 +441,7 @@ const allProjections = {
         employee: true,
     },
     employee: {
+        ...auditLogProjection,
         id: true,
         id_number: true,
         first_name: true,
@@ -448,6 +469,7 @@ const allProjections = {
         employee_type: true,
     },
     employee_action: {
+        ...auditLogProjection,
         id: true,
         employee_status: true,
         attachment: true,
@@ -455,18 +477,21 @@ const allProjections = {
         action_reason: true,
     },
     employee_attachment: {
+        ...auditLogProjection,
         id: true,
         description: true,
         path: true,
         employee: true,
     },
     employee_commitment: {
+        ...auditLogProjection,
         id: true,
         commitment_type: true,
         employee: true,
         remark: true,
     },
     employee_contact: {
+        ...auditLogProjection,
         id: true,
         name: true,
         relationship: true,
@@ -476,6 +501,7 @@ const allProjections = {
         employee: true,
     },
     employee_id_range: {
+        ...auditLogProjection,
         id: true,
         start: true,
         end: true,
@@ -483,6 +509,7 @@ const allProjections = {
         employee_type: true,
     },
     employee_loan_repayment: {
+        ...auditLogProjection,
         id: true,
         repayment_amount: true,
         total_amount: true,
@@ -490,23 +517,27 @@ const allProjections = {
         salary_component: true,
     },
     employee_pay_frequency: {
+        ...auditLogProjection,
         id: true,
         expected_working_hrs: true,
         employee: true,
         payroll_frequency_type: true,
     },
     employee_paygrade: {
+        ...auditLogProjection,
         id: true,
         employee: true,
         paygrade: true,
     },
     employee_salary_component: {
+        ...auditLogProjection,
         id: true,
         amount: true,
         employee: true,
         salary_component: true,
     },
     experience: {
+        ...auditLogProjection,
         id: true,
         company: true,
         job_title: true,
@@ -515,6 +546,7 @@ const allProjections = {
         employee: true,
     },
     leave_assignment: {
+        ...auditLogProjection,
         id: true,
         is_half_day: true,
         leave_assignment_type: true,
@@ -525,11 +557,13 @@ const allProjections = {
         attendance_abscence_type: true,
     },
     leave_entitlement: {
+        ...auditLogProjection,
         id: true,
         employee: true,
         attendance_abscence_type: true,
     },
     leave_transfer: {
+        ...auditLogProjection,
         id: true,
         from_year: true,
         to_year: true,
@@ -541,6 +575,7 @@ const allProjections = {
         employee: true,
     },
     license: {
+        ...auditLogProjection,
         id: true,
         license_number: true,
         issued_date: true,
@@ -549,6 +584,7 @@ const allProjections = {
         employee: true,
     },
     org_assignment: {
+        ...auditLogProjection,
         id: true,
         employee_group: true,
         location: true,
@@ -557,11 +593,13 @@ const allProjections = {
         business_unit: true,
     },
     service_allowance_pay: {
+        ...auditLogProjection,
         id: true,
         allowance_pay: true,
         employee: true,
     },
     shift_assignment: {
+        ...auditLogProjection,
         id: true,
         shift_schedule_hdr_id: true,
         employee: true,
@@ -587,7 +625,7 @@ const allFilters = {
         type: "string",
         name: "string",
         size: "number",
-        path: "string",
+        // path: "string",
         employee_id: "number",
     },
     dependent: {
@@ -621,7 +659,7 @@ const allFilters = {
         gender: "number",
         marital_status: "number",
         place_of_birth: "string",
-        photo: "string",
+        // photo: "string",
         is_employee_active: "boolean",
         type: "string",
         prev_employment_leave_days: "Float?",
@@ -645,7 +683,7 @@ const allFilters = {
     employee_attachment: {
         id: "number",
         description: "string",
-        path: "string",
+        // path: "string",
         employee_id: "number",
     },
     employee_commitment: {
@@ -754,6 +792,7 @@ const allFilters = {
 };
 const allSorts = {
     address: {
+        ...auditLogSort,
         id: "number",
         address_line_1: "number",
         address_line_2: "number",
@@ -768,6 +807,7 @@ const allSorts = {
         //needs address_type
     },
     attachment: {
+        ...auditLogSort,
         id: "number",
         description: "number",
         type: "number",
@@ -778,6 +818,7 @@ const allSorts = {
         //needs employee
     },
     dependent: {
+        ...auditLogSort,
         id: "number",
         fullname: "number",
         relationship: "number",
@@ -786,6 +827,7 @@ const allSorts = {
         //needs employee
     },
     discipline: {
+        ...auditLogSort,
         id: "number",
         case_description: "number",
         attachment_id: "number",
@@ -796,6 +838,7 @@ const allSorts = {
         //needs attachment
     },
     education: {
+        ...auditLogSort,
         id: "number",
         duration: "number",
         score: "number",
@@ -809,6 +852,7 @@ const allSorts = {
         //needs field_of_study
     },
     employee: {
+        ...auditLogSort,
         id: "number",
         id_number: "number",
         first_name: "number",
@@ -842,6 +886,7 @@ const allSorts = {
         //needs religion
     },
     employee_action: {
+        ...auditLogSort,
         id: "number",
         employee_status: "number",
         attachment_id: "number",
@@ -850,6 +895,7 @@ const allSorts = {
         //needs employee
     },
     employee_attachment: {
+        ...auditLogSort,
         id: "number",
         description: "number",
         path: "number",
@@ -857,6 +903,7 @@ const allSorts = {
         //needs employee
     },
     employee_commitment: {
+        ...auditLogSort,
         id: "number",
         commitment_type_id: "number",
         employee_id: "number",
@@ -865,6 +912,7 @@ const allSorts = {
         //needs commitment_type
     },
     employee_contact: {
+        ...auditLogSort,
         id: "number",
         name: "number",
         relationship: "number",
@@ -875,6 +923,7 @@ const allSorts = {
         //needs employee
     },
     employee_id_range: {
+        ...auditLogSort,
         id: "number",
         start: "number",
         end: "number",
@@ -883,6 +932,7 @@ const allSorts = {
         //needs employee_type
     },
     employee_loan_repayment: {
+        ...auditLogSort,
         id: "number",
         repayment_amount: "number",
         total_amount: "number",
@@ -892,6 +942,7 @@ const allSorts = {
         //needs salary_component -- inside hcm/payroll
     },
     employee_pay_frequency: {
+        ...auditLogSort,
         id: "number",
         expected_working_hrs: "number",
         employee_id: "number",
@@ -900,6 +951,7 @@ const allSorts = {
         //needs payroll_frequency_type -- inside hcm/payroll
     },
     employee_paygrade: {
+        ...auditLogSort,
         id: "number",
         employee_id: "number",
         paygrade_id: "number",
@@ -907,6 +959,7 @@ const allSorts = {
         //needs paygrade -- inside hcm/payroll
     },
     employee_salary_component: {
+        ...auditLogSort,
         id: "number",
         amount: "number",
         employee_id: "number",
@@ -915,6 +968,7 @@ const allSorts = {
         //needs employee
     },
     experience: {
+        ...auditLogSort,
         id: "number",
         company: "number",
         job_title: "number",
@@ -924,6 +978,7 @@ const allSorts = {
         //needs employee
     },
     leave_assignment: {
+        ...auditLogSort,
         id: "number",
         is_half_day: "number",
         leave_assignment_type: "number",
@@ -936,6 +991,7 @@ const allSorts = {
         //needs attendance_abscence_type -- inside hcm/timeandleave
     },
     leave_entitlement: {
+        ...auditLogSort,
         id: "number",
         employee_id: "number",
         attendance_abscence_type_id: "number",
@@ -943,6 +999,7 @@ const allSorts = {
         //needs attendance_abscence_type -- inside hcm/timeandleave
     },
     leave_transfer: {
+        ...auditLogSort,
         id: "number",
         from_year: "number",
         to_year: "number",
@@ -955,6 +1012,7 @@ const allSorts = {
         //needs employee
     },
     license: {
+        ...auditLogSort,
         id: "number",
         license_number: "number",
         issued_date: "number",
@@ -965,6 +1023,7 @@ const allSorts = {
         //needs license_type
     },
     org_assignment: {
+        ...auditLogSort,
         id: "number",
         employee_group_id: "number",
         location_id: "number",
@@ -978,12 +1037,14 @@ const allSorts = {
         //needs location -- inside hcm/company_structure
     },
     service_allowance_pay: {
+        ...auditLogSort,
         id: "number",
         allowance_pay: "number",
         employee_id: "number",
         //needs employee
     },
     shift_assignment: {
+        ...auditLogSort,
         id: "number",
         shift_schedule_hdr_id: "number",
         employee_id: "number",
@@ -991,7 +1052,7 @@ const allSorts = {
         //needs shift_schedule_hdr -- inside hcm/timeandleave
     },
 };
-const allRoutes = [
+const allPostRoutes = [
     "/address",
     "/dependent",
     "/discipline",
@@ -1013,8 +1074,33 @@ const allRoutes = [
     "/service_allowance_pay",
     "/shift_assignment",
 ];
+const allRoutes = [
+    "/address",
+    "/attachment", //added
+    "/dependent",
+    "/discipline",
+    "/education",
+    "/employee", //added
+    "/employee_action",
+    "/employee_attachment", //added
+    "/employee_commitment",
+    "/employee_contact",
+    "/employee_id_range",
+    "/employee_loan_repayment",
+    "/employee_pay_frequency",
+    "/employee_paygrade",
+    "/employee_salary_component",
+    "/experience",
+    "/leave_assignment",
+    "/leave_entitlement",
+    "/leave_transfer",
+    "/license",
+    "/org_assignment",
+    "/service_allowance_pay",
+    "/shift_assignment",
+];
 
-router.post(allRoutes, async (req, res, next) => {
+router.post(allPostRoutes, async (req, res, next) => {
     const operationDataType = req.path.split("/").pop();
     let reqBody;
     const requiredInputFilter = allInputFilters[operationDataType];
@@ -1066,6 +1152,22 @@ router.post(allRoutes, async (req, res, next) => {
         error(e.key, e.message, next, 400);
         return;
     }
+    for (let i in allRangeValues[operationDataType]) {
+        if (!reqBody[i] && reqBody[i] != 0) {
+            continue;
+        }
+        if (
+            reqBody[i] < allRangeValues[operationDataType][i][0] ||
+            reqBody[i] > allRangeValues[operationDataType][i][1]
+        ) {
+            error(
+                i,
+                `must be in range ${allRangeValues[operationDataType][i]}`,
+                next
+            );
+            return false;
+        }
+    }
     for (let i in phoneValues[operationDataType]) {
         if (reqBody[phoneValues[operationDataType][i]])
             if (
@@ -1087,45 +1189,6 @@ router.post(allRoutes, async (req, res, next) => {
                 )
             )
                 return;
-    }
-    if (operationDataType === "hcm_configuration") {
-        if (
-            reqBody.employer_pension ||
-            reqBody.employer_pension == 0 ||
-            reqBody.employer_pension == false
-        ) {
-            if (reqBody.employer_pension < 1 || reqBody.employer_pension > 20) {
-                error("employer_pension", "must be below 20 and above 1", next);
-                return;
-            }
-        }
-        if (
-            reqBody.employee_pension ||
-            reqBody.employee_pension == 0 ||
-            reqBody.employee_pension == false
-        ) {
-            if (reqBody.employee_pension < 1 || reqBody.employee_pension > 20) {
-                error("employee_pension", "must be below 20 and above 1", next);
-                return;
-            }
-        }
-        if (
-            reqBody.employee_retirement_age ||
-            reqBody.employee_retirement_age == 0 ||
-            reqBody.employee_retirement_age == false
-        ) {
-            if (
-                reqBody.employee_retirement_age < 40 ||
-                reqBody.employee_retirement_age > 100
-            ) {
-                error(
-                    "employee_retirement_age",
-                    "must be below 20 and above 1",
-                    next
-                );
-                return;
-            }
-        }
     }
     try {
         const data = await post(
@@ -1208,7 +1271,7 @@ router.get(allRoutes, async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
-router.patch(allRoutes, async (req, res, next) => {
+router.patch(allPostRoutes, async (req, res, next) => {
     const operationDataType = req.path.split("/").pop();
     let updateData = {};
     try {
@@ -1254,6 +1317,22 @@ router.patch(allRoutes, async (req, res, next) => {
                 } else {
                     updateData[key] = Math.floor(updateData[key]);
                 }
+            }
+        }
+        for (let i in allRangeValues[operationDataType]) {
+            if (!updateData[i] && updateData[i] != 0) {
+                continue;
+            }
+            if (
+                updateData[i] < allRangeValues[operationDataType][i][0] ||
+                updateData[i] > allRangeValues[operationDataType][i][1]
+            ) {
+                error(
+                    i,
+                    `must be in range ${allRangeValues[operationDataType][i]}`,
+                    next
+                );
+                return false;
             }
         }
     } catch (e) {

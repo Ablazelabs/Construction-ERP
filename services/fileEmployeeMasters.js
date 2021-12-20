@@ -1,81 +1,17 @@
 const { error } = require("../config/config");
 const { PrismaClient } = require("@prisma/client");
-
-const {
-    address,
-    attachment,
-    dependent,
-    discipline,
-    education,
-    employee,
-    employee_action,
-    employee_attachment,
-    employee_commitment,
-    employee_contact,
-    employee_id_range,
-    employee_loan_repayment,
-    employee_pay_frequency,
-    employee_paygrade,
-    employee_salary_component,
-    experience,
-    leave_assignment,
-    leave_entitlement,
-    leave_transfer,
-    license,
-    org_assignment,
-    service_allowance_pay,
-    shift_assignment,
-} = new PrismaClient();
+const { unlinkSync } = require("fs");
+const { employee, attachment, employee_attachment } = new PrismaClient();
 
 const allModels = {
-    address,
-    attachment,
-    dependent,
-    discipline,
-    education,
     employee,
-    employee_action,
+    attachment,
     employee_attachment,
-    employee_commitment,
-    employee_contact,
-    employee_id_range,
-    employee_loan_repayment,
-    employee_pay_frequency,
-    employee_paygrade,
-    employee_salary_component,
-    experience,
-    leave_assignment,
-    leave_entitlement,
-    leave_transfer,
-    license,
-    org_assignment,
-    service_allowance_pay,
-    shift_assignment,
 };
 const uniqueValues = {
-    address: [],
-    attachment: [],
-    dependent: [],
-    discipline: [],
-    education: [],
     employee: [],
-    employee_action: [],
+    attachment: [],
     employee_attachment: [],
-    employee_commitment: [],
-    employee_contact: [],
-    employee_id_range: [],
-    employee_loan_repayment: [],
-    employee_pay_frequency: [],
-    employee_paygrade: [],
-    employee_salary_component: [],
-    experience: [],
-    leave_assignment: [],
-    leave_entitlement: [],
-    leave_transfer: [],
-    license: [],
-    org_assignment: [],
-    service_allowance_pay: [],
-    shift_assignment: [],
 };
 const post = async (reqBody, operationDataType, creator, next) => {
     for (let i in uniqueValues[operationDataType]) {
@@ -140,30 +76,6 @@ const post = async (reqBody, operationDataType, creator, next) => {
         }
     }
 };
-const get = async (
-    queryFilter,
-    querySort,
-    limit,
-    skip,
-    projection,
-    operationDataType
-) => {
-    const data = await allModels[operationDataType].findMany({
-        where: {
-            ...queryFilter,
-            status: 0,
-        },
-        orderBy: {
-            ...querySort,
-        },
-        take: limit,
-        skip,
-        select: {
-            ...projection,
-        },
-    });
-    return data;
-};
 const patch = async (
     updateDataProjection,
     reqBody,
@@ -176,6 +88,13 @@ const patch = async (
         select: { ...updateDataProjection, isProtectedForEdit: true },
         where: { id: reqBody.id },
     });
+    if (updateDataProjection["path"] || updateDataProjection["photo"]) {
+        const fileUrl = myModel["path"] || myModel["photo"];
+        const fullFileName = fileUrl.split("/").pop();
+        try {
+            unlinkSync(`uploads\\${operationDataType}\\${fullFileName}`);
+        } catch {}
+    }
     if (!myModel) {
         error("id", `${operationDataType} doesn't exist`, next);
         return false;
@@ -235,22 +154,8 @@ const patch = async (
     }
     return { success: true };
 };
-const deleter = async ({ id }, operationDataType) => {
-    try {
-        await allModels[operationDataType].update({
-            where: { id },
-            data: { status: 1, endDate: new Date() },
-        });
-    } catch (e) {
-        console.log(e);
-        return { success: false };
-    }
-    return { success: true };
-};
 
 module.exports = {
     post,
-    get,
     patch,
-    deleter,
 };

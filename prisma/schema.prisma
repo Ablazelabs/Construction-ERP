@@ -1805,17 +1805,18 @@ model address_type {
 }
 
 model commitment {
-  startDate          DateTime
-  endDate            DateTime
-  creationDate       DateTime @default(now())
-  createdBy          String
-  revisionDate       DateTime @updatedAt
-  revisedBy          String
-  status             Int      @default(0)
-  isProtectedForEdit Boolean  @default(false)
-  id                 Int      @id @default(autoincrement())
-  type_name          String   @unique
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime              @default(now())
+  createdBy           String
+  revisionDate        DateTime              @updatedAt
+  revisedBy           String
+  status              Int                   @default(0)
+  isProtectedForEdit  Boolean               @default(false)
+  id                  Int                   @id @default(autoincrement())
+  type_name           String                @unique
   //needs no one
+  employee_commitment employee_commitment[]
 }
 
 model custom_report {
@@ -2202,6 +2203,7 @@ model address {
   email              String?
   employee_id        Int
   address_type_id    Int?
+  employee           employee      @relation(fields: [employee_id], references: [id])
   address_type       address_type? @relation(fields: [address_type_id], references: [id])
 }
 
@@ -2352,6 +2354,8 @@ model employee {
   license                   license[]
   service_allowance_pay     service_allowance_pay[]
   shift_assignment          shift_assignment[]
+  address                   address[]
+  employee_commitment       employee_commitment[]
 }
 
 model employee_action {
@@ -2390,17 +2394,17 @@ model employee_attachment {
   employee           employee @relation(fields: [employee_id], references: [id])
 }
 
-// model employee_commitment {
-//   id                 Int     @id @default(autoincrement())
-//   commitment_type_id Int
-//   remark             String?
-//   employee_id        Int
-//   employee    employee @relation(fields: [employee_id], references: [id])
-//   commitment_type    commitment_type @relation(fields: [commitment_type_id], references: [id])
+model employee_commitment {
+  id                 Int        @id @default(autoincrement())
+  commitment_type_id Int
+  remark             String?
+  employee_id        Int
+  employee           employee   @relation(fields: [employee_id], references: [id])
+  commitment_type    commitment @relation(fields: [commitment_type_id], references: [id])
 
-//   //needs employee
-//   //needs commitment_type
-// }
+  //needs employee
+  //needs commitment
+}
 
 model employee_contact {
   startDate          DateTime

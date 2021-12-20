@@ -22,7 +22,7 @@ router.post(
             const fileType = req.file.originalname.split(".").pop();
             const filePath = req.file.path + "." + fileType;
             const fileName = req.file.filename;
-            const fileUrl = `/public/${fileName}.${fileType}`;
+            const fileUrl = `/uploads/${fileName}.${fileType}`;
             rename(req.file.path, filePath, () => {});
             const saved = await saveList(
                 data.data,

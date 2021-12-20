@@ -12,7 +12,8 @@ const authorization = {
     },
     authenticate: async (req, res, next) => {
         const requestRoute = req.path.split("/").pop();
-        const pass = req.path.search("api-docs") == -1 ? false : true;
+        const pass =
+            req.path.search(/\/api-docs\/|\/uploads\//) == -1 ? false : true;
         const method = req.method;
         if (
             requestRoute == "login" ||
