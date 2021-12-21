@@ -1,0 +1,1074 @@
+{
+    "/hcm/recruitment/external_applicant": {
+        "post": {
+            "summary": "creates a new external_applicant",
+            "tags": ["external_applicant"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "applicant_name": { "type": "String" },
+                                "father_name": { "type": "String" },
+                                "grand_father_name": { "type": "String?" },
+                                "mobile_number": { "type": "String?" },
+                                "email": { "type": "String?" },
+                                "experience_year": { "type": "Int?" },
+                                "gender": { "type": "Int" },
+                                "marital_status": { "type": "Int" },
+                                "file": { "type": "String?" },
+                                "name": { "type": "String?" },
+                                "type": { "type": "String?" },
+                                "training_type_id": { "type": "Int" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected external_applicants",
+            "tags": ["external_applicant"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "applicant_name": { "type": "String" },
+                                        "father_name": { "type": "String" },
+                                        "grand_father_name": {
+                                            "type": "String?"
+                                        },
+                                        "mobile_number": { "type": "String?" },
+                                        "email": { "type": "String?" },
+                                        "experience_year": { "type": "Int?" },
+                                        "gender": { "type": "Int" },
+                                        "marital_status": { "type": "Int" },
+                                        "file": { "type": "String?" },
+                                        "name": { "type": "String?" },
+                                        "type": { "type": "String?" },
+                                        "training_type_id": { "type": "Int" }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "applicant_name": { "type": "Int" },
+                                        "father_name": { "type": "Int" },
+                                        "grand_father_name": { "type": "Int" },
+                                        "mobile_number": { "type": "Int" },
+                                        "email": { "type": "Int" },
+                                        "experience_year": { "type": "Int" },
+                                        "gender": { "type": "Int" },
+                                        "marital_status": { "type": "Int" },
+                                        "file": { "type": "Int" },
+                                        "name": { "type": "Int" },
+                                        "type": { "type": "Int" },
+                                        "training_type_id": { "type": "Int" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "applicant_name": { "type": "String" },
+                                    "father_name": { "type": "String" },
+                                    "grand_father_name": { "type": "String?" },
+                                    "mobile_number": { "type": "String?" },
+                                    "email": { "type": "String?" },
+                                    "experience_year": { "type": "Int?" },
+                                    "gender": { "type": "Int" },
+                                    "marital_status": { "type": "Int" },
+                                    "file": { "type": "String?" },
+                                    "name": { "type": "String?" },
+                                    "type": { "type": "String?" },
+                                    "training_type_id": { "type": "Int" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a external_applicant",
+            "tags": ["external_applicant"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "applicant_name": { "type": "String" },
+                                        "father_name": { "type": "String" },
+                                        "grand_father_name": {
+                                            "type": "String?"
+                                        },
+                                        "mobile_number": { "type": "String?" },
+                                        "email": { "type": "String?" },
+                                        "experience_year": { "type": "Int?" },
+                                        "gender": { "type": "Int" },
+                                        "marital_status": { "type": "Int" },
+                                        "file": { "type": "String?" },
+                                        "name": { "type": "String?" },
+                                        "type": { "type": "String?" },
+                                        "training_type_id": { "type": "Int" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a external_applicant",
+            "tags": ["external_applicant"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/hcm/recruitment/vacancy": {
+        "post": {
+            "summary": "creates a new vacancy",
+            "tags": ["vacancy"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "number_of_position": { "type": "Int" },
+                                "vacancy_status": { "type": "Int" },
+                                "opening_date": { "type": "DateTime?" },
+                                "closing_date": { "type": "DateTime?" },
+                                "action_date": { "type": "DateTime?" },
+                                "vacancy_type": { "type": "Int" },
+                                "requested_by": { "type": "String?" },
+                                "approved_by": { "type": "String?" },
+                                "remark": { "type": "String?" },
+                                "job_title_id": { "type": "Int" },
+                                "vacancy_request_reason_id": { "type": "Int?" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected vacancys",
+            "tags": ["vacancy"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "number_of_position": { "type": "Int" },
+                                        "vacancy_status": { "type": "Int" },
+                                        "vacancy_type": { "type": "Int" },
+                                        "requested_by": { "type": "String?" },
+                                        "approved_by": { "type": "String?" },
+                                        "remark": { "type": "String?" },
+                                        "job_title_id": { "type": "Int" },
+                                        "vacancy_request_reason_id": {
+                                            "type": "Int?"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "number_of_position": { "type": "Int" },
+                                        "vacancy_status": { "type": "Int" },
+                                        "opening_date": { "type": "Int" },
+                                        "closing_date": { "type": "Int" },
+                                        "action_date": { "type": "Int" },
+                                        "vacancy_type": { "type": "Int" },
+                                        "requested_by": { "type": "Int" },
+                                        "approved_by": { "type": "Int" },
+                                        "remark": { "type": "Int" },
+                                        "job_title_id": { "type": "Int" },
+                                        "vacancy_request_reason_id": {
+                                            "type": "Int"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "number_of_position": { "type": "Int" },
+                                    "vacancy_status": { "type": "Int" },
+                                    "opening_date": { "type": "DateTime?" },
+                                    "closing_date": { "type": "DateTime?" },
+                                    "action_date": { "type": "DateTime?" },
+                                    "vacancy_type": { "type": "Int" },
+                                    "requested_by": { "type": "String?" },
+                                    "approved_by": { "type": "String?" },
+                                    "remark": { "type": "String?" },
+                                    "job_title_id": { "type": "Int" },
+                                    "vacancy_request_reason_id": {
+                                        "type": "Int?"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a vacancy",
+            "tags": ["vacancy"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "number_of_position": { "type": "Int" },
+                                        "vacancy_status": { "type": "Int" },
+                                        "opening_date": { "type": "DateTime?" },
+                                        "closing_date": { "type": "DateTime?" },
+                                        "action_date": { "type": "DateTime?" },
+                                        "vacancy_type": { "type": "Int" },
+                                        "requested_by": { "type": "String?" },
+                                        "approved_by": { "type": "String?" },
+                                        "remark": { "type": "String?" },
+                                        "job_title_id": { "type": "Int" },
+                                        "vacancy_request_reason_id": {
+                                            "type": "Int?"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a vacancy",
+            "tags": ["vacancy"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/hcm/recruitment/vacancy_applicant": {
+        "post": {
+            "summary": "creates a new vacancy_applicant",
+            "tags": ["vacancy_applicant"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "name": { "type": "String" },
+                                "application_date": { "type": "DateTime" },
+                                "remark": { "type": "String?" },
+                                "scale": { "type": "Float?" },
+                                "result": { "type": "Float?" },
+                                "application_status": { "type": "Int" },
+                                "is_employee": { "type": "Int" },
+                                "external_applicant_id": { "type": "Int?" },
+                                "employee_id": { "type": "Int?" },
+                                "vacancy_id": { "type": "Int" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected vacancy_applicants",
+            "tags": ["vacancy_applicant"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "name": { "type": "String" },
+                                        "remark": { "type": "String?" },
+                                        "application_status": { "type": "Int" },
+                                        "is_employee": { "type": "Int" },
+                                        "external_applicant_id": {
+                                            "type": "Int?"
+                                        },
+                                        "employee_id": { "type": "Int?" },
+                                        "vacancy_id": { "type": "Int" }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "name": { "type": "Int" },
+                                        "application_date": { "type": "Int" },
+                                        "remark": { "type": "Int" },
+                                        "scale": { "type": "Int" },
+                                        "result": { "type": "Int" },
+                                        "application_status": { "type": "Int" },
+                                        "is_employee": { "type": "Int" },
+                                        "external_applicant_id": {
+                                            "type": "Int"
+                                        },
+                                        "employee_id": { "type": "Int" },
+                                        "vacancy_id": { "type": "Int" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "name": { "type": "String" },
+                                    "application_date": { "type": "DateTime" },
+                                    "remark": { "type": "String?" },
+                                    "scale": { "type": "Float?" },
+                                    "result": { "type": "Float?" },
+                                    "application_status": { "type": "Int" },
+                                    "is_employee": { "type": "Int" },
+                                    "external_applicant_id": { "type": "Int?" },
+                                    "employee_id": { "type": "Int?" },
+                                    "vacancy_id": { "type": "Int" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a vacancy_applicant",
+            "tags": ["vacancy_applicant"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": { "type": "String" },
+                                        "application_date": {
+                                            "type": "DateTime"
+                                        },
+                                        "remark": { "type": "String?" },
+                                        "scale": { "type": "Float?" },
+                                        "result": { "type": "Float?" },
+                                        "application_status": { "type": "Int" },
+                                        "is_employee": { "type": "Int" },
+                                        "external_applicant_id": {
+                                            "type": "Int?"
+                                        },
+                                        "employee_id": { "type": "Int?" },
+                                        "vacancy_id": { "type": "Int" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a vacancy_applicant",
+            "tags": ["vacancy_applicant"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/hcm/recruitment/vacancy_examiner": {
+        "post": {
+            "summary": "creates a new vacancy_examiner",
+            "tags": ["vacancy_examiner"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "vacancy_id": { "type": "Int" },
+                                "employee_id": { "type": "Int" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected vacancy_examiners",
+            "tags": ["vacancy_examiner"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "vacancy_id": { "type": "Int" },
+                                        "employee_id": { "type": "Int" }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "vacancy_id": { "type": "Int" },
+                                        "employee_id": { "type": "Int" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "vacancy_id": { "type": "Int" },
+                                    "employee_id": { "type": "Int" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a vacancy_examiner",
+            "tags": ["vacancy_examiner"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "vacancy_id": { "type": "Int" },
+                                        "employee_id": { "type": "Int" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a vacancy_examiner",
+            "tags": ["vacancy_examiner"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/hcm/recruitment/vacancy_internal_applicant": {
+        "post": {
+            "summary": "creates a new vacancy_internal_applicant",
+            "tags": ["vacancy_internal_applicant"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "employee_id": { "type": "Int" },
+                                "vacancy_id": { "type": "Int" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected vacancy_internal_applicants",
+            "tags": ["vacancy_internal_applicant"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "employee_id": { "type": "Int" },
+                                        "vacancy_id": { "type": "Int" }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "employee_id": { "type": "Int" },
+                                        "vacancy_id": { "type": "Int" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "employee_id": { "type": "Int" },
+                                    "vacancy_id": { "type": "Int" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a vacancy_internal_applicant",
+            "tags": ["vacancy_internal_applicant"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "employee_id": { "type": "Int" },
+                                        "vacancy_id": { "type": "Int" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a vacancy_internal_applicant",
+            "tags": ["vacancy_internal_applicant"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/hcm/recruitment/vacancy_request_reason": {
+        "post": {
+            "summary": "creates a new vacancy_request_reason",
+            "tags": ["vacancy_request_reason"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "reason": { "type": "String" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected vacancy_request_reasons",
+            "tags": ["vacancy_request_reason"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "reason": { "type": "String" }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "reason": { "type": "Int" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "reason": { "type": "String" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a vacancy_request_reason",
+            "tags": ["vacancy_request_reason"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "reason": { "type": "String" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a vacancy_request_reason",
+            "tags": ["vacancy_request_reason"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

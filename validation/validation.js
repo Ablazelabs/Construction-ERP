@@ -15,8 +15,6 @@ module.exports = {
         let countryCode = splitPhone[0];
         if (phone_number.length !== 9)
             error(key, "Phone number Length must be 3-9", next);
-        else if (phone_number[0] !== "9")
-            error(key, "Phone number must start with 9", next);
         else if (countryCode.length !== 3)
             error(key, "country code must be of 3 length", next);
         else if (

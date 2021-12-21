@@ -1,7 +1,6 @@
 const express = require("express");
 const { json } = require("body-parser");
 const swaggerUi = require("swagger-ui-express");
-const YAML = require("yamljs");
 const path = require("path");
 require("dotenv").config();
 const { authenticate } = require("./validation/auth");
@@ -28,6 +27,8 @@ const financeUpload = require("./api-routes/finance/operational/upload");
 const hcmMasters = require("./api-routes/hcm/master/hcmMasters");
 const hcmEmployeeMasters = require("./api-routes/hcm/employee_master/hcmEmployeeMasters");
 const fileEmployeeMasters = require("./api-routes/hcm/employee_master/fileEmployeeMasters");
+const jobPosCompStrucRecru = require("./api-routes/hcm/jobPosCompStrucRecru/jobPosCompStrucRecru");
+const compStrucRecruFile = require("./api-routes/hcm/jobPosCompStrucRecru/compStrucRecruFile");
 const cors = require("cors");
 
 app.use(json());
@@ -70,9 +71,13 @@ app.use("/finance/master", accountingPeriod);
 app.use("/finance/operational", restFinanceOperational);
 app.use("/finance/operational", financeUpload);
 app.use("/hcm/master", hcmMasters);
-app.use("/hcm/employee_master/", hcmEmployeeMasters);
-app.use("/hcm/employee_master/", fileEmployeeMasters);
+app.use("/hcm/employee_master", hcmEmployeeMasters);
+app.use("/hcm/employee_master", fileEmployeeMasters);
+app.use("/hcm", jobPosCompStrucRecru);
+app.use("/hcm", compStrucRecruFile);
+
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 app.use((err, _req, res, _next) => {
     let myError = JSON.parse(err.message);
     const status = myError.status;

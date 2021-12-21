@@ -1701,6 +1701,7 @@ model currency {
   general_journal_header general_journal_header[]
   general_ledger         general_ledger[]
   asset                  asset[]
+  company                company[]
 }
 
 model country {
@@ -1717,6 +1718,7 @@ model country {
   country_name       String
   contact_address    contact_address[]
   employee           employee[]
+  company            company[]
 }
 
 model title {
@@ -1984,19 +1986,18 @@ model religion {
 model training_type {
   startDate          DateTime
   endDate            DateTime
-  creationDate       DateTime    @default(now())
+  creationDate       DateTime             @default(now())
   createdBy          String
-  revisionDate       DateTime    @updatedAt
+  revisionDate       DateTime             @updatedAt
   revisedBy          String
-  status             Int         @default(0)
-  isProtectedForEdit Boolean     @default(false)
-  id                 Int         @id @default(autoincrement())
-  training_type_name String      @unique
+  status             Int                  @default(0)
+  isProtectedForEdit Boolean              @default(false)
+  id                 Int                  @id @default(autoincrement())
+  training_type_name String               @unique
   job_title          job_title[]
   education          education[]
+  external_applicant external_applicant[]
 }
-
-//today start
 
 model salary_component {
   startDate                 DateTime
@@ -2102,85 +2103,6 @@ model sub_shift_group {
   afternoon_in       Float
   tolerance_minutes  Int?
   shift_schedule_hdr shift_schedule_hdr[]
-}
-
-model business_unit {
-  startDate          DateTime
-  endDate            DateTime
-  creationDate       DateTime         @default(now())
-  createdBy          String
-  revisionDate       DateTime         @updatedAt
-  revisedBy          String
-  status             Int              @default(0)
-  isProtectedForEdit Boolean          @default(false)
-  id                 Int              @id @default(autoincrement())
-  name               String
-  parent_id          Int?
-  is_root            Boolean?
-  cost_center_id     Int?
-  employee_id        Int?
-  employee           employee?        @relation(fields: [employee_id], references: [id])
-  cost_center        cost_center?     @relation(fields: [cost_center_id], references: [id])
-  org_assignment     org_assignment[]
-}
-
-model location {
-  startDate          DateTime
-  endDate            DateTime
-  creationDate       DateTime         @default(now())
-  createdBy          String
-  revisionDate       DateTime         @updatedAt
-  revisedBy          String
-  status             Int              @default(0)
-  isProtectedForEdit Boolean          @default(false)
-  id                 Int              @id @default(autoincrement())
-  location_name      String
-  address_1          String
-  address_2          String?
-  city               String?
-  state_or_province  String?
-  zip_or_portal_code String?
-  phone              String?
-  fax                String?
-  website            String?
-  email              String?
-  org_assignment     org_assignment[]
-}
-
-model job_title {
-  startDate          DateTime
-  endDate            DateTime
-  creationDate       DateTime         @default(now())
-  createdBy          String
-  revisionDate       DateTime         @updatedAt
-  revisedBy          String
-  status             Int              @default(0)
-  isProtectedForEdit Boolean          @default(false)
-  id                 Int              @id @default(autoincrement())
-  title_name         String
-  job_specification  String?
-  min_experience     Int?
-  paygrade_id        Int?
-  training_type_id   Int?
-  job_category_id    Int?
-  paygrade           paygrade?        @relation(fields: [paygrade_id], references: [id])
-  training_type      training_type?   @relation(fields: [training_type_id], references: [id])
-  job_category       job_category?    @relation(fields: [job_category_id], references: [id])
-  org_assignment     org_assignment[]
-}
-
-model job_category {
-  startDate            DateTime
-  endDate              DateTime
-  creationDate         DateTime    @default(now())
-  createdBy            String
-  revisionDate         DateTime    @updatedAt
-  revisedBy            String
-  status               Int         @default(0)
-  isProtectedForEdit   Boolean     @default(false)
-  id                   Int         @id @default(autoincrement())
-  category_description String
-  job_title            job_title[]
 }
 
 model address {
@@ -2335,27 +2257,30 @@ model employee {
   title         title?         @relation(fields: [title_id], references: [id])
   religion      religion?      @relation(fields: [religion_id], references: [id])
 
-  business_unit             business_unit[]
-  attachment                attachment[]
-  dependent                 dependent[]
-  discipline                discipline[]
-  education                 education[]
-  employee_action           employee_action[]
-  employee_attachment       employee_attachment[]
-  employee_contact          employee_contact[]
-  employee_loan_repayment   employee_loan_repayment[]
-  employee_pay_frequency    employee_pay_frequency[]
-  employee_paygrade         employee_paygrade[]
-  employee_salary_component employee_salary_component[]
-  experience                experience[]
-  leave_assignment          leave_assignment[]
-  leave_entitlement         leave_entitlement[]
-  leave_transfer            leave_transfer[]
-  license                   license[]
-  service_allowance_pay     service_allowance_pay[]
-  shift_assignment          shift_assignment[]
-  address                   address[]
-  employee_commitment       employee_commitment[]
+  business_unit              business_unit[]
+  attachment                 attachment[]
+  dependent                  dependent[]
+  discipline                 discipline[]
+  education                  education[]
+  employee_action            employee_action[]
+  employee_attachment        employee_attachment[]
+  employee_contact           employee_contact[]
+  employee_loan_repayment    employee_loan_repayment[]
+  employee_pay_frequency     employee_pay_frequency[]
+  employee_paygrade          employee_paygrade[]
+  employee_salary_component  employee_salary_component[]
+  experience                 experience[]
+  leave_assignment           leave_assignment[]
+  leave_entitlement          leave_entitlement[]
+  leave_transfer             leave_transfer[]
+  license                    license[]
+  service_allowance_pay      service_allowance_pay[]
+  shift_assignment           shift_assignment[]
+  address                    address[]
+  employee_commitment        employee_commitment[]
+  vacancy_applicant          vacancy_applicant[]
+  vacancy_examiner           vacancy_examiner[]
+  vacancy_internal_applicant vacancy_internal_applicant[]
 }
 
 model employee_action {
@@ -2659,4 +2584,287 @@ model shift_assignment {
 
   //needs employee
   //needs shift_schedule_hdr -- inside hcm/timeandleave
+}
+
+//today start
+
+model business_unit {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime         @default(now())
+  createdBy          String
+  revisionDate       DateTime         @updatedAt
+  revisedBy          String
+  status             Int              @default(0)
+  isProtectedForEdit Boolean          @default(false)
+  id                 Int              @id @default(autoincrement())
+  name               String
+  parent_id          Int?
+  is_root            Boolean?
+  cost_center_id     Int?
+  employee_id        Int?
+  employee           employee?        @relation(fields: [employee_id], references: [id])
+  cost_center        cost_center?     @relation(fields: [cost_center_id], references: [id])
+  org_assignment     org_assignment[]
+}
+
+model location {
+  startDate               DateTime
+  endDate                 DateTime
+  creationDate            DateTime                  @default(now())
+  createdBy               String
+  revisionDate            DateTime                  @updatedAt
+  revisedBy               String
+  status                  Int                       @default(0)
+  isProtectedForEdit      Boolean                   @default(false)
+  id                      Int                       @id @default(autoincrement())
+  location_name           String
+  address_1               String
+  address_2               String?
+  city                    String?
+  state_or_province       String?
+  zip_or_portal_code      String?
+  phone                   String?
+  fax                     String?
+  website                 String?
+  email                   String?
+  org_assignment          org_assignment[]
+  company_primary_contact company_primary_contact[]
+}
+
+model job_title {
+  startDate            DateTime
+  endDate              DateTime
+  creationDate         DateTime               @default(now())
+  createdBy            String
+  revisionDate         DateTime               @updatedAt
+  revisedBy            String
+  status               Int                    @default(0)
+  isProtectedForEdit   Boolean                @default(false)
+  id                   Int                    @id @default(autoincrement())
+  title_name           String
+  job_specification    String?
+  min_experience       Int?
+  paygrade_id          Int?
+  training_type_id     Int?
+  job_category_id      Int?
+  paygrade             paygrade?              @relation(fields: [paygrade_id], references: [id])
+  training_type        training_type?         @relation(fields: [training_type_id], references: [id])
+  job_category         job_category?          @relation(fields: [job_category_id], references: [id])
+  org_assignment       org_assignment[]
+  job_safety_equipment job_safety_equipment[]
+  vacancy              vacancy[]
+}
+
+model job_category {
+  startDate            DateTime
+  endDate              DateTime
+  creationDate         DateTime    @default(now())
+  createdBy            String
+  revisionDate         DateTime    @updatedAt
+  revisedBy            String
+  status               Int         @default(0)
+  isProtectedForEdit   Boolean     @default(false)
+  id                   Int         @id @default(autoincrement())
+  category_description String
+  job_title            job_title[]
+}
+
+model job_safety_equipment {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime         @default(now())
+  createdBy           String
+  revisionDate        DateTime         @updatedAt
+  revisedBy           String
+  status              Int              @default(0)
+  isProtectedForEdit  Boolean          @default(false)
+  id                  Int              @id @default(autoincrement())
+  safety_equipment_id Int
+  job_title_id        Int
+  job_title           job_title        @relation(fields: [job_title_id], references: [id])
+  safety_equipment    safety_equipment @relation(fields: [safety_equipment_id], references: [id])
+}
+
+model safety_equipment {
+  startDate            DateTime
+  endDate              DateTime
+  creationDate         DateTime               @default(now())
+  createdBy            String
+  revisionDate         DateTime               @updatedAt
+  revisedBy            String
+  status               Int                    @default(0)
+  isProtectedForEdit   Boolean                @default(false)
+  id                   Int                    @id @default(autoincrement())
+  name                 String
+  job_safety_equipment job_safety_equipment[]
+}
+
+model company {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime  @default(now())
+  createdBy          String
+  revisionDate       DateTime  @updatedAt
+  revisedBy          String
+  status             Int       @default(0)
+  isProtectedForEdit Boolean   @default(false)
+  id                 Int       @id @default(autoincrement())
+  code               String
+  name               String
+  country_id         Int?
+  currency_id        Int?
+  logo               String? //needs file handling
+  country            country?  @relation(fields: [country_id], references: [id])
+  currency           currency? @relation(fields: [currency_id], references: [id])
+}
+
+model company_primary_contact {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime  @default(now())
+  createdBy          String
+  revisionDate       DateTime  @updatedAt
+  revisedBy          String
+  status             Int       @default(0)
+  isProtectedForEdit Boolean   @default(false)
+  id                 Int       @id @default(autoincrement())
+  name               String
+  phone              String
+  email              String?
+  location_id        Int?
+  location           location? @relation(fields: [location_id], references: [id])
+}
+
+model external_applicant {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime            @default(now())
+  createdBy          String
+  revisionDate       DateTime            @updatedAt
+  revisedBy          String
+  status             Int                 @default(0)
+  isProtectedForEdit Boolean             @default(false)
+  id                 Int                 @id @default(autoincrement())
+  applicant_name     String
+  father_name        String
+  grand_father_name  String?
+  mobile_number      String?
+  email              String?
+  experience_year    Int? //[0+]
+  gender             Int
+  marital_status     Int?
+  file               String?
+  name               String?
+  type               String?
+  training_type_id   Int
+  training_type      training_type       @relation(fields: [training_type_id], references: [id])
+  //needs training_type
+  vacancy_applicant  vacancy_applicant[]
+}
+
+model vacancy {
+  startDate                  DateTime
+  endDate                    DateTime
+  creationDate               DateTime                     @default(now())
+  createdBy                  String
+  revisionDate               DateTime                     @updatedAt
+  revisedBy                  String
+  status                     Int                          @default(0)
+  isProtectedForEdit         Boolean                      @default(false)
+  id                         Int                          @id @default(autoincrement())
+  number_of_position         Int //[1+]
+  vacancy_status             Int
+  opening_date               DateTime?
+  closing_date               DateTime?
+  action_date                DateTime?
+  vacancy_type               Int
+  requested_by               String?
+  approved_by                String?
+  remark                     String?
+  job_title_id               Int
+  vacancy_request_reason_id  Int?
+  job_title                  job_title                    @relation(fields: [job_title_id], references: [id])
+  vacancy_request_reason     vacancy_request_reason?      @relation(fields: [vacancy_request_reason_id], references: [id])
+  //needs job_title
+  //needs vacancy_request_reason
+  vacancy_applicant          vacancy_applicant[]
+  vacancy_examiner           vacancy_examiner[]
+  vacancy_internal_applicant vacancy_internal_applicant[]
+}
+
+model vacancy_applicant {
+  startDate             DateTime
+  endDate               DateTime
+  creationDate          DateTime            @default(now())
+  createdBy             String
+  revisionDate          DateTime            @updatedAt
+  revisedBy             String
+  status                Int                 @default(0)
+  isProtectedForEdit    Boolean             @default(false)
+  id                    Int                 @id @default(autoincrement())
+  name                  String
+  application_date      DateTime
+  remark                String?
+  scale                 Float?
+  result                Float?
+  application_status    Int
+  is_employee           Int
+  external_applicant_id Int?
+  employee_id           Int?
+  vacancy_id            Int
+  external_applicant    external_applicant? @relation(fields: [external_applicant_id], references: [id])
+  employee              employee?           @relation(fields: [employee_id], references: [id])
+  vacancy               vacancy             @relation(fields: [vacancy_id], references: [id])
+  //needs external_applicant
+  //needs employee
+  //needs vacancy
+}
+
+model vacancy_examiner {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  vacancy_id         Int
+  employee_id        Int
+  vacancy            vacancy  @relation(fields: [vacancy_id], references: [id])
+  employee           employee @relation(fields: [employee_id], references: [id])
+  //needs vacancy
+  //needs employee
+}
+
+model vacancy_internal_applicant {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  employee_id        Int
+  vacancy_id         Int
+  vacancy            vacancy  @relation(fields: [vacancy_id], references: [id])
+  employee           employee @relation(fields: [employee_id], references: [id])
+}
+
+model vacancy_request_reason {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime  @default(now())
+  createdBy          String
+  revisionDate       DateTime  @updatedAt
+  revisedBy          String
+  status             Int       @default(0)
+  isProtectedForEdit Boolean   @default(false)
+  id                 Int       @id @default(autoincrement())
+  reason             String
+  vacancy            vacancy[]
 }
