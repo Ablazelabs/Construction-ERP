@@ -231,8 +231,7 @@ router.patch(allRoutes, upload.single("file"), async (req, res, next) => {
     let updateData = {};
     try {
         if (!req.body.updateData) req.body.updateData = {};
-        inputFilter({ id: "string", updateData: "object" }, {}, req.body);
-        req.body.id = Number(req.body.id);
+        inputFilter({ id: "number", updateData: "object" }, {}, req.body);
         updateData = inputFilter(
             {},
             {

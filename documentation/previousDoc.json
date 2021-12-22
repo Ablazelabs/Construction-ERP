@@ -383,6 +383,41 @@
                 }
             }
         },
+        "/project/master/upload": {
+            "post": {
+                "summary": "Upload an excel with the required format",
+                "tags": ["Project Master Upload"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "file": { "type": "xls|xlsx" },
+                                    "type": { "type": "number" }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success message",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": { "type": "boolean" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/project/master/client": {
             "post": {
                 "summary": "Creates a new client",
@@ -4642,6 +4677,235 @@
             "delete": {
                 "summary": "deletes a invoice_tracking",
                 "tags": ["invoice_tracking"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": { "id": { "type": "integer" } }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success message",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": { "type": "boolean" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/project/operational/required_document": {
+            "post": {
+                "summary": "posts a new required document",
+                "tags": ["required_document"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "isProtectedForEdit": { "type": "boolean" },
+                                    "spec_reference": { "type": "string" },
+                                    "requested_by": { "type": "string" },
+                                    "quantity_needed": { "type": "number" },
+                                    "date_requested": { "type": "string" },
+                                    "date_needed": { "type": "string" },
+                                    "assigned_to": { "type": "string" },
+                                    "location": { "type": "string" },
+                                    "documentation_id": { "type": "number" },
+                                    "project_id": { "type": "number" },
+                                    "received": { "type": "string" },
+                                    "received_date": { "type": "string" }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success message",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": { "type": "boolean" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "gets selected required_document",
+                "tags": ["required_document"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "limit": { "type": "integer" },
+                                    "skip": { "type": "integer" },
+                                    "filter": {
+                                        "type": "object",
+                                        "properties": {
+                                            "spec_reference": {
+                                                "type": "string"
+                                            },
+                                            "requested_by": {
+                                                "type": "string"
+                                            },
+                                            "assigned_to": { "type": "string" },
+                                            "received": { "type": "string" },
+                                            "location": { "type": "string" },
+                                            "documentation_id": {
+                                                "type": "number"
+                                            },
+                                            "project_id": { "type": "number" }
+                                        }
+                                    },
+                                    "sort": {
+                                        "type": "object",
+                                        "properties": {
+                                            "startDate": { "type": "number" },
+                                            "endDate": { "type": "number" },
+                                            "creationDate": {
+                                                "type": "number"
+                                            },
+                                            "createdBy": { "type": "number" },
+                                            "revisionDate": {
+                                                "type": "number"
+                                            },
+                                            "revisedBy": { "type": "number" },
+                                            "isProtectedForEdit": {
+                                                "type": "number"
+                                            },
+                                            "id": { "type": "number" },
+                                            "spec_reference": {
+                                                "type": "number"
+                                            },
+                                            "requested_by": {
+                                                "type": "number"
+                                            },
+                                            "quantity_needed": {
+                                                "type": "number"
+                                            },
+                                            "date_requested": {
+                                                "type": "number"
+                                            },
+                                            "date_needed": { "type": "number" },
+                                            "assigned_to": { "type": "number" },
+                                            "received": { "type": "number" },
+                                            "received_date": {
+                                                "type": "number"
+                                            },
+                                            "location": { "type": "number" },
+                                            "project": { "type": "number" },
+                                            "documentation": {
+                                                "type": "number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success message",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": { "type": "object" }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "updates a required_document",
+                "tags": ["required_document"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "integer" },
+                                    "updateData": {
+                                        "type": "object",
+                                        "properties": {
+                                            "isProtectedForEdit": {
+                                                "type": "boolean"
+                                            },
+                                            "spec_reference": {
+                                                "type": "string"
+                                            },
+                                            "requested_by": {
+                                                "type": "string"
+                                            },
+                                            "quantity_needed": {
+                                                "type": "number"
+                                            },
+                                            "date_requested": {
+                                                "type": "string"
+                                            },
+                                            "date_needed": { "type": "string" },
+                                            "assigned_to": { "type": "string" },
+                                            "location": { "type": "string" },
+                                            "documentation_id": {
+                                                "type": "number"
+                                            },
+                                            "project_id": { "type": "number" },
+                                            "received": { "type": "string" },
+                                            "received_date": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success message",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": { "type": "boolean" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "deletes a required_document",
+                "tags": ["required_document"],
                 "requestBody": {
                     "required": true,
                     "content": {
