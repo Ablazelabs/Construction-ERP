@@ -30,6 +30,7 @@ const fileEmployeeMasters = require("./api-routes/hcm/employee_master/fileEmploy
 const jobPosCompStrucRecru = require("./api-routes/hcm/jobPosCompStrucRecru/jobPosCompStrucRecru");
 const compStrucRecruFile = require("./api-routes/hcm/jobPosCompStrucRecru/compStrucRecruFile");
 const hcmPayroll = require("./api-routes/hcm/payroll/hcmPayroll");
+const hcmTimeAndLeave = require("./api-routes/hcm/timeAndLeave/hcmTimeAndLeave");
 const cors = require("cors");
 
 app.use(json());
@@ -77,6 +78,7 @@ app.use("/hcm/employee_master", fileEmployeeMasters);
 app.use("/hcm", jobPosCompStrucRecru);
 app.use("/hcm", compStrucRecruFile);
 app.use("/hcm/payroll", hcmPayroll);
+app.use("/hcm/time_and_leave", hcmTimeAndLeave);
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 

@@ -5,12 +5,14 @@ const hcmCompanyStructure = require("./hcmCompanyStructure.json");
 const hcmRecruitment = require("./hcmRecruitment.json");
 const hcmJobPositions = require("./hcmJobPositions.json");
 const hcmPayrolls = require("./hcmPayrolls.json");
+const hcmTimeAndLeave = require("./hcmTimeAndLeave.json");
 const allNewDocs = {
     hcmEmployeeMaster,
     hcmCompanyStructure,
     hcmRecruitment,
     hcmJobPositions,
     hcmPayrolls,
+    hcmTimeAndLeave,
 };
 for (let i in allNewDocs) {
     for (let k in allNewDocs[i]) {

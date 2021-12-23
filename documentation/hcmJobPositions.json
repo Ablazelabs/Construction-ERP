@@ -10,7 +10,8 @@
                         "schema": {
                             "type": "object",
                             "properties": {
-                                "category_description": { "type": "String" }
+                                "category_description": { "type": "String" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -50,6 +51,9 @@
                                         "id": { "type": "Int" },
                                         "category_description": {
                                             "type": "String"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 },
@@ -59,6 +63,15 @@
                                         "id": { "type": "Int" },
                                         "category_description": {
                                             "type": "Int"
+                                        },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
                                         }
                                     }
                                 }
@@ -76,7 +89,16 @@
                                 "type": "object",
                                 "properties": {
                                     "id": { "type": "Int" },
-                                    "category_description": { "type": "String" }
+                                    "category_description": {
+                                        "type": "String"
+                                    },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -100,6 +122,9 @@
                                     "properties": {
                                         "category_description": {
                                             "type": "String"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 }
@@ -167,7 +192,8 @@
                             "type": "object",
                             "properties": {
                                 "safety_equipment_id": { "type": "Int" },
-                                "job_title_id": { "type": "Int" }
+                                "job_title_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -208,7 +234,10 @@
                                         "safety_equipment_id": {
                                             "type": "Int"
                                         },
-                                        "job_title_id": { "type": "Int" }
+                                        "job_title_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -218,7 +247,16 @@
                                         "safety_equipment_id": {
                                             "type": "Int"
                                         },
-                                        "job_title_id": { "type": "Int" }
+                                        "job_title_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -236,7 +274,14 @@
                                 "properties": {
                                     "id": { "type": "Int" },
                                     "safety_equipment_id": { "type": "Int" },
-                                    "job_title_id": { "type": "Int" }
+                                    "job_title_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -261,7 +306,10 @@
                                         "safety_equipment_id": {
                                             "type": "Int"
                                         },
-                                        "job_title_id": { "type": "Int" }
+                                        "job_title_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -332,7 +380,8 @@
                                 "min_experience": { "type": "Int?" },
                                 "paygrade_id": { "type": "Int?" },
                                 "training_type_id": { "type": "Int?" },
-                                "job_category_id": { "type": "Int?" }
+                                "job_category_id": { "type": "Int?" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -377,7 +426,10 @@
                                         "min_experience": { "type": "Int?" },
                                         "paygrade_id": { "type": "Int?" },
                                         "training_type_id": { "type": "Int?" },
-                                        "job_category_id": { "type": "Int?" }
+                                        "job_category_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -389,7 +441,16 @@
                                         "min_experience": { "type": "Int" },
                                         "paygrade_id": { "type": "Int" },
                                         "training_type_id": { "type": "Int" },
-                                        "job_category_id": { "type": "Int" }
+                                        "job_category_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -411,7 +472,14 @@
                                     "min_experience": { "type": "Int?" },
                                     "paygrade_id": { "type": "Int?" },
                                     "training_type_id": { "type": "Int?" },
-                                    "job_category_id": { "type": "Int?" }
+                                    "job_category_id": { "type": "Int?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -440,7 +508,10 @@
                                         "min_experience": { "type": "Int?" },
                                         "paygrade_id": { "type": "Int?" },
                                         "training_type_id": { "type": "Int?" },
-                                        "job_category_id": { "type": "Int?" }
+                                        "job_category_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -505,7 +576,10 @@
                     "application/json": {
                         "schema": {
                             "type": "object",
-                            "properties": { "name": { "type": "String" } }
+                            "properties": {
+                                "name": { "type": "String" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
                         }
                     }
                 }
@@ -542,14 +616,26 @@
                                     "type": "object",
                                     "properties": {
                                         "id": { "type": "Int" },
-                                        "name": { "type": "String" }
+                                        "name": { "type": "String" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
                                     "type": "object",
                                     "properties": {
                                         "id": { "type": "Int" },
-                                        "name": { "type": "Int" }
+                                        "name": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -566,7 +652,14 @@
                                 "type": "object",
                                 "properties": {
                                     "id": { "type": "Int" },
-                                    "name": { "type": "String" }
+                                    "name": { "type": "String" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -588,7 +681,10 @@
                                 "updateData": {
                                     "type": "object",
                                     "properties": {
-                                        "name": { "type": "String" }
+                                        "name": { "type": "String" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }

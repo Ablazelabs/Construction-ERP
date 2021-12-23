@@ -1,0 +1,1006 @@
+{
+    "allInputFilters": {
+        "employee_back_penality_deduction": {
+            "transaction_date": "string",
+            "employee_id": "number"
+        },
+        "employee_pay_scale": { "scale": "number", "employee_id": "number" },
+        "employee_penality": {
+            "penality_date": "string",
+            "case_description": "string",
+            "employee_id": "number"
+        },
+        "employee_penality_detail_mst": {
+            "level": "number",
+            "penality_description": "string",
+            "penality_days": "number",
+            "employee_penality_type_id": "number"
+        },
+        "employee_penality_type": {
+            "ref_number": "string",
+            "description": "string"
+        },
+        "employee_tax": {
+            "start": "number",
+            "end": "number",
+            "percent": "number"
+        },
+        "global_payroll_account_mapping": {
+            "chart_of_account_id": "number",
+            "business_unit_id": "number"
+        },
+        "overtime": {
+            "date": "string",
+            "hours": "number",
+            "remark": "string",
+            "employee_id": "number",
+            "overtime_status": "number"
+        },
+        "overtime_rate": { "description": "string", "rate": "number" },
+        "paygrade": {
+            "paygrade_name": "string",
+            "min_salary": "number",
+            "max_salary": "number"
+        },
+        "paygrade_salary_component": {
+            "paygrade_id": "number",
+            "salary_component_id": "number"
+        },
+        "paygrade_scale": { "scale": "number", "paygrade_id": "number" },
+        "payroll_detail": {
+            "payroll_summary_id": "number",
+            "payroll_component": "number"
+        },
+        "payroll_detail_history": {
+            "payroll_summary_history_id": "number",
+            "description": "string",
+            "total_amount": "number"
+        },
+        "payroll_frequency_type": { "payroll_frequency_desc": "string" },
+        "payroll_location_setting": { "location_id": "number" },
+        "payroll_log": {
+            "period": "number",
+            "year": "number",
+            "employee_id": "number"
+        },
+        "payroll_log_employee": {
+            "start_period": "string",
+            "end_period": "string",
+            "employee_id": "number",
+            "payroll_frequency_type_id": "number"
+        },
+        "payroll_period_autogen": {
+            "period_id": "string",
+            "start_period": "string",
+            "end_period": "string",
+            "year": "number",
+            "payroll_frequency_type_id": "number",
+            "is_payroll_processed": "boolean",
+            "is_payroll_posted": "boolean",
+            "is_processing_started": "boolean"
+        },
+        "payroll_period_autogen_log": {
+            "year": "number",
+            "is_period_generated": "boolean"
+        },
+        "payroll_period_template": {
+            "period_id": "string",
+            "start_period": "string",
+            "end_period": "string",
+            "payroll_frequency_type_id": "number"
+        },
+        "payroll_posting_log": { "log_message": "string" },
+        "payroll_processing_log": { "log_message": "string" },
+        "payroll_summary": {
+            "expected_working_hours": "number",
+            "total_worked_hours": "number"
+        },
+        "payroll_summary_history": {
+            "expected_working_hours": "number",
+            "total_worked_hours": "number"
+        },
+        "pay_scale_history_log": {
+            "scale": "number",
+            "amount": "number",
+            "paygrade_id": "number"
+        },
+        "salary_adjustment": {
+            "amount": "number",
+            "salary_component_id": "number",
+            "employee_id": "number"
+        },
+        "salary_component": {
+            "name": "string",
+            "chart_of_account_id": "number"
+        },
+        "salary_component_account_mapping": {
+            "chart_of_account_id": "number",
+            "business_unit_id": "number",
+            "salary_component_id": "number"
+        }
+    },
+    "enums": {
+        "employee_back_penality_deduction": {},
+        "employee_pay_scale": {},
+        "employee_penality": {},
+        "employee_penality_detail_mst": {},
+        "employee_penality_type": {},
+        "employee_tax": {},
+        "global_payroll_account_mapping": {
+            "payroll_account_type": [
+                "SALARY_EXPENSE",
+                "LOST_TIME_DEDUCTION",
+                "OVER_TIME_EXPENSE",
+                "NET_PAY_CONTROL",
+                "EMPLOYEE_PENALITY"
+            ]
+        },
+        "overtime": {
+            "overtime_status": [
+                "Pending",
+                "Approved",
+                "Rejected",
+                "Released",
+                "Locked"
+            ]
+        },
+        "overtime_rate": {},
+        "paygrade": {},
+        "paygrade_salary_component": {},
+        "paygrade_scale": {},
+        "payroll_detail": {
+            "payroll_component": [
+                "Basic",
+                "Earning",
+                "Deduction",
+                "Loan",
+                "IncomeTax",
+                "OverTime",
+                "EmployeerPension",
+                "EarningAdj",
+                "DeductionAdj",
+                "EmployeePension",
+                "LostTime",
+                "NetPay",
+                "Penality"
+            ],
+            "payroll_posting_entry_type": [
+                "Gross",
+                "IncomeTax",
+                "OtherDeduction",
+                "EmployeerTax"
+            ]
+        },
+        "payroll_detail_history": {
+            "payroll_component": [
+                "Basic",
+                "Earning",
+                "Deduction",
+                "Loan",
+                "IncomeTax",
+                "OverTime",
+                "EmployeerPension",
+                "EarningAdj",
+                "DeductionAdj",
+                "EmployeePension",
+                "LostTime",
+                "NetPay",
+                "Penality"
+            ],
+            "payroll_posting_entry_type": [
+                "Gross",
+                "IncomeTax",
+                "OtherDeduction",
+                "EmployeerTax"
+            ]
+        },
+        "payroll_frequency_type": {},
+        "payroll_location_setting": {},
+        "payroll_log": {},
+        "payroll_log_employee": {},
+        "payroll_period_autogen": {},
+        "payroll_period_autogen_log": {},
+        "payroll_period_template": {},
+        "payroll_posting_log": {},
+        "payroll_processing_log": {},
+        "payroll_summary": {},
+        "payroll_summary_history": {},
+        "pay_scale_history_log": {},
+        "salary_adjustment": {},
+        "salary_component": {
+            "salary_component_type": ["earning", "deduction"],
+            "value_type": ["percent", "fixed"]
+        },
+        "salary_component_account_mapping": {}
+    },
+    "allOptionalInputFilters": {
+        "employee_back_penality_deduction": {
+            "remaining_deduction": "number",
+            "currently_deducted_amount": "number",
+            "is_payroll_posted": "boolean",
+            "payroll_frequency_type_id": "number"
+        },
+        "employee_pay_scale": {},
+        "employee_penality": {
+            "employee_penality_detail_mst_id": "number",
+            "is_applied_for_payroll": "boolean"
+        },
+        "employee_penality_detail_mst": {},
+        "employee_penality_type": {},
+        "employee_tax": {},
+        "global_payroll_account_mapping": { "payroll_account_type": "number" },
+        "overtime": {
+            "action_date": "string",
+            "delegated_username": "string",
+            "overtime_rate_id": "number"
+        },
+        "overtime_rate": {},
+        "paygrade": {},
+        "paygrade_salary_component": {},
+        "paygrade_scale": { "amount": "number" },
+        "payroll_detail": {
+            "description": "string",
+            "total_amount": "number",
+            "payroll_component": "number",
+            "payroll_posting_entry_type": "number",
+            "salary_component_id": "number",
+            "isEmployerPart": "boolean",
+            "isEarning": "boolean"
+        },
+        "payroll_detail_history": {
+            "salary_component_id": "number",
+            "payroll_posting_entry_type": "number",
+            "is_employer_part": "boolean",
+            "is_earning": "boolean"
+        },
+        "payroll_frequency_type": {},
+        "payroll_location_setting": {},
+        "payroll_log": { "message": "string" },
+        "payroll_log_employee": { "message": "string" },
+        "payroll_period_autogen": {
+            "is_payroll_interfaced_to_FI": "boolean",
+            "is_payroll_locked": "boolean"
+        },
+        "payroll_period_autogen_log": {},
+        "payroll_period_template": {},
+        "payroll_posting_log": {},
+        "payroll_processing_log": {},
+        "payroll_summary": {
+            "total_worked_OT_hours": "number",
+            "total_worked_OT_amount": "number",
+            "total_absent_hours": "number",
+            "total_absent_amount": "number",
+            "total_amount": "number",
+            "payroll_frequency_type_id": "number",
+            "employee_id": "number",
+            "business_unit_id": "number"
+        },
+        "payroll_summary_history": {
+            "total_worked_OT_hours": "number",
+            "total_worked_OT_amount": "number",
+            "total_absent_hours": "number",
+            "total_absent_amount": "number",
+            "total_amount": "number",
+            "is_payroll_posted": "boolean",
+            "payroll_frequency_type_id": "number",
+            "employee_id": "number",
+            "business_unit_id": "number"
+        },
+        "pay_scale_history_log": { "effective_date": "string" },
+        "salary_adjustment": { "payroll_date": "string" },
+        "salary_component": {
+            "salary_component_type": "number",
+            "value_type": "number",
+            "value": "number",
+            "taxable": "boolean"
+        },
+        "salary_component_account_mapping": {}
+    },
+    "allRangeValues": {
+        "employee_tax": {
+            "start": [0, 10000000000],
+            "end": [0, 10000000000],
+            "percent": [0, 10000000000]
+        },
+        "overtime": { "hours": [0.5, 24] },
+        "overtime_rate": { "rate": [0.5, 5] },
+        "paygrade": {
+            "min_salary": [0, 10000000000],
+            "max_salary": [0, 10000000000]
+        },
+        "pay_scale_history_log": { "scale": [1, 11] }
+    },
+    "phoneValues": {
+        "employee_back_penality_deduction": [],
+        "employee_pay_scale": [],
+        "employee_penality": [],
+        "employee_penality_detail_mst": [],
+        "employee_penality_type": [],
+        "employee_tax": [],
+        "global_payroll_account_mapping": [],
+        "overtime": [],
+        "overtime_rate": [],
+        "paygrade": [],
+        "paygrade_salary_component": [],
+        "paygrade_scale": [],
+        "payroll_detail": [],
+        "payroll_detail_history": [],
+        "payroll_frequency_type": [],
+        "payroll_location_setting": [],
+        "payroll_log": [],
+        "payroll_log_employee": [],
+        "payroll_period_autogen": [],
+        "payroll_period_autogen_log": [],
+        "payroll_period_template": [],
+        "payroll_posting_log": [],
+        "payroll_processing_log": [],
+        "payroll_summary": [],
+        "payroll_summary_history": [],
+        "pay_scale_history_log": [],
+        "salary_adjustment": [],
+        "salary_component": [],
+        "salary_component_account_mapping": []
+    },
+    "emailValues": {
+        "employee_back_penality_deduction": [],
+        "employee_pay_scale": [],
+        "employee_penality": [],
+        "employee_penality_detail_mst": [],
+        "employee_penality_type": [],
+        "employee_tax": [],
+        "global_payroll_account_mapping": [],
+        "overtime": [],
+        "overtime_rate": [],
+        "paygrade": [],
+        "paygrade_salary_component": [],
+        "paygrade_scale": [],
+        "payroll_detail": [],
+        "payroll_detail_history": [],
+        "payroll_frequency_type": [],
+        "payroll_location_setting": [],
+        "payroll_log": [],
+        "payroll_log_employee": [],
+        "payroll_period_autogen": [],
+        "payroll_period_autogen_log": [],
+        "payroll_period_template": [],
+        "payroll_posting_log": [],
+        "payroll_processing_log": [],
+        "payroll_summary": [],
+        "payroll_summary_history": [],
+        "pay_scale_history_log": [],
+        "salary_adjustment": [],
+        "salary_component": [],
+        "salary_component_account_mapping": []
+    },
+    "dateValues": {
+        "employee_back_penality_deduction": ["transaction_date"],
+        "employee_pay_scale": [],
+        "employee_penality": ["penality_date"],
+        "employee_penality_detail_mst": [],
+        "employee_penality_type": [],
+        "employee_tax": [],
+        "global_payroll_account_mapping": [],
+        "overtime": ["date", "action_date"],
+        "overtime_rate": [],
+        "paygrade": [],
+        "paygrade_salary_component": [],
+        "paygrade_scale": [],
+        "payroll_detail": [],
+        "payroll_detail_history": [],
+        "payroll_frequency_type": [],
+        "payroll_location_setting": [],
+        "payroll_log": [],
+        "payroll_log_employee": ["start_period", "end_period"],
+        "payroll_period_autogen": ["start_period", "end_period"],
+        "payroll_period_autogen_log": [],
+        "payroll_period_template": ["start_period", "end_period"],
+        "payroll_posting_log": [],
+        "payroll_processing_log": [],
+        "payroll_summary": [],
+        "payroll_summary_history": [],
+        "pay_scale_history_log": ["effective_date"],
+        "salary_adjustment": ["payroll_date"],
+        "salary_component": [],
+        "salary_component_account_mapping": []
+    },
+    "allProjections": {
+        "employee_back_penality_deduction": {
+            "id": true,
+            "transaction_date": true,
+            "remaining_deduction": true,
+            "currently_deducted_amount": true,
+            "is_payroll_posted": true,
+            "employee": true,
+            "payroll_frequency_type": true
+        },
+        "employee_pay_scale": { "id": true, "scale": true, "employee": true },
+        "employee_penality": {
+            "id": true,
+            "penality_date": true,
+            "case_description": true,
+            "employee_penality_detail_mst": true,
+            "employee": true,
+            "is_applied_for_payroll": true
+        },
+        "employee_penality_detail_mst": {
+            "id": true,
+            "level": true,
+            "penality_description": true,
+            "penality_days": true,
+            "employee_penality_type": true
+        },
+        "employee_penality_type": {
+            "id": true,
+            "ref_number": true,
+            "description": true
+        },
+        "employee_tax": {
+            "id": true,
+            "start": true,
+            "end": true,
+            "percent": true
+        },
+        "global_payroll_account_mapping": {
+            "id": true,
+            "chart_of_account": true,
+            "business_unit": true,
+            "payroll_account_type": true
+        },
+        "overtime": {
+            "id": true,
+            "date": true,
+            "hours": true,
+            "remark": true,
+            "overtime_status": true,
+            "action_date": true,
+            "delegated_username": true,
+            "employee": true,
+            "overtime_rate": true
+        },
+        "overtime_rate": { "id": true, "description": true, "rate": true },
+        "paygrade": {
+            "id": true,
+            "paygrade_name": true,
+            "min_salary": true,
+            "max_salary": true
+        },
+        "paygrade_salary_component": {
+            "id": true,
+            "paygrade": true,
+            "salary_component": true
+        },
+        "paygrade_scale": {
+            "id": true,
+            "scale": true,
+            "amount": true,
+            "paygrade": true
+        },
+        "payroll_detail": {
+            "id": true,
+            "description": true,
+            "total_amount": true,
+            "payroll_component": true,
+            "isEmployerPart": true,
+            "isEarning": true,
+            "payroll_posting_entry_type": true,
+            "payroll_summary": true,
+            "salary_component": true
+        },
+        "payroll_detail_history": {
+            "id": true,
+            "payroll_summary_history": true,
+            "description": true,
+            "total_amount": true,
+            "payroll_component": true,
+            "salary_component": true,
+            "is_employer_part": true,
+            "is_earning": true,
+            "payroll_posting_entry_type": true
+        },
+        "payroll_frequency_type": {
+            "id": true,
+            "payroll_frequency_desc": true
+        },
+        "payroll_location_setting": { "id": true, "location": true },
+        "payroll_log": {
+            "id": true,
+            "period": true,
+            "year": true,
+            "message": true,
+            "employee": true
+        },
+        "payroll_log_employee": {
+            "id": true,
+            "start_period": true,
+            "end_period": true,
+            "message": true,
+            "employee": true,
+            "payroll_frequency_type": true
+        },
+        "payroll_period_autogen": {
+            "id": true,
+            "period": true,
+            "start_period": true,
+            "end_period": true,
+            "year": true,
+            "is_payroll_processed": true,
+            "payroll_frequency_type": true,
+            "is_payroll_posted": true,
+            "is_processing_started": true,
+            "is_payroll_interfaced_to_FI": true,
+            "is_payroll_locked": true
+        },
+        "payroll_period_autogen_log": {
+            "id": true,
+            "year": true,
+            "is_period_generated": true
+        },
+        "payroll_period_template": {
+            "id": true,
+            "period": true,
+            "start_period": true,
+            "end_period": true,
+            "payroll_frequency_type": true
+        },
+        "payroll_posting_log": { "id": true, "log_message": true },
+        "payroll_processing_log": { "id": true, "log_message": true },
+        "payroll_summary": {
+            "id": true,
+            "expected_working_hours": true,
+            "total_worked_hours": true,
+            "total_worked_OT_hours": true,
+            "total_worked_OT_amount": true,
+            "total_absent_hours": true,
+            "total_absent_amount": true,
+            "total_amount": true,
+            "payroll_frequency_type": true,
+            "employee": true,
+            "business_unit": true
+        },
+        "payroll_summary_history": {
+            "id": true,
+            "expected_working_hours": true,
+            "total_worked_hours": true,
+            "total_worked_OT_hours": true,
+            "total_worked_OT_amount": true,
+            "total_absent_hours": true,
+            "total_absent_amount": true,
+            "total_amount": true,
+            "is_payroll_posted": true,
+            "payroll_frequency_type": true,
+            "employee": true,
+            "business_unit": true
+        },
+        "pay_scale_history_log": {
+            "id": true,
+            "scale": true,
+            "effective_date": true,
+            "amount": true,
+            "paygrade": true
+        },
+        "salary_adjustment": {
+            "id": true,
+            "payroll_date": true,
+            "amount": true,
+            "salary_component": true,
+            "employee": true
+        },
+        "salary_component": {
+            "id": true,
+            "name": true,
+            "salary_component_type": true,
+            "value_type": true,
+            "value": true,
+            "taxable": true,
+            "chart_of_account": true
+        },
+        "salary_component_account_mapping": {
+            "id": true,
+            "chart_of_account": true,
+            "business_unit": true,
+            "salary_component": true
+        }
+    },
+    "allFilters": {
+        "employee_back_penality_deduction": {
+            "id": "number",
+            "remaining_deduction": "number",
+            "currently_deducted_amount": "number",
+            "is_payroll_posted": "boolean",
+            "employee_id": "number",
+            "payroll_frequency_type_id": "number"
+        },
+        "employee_pay_scale": {
+            "id": "number",
+            "scale": "number",
+            "employee_id": "number"
+        },
+        "employee_penality": {
+            "id": "number",
+            "case_description": "string",
+            "employee_penality_detail_mst_id": "number",
+            "employee_id": "number",
+            "is_applied_for_payroll": "boolean"
+        },
+        "employee_penality_detail_mst": {
+            "id": "number",
+            "level": "number",
+            "penality_description": "string",
+            "penality_days": "number",
+            "employee_penality_type_id": "number"
+        },
+        "employee_penality_type": {
+            "id": "number",
+            "ref_number": "string",
+            "description": "string"
+        },
+        "employee_tax": {
+            "id": "number",
+            "start": "number",
+            "end": "number",
+            "percent": "number"
+        },
+        "global_payroll_account_mapping": {
+            "id": "number",
+            "chart_of_account_id": "number",
+            "business_unit_id": "number",
+            "payroll_account_type": "number"
+        },
+        "overtime": {
+            "id": "number",
+            "hours": "number",
+            "remark": "string",
+            "overtime_status": "number",
+            "delegated_username": "string",
+            "employee_id": "number",
+            "overtime_rate_id": "number"
+        },
+        "overtime_rate": {
+            "id": "number",
+            "description": "string",
+            "rate": "number"
+        },
+        "paygrade": {
+            "id": "number",
+            "paygrade_name": "string",
+            "min_salary": "number",
+            "max_salary": "number"
+        },
+        "paygrade_salary_component": {
+            "id": "number",
+            "paygrade_id": "number",
+            "salary_component_id": "number"
+        },
+        "paygrade_scale": {
+            "id": "number",
+            "scale": "number",
+            "amount": "number",
+            "paygrade_id": "number"
+        },
+        "payroll_detail": {
+            "id": "number",
+            "description": "string",
+            "total_amount": "number",
+            "payroll_component": "number",
+            "isEmployerPart": "boolean",
+            "isEarning": "boolean",
+            "payroll_posting_entry_type": "number",
+            "payroll_summary_id": "number",
+            "salary_component_id": "number"
+        },
+        "payroll_detail_history": {
+            "id": "number",
+            "payroll_summary_history_id": "number",
+            "description": "string",
+            "total_amount": "number",
+            "payroll_component": "number",
+            "salary_component_id": "number",
+            "is_employer_part": "boolean",
+            "is_earning": "boolean",
+            "payroll_posting_entry_type": "number"
+        },
+        "payroll_frequency_type": {
+            "id": "number",
+            "payroll_frequency_desc": "string"
+        },
+        "payroll_location_setting": { "id": "number", "location_id": "number" },
+        "payroll_log": {
+            "id": "number",
+            "period": "number",
+            "year": "number",
+            "message": "string",
+            "employee_id": "number"
+        },
+        "payroll_log_employee": {
+            "id": "number",
+            "message": "string",
+            "employee_id": "number",
+            "payroll_frequency_type_id": "number"
+        },
+        "payroll_period_autogen": {
+            "id": "number",
+            "period_id": "string",
+            "year": "number",
+            "is_payroll_processed": "boolean",
+            "payroll_frequency_type_id": "number",
+            "is_payroll_posted": "boolean",
+            "is_processing_started": "boolean",
+            "is_payroll_interfaced_to_FI": "boolean",
+            "is_payroll_locked": "boolean"
+        },
+        "payroll_period_autogen_log": {
+            "id": "number",
+            "year": "number",
+            "is_period_generated": "boolean"
+        },
+        "payroll_period_template": {
+            "id": "number",
+            "period_id": "string",
+            "payroll_frequency_type_id": "number"
+        },
+        "payroll_posting_log": { "id": "number", "log_message": "string" },
+        "payroll_processing_log": { "id": "number", "log_message": "string" },
+        "payroll_summary": {
+            "id": "number",
+            "expected_working_hours": "number",
+            "total_worked_hours": "number",
+            "total_worked_OT_hours": "number",
+            "total_worked_OT_amount": "number",
+            "total_absent_hours": "number",
+            "total_absent_amount": "number",
+            "total_amount": "number",
+            "payroll_frequency_type_id": "number",
+            "employee_id": "number",
+            "business_unit_id": "number"
+        },
+        "payroll_summary_history": {
+            "id": "number",
+            "expected_working_hours": "number",
+            "total_worked_hours": "number",
+            "total_worked_OT_hours": "number",
+            "total_worked_OT_amount": "number",
+            "total_absent_hours": "number",
+            "total_absent_amount": "number",
+            "total_amount": "number",
+            "is_payroll_posted": "boolean",
+            "payroll_frequency_type_id": "number",
+            "employee_id": "number",
+            "business_unit_id": "number"
+        },
+        "pay_scale_history_log": {
+            "id": "number",
+            "scale": "number",
+            "amount": "number",
+            "paygrade_id": "number"
+        },
+        "salary_adjustment": {
+            "id": "number",
+            "amount": "number",
+            "salary_component_id": "number",
+            "employee_id": "number"
+        },
+        "salary_component": {
+            "id": "number",
+            "name": "string",
+            "salary_component_type": "number",
+            "value_type": "number",
+            "value": "number",
+            "taxable": "boolean",
+            "chart_of_account_id": "number"
+        },
+        "salary_component_account_mapping": {
+            "id": "number",
+            "chart_of_account_id": "number",
+            "business_unit_id": "number",
+            "salary_component_id": "number"
+        }
+    },
+    "allSorts": {
+        "employee_back_penality_deduction": {
+            "id": "number",
+            "remaining_deduction": "number",
+            "currently_deducted_amount": "number",
+            "employee_id": "number",
+            "payroll_frequency_type_id": "number"
+        },
+        "employee_pay_scale": {
+            "id": "number",
+            "scale": "number",
+            "employee_id": "number"
+        },
+        "employee_penality": {
+            "id": "number",
+            "case_description": "string",
+            "employee_penality_detail_mst_id": "number",
+            "employee_id": "number"
+        },
+        "employee_penality_detail_mst": {
+            "id": "number",
+            "level": "number",
+            "penality_description": "string",
+            "penality_days": "number",
+            "employee_penality_type_id": "number"
+        },
+        "employee_penality_type": {
+            "id": "number",
+            "ref_number": "string",
+            "description": "string"
+        },
+        "employee_tax": {
+            "id": "number",
+            "start": "number",
+            "end": "number",
+            "percent": "number"
+        },
+        "global_payroll_account_mapping": {
+            "id": "number",
+            "chart_of_account_id": "number",
+            "business_unit_id": "number",
+            "payroll_account_type": "number"
+        },
+        "overtime": {
+            "id": "number",
+            "hours": "number",
+            "remark": "string",
+            "overtime_status": "number",
+            "delegated_username": "string",
+            "employee_id": "number",
+            "overtime_rate_id": "number"
+        },
+        "overtime_rate": {
+            "id": "number",
+            "description": "string",
+            "rate": "number"
+        },
+        "paygrade": {
+            "id": "number",
+            "paygrade_name": "string",
+            "min_salary": "number",
+            "max_salary": "number"
+        },
+        "paygrade_salary_component": {
+            "id": "number",
+            "paygrade_id": "number",
+            "salary_component_id": "number"
+        },
+        "paygrade_scale": {
+            "id": "number",
+            "scale": "number",
+            "amount": "number",
+            "paygrade_id": "number"
+        },
+        "payroll_detail": {
+            "id": "number",
+            "description": "string",
+            "total_amount": "number",
+            "payroll_component": "number",
+            "payroll_posting_entry_type": "number",
+            "payroll_summary_id": "number",
+            "salary_component_id": "number"
+        },
+        "payroll_detail_history": {
+            "id": "number",
+            "payroll_summary_history_id": "number",
+            "description": "string",
+            "total_amount": "number",
+            "payroll_component": "number",
+            "salary_component_id": "number",
+            "payroll_posting_entry_type": "number"
+        },
+        "payroll_frequency_type": {
+            "id": "number",
+            "payroll_frequency_desc": "string"
+        },
+        "payroll_location_setting": { "id": "number", "location_id": "number" },
+        "payroll_log": {
+            "id": "number",
+            "period": "number",
+            "year": "number",
+            "message": "string",
+            "employee_id": "number"
+        },
+        "payroll_log_employee": {
+            "id": "number",
+            "message": "string",
+            "employee_id": "number",
+            "payroll_frequency_type_id": "number"
+        },
+        "payroll_period_autogen": {
+            "id": "number",
+            "period_id": "string",
+            "year": "number",
+            "payroll_frequency_type_id": "number"
+        },
+        "payroll_period_autogen_log": { "id": "number", "year": "number" },
+        "payroll_period_template": {
+            "id": "number",
+            "period_id": "string",
+            "payroll_frequency_type_id": "number"
+        },
+        "payroll_posting_log": { "id": "number", "log_message": "string" },
+        "payroll_processing_log": { "id": "number", "log_message": "string" },
+        "payroll_summary": {
+            "id": "number",
+            "expected_working_hours": "number",
+            "total_worked_hours": "number",
+            "total_worked_OT_hours": "number",
+            "total_worked_OT_amount": "number",
+            "total_absent_hours": "number",
+            "total_absent_amount": "number",
+            "total_amount": "number",
+            "payroll_frequency_type_id": "number",
+            "employee_id": "number",
+            "business_unit_id": "number"
+        },
+        "payroll_summary_history": {
+            "id": "number",
+            "expected_working_hours": "number",
+            "total_worked_hours": "number",
+            "total_worked_OT_hours": "number",
+            "total_worked_OT_amount": "number",
+            "total_absent_hours": "number",
+            "total_absent_amount": "number",
+            "total_amount": "number",
+            "payroll_frequency_type_id": "number",
+            "employee_id": "number",
+            "business_unit_id": "number"
+        },
+        "pay_scale_history_log": {
+            "id": "number",
+            "scale": "number",
+            "amount": "number",
+            "paygrade_id": "number"
+        },
+        "salary_adjustment": {
+            "id": "number",
+            "amount": "number",
+            "salary_component_id": "number",
+            "employee_id": "number"
+        },
+        "salary_component": {
+            "id": "number",
+            "name": "string",
+            "salary_component_type": "number",
+            "value_type": "number",
+            "value": "number",
+            "chart_of_account_id": "number"
+        },
+        "salary_component_account_mapping": {
+            "id": "number",
+            "chart_of_account_id": "number",
+            "business_unit_id": "number",
+            "salary_component_id": "number"
+        }
+    },
+    "allRoutes": [
+        "/salary_component",
+        "/payroll_frequency_type",
+        "/paygrade",
+        "/employee_back_penality_deduction",
+        "/employee_pay_scale",
+        "/employee_penality",
+        "/employee_penality_detail_mst",
+        "/employee_penality_type",
+        "/employee_tax",
+        "/global_payroll_account_mapping",
+        "/overtime",
+        "/overtime_rate",
+        "/paygrade_salary_component",
+        "/paygrade_scale",
+        "/payroll_detail",
+        "/payroll_detail_history",
+        "/payroll_location_setting",
+        "/payroll_log",
+        "/payroll_log_employee",
+        "/payroll_period_autogen",
+        "/payroll_period_autogen_log",
+        "/payroll_period_template",
+        "/payroll_posting_log",
+        "/payroll_processing_log",
+        "/payroll_summary",
+        "/payroll_summary_history",
+        "/pay_scale_history_log",
+        "/salary_adjustment",
+        "/salary_component_account_mapping"
+    ]
+}

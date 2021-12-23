@@ -1,0 +1,397 @@
+{
+    "allInputFilters": {
+        "currency": {
+            "currency_code": "string",
+            "name": "string",
+            "symbol": "string",
+            "is_base_currency": "boolean",
+            "currency_description": "string"
+        },
+        "country": { "country_code": "string", "country_name": "string" },
+        "title": { "short_code": "string", "name": "string" },
+        "language": { "code": "string", "name": "string" },
+        "action_reason": {
+            "reason_description": "string",
+            "action_type_code": "string"
+        },
+        "action_type": {},
+        "address_type": { "type_name": "string" },
+        "commitment": { "type_name": "string" },
+        "custom_report": { "query_name": "string", "query": "string" },
+        "discipline_case_type": { "case_description": "string" },
+        "duration_measure": { "measure": "string" },
+        "employee_group": { "group_description": "string" },
+        "employee_type": { "description": "string" },
+        "field_of_study": { "field_of_study_name": "string" },
+        "hcm_configuration": {},
+        "employee_transaction_lock": { "payroll_lock": "boolean" },
+        "license_type": { "license_type_name": "string" },
+        "nationality": {
+            "nationality_code": "string",
+            "nationality_name": "string"
+        },
+        "religion": { "name": "string" },
+        "training_type": { "training_type_name": "string" }
+    },
+    "enums": {
+        "currency": { "currency_format": ["comma", "period", "Space"] },
+        "action_type": {
+            "employee_status": ["active", "Inactive", "Retired", "Withdraw"]
+        }
+    },
+    "allOptionalInputFilters": {
+        "currency": {
+            "price_precision": "number",
+            "currency_format": "number"
+        },
+        "country": {},
+        "title": {},
+        "language": {},
+        "action_reason": { "action_type_id": "number" },
+        "action_type": {
+            "action_type_description": "string",
+            "is_initial_hiring": "boolean",
+            "is_with_org_assignment": "boolean",
+            "default_action_type_code": "string",
+            "is_promotion": "boolean",
+            "employee_status": "number"
+        },
+        "address_type": {},
+        "commitment": {},
+        "custom_report": {},
+        "discipline_case_type": {},
+        "duration_measure": {},
+        "employee_group": {},
+        "employee_type": {},
+        "field_of_study": {},
+        "hcm_configuration": {
+            "income_tax_payable_id": "number",
+            "employer_tax_id": "number",
+            "employer_tax_control_id": "number",
+            "employer_pension_account_id": "number",
+            "employer_pension": "number",
+            "employee_pension": "number",
+            "employee_retirement_age": "number"
+        },
+        "employee_transaction_lock": {},
+        "license_type": {},
+        "nationality": {},
+        "religion": {},
+        "training_type": {}
+    },
+    "allRangeValues": {
+        "hcm_configuration": {
+            "employer_pension": [1, 20],
+            "employee_pension": [1, 20],
+            "employee_retirement_age": [40, 100]
+        }
+    },
+    "phoneValues": {
+        "account_category": [],
+        "account_type": [],
+        "closing_note": [],
+        "financial_statement_section": [],
+        "bank": [],
+        "contact": [],
+        "contact_address": [],
+        "contact_person": [],
+        "cost_center": [],
+        "cost_center_accounts": [],
+        "payment_term": [],
+        "exchange_rate": [],
+        "company_address": [],
+        "date_format_type": [],
+        "financial_settings": [],
+        "industry": [],
+        "journal_users": [],
+        "primary_contact": [],
+        "foot_note": [],
+        "associated_tax_group": [],
+        "tax": [],
+        "tax_authority": [],
+        "tax_exemption": [],
+        "tax_group": [],
+        "tax_rule": [],
+        "accounting_period": [],
+        "journal_type": []
+    },
+    "emailValues": {
+        "account_category": [],
+        "account_type": [],
+        "closing_note": [],
+        "financial_statement_section": [],
+        "bank": [],
+        "contact": [],
+        "contact_address": [],
+        "contact_person": [],
+        "cost_center": [],
+        "cost_center_accounts": [],
+        "payment_term": [],
+        "exchange_rate": [],
+        "company_address": [],
+        "date_format_type": [],
+        "financial_settings": [],
+        "industry": [],
+        "journal_users": [],
+        "primary_contact": [],
+        "foot_note": [],
+        "associated_tax_group": [],
+        "tax": [],
+        "tax_authority": [],
+        "tax_exemption": [],
+        "tax_group": [],
+        "tax_rule": [],
+        "accounting_period": [],
+        "journal_type": []
+    },
+    "dateValues": {
+        "account_category": [],
+        "account_type": [],
+        "closing_note": [],
+        "financial_statement_section": [],
+        "bank": [],
+        "contact": [],
+        "contact_address": [],
+        "contact_person": [],
+        "cost_center": [],
+        "cost_center_accounts": [],
+        "payment_term": [],
+        "exchange_rate": [],
+        "company_address": [],
+        "date_format_type": [],
+        "financial_settings": [],
+        "industry": [],
+        "journal_users": [],
+        "primary_contact": [],
+        "foot_note": [],
+        "associated_tax_group": [],
+        "tax": [],
+        "tax_authority": [],
+        "tax_exemption": [],
+        "tax_group": [],
+        "tax_rule": [],
+        "accounting_period": [],
+        "journal_type": []
+    },
+    "allProjections": {
+        "currency": {
+            "id": true,
+            "currency_code": true,
+            "currency_description": true,
+            "name": true,
+            "symbol": true,
+            "price_precision": true,
+            "currency_format": true,
+            "is_base_currency": true
+        },
+        "country": { "id": true, "country_code": true, "country_name": true },
+        "title": { "id": true, "short_code": true, "name": true },
+        "language": { "id": true, "code": true, "name": true },
+        "action_reason": {
+            "id": true,
+            "reason_description": true,
+            "action_type_code": true,
+            "action_type": true
+        },
+        "action_type": {
+            "id": true,
+            "action_type_description": true,
+            "is_initial_hiring": true,
+            "is_with_org_assignment": true,
+            "default_action_type_code": true,
+            "is_promotion": true,
+            "employee_status": true
+        },
+        "address_type": { "id": true, "type_name": true },
+        "commitment": { "id": true, "type_name": true },
+        "custom_report": { "id": true, "query_name": true, "query": true },
+        "discipline_case_type": { "id": true, "case_description": true },
+        "duration_measure": { "id": true, "measure": true },
+        "employee_group": { "id": true, "group_description": true },
+        "employee_type": { "id": true, "description": true },
+        "field_of_study": { "id": true, "field_of_study_name": true },
+        "hcm_configuration": {
+            "id": true,
+            "income_tax_payable_id": true,
+            "employer_tax_id": true,
+            "employer_tax_control_id": true,
+            "employer_pension_account_id": true,
+            "employer_pension": true,
+            "employee_pension": true,
+            "employee_retirement_age": true
+        },
+        "employee_transaction_lock": { "id": true, "payroll_lock": true },
+        "license_type": { "id": true, "license_type_name": true },
+        "nationality": {
+            "id": true,
+            "nationality_code": true,
+            "nationality_name": true
+        },
+        "religion": { "id": true, "name": true },
+        "training_type": { "id": true, "training_type_name": true }
+    },
+    "allFilters": {
+        "currency": {
+            "id": "number",
+            "currency_code": "string",
+            "currency_description": "string",
+            "name": "string",
+            "symbol": "string",
+            "price_precision": "number",
+            "currency_format": "number",
+            "is_base_currency": "boolean"
+        },
+        "country": {
+            "id": "number",
+            "country_code": "string",
+            "country_name": "string"
+        },
+        "title": { "id": "number", "short_code": "string", "name": "string" },
+        "language": { "id": "number", "code": "string", "name": "string" },
+        "action_reason": {
+            "id": "number",
+            "reason_description": "string",
+            "action_type_code": "string",
+            "action_type_id": "number"
+        },
+        "action_type": {
+            "id": "number",
+            "action_type_description": "string",
+            "is_initial_hiring": "boolean",
+            "is_with_org_assignment": "boolean",
+            "default_action_type_code": "string",
+            "is_promotion": "boolean",
+            "employee_status": "number"
+        },
+        "address_type": { "id": "number", "type_name": "string" },
+        "commitment": { "id": "number", "type_name": "string" },
+        "custom_report": {
+            "id": "number",
+            "query_name": "string",
+            "query": "string"
+        },
+        "discipline_case_type": {
+            "id": "number",
+            "case_description": "string"
+        },
+        "duration_measure": { "id": "number", "measure": "string" },
+        "employee_group": { "id": "number", "group_description": "string" },
+        "employee_type": { "id": "number", "description": "string" },
+        "field_of_study": { "id": "number", "field_of_study_name": "string" },
+        "hcm_configuration": {
+            "id": "number",
+            "income_tax_payable_id": "number",
+            "employer_tax_id": "number",
+            "employer_tax_control_id": "number",
+            "employer_pension_account_id": "number",
+            "employer_pension": "number",
+            "employee_pension": "number",
+            "employee_retirement_age": "number"
+        },
+        "employee_transaction_lock": {
+            "id": "number",
+            "payroll_lock": "boolean"
+        },
+        "license_type": { "id": "number", "license_type_name": "string" },
+        "nationality": {
+            "id": "number",
+            "nationality_code": "string",
+            "nationality_name": "string"
+        },
+        "religion": { "id": "number", "name": "string" },
+        "training_type": { "id": "number", "training_type_name": "string" }
+    },
+    "allSorts": {
+        "currency": {
+            "id": "number",
+            "currency_code": "number",
+            "currency_description": "number",
+            "name": "number",
+            "symbol": "number",
+            "price_precision": "number",
+            "currency_format": "number",
+            "is_base_currency": "number"
+        },
+        "country": {
+            "id": "number",
+            "country_code": "number",
+            "country_name": "number"
+        },
+        "title": { "id": "number", "short_code": "number", "name": "number" },
+        "language": { "id": "number", "code": "number", "name": "number" },
+        "action_reason": {
+            "id": "number",
+            "reason_description": "number",
+            "action_type_code": "number",
+            "action_type_id": "number"
+        },
+        "action_type": {
+            "id": "number",
+            "action_type_description": "number",
+            "is_initial_hiring": "number",
+            "is_with_org_assignment": "number",
+            "default_action_type_code": "number",
+            "is_promotion": "number",
+            "employee_status": "number"
+        },
+        "address_type": { "id": "number", "type_name": "number" },
+        "commitment": { "id": "number", "type_name": "number" },
+        "custom_report": {
+            "id": "number",
+            "query_name": "number",
+            "query": "number"
+        },
+        "discipline_case_type": {
+            "id": "number",
+            "case_description": "number"
+        },
+        "duration_measure": { "id": "number", "measure": "number" },
+        "employee_group": { "id": "number", "group_description": "number" },
+        "employee_type": { "id": "number", "description": "number" },
+        "field_of_study": { "id": "number", "field_of_study_name": "number" },
+        "hcm_configuration": {
+            "id": "number",
+            "income_tax_payable_id": "number",
+            "employer_tax_id": "number",
+            "employer_tax_control_id": "number",
+            "employer_pension_account_id": "number",
+            "employer_pension": "number",
+            "employee_pension": "number",
+            "employee_retirement_age": "number"
+        },
+        "employee_transaction_lock": {
+            "id": "number",
+            "payroll_lock": "number"
+        },
+        "license_type": { "id": "number", "license_type_name": "number" },
+        "nationality": {
+            "id": "number",
+            "nationality_code": "number",
+            "nationality_name": "number"
+        },
+        "religion": { "id": "number", "name": "number" },
+        "training_type": { "id": "number", "training_type_name": "number" }
+    },
+    "allRoutes": [
+        "/currency",
+        "/country",
+        "/title",
+        "/language",
+        "/action_reason",
+        "/action_type",
+        "/address_type",
+        "/commitment",
+        "/custom_report",
+        "/discipline_case_type",
+        "/duration_measure",
+        "/employee_group",
+        "/employee_type",
+        "/field_of_study",
+        "/hcm_configuration",
+        "/employee_transaction_lock",
+        "/license_type",
+        "/nationality",
+        "/religion",
+        "/training_type"
+    ]
+}

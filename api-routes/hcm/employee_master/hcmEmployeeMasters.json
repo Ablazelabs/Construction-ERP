@@ -1,0 +1,912 @@
+{
+    "allInputFilters": {
+        "address": { "address_line_1": "string", "employee_id": "number" },
+        "dependent": { "fullname": "string", "employee_id": "number" },
+        "discipline": { "case_description": "string" },
+        "education": {
+            "field_of_study_id": "number",
+            "duration_measure_id": "number",
+            "training_type_id": "number",
+            "employee_id": "number"
+        },
+        "employee": {
+            "id_number": "number",
+            "first_name": "string",
+            "middle_name": "string",
+            "gender": "number"
+        },
+        "employee_action": {
+            "employee_id": "number",
+            "action_reason_id": "number"
+        },
+        "employee_commitment": {
+            "commitment_type_id": "number",
+            "employee_id": "number"
+        },
+        "employee_contact": {
+            "name": "string",
+            "relationship": "string",
+            "address_line_1": "string",
+            "mobile_number": "string",
+            "employee_id": "number"
+        },
+        "employee_id_range": { "start": "number", "end": "number" },
+        "employee_loan_repayment": {
+            "repayment_amount": "number",
+            "total_amount": "number"
+        },
+        "employee_pay_frequency": { "expected_working_hrs": "number" },
+        "employee_paygrade": {
+            "employee_id": "number",
+            "paygrade_id": "number"
+        },
+        "employee_salary_component": {
+            "employee_id": "number",
+            "salary_component_id": "number"
+        },
+        "experience": {
+            "company": "string",
+            "job_title": "string",
+            "employee_id": "number"
+        },
+        "leave_assignment": { "employee_id": "number" },
+        "leave_entitlement": {
+            "id": "number",
+            "employee_id": "number",
+            "attendance_abscence_type_id": "number"
+        },
+        "leave_transfer": { "remark": "string", "employee_id": "number" },
+        "license": { "expiry_date": "string" },
+        "org_assignment": {
+            "job_title_id": "number",
+            "business_unit_id": "number"
+        },
+        "service_allowance_pay": { "allowance_pay": "number" },
+        "shift_assignment": {
+            "shift_schedule_hdr_id": "number",
+            "employee_id": "number"
+        }
+    },
+    "enums": {
+        "address": {},
+        "dependent": { "relationship": ["child", "other"] },
+        "discipline": {},
+        "education": {},
+        "employee": {
+            "gender": ["male", "female"],
+            "marital_status": ["Single", "Married", "Widowed", "Divorced"]
+        },
+        "employee_action": {
+            "employee_status": ["Active", "Inactive", "Retired", "Withdraw"]
+        },
+        "employee_commitment": {},
+        "employee_contact": {},
+        "employee_id_range": {},
+        "employee_loan_repayment": {},
+        "employee_pay_frequency": {},
+        "employee_paygrade": {},
+        "employee_salary_component": {},
+        "experience": {},
+        "leave_assignment": {
+            "leave_assignment_type": ["Direct", "Request", "Plan"],
+            "leave_request_status": [
+                "Pending",
+                "Approved",
+                "Rejected",
+                "Released",
+                "Locked"
+            ]
+        },
+        "leave_entitlement": {},
+        "leave_transfer": {
+            "leave_request_status": [
+                "Pending",
+                "Approved",
+                "Rejected",
+                "Released",
+                "Locked"
+            ]
+        },
+        "license": {},
+        "org_assignment": {},
+        "service_allowance_pay": {},
+        "shift_assignment": {}
+    },
+    "allOptionalInputFilters": {
+        "address": {
+            "address_line_2": "string",
+            "region": "string",
+            "city": "string",
+            "mobile_number": "string",
+            "house_number": "string",
+            "postal_box": "string",
+            "email": "string",
+            "address_type_id": "number"
+        },
+        "dependent": {
+            "relationship": "number",
+            "dependent_date_of_birth": "string"
+        },
+        "discipline": {
+            "attachment_id": "number",
+            "case_type_id": "number",
+            "employee_id": "number"
+        },
+        "education": { "score": "string" },
+        "employee": {
+            "last_name": "string",
+            "date_of_birth": "string",
+            "employment_start_date": "string",
+            "date_of_joining": "string",
+            "marital_status": "number",
+            "marital_since": "string",
+            "place_of_birth": "string",
+            "photo": "string",
+            "is_employee_active": "boolean",
+            "type": "string",
+            "prev_employment_leave_days": "Float?",
+            "bank_account_number": "string",
+            "document_ref": "string",
+            "pension_ref": "string",
+            "nationality_id": "number",
+            "country_id": "number",
+            "language_id": "number",
+            "title_id": "number",
+            "religion_id": "number",
+            "employee_type_id": "number"
+        },
+        "employee_action": {
+            "employee_status": "number",
+            "attachment_id": "number"
+        },
+        "employee_commitment": { "remark": "string" },
+        "employee_contact": { "address_line_2": "string" },
+        "employee_id_range": {
+            "number_of_digit": "number",
+            "employee_type_id": "number"
+        },
+        "employee_loan_repayment": {
+            "employee_id": "number",
+            "salary_component_id": "number"
+        },
+        "employee_pay_frequency": {
+            "employee_id": "number",
+            "payroll_frequency_type_id": "number"
+        },
+        "employee_paygrade": {},
+        "employee_salary_component": { "amount": "Float?" },
+        "experience": { "salary": "Float?", "comment": "string" },
+        "leave_assignment": {
+            "is_half_day": "boolean",
+            "leave_assignment_type": "number",
+            "leave_request_status": "number",
+            "action_date": "string",
+            "delegated_user_name": "string",
+            "attendance_abscence_type_id": "number"
+        },
+        "leave_entitlement": {},
+        "leave_transfer": {
+            "from_year": "number",
+            "to_year": "number",
+            "number_of_days": "number",
+            "leave_request_status": "number",
+            "action_date": "string",
+            "delegated_user_name": "string"
+        },
+        "license": {
+            "license_number": "string",
+            "issued_date": "string",
+            "license_type_id": "number",
+            "employee_id": "number"
+        },
+        "org_assignment": {
+            "employee_group_id": "number",
+            "location_id": "number",
+            "employee_action_id": "number"
+        },
+        "service_allowance_pay": { "employee_id": "number" },
+        "shift_assignment": {}
+    },
+    "allRangeValues": {
+        "employee_id_range": {
+            "start": [0, 10000000000],
+            "end": [0, 10000000000]
+        },
+        "employee_loan_repayment": {
+            "repayment_amount": [0, 10000000000],
+            "total_amount": [0, 10000000000]
+        },
+        "service_allowance_pay": { "allowance_pay": [0, 10000000000] }
+    },
+    "phoneValues": {
+        "address": ["mobile_number"],
+        "attachment": [],
+        "dependent": [],
+        "discipline": [],
+        "education": [],
+        "employee": [],
+        "employee_action": [],
+        "employee_attachment": [],
+        "employee_commitment": [],
+        "employee_contact": ["mobile_number"],
+        "employee_id_range": [],
+        "employee_loan_repayment": [],
+        "employee_pay_frequency": [],
+        "employee_paygrade": [],
+        "employee_salary_component": [],
+        "experience": [],
+        "leave_assignment": [],
+        "leave_entitlement": [],
+        "leave_transfer": [],
+        "license": [],
+        "org_assignment": [],
+        "service_allowance_pay": [],
+        "shift_assignment": []
+    },
+    "emailValues": {
+        "address": ["email"],
+        "attachment": [],
+        "dependent": [],
+        "discipline": [],
+        "education": [],
+        "employee": [],
+        "employee_action": [],
+        "employee_attachment": [],
+        "employee_commitment": [],
+        "employee_contact": [],
+        "employee_id_range": [],
+        "employee_loan_repayment": [],
+        "employee_pay_frequency": [],
+        "employee_paygrade": [],
+        "employee_salary_component": [],
+        "experience": [],
+        "leave_assignment": [],
+        "leave_entitlement": [],
+        "leave_transfer": [],
+        "license": [],
+        "org_assignment": [],
+        "service_allowance_pay": [],
+        "shift_assignment": []
+    },
+    "dateValues": {
+        "address": [],
+        "attachment": [],
+        "dependent": ["dependent_date_of_birth"],
+        "discipline": [],
+        "education": [],
+        "employee": [
+            "date_of_birth",
+            "employment_start_date",
+            "date_of_joining",
+            "marital_since"
+        ],
+        "employee_action": [],
+        "employee_attachment": [],
+        "employee_commitment": [],
+        "employee_contact": [],
+        "employee_id_range": [],
+        "employee_loan_repayment": [],
+        "employee_pay_frequency": [],
+        "employee_paygrade": [],
+        "employee_salary_component": [],
+        "experience": [],
+        "leave_assignment": ["action_date"],
+        "leave_entitlement": [],
+        "leave_transfer": ["action_date"],
+        "license": ["issued_date", "expiry_date"],
+        "org_assignment": [],
+        "service_allowance_pay": [],
+        "shift_assignment": []
+    },
+    "allProjections": {
+        "address": {
+            "id": true,
+            "address_line_1": true,
+            "address_line_2": true,
+            "region": true,
+            "city": true,
+            "mobile_number": true,
+            "house_number": true,
+            "postal_box": true,
+            "email": true,
+            "employee": true,
+            "address_type": true
+        },
+        "attachment": {
+            "id": true,
+            "description": true,
+            "type": true,
+            "name": true,
+            "size": true,
+            "path": true,
+            "employee": true
+        },
+        "dependent": {
+            "id": true,
+            "fullname": true,
+            "relationship": true,
+            "dependent_date_of_birth": true,
+            "employee": true
+        },
+        "discipline": {
+            "id": true,
+            "case_description": true,
+            "attachment": true,
+            "case_type": true,
+            "employee": true
+        },
+        "education": {
+            "id": true,
+            "duration": true,
+            "score": true,
+            "field_of_study": true,
+            "duration_measure": true,
+            "training_type": true,
+            "employee": true
+        },
+        "employee": {
+            "id": true,
+            "id_number": true,
+            "first_name": true,
+            "middle_name": true,
+            "last_name": true,
+            "gender": true,
+            "date_of_birth": true,
+            "employment_start_date": true,
+            "date_of_joining": true,
+            "marital_status": true,
+            "marital_since": true,
+            "place_of_birth": true,
+            "photo": true,
+            "is_employee_active": true,
+            "type": true,
+            "prev_employment_leave_days": true,
+            "bank_account_number": true,
+            "document_ref": true,
+            "pension_ref": true,
+            "nationality": true,
+            "country": true,
+            "language": true,
+            "title": true,
+            "religion": true,
+            "employee_type": true
+        },
+        "employee_action": {
+            "id": true,
+            "employee_status": true,
+            "attachment": true,
+            "employee": true,
+            "action_reason": true
+        },
+        "employee_attachment": {
+            "id": true,
+            "description": true,
+            "path": true,
+            "employee": true
+        },
+        "employee_commitment": {
+            "id": true,
+            "commitment_type": true,
+            "employee": true,
+            "remark": true
+        },
+        "employee_contact": {
+            "id": true,
+            "name": true,
+            "relationship": true,
+            "address_line_1": true,
+            "address_line_2": true,
+            "mobile_number": true,
+            "employee": true
+        },
+        "employee_id_range": {
+            "id": true,
+            "start": true,
+            "end": true,
+            "number_of_digit": true,
+            "employee_type": true
+        },
+        "employee_loan_repayment": {
+            "id": true,
+            "repayment_amount": true,
+            "total_amount": true,
+            "employee_id": true,
+            "salary_component": true
+        },
+        "employee_pay_frequency": {
+            "id": true,
+            "expected_working_hrs": true,
+            "employee": true,
+            "payroll_frequency_type": true
+        },
+        "employee_paygrade": { "id": true, "employee": true, "paygrade": true },
+        "employee_salary_component": {
+            "id": true,
+            "amount": true,
+            "employee": true,
+            "salary_component": true
+        },
+        "experience": {
+            "id": true,
+            "company": true,
+            "job_title": true,
+            "salary": true,
+            "comment": true,
+            "employee": true
+        },
+        "leave_assignment": {
+            "id": true,
+            "is_half_day": true,
+            "leave_assignment_type": true,
+            "leave_request_status": true,
+            "action_date": true,
+            "delegated_user_name": true,
+            "employee": true,
+            "attendance_abscence_type": true
+        },
+        "leave_entitlement": {
+            "id": true,
+            "employee": true,
+            "attendance_abscence_type": true
+        },
+        "leave_transfer": {
+            "id": true,
+            "from_year": true,
+            "to_year": true,
+            "number_of_days": true,
+            "leave_request_status": true,
+            "remark": true,
+            "action_date": true,
+            "delegated_user_name": true,
+            "employee": true
+        },
+        "license": {
+            "id": true,
+            "license_number": true,
+            "issued_date": true,
+            "expiry_date": true,
+            "license_type": true,
+            "employee": true
+        },
+        "org_assignment": {
+            "id": true,
+            "employee_group": true,
+            "location": true,
+            "employee_action": true,
+            "job_title": true,
+            "business_unit": true
+        },
+        "service_allowance_pay": {
+            "id": true,
+            "allowance_pay": true,
+            "employee": true
+        },
+        "shift_assignment": {
+            "id": true,
+            "shift_schedule_hdr_id": true,
+            "employee": true
+        }
+    },
+    "allFilters": {
+        "address": {
+            "id": "number",
+            "address_line_1": "string",
+            "address_line_2": "string",
+            "region": "string",
+            "city": "string",
+            "mobile_number": "string",
+            "house_number": "string",
+            "postal_box": "string",
+            "email": "string",
+            "employee_id": "number",
+            "address_type_id": "number"
+        },
+        "attachment": {
+            "id": "number",
+            "description": "string",
+            "type": "string",
+            "name": "string",
+            "size": "number",
+            "employee_id": "number"
+        },
+        "dependent": {
+            "id": "number",
+            "fullname": "string",
+            "relationship": "number",
+            "employee_id": "number"
+        },
+        "discipline": {
+            "id": "number",
+            "case_description": "string",
+            "attachment_id": "number",
+            "case_type_id": "number",
+            "employee_id": "number"
+        },
+        "education": {
+            "id": "number",
+            "duration": "number",
+            "score": "string",
+            "field_of_study_id": "number",
+            "duration_measure_id": "number",
+            "training_type_id": "number",
+            "employee_id": "number"
+        },
+        "employee": {
+            "id": "number",
+            "id_number": "number",
+            "first_name": "string",
+            "middle_name": "string",
+            "last_name": "string",
+            "gender": "number",
+            "marital_status": "number",
+            "place_of_birth": "string",
+            "is_employee_active": "boolean",
+            "type": "string",
+            "prev_employment_leave_days": "Float?",
+            "bank_account_number": "string",
+            "document_ref": "string",
+            "pension_ref": "string",
+            "nationality_id": "number",
+            "country_id": "number",
+            "language_id": "number",
+            "title_id": "number",
+            "religion_id": "number",
+            "employee_type_id": "number"
+        },
+        "employee_action": {
+            "id": "number",
+            "employee_status": "number",
+            "attachment_id": "number",
+            "employee_id": "number",
+            "action_reason_id": "number"
+        },
+        "employee_attachment": {
+            "id": "number",
+            "description": "string",
+            "employee_id": "number"
+        },
+        "employee_commitment": {
+            "id": "number",
+            "commitment_type_id": "number",
+            "employee_id": "number",
+            "remark": "string"
+        },
+        "employee_contact": {
+            "id": "number",
+            "name": "string",
+            "relationship": "string",
+            "address_line_1": "string",
+            "address_line_2": "string",
+            "mobile_number": "string",
+            "employee_id": "number"
+        },
+        "employee_id_range": {
+            "id": "number",
+            "start": "number",
+            "end": "number",
+            "number_of_digit": "number",
+            "employee_type_id": "number"
+        },
+        "employee_loan_repayment": {
+            "id": "number",
+            "repayment_amount": "number",
+            "total_amount": "number",
+            "employee_id": "number",
+            "salary_component_id": "number"
+        },
+        "employee_pay_frequency": {
+            "id": "number",
+            "expected_working_hrs": "number",
+            "employee_id": "number",
+            "payroll_frequency_type_id": "number"
+        },
+        "employee_paygrade": {
+            "id": "number",
+            "employee_id": "number",
+            "paygrade_id": "number"
+        },
+        "employee_salary_component": {
+            "id": "number",
+            "amount": "Float?",
+            "employee_id": "number",
+            "salary_component_id": "number"
+        },
+        "experience": {
+            "id": "number",
+            "company": "string",
+            "job_title": "string",
+            "salary": "Float?",
+            "comment": "string",
+            "employee_id": "number"
+        },
+        "leave_assignment": {
+            "id": "number",
+            "is_half_day": "boolean",
+            "leave_assignment_type": "number",
+            "leave_request_status": "number",
+            "delegated_user_name": "string",
+            "employee_id": "number",
+            "attendance_abscence_type_id": "number"
+        },
+        "leave_entitlement": {
+            "id": "number",
+            "employee_id": "number",
+            "attendance_abscence_type_id": "number"
+        },
+        "leave_transfer": {
+            "id": "number",
+            "from_year": "number",
+            "to_year": "number",
+            "number_of_days": "number",
+            "leave_request_status": "number",
+            "remark": "string",
+            "action_date": "string",
+            "delegated_user_name": "string",
+            "employee_id": "number"
+        },
+        "license": {
+            "id": "number",
+            "license_number": "string",
+            "license_type_id": "number",
+            "employee_id": "number"
+        },
+        "org_assignment": {
+            "id": "number",
+            "employee_group_id": "number",
+            "location_id": "number",
+            "employee_action_id": "number",
+            "job_title_id": "number",
+            "business_unit_id": "number"
+        },
+        "service_allowance_pay": {
+            "id": "number",
+            "allowance_pay": "number",
+            "employee_id": "number"
+        },
+        "shift_assignment": {
+            "id": "number",
+            "shift_schedule_hdr_id": "number",
+            "employee_id": "number"
+        }
+    },
+    "allSorts": {
+        "address": {
+            "id": "number",
+            "address_line_1": "number",
+            "address_line_2": "number",
+            "region": "number",
+            "city": "number",
+            "mobile_number": "number",
+            "house_number": "number",
+            "postal_box": "number",
+            "email": "number",
+            "employee_id": "number",
+            "address_type_id": "number"
+        },
+        "attachment": {
+            "id": "number",
+            "description": "number",
+            "type": "number",
+            "name": "number",
+            "size": "number",
+            "path": "number",
+            "employee_id": "number"
+        },
+        "dependent": {
+            "id": "number",
+            "fullname": "number",
+            "relationship": "number",
+            "dependent_date_of_birth": "number",
+            "employee_id": "number"
+        },
+        "discipline": {
+            "id": "number",
+            "case_description": "number",
+            "attachment_id": "number",
+            "case_type_id": "number",
+            "employee_id": "number"
+        },
+        "education": {
+            "id": "number",
+            "duration": "number",
+            "score": "number",
+            "field_of_study_id": "number",
+            "duration_measure_id": "number",
+            "training_type_id": "number",
+            "employee_id": "number"
+        },
+        "employee": {
+            "id": "number",
+            "id_number": "number",
+            "first_name": "number",
+            "middle_name": "number",
+            "last_name": "number",
+            "gender": "number",
+            "date_of_birth": "number",
+            "employment_start_date": "number",
+            "date_of_joining": "number",
+            "marital_status": "number",
+            "marital_since": "number",
+            "place_of_birth": "number",
+            "photo": "number",
+            "is_employee_active": "number",
+            "type": "number",
+            "prev_employment_leave_days": "number",
+            "bank_account_number": "number",
+            "document_ref": "number",
+            "pension_ref": "number",
+            "nationality_id": "number",
+            "country_id": "number",
+            "language_id": "number",
+            "title_id": "number",
+            "religion_id": "number",
+            "employee_type_id": "number"
+        },
+        "employee_action": {
+            "id": "number",
+            "employee_status": "number",
+            "attachment_id": "number",
+            "employee_id": "number",
+            "action_reason_id": "number"
+        },
+        "employee_attachment": {
+            "id": "number",
+            "description": "number",
+            "path": "number",
+            "employee_id": "number"
+        },
+        "employee_commitment": {
+            "id": "number",
+            "commitment_type_id": "number",
+            "employee_id": "number",
+            "remark": "number"
+        },
+        "employee_contact": {
+            "id": "number",
+            "name": "number",
+            "relationship": "number",
+            "address_line_1": "number",
+            "address_line_2": "number",
+            "mobile_number": "number",
+            "employee_id": "number"
+        },
+        "employee_id_range": {
+            "id": "number",
+            "start": "number",
+            "end": "number",
+            "number_of_digit": "number",
+            "employee_type_id": "number"
+        },
+        "employee_loan_repayment": {
+            "id": "number",
+            "repayment_amount": "number",
+            "total_amount": "number",
+            "employee_id": "number",
+            "salary_component_id": "number"
+        },
+        "employee_pay_frequency": {
+            "id": "number",
+            "expected_working_hrs": "number",
+            "employee_id": "number",
+            "payroll_frequency_type_id": "number"
+        },
+        "employee_paygrade": {
+            "id": "number",
+            "employee_id": "number",
+            "paygrade_id": "number"
+        },
+        "employee_salary_component": {
+            "id": "number",
+            "amount": "number",
+            "employee_id": "number",
+            "salary_component_id": "number"
+        },
+        "experience": {
+            "id": "number",
+            "company": "number",
+            "job_title": "number",
+            "salary": "number",
+            "comment": "number",
+            "employee_id": "number"
+        },
+        "leave_assignment": {
+            "id": "number",
+            "is_half_day": "number",
+            "leave_assignment_type": "number",
+            "leave_request_status": "number",
+            "action_date": "number",
+            "delegated_user_name": "number",
+            "employee_id": "number",
+            "attendance_abscence_type_id": "number"
+        },
+        "leave_entitlement": {
+            "id": "number",
+            "employee_id": "number",
+            "attendance_abscence_type_id": "number"
+        },
+        "leave_transfer": {
+            "id": "number",
+            "from_year": "number",
+            "to_year": "number",
+            "number_of_days": "number",
+            "leave_request_status": "number",
+            "remark": "number",
+            "action_date": "number",
+            "delegated_user_name": "number",
+            "employee_id": "number"
+        },
+        "license": {
+            "id": "number",
+            "license_number": "number",
+            "issued_date": "number",
+            "expiry_date": "number",
+            "license_type_id": "number",
+            "employee_id": "number"
+        },
+        "org_assignment": {
+            "id": "number",
+            "employee_group_id": "number",
+            "location_id": "number",
+            "employee_action_id": "number",
+            "job_title_id": "number",
+            "business_unit_id": "number"
+        },
+        "service_allowance_pay": {
+            "id": "number",
+            "allowance_pay": "number",
+            "employee_id": "number"
+        },
+        "shift_assignment": {
+            "id": "number",
+            "shift_schedule_hdr_id": "number",
+            "employee_id": "number"
+        }
+    },
+    "allRoutes": [
+        "/address",
+        "/attachment",
+        "/dependent",
+        "/discipline",
+        "/education",
+        "/employee",
+        "/employee_action",
+        "/employee_attachment",
+        "/employee_commitment",
+        "/employee_contact",
+        "/employee_id_range",
+        "/employee_loan_repayment",
+        "/employee_pay_frequency",
+        "/employee_paygrade",
+        "/employee_salary_component",
+        "/experience",
+        "/leave_assignment",
+        "/leave_entitlement",
+        "/leave_transfer",
+        "/license",
+        "/org_assignment",
+        "/service_allowance_pay",
+        "/shift_assignment"
+    ],
+    "allPostRoutes": [
+        "/address",
+        "/dependent",
+        "/discipline",
+        "/education",
+        "/employee_action",
+        "/employee_commitment",
+        "/employee_contact",
+        "/employee_id_range",
+        "/employee_loan_repayment",
+        "/employee_pay_frequency",
+        "/employee_paygrade",
+        "/employee_salary_component",
+        "/experience",
+        "/leave_assignment",
+        "/leave_entitlement",
+        "/leave_transfer",
+        "/license",
+        "/org_assignment",
+        "/service_allowance_pay",
+        "/shift_assignment"
+    ]
+}

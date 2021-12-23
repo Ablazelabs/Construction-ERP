@@ -7,17 +7,17 @@ const {
     get,
     patch,
     deleter,
-} = require("../../../services/hcmEmployeeMasters");
+} = require("../../../services/hcmTimeAndLeave");
+
 const {
     returnReqBody,
     returnGetData,
     returnPatchData,
 } = require("../../../validation/basicValidators");
 
-const allConfigs = require("./hcmEmployeeMasters.json");
+const allConfigs = require("./hcmTimeAndLeave.json");
 const {
     allRoutes,
-    allPostRoutes,
     allInputFilters,
     allOptionalInputFilters,
     dateValues,
@@ -29,8 +29,7 @@ const {
     allSorts,
     allFilters,
 } = allConfigs;
-
-router.post(allPostRoutes, async (req, res, next) => {
+router.post(allRoutes, async (req, res, next) => {
     const operationDataType = req.path.split("/").pop();
     const requiredInputFilter = allInputFilters[operationDataType],
         optionalInputFilter = allOptionalInputFilters[operationDataType],
@@ -103,7 +102,7 @@ router.get(allRoutes, async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
-router.patch(allPostRoutes, async (req, res, next) => {
+router.patch(allRoutes, async (req, res, next) => {
     const operationDataType = req.path.split("/").pop();
 
     const requiredInputFilter = allInputFilters[operationDataType],

@@ -8,21 +8,21 @@ chai.use(chaiHttp);
 const { readFileSync } = require("fs");
 let accessToken = readFileSync("./test/accessToken.txt", "utf-8");
 
-const url = "/hcm/payroll/employee_penality_type";
+const url = "/hcm/time_and_leave/attendance_abscence_type";
 
-describe("hcm payroll Test 1(employee_penality_type)", () => {
+describe("hcm time_and_leave Test 1(attendance_abscence_type)", () => {
     /**
      * Test the post
      */
     const randomName = Math.floor(Math.random() * 1000000);
-    describe("/employee_penality_type post test", () => {
-        it("Should post a new employee_penality_type", (done) => {
+    describe("/attendance_abscence_type post test", () => {
+        it("Should post a new attendance_abscence_type", (done) => {
             chai.request(server)
                 .post(url)
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
-                    ref_number: `${randomName}`,
-                    description: "string ralskdjfawejio",
+                    aa_description: `${randomName}`,
+                    number_of_days: 10,
                 })
                 .end((err, response) => {
                     response.should.have.status(200);
@@ -31,17 +31,18 @@ describe("hcm payroll Test 1(employee_penality_type)", () => {
                     done();
                 });
         });
-        it("should return error 400, ref number must be given", (done) => {
+        it("should return error 400, aa_description already resgistered", (done) => {
             chai.request(server)
                 .post(url)
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
-                    description: "string ralskdjfawejio",
+                    aa_description: `${randomName}`,
+                    number_of_days: 10,
                 })
                 .end((err, response) => {
                     response.should.have.status(400);
                     response.body.should.have.property("error");
-                    response.body.error.should.have.property("ref_number");
+                    response.body.error.should.have.property("aa_description");
                     done();
                 });
         });
@@ -51,7 +52,7 @@ describe("hcm payroll Test 1(employee_penality_type)", () => {
      */
     let randomGottenId; //this is to make sure delete later works
     describe("Get Test", () => {
-        it("should get employee_penality_types", (done) => {
+        it("should get attendance_abscence_types", (done) => {
             chai.request(server)
                 .get(url)
                 .set({ Authorization: `Bearer ${accessToken}` })
@@ -88,8 +89,8 @@ describe("hcm payroll Test 1(employee_penality_type)", () => {
      * Test the delete
      */
 
-    describe("/employee_penality_type delete", () => {
-        it("Should delete a employee_penality_type", (done) => {
+    describe("/attendance_abscence_type delete", () => {
+        it("Should delete a attendance_abscence_type", (done) => {
             chai.request(server)
                 .delete(url)
                 .set({ Authorization: `Bearer ${accessToken}` })
@@ -103,7 +104,7 @@ describe("hcm payroll Test 1(employee_penality_type)", () => {
                     done();
                 });
         });
-        it("Should return error 400(no employee_penality_type id sent)", (done) => {
+        it("Should return error 400(no attendance_abscence_type id sent)", (done) => {
             chai.request(server)
                 .delete(url)
                 .set({ Authorization: `Bearer ${accessToken}` })
@@ -122,15 +123,15 @@ describe("hcm payroll Test 1(employee_penality_type)", () => {
      * Test the patch
      */
 
-    describe("/employee_penality_type patch", () => {
-        it("Should update a employee_penality_type", (done) => {
+    describe("/attendance_abscence_type patch", () => {
+        it("Should update a attendance_abscence_type", (done) => {
             chai.request(server)
                 .patch(url)
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
                     id: randomGottenId,
                     updateData: {
-                        ref_number: `${randomName}_updated`,
+                        aa_description: `${randomName}_updated`,
                     },
                 })
                 .end((err, response) => {
@@ -146,7 +147,7 @@ describe("hcm payroll Test 1(employee_penality_type)", () => {
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
                     updateData: {
-                        first_name: "yared",
+                        aa_description: "yared",
                     },
                 })
                 .end((err, response) => {
@@ -163,7 +164,7 @@ describe("hcm payroll Test 1(employee_penality_type)", () => {
                 .send({
                     id: 1,
                     updateData: {
-                        first_name: "yared",
+                        aa_description: "yared",
                     },
                 })
                 .end((err, response) => {
@@ -177,22 +178,20 @@ describe("hcm payroll Test 1(employee_penality_type)", () => {
     });
 });
 
-const url2 = "/hcm/payroll/employee_tax";
+const url2 = "/hcm/time_and_leave/holiday";
 
-describe("hcm payroll master Test 2(employee_tax)", () => {
+describe("hcm time_and_leave master Test 2(holiday)", () => {
     /**
      * Test the post
      */
     const randomName = Math.floor(Math.random() * 1000000);
-    describe("/employee_tax post test", () => {
-        it("Should post a new employee_tax", (done) => {
+    describe("/holiday post test", () => {
+        it("Should post a new holiday", (done) => {
             chai.request(server)
                 .post(url2)
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
-                    start: 10,
-                    end: 20,
-                    percent: 89.3,
+                    holiday_name: `${randomName}`,
                 })
                 .end((err, response) => {
                     response.should.have.status(200);
@@ -201,18 +200,17 @@ describe("hcm payroll master Test 2(employee_tax)", () => {
                     done();
                 });
         });
-        it("should return error 400, start not sent", (done) => {
+        it("should return error 400, holiday name already registered", (done) => {
             chai.request(server)
                 .post(url2)
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
-                    end: 20,
-                    percent: 89.3,
+                    holiday_name: `${randomName}`,
                 })
                 .end((err, response) => {
                     response.should.have.status(400);
                     response.body.should.have.property("error");
-                    response.body.error.should.have.property("start");
+                    response.body.error.should.have.property("holiday_name");
                     done();
                 });
         });
@@ -259,8 +257,8 @@ describe("hcm payroll master Test 2(employee_tax)", () => {
      * Test the delete
      */
 
-    describe("/employee_tax delete", () => {
-        it("Should delete a employee_tax", (done) => {
+    describe("/holiday delete", () => {
+        it("Should delete a holiday", (done) => {
             chai.request(server)
                 .delete(url2)
                 .set({ Authorization: `Bearer ${accessToken}` })
@@ -274,7 +272,7 @@ describe("hcm payroll master Test 2(employee_tax)", () => {
                     done();
                 });
         });
-        it("Should return error 400(no employee_tax id sent)", (done) => {
+        it("Should return error 400(no holiday id sent)", (done) => {
             chai.request(server)
                 .delete(url2)
                 .set({ Authorization: `Bearer ${accessToken}` })
@@ -293,15 +291,15 @@ describe("hcm payroll master Test 2(employee_tax)", () => {
      * Test the patch
      */
 
-    describe("/employee_tax patch", () => {
-        it("Should update a employee_tax", (done) => {
+    describe("/holiday patch", () => {
+        it("Should update a holiday", (done) => {
             chai.request(server)
                 .patch(url2)
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
                     id: randomGottenId,
                     updateData: {
-                        start: 9,
+                        holiday_name: `${randomName}_updated`,
                     },
                 })
                 .end((err, response) => {
@@ -317,7 +315,7 @@ describe("hcm payroll master Test 2(employee_tax)", () => {
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
                     updateData: {
-                        short_code: "yared terefe",
+                        holiday_name: "yared terefe",
                     },
                 })
                 .end((err, response) => {
@@ -352,7 +350,7 @@ describe("hcm payroll master Test 2(employee_tax)", () => {
                 .send({
                     id: 1,
                     updateData: {
-                        short_code: "yared terefe",
+                        holiday_name: "yared terefe",
                     },
                 })
                 .end((err, response) => {

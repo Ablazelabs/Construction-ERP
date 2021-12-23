@@ -19,7 +19,8 @@
                                 "employee_id": { "type": "Int" },
                                 "payroll_frequency_type_id": {
                                     "type": "Float?"
-                                }
+                                },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -60,7 +61,10 @@
                                         "is_payroll_posted": {
                                             "type": "Boolean?"
                                         },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -78,6 +82,15 @@
                                         "employee_id": { "type": "Int" },
                                         "payroll_frequency_type_id": {
                                             "type": "Int"
+                                        },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
                                         }
                                     }
                                 }
@@ -104,7 +117,14 @@
                                     "employee_id": { "type": "Int" },
                                     "payroll_frequency_type_id": {
                                         "type": "Float?"
-                                    }
+                                    },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -141,6 +161,9 @@
                                         "employee_id": { "type": "Int" },
                                         "payroll_frequency_type_id": {
                                             "type": "Float?"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 }
@@ -208,7 +231,8 @@
                             "type": "object",
                             "properties": {
                                 "scale": { "type": "Int" },
-                                "employee_id": { "type": "Int" }
+                                "employee_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -247,7 +271,10 @@
                                     "properties": {
                                         "id": { "type": "Int" },
                                         "scale": { "type": "Int" },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -255,7 +282,16 @@
                                     "properties": {
                                         "id": { "type": "Int" },
                                         "scale": { "type": "Int" },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -273,7 +309,14 @@
                                 "properties": {
                                     "id": { "type": "Int" },
                                     "scale": { "type": "Int" },
-                                    "employee_id": { "type": "Int" }
+                                    "employee_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -296,7 +339,10 @@
                                     "type": "object",
                                     "properties": {
                                         "scale": { "type": "Int" },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -368,7 +414,10 @@
                                     "type": "Int?"
                                 },
                                 "employee_id": { "type": "Int" },
-                                "is_applied_for_payroll": { "type": "Boolean?" }
+                                "is_applied_for_payroll": {
+                                    "type": "Boolean?"
+                                },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -415,6 +464,9 @@
                                         "employee_id": { "type": "Int" },
                                         "is_applied_for_payroll": {
                                             "type": "Boolean?"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 },
@@ -430,6 +482,15 @@
                                         "employee_id": { "type": "Int" },
                                         "is_applied_for_payroll": {
                                             "type": "Int"
+                                        },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
                                         }
                                     }
                                 }
@@ -455,7 +516,14 @@
                                     "employee_id": { "type": "Int" },
                                     "is_applied_for_payroll": {
                                         "type": "Boolean?"
-                                    }
+                                    },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -487,6 +555,9 @@
                                         "employee_id": { "type": "Int" },
                                         "is_applied_for_payroll": {
                                             "type": "Boolean?"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 }
@@ -556,7 +627,8 @@
                                 "level": { "type": "Int" },
                                 "penality_description": { "type": "String" },
                                 "penality_days": { "type": "Int" },
-                                "employee_penality_type_id": { "type": "Int" }
+                                "employee_penality_type_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -601,6 +673,9 @@
                                         "penality_days": { "type": "Int" },
                                         "employee_penality_type_id": {
                                             "type": "Int"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 },
@@ -615,6 +690,15 @@
                                         "penality_days": { "type": "Int" },
                                         "employee_penality_type_id": {
                                             "type": "Int"
+                                        },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
                                         }
                                     }
                                 }
@@ -639,7 +723,14 @@
                                     "penality_days": { "type": "Int" },
                                     "employee_penality_type_id": {
                                         "type": "Int"
-                                    }
+                                    },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -668,6 +759,9 @@
                                         "penality_days": { "type": "Int" },
                                         "employee_penality_type_id": {
                                             "type": "Int"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 }
@@ -735,7 +829,8 @@
                             "type": "object",
                             "properties": {
                                 "ref_number": { "type": "String" },
-                                "description": { "type": "String" }
+                                "description": { "type": "String" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -774,7 +869,10 @@
                                     "properties": {
                                         "id": { "type": "Int" },
                                         "ref_number": { "type": "String" },
-                                        "description": { "type": "String" }
+                                        "description": { "type": "String" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -782,7 +880,16 @@
                                     "properties": {
                                         "id": { "type": "Int" },
                                         "ref_number": { "type": "Int" },
-                                        "description": { "type": "Int" }
+                                        "description": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -800,7 +907,14 @@
                                 "properties": {
                                     "id": { "type": "Int" },
                                     "ref_number": { "type": "String" },
-                                    "description": { "type": "String" }
+                                    "description": { "type": "String" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -823,7 +937,10 @@
                                     "type": "object",
                                     "properties": {
                                         "ref_number": { "type": "String" },
-                                        "description": { "type": "String" }
+                                        "description": { "type": "String" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -891,7 +1008,8 @@
                             "properties": {
                                 "start": { "type": "Float" },
                                 "end": { "type": "Float" },
-                                "percent": { "type": "Float" }
+                                "percent": { "type": "Float" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -927,7 +1045,12 @@
                                 "skip": { "type": "Int" },
                                 "filter": {
                                     "type": "object",
-                                    "properties": { "id": { "type": "Int" } }
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
                                 },
                                 "sort": {
                                     "type": "object",
@@ -935,7 +1058,16 @@
                                         "id": { "type": "Int" },
                                         "start": { "type": "Int" },
                                         "end": { "type": "Int" },
-                                        "percent": { "type": "Int" }
+                                        "percent": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -954,7 +1086,14 @@
                                     "id": { "type": "Int" },
                                     "start": { "type": "Float" },
                                     "end": { "type": "Float" },
-                                    "percent": { "type": "Float" }
+                                    "percent": { "type": "Float" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -978,7 +1117,10 @@
                                     "properties": {
                                         "start": { "type": "Float" },
                                         "end": { "type": "Float" },
-                                        "percent": { "type": "Float" }
+                                        "percent": { "type": "Float" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -1046,7 +1188,8 @@
                             "properties": {
                                 "chart_of_account_id": { "type": "Int" },
                                 "business_unit_id": { "type": "Int" },
-                                "payroll_account_type": { "type": "Int" }
+                                "payroll_account_type": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -1090,6 +1233,9 @@
                                         "business_unit_id": { "type": "Int" },
                                         "payroll_account_type": {
                                             "type": "Int"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 },
@@ -1103,6 +1249,15 @@
                                         "business_unit_id": { "type": "Int" },
                                         "payroll_account_type": {
                                             "type": "Int"
+                                        },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
                                         }
                                     }
                                 }
@@ -1122,7 +1277,14 @@
                                     "id": { "type": "Int" },
                                     "chart_of_account_id": { "type": "Int" },
                                     "business_unit_id": { "type": "Int" },
-                                    "payroll_account_type": { "type": "Int" }
+                                    "payroll_account_type": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -1150,6 +1312,9 @@
                                         "business_unit_id": { "type": "Int" },
                                         "payroll_account_type": {
                                             "type": "Int"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 }
@@ -1223,7 +1388,8 @@
                                 "action_date": { "type": "DateTime?" },
                                 "delegated_username": { "type": "String?" },
                                 "employee_id": { "type": "Int @unique" },
-                                "overtime_rate_id": { "type": "Int?" }
+                                "overtime_rate_id": { "type": "Int?" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -1269,7 +1435,10 @@
                                         "employee_id": {
                                             "type": "Int @unique"
                                         },
-                                        "overtime_rate_id": { "type": "Int?" }
+                                        "overtime_rate_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -1283,7 +1452,16 @@
                                         "action_date": { "type": "Int" },
                                         "delegated_username": { "type": "Int" },
                                         "employee_id": { "type": "Int" },
-                                        "overtime_rate_id": { "type": "Int" }
+                                        "overtime_rate_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -1307,7 +1485,14 @@
                                     "action_date": { "type": "DateTime?" },
                                     "delegated_username": { "type": "String?" },
                                     "employee_id": { "type": "Int @unique" },
-                                    "overtime_rate_id": { "type": "Int?" }
+                                    "overtime_rate_id": { "type": "Int?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -1340,7 +1525,10 @@
                                         "employee_id": {
                                             "type": "Int @unique"
                                         },
-                                        "overtime_rate_id": { "type": "Int?" }
+                                        "overtime_rate_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -1407,7 +1595,8 @@
                             "type": "object",
                             "properties": {
                                 "description": { "type": "String @unique" },
-                                "rate": { "type": "Float" }
+                                "rate": { "type": "Float" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -1447,6 +1636,9 @@
                                         "id": { "type": "Int" },
                                         "description": {
                                             "type": "String @unique"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 },
@@ -1455,7 +1647,16 @@
                                     "properties": {
                                         "id": { "type": "Int" },
                                         "description": { "type": "Int" },
-                                        "rate": { "type": "Int" }
+                                        "rate": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -1473,7 +1674,14 @@
                                 "properties": {
                                     "id": { "type": "Int" },
                                     "description": { "type": "String @unique" },
-                                    "rate": { "type": "Float" }
+                                    "rate": { "type": "Float" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -1498,7 +1706,10 @@
                                         "description": {
                                             "type": "String @unique"
                                         },
-                                        "rate": { "type": "Float" }
+                                        "rate": { "type": "Float" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -1566,7 +1777,8 @@
                             "properties": {
                                 "paygrade_name": { "type": "String @unique" },
                                 "min_salary": { "type": "Float" },
-                                "max_salary": { "type": "Float" }
+                                "max_salary": { "type": "Float" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -1606,6 +1818,9 @@
                                         "id": { "type": "Int" },
                                         "paygrade_name": {
                                             "type": "String @unique"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 },
@@ -1615,7 +1830,16 @@
                                         "id": { "type": "Int" },
                                         "paygrade_name": { "type": "Int" },
                                         "min_salary": { "type": "Int" },
-                                        "max_salary": { "type": "Int" }
+                                        "max_salary": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -1636,7 +1860,14 @@
                                         "type": "String @unique"
                                     },
                                     "min_salary": { "type": "Float" },
-                                    "max_salary": { "type": "Float" }
+                                    "max_salary": { "type": "Float" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -1662,7 +1893,10 @@
                                             "type": "String @unique"
                                         },
                                         "min_salary": { "type": "Float" },
-                                        "max_salary": { "type": "Float" }
+                                        "max_salary": { "type": "Float" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -1729,7 +1963,8 @@
                             "type": "object",
                             "properties": {
                                 "paygrade_id": { "type": "Int" },
-                                "salary_component_id": { "type": "Int" }
+                                "salary_component_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -1768,7 +2003,12 @@
                                     "properties": {
                                         "id": { "type": "Int" },
                                         "paygrade_id": { "type": "Int" },
-                                        "salary_component_id": { "type": "Int" }
+                                        "salary_component_id": {
+                                            "type": "Int"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -1776,7 +2016,18 @@
                                     "properties": {
                                         "id": { "type": "Int" },
                                         "paygrade_id": { "type": "Int" },
-                                        "salary_component_id": { "type": "Int" }
+                                        "salary_component_id": {
+                                            "type": "Int"
+                                        },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -1794,7 +2045,14 @@
                                 "properties": {
                                     "id": { "type": "Int" },
                                     "paygrade_id": { "type": "Int" },
-                                    "salary_component_id": { "type": "Int" }
+                                    "salary_component_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -1817,7 +2075,12 @@
                                     "type": "object",
                                     "properties": {
                                         "paygrade_id": { "type": "Int" },
-                                        "salary_component_id": { "type": "Int" }
+                                        "salary_component_id": {
+                                            "type": "Int"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -1885,7 +2148,8 @@
                             "properties": {
                                 "scale": { "type": "Int" },
                                 "amount": { "type": "Float?" },
-                                "paygrade_id": { "type": "Int" }
+                                "paygrade_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -1924,7 +2188,10 @@
                                     "properties": {
                                         "id": { "type": "Int" },
                                         "scale": { "type": "Int" },
-                                        "paygrade_id": { "type": "Int" }
+                                        "paygrade_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -1933,7 +2200,16 @@
                                         "id": { "type": "Int" },
                                         "scale": { "type": "Int" },
                                         "amount": { "type": "Int" },
-                                        "paygrade_id": { "type": "Int" }
+                                        "paygrade_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -1952,7 +2228,14 @@
                                     "id": { "type": "Int" },
                                     "scale": { "type": "Int" },
                                     "amount": { "type": "Float?" },
-                                    "paygrade_id": { "type": "Int" }
+                                    "paygrade_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -1976,7 +2259,10 @@
                                     "properties": {
                                         "scale": { "type": "Int" },
                                         "amount": { "type": "Float?" },
-                                        "paygrade_id": { "type": "Int" }
+                                        "paygrade_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -2049,7 +2335,8 @@
                                 "isEarning": { "type": "Boolean?" },
                                 "payroll_posting_entry_type": { "type": "Int" },
                                 "payroll_summary_id": { "type": "Int" },
-                                "salary_component_id": { "type": "Int?" }
+                                "salary_component_id": { "type": "Int?" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -2099,6 +2386,9 @@
                                         "payroll_summary_id": { "type": "Int" },
                                         "salary_component_id": {
                                             "type": "Int?"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 },
@@ -2115,7 +2405,18 @@
                                             "type": "Int"
                                         },
                                         "payroll_summary_id": { "type": "Int" },
-                                        "salary_component_id": { "type": "Int" }
+                                        "salary_component_id": {
+                                            "type": "Int"
+                                        },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -2141,7 +2442,14 @@
                                         "type": "Int"
                                     },
                                     "payroll_summary_id": { "type": "Int" },
-                                    "salary_component_id": { "type": "Int?" }
+                                    "salary_component_id": { "type": "Int?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -2176,6 +2484,9 @@
                                         "payroll_summary_id": { "type": "Int" },
                                         "salary_component_id": {
                                             "type": "Int?"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 }
@@ -2249,7 +2560,8 @@
                                 "salary_component_id": { "type": "Int?" },
                                 "is_employer_part": { "type": "Boolean?" },
                                 "is_earning": { "type": "Boolean?" },
-                                "payroll_posting_entry_type": { "type": "Int" }
+                                "payroll_posting_entry_type": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -2301,6 +2613,9 @@
                                         "is_earning": { "type": "Boolean?" },
                                         "payroll_posting_entry_type": {
                                             "type": "Int"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 },
@@ -2321,6 +2636,15 @@
                                         "is_earning": { "type": "Int" },
                                         "payroll_posting_entry_type": {
                                             "type": "Int"
+                                        },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
                                         }
                                     }
                                 }
@@ -2349,7 +2673,14 @@
                                     "is_earning": { "type": "Boolean?" },
                                     "payroll_posting_entry_type": {
                                         "type": "Int"
-                                    }
+                                    },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -2386,6 +2717,9 @@
                                         "is_earning": { "type": "Boolean?" },
                                         "payroll_posting_entry_type": {
                                             "type": "Int"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 }
@@ -2454,7 +2788,8 @@
                             "properties": {
                                 "payroll_frequency_desc": {
                                     "type": "String @unique"
-                                }
+                                },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -2494,6 +2829,9 @@
                                         "id": { "type": "Int" },
                                         "payroll_frequency_desc": {
                                             "type": "String @unique"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 },
@@ -2503,6 +2841,15 @@
                                         "id": { "type": "Int" },
                                         "payroll_frequency_desc": {
                                             "type": "Int"
+                                        },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
                                         }
                                     }
                                 }
@@ -2522,7 +2869,14 @@
                                     "id": { "type": "Int" },
                                     "payroll_frequency_desc": {
                                         "type": "String @unique"
-                                    }
+                                    },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -2546,6 +2900,9 @@
                                     "properties": {
                                         "payroll_frequency_desc": {
                                             "type": "String @unique"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 }
@@ -2611,7 +2968,10 @@
                     "application/json": {
                         "schema": {
                             "type": "object",
-                            "properties": { "location_id": { "type": "Int" } }
+                            "properties": {
+                                "location_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
                         }
                     }
                 }
@@ -2648,14 +3008,26 @@
                                     "type": "object",
                                     "properties": {
                                         "id": { "type": "Int" },
-                                        "location_id": { "type": "Int" }
+                                        "location_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
                                     "type": "object",
                                     "properties": {
                                         "id": { "type": "Int" },
-                                        "location_id": { "type": "Int" }
+                                        "location_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -2672,7 +3044,14 @@
                                 "type": "object",
                                 "properties": {
                                     "id": { "type": "Int" },
-                                    "location_id": { "type": "Int" }
+                                    "location_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -2694,7 +3073,10 @@
                                 "updateData": {
                                     "type": "object",
                                     "properties": {
-                                        "location_id": { "type": "Int" }
+                                        "location_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -2763,7 +3145,8 @@
                                 "period": { "type": "Int" },
                                 "year": { "type": "Int" },
                                 "message": { "type": "String?" },
-                                "employee_id": { "type": "Int" }
+                                "employee_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -2804,7 +3187,10 @@
                                         "period": { "type": "Int" },
                                         "year": { "type": "Int" },
                                         "message": { "type": "String?" },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -2814,7 +3200,16 @@
                                         "period": { "type": "Int" },
                                         "year": { "type": "Int" },
                                         "message": { "type": "Int" },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -2834,7 +3229,14 @@
                                     "period": { "type": "Int" },
                                     "year": { "type": "Int" },
                                     "message": { "type": "String?" },
-                                    "employee_id": { "type": "Int" }
+                                    "employee_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -2859,7 +3261,10 @@
                                         "period": { "type": "Int" },
                                         "year": { "type": "Int" },
                                         "message": { "type": "String?" },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -2929,7 +3334,8 @@
                                 "end_period": { "type": "DateTime" },
                                 "message": { "type": "String?" },
                                 "employee_id": { "type": "Int" },
-                                "payroll_frequency_type_id": { "type": "Int" }
+                                "payroll_frequency_type_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -2971,6 +3377,9 @@
                                         "employee_id": { "type": "Int" },
                                         "payroll_frequency_type_id": {
                                             "type": "Int"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 },
@@ -2984,6 +3393,15 @@
                                         "employee_id": { "type": "Int" },
                                         "payroll_frequency_type_id": {
                                             "type": "Int"
+                                        },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
                                         }
                                     }
                                 }
@@ -3007,7 +3425,14 @@
                                     "employee_id": { "type": "Int" },
                                     "payroll_frequency_type_id": {
                                         "type": "Int"
-                                    }
+                                    },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -3035,6 +3460,9 @@
                                         "employee_id": { "type": "Int" },
                                         "payroll_frequency_type_id": {
                                             "type": "Int"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 }
@@ -3112,7 +3540,8 @@
                                 "is_payroll_interfaced_to_FI": {
                                     "type": "Boolean?"
                                 },
-                                "is_payroll_locked": { "type": "Boolean?" }
+                                "is_payroll_locked": { "type": "Boolean?" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -3169,6 +3598,9 @@
                                         },
                                         "is_payroll_locked": {
                                             "type": "Boolean?"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 },
@@ -3193,7 +3625,16 @@
                                         "is_payroll_interfaced_to_FI": {
                                             "type": "Int"
                                         },
-                                        "is_payroll_locked": { "type": "Int" }
+                                        "is_payroll_locked": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -3227,7 +3668,14 @@
                                     "is_payroll_interfaced_to_FI": {
                                         "type": "Boolean?"
                                     },
-                                    "is_payroll_locked": { "type": "Boolean?" }
+                                    "is_payroll_locked": { "type": "Boolean?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -3270,6 +3718,9 @@
                                         },
                                         "is_payroll_locked": {
                                             "type": "Boolean?"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 }
@@ -3337,7 +3788,8 @@
                             "type": "object",
                             "properties": {
                                 "year": { "type": "Int" },
-                                "is_period_generated": { "type": "Boolean" }
+                                "is_period_generated": { "type": "Boolean" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -3378,6 +3830,9 @@
                                         "year": { "type": "Int" },
                                         "is_period_generated": {
                                             "type": "Boolean"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 },
@@ -3386,7 +3841,18 @@
                                     "properties": {
                                         "id": { "type": "Int" },
                                         "year": { "type": "Int" },
-                                        "is_period_generated": { "type": "Int" }
+                                        "is_period_generated": {
+                                            "type": "Int"
+                                        },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -3404,7 +3870,16 @@
                                 "properties": {
                                     "id": { "type": "Int" },
                                     "year": { "type": "Int" },
-                                    "is_period_generated": { "type": "Boolean" }
+                                    "is_period_generated": {
+                                        "type": "Boolean"
+                                    },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -3429,6 +3904,9 @@
                                         "year": { "type": "Int" },
                                         "is_period_generated": {
                                             "type": "Boolean"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 }
@@ -3498,7 +3976,8 @@
                                 "period_id": { "type": "String" },
                                 "start_period": { "type": "DateTime" },
                                 "end_period": { "type": "DateTime" },
-                                "payroll_frequency_type_id": { "type": "Int" }
+                                "payroll_frequency_type_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -3539,6 +4018,9 @@
                                         "period_id": { "type": "String" },
                                         "payroll_frequency_type_id": {
                                             "type": "Int"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 },
@@ -3551,6 +4033,15 @@
                                         "end_period": { "type": "Int" },
                                         "payroll_frequency_type_id": {
                                             "type": "Int"
+                                        },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
                                         }
                                     }
                                 }
@@ -3573,7 +4064,14 @@
                                     "end_period": { "type": "DateTime" },
                                     "payroll_frequency_type_id": {
                                         "type": "Int"
-                                    }
+                                    },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -3600,6 +4098,9 @@
                                         "end_period": { "type": "DateTime" },
                                         "payroll_frequency_type_id": {
                                             "type": "Int"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 }
@@ -3666,7 +4167,8 @@
                         "schema": {
                             "type": "object",
                             "properties": {
-                                "log_message": { "type": "String" }
+                                "log_message": { "type": "String" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -3704,14 +4206,26 @@
                                     "type": "object",
                                     "properties": {
                                         "id": { "type": "Int" },
-                                        "log_message": { "type": "String" }
+                                        "log_message": { "type": "String" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
                                     "type": "object",
                                     "properties": {
                                         "id": { "type": "Int" },
-                                        "log_message": { "type": "Int" }
+                                        "log_message": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -3728,7 +4242,14 @@
                                 "type": "object",
                                 "properties": {
                                     "id": { "type": "Int" },
-                                    "log_message": { "type": "String" }
+                                    "log_message": { "type": "String" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -3750,7 +4271,10 @@
                                 "updateData": {
                                     "type": "object",
                                     "properties": {
-                                        "log_message": { "type": "String" }
+                                        "log_message": { "type": "String" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -3816,7 +4340,8 @@
                         "schema": {
                             "type": "object",
                             "properties": {
-                                "log_message": { "type": "String" }
+                                "log_message": { "type": "String" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -3854,14 +4379,26 @@
                                     "type": "object",
                                     "properties": {
                                         "id": { "type": "Int" },
-                                        "log_message": { "type": "String" }
+                                        "log_message": { "type": "String" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
                                     "type": "object",
                                     "properties": {
                                         "id": { "type": "Int" },
-                                        "log_message": { "type": "Int" }
+                                        "log_message": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -3878,7 +4415,14 @@
                                 "type": "object",
                                 "properties": {
                                     "id": { "type": "Int" },
-                                    "log_message": { "type": "String" }
+                                    "log_message": { "type": "String" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -3900,7 +4444,10 @@
                                 "updateData": {
                                     "type": "object",
                                     "properties": {
-                                        "log_message": { "type": "String" }
+                                        "log_message": { "type": "String" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -3975,7 +4522,8 @@
                                 "total_amount": { "type": "Float?" },
                                 "payroll_frequency_type_id": { "type": "Int?" },
                                 "employee_id": { "type": "Int?" },
-                                "business_unit_id": { "type": "Int?" }
+                                "business_unit_id": { "type": "Int?" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -4017,7 +4565,10 @@
                                             "type": "Int?"
                                         },
                                         "employee_id": { "type": "Int?" },
-                                        "business_unit_id": { "type": "Int?" }
+                                        "business_unit_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -4043,7 +4594,16 @@
                                             "type": "Int"
                                         },
                                         "employee_id": { "type": "Int" },
-                                        "business_unit_id": { "type": "Int" }
+                                        "business_unit_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -4077,7 +4637,14 @@
                                         "type": "Int?"
                                     },
                                     "employee_id": { "type": "Int?" },
-                                    "business_unit_id": { "type": "Int?" }
+                                    "business_unit_id": { "type": "Int?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -4122,7 +4689,10 @@
                                             "type": "Int?"
                                         },
                                         "employee_id": { "type": "Int?" },
-                                        "business_unit_id": { "type": "Int?" }
+                                        "business_unit_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -4198,7 +4768,8 @@
                                 "is_payroll_posted": { "type": "Boolean?" },
                                 "payroll_frequency_type_id": { "type": "Int?" },
                                 "employee_id": { "type": "Int?" },
-                                "business_unit_id": { "type": "Int?" }
+                                "business_unit_id": { "type": "Int?" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -4243,7 +4814,10 @@
                                             "type": "Int?"
                                         },
                                         "employee_id": { "type": "Int?" },
-                                        "business_unit_id": { "type": "Int?" }
+                                        "business_unit_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -4270,7 +4844,16 @@
                                             "type": "Int"
                                         },
                                         "employee_id": { "type": "Int" },
-                                        "business_unit_id": { "type": "Int" }
+                                        "business_unit_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -4305,7 +4888,14 @@
                                         "type": "Int?"
                                     },
                                     "employee_id": { "type": "Int?" },
-                                    "business_unit_id": { "type": "Int?" }
+                                    "business_unit_id": { "type": "Int?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -4353,7 +4943,10 @@
                                             "type": "Int?"
                                         },
                                         "employee_id": { "type": "Int?" },
-                                        "business_unit_id": { "type": "Int?" }
+                                        "business_unit_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -4422,7 +5015,8 @@
                                 "scale": { "type": "Int" },
                                 "effective_date": { "type": "DateTime?" },
                                 "amount": { "type": "Float" },
-                                "paygrade_id": { "type": "Int" }
+                                "paygrade_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -4461,7 +5055,10 @@
                                     "properties": {
                                         "id": { "type": "Int" },
                                         "scale": { "type": "Int" },
-                                        "paygrade_id": { "type": "Int" }
+                                        "paygrade_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -4471,7 +5068,16 @@
                                         "scale": { "type": "Int" },
                                         "effective_date": { "type": "Int" },
                                         "amount": { "type": "Int" },
-                                        "paygrade_id": { "type": "Int" }
+                                        "paygrade_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -4491,7 +5097,14 @@
                                     "scale": { "type": "Int" },
                                     "effective_date": { "type": "DateTime?" },
                                     "amount": { "type": "Float" },
-                                    "paygrade_id": { "type": "Int" }
+                                    "paygrade_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -4518,7 +5131,10 @@
                                             "type": "DateTime?"
                                         },
                                         "amount": { "type": "Float" },
-                                        "paygrade_id": { "type": "Int" }
+                                        "paygrade_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -4589,7 +5205,8 @@
                                 "salary_component_id": {
                                     "type": "Int @unique"
                                 },
-                                "employee_id": { "type": "Int @unique" }
+                                "employee_id": { "type": "Int @unique" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -4630,7 +5247,12 @@
                                         "salary_component_id": {
                                             "type": "Int @unique"
                                         },
-                                        "employee_id": { "type": "Int @unique" }
+                                        "employee_id": {
+                                            "type": "Int @unique"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -4642,7 +5264,16 @@
                                         "salary_component_id": {
                                             "type": "Int"
                                         },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -4664,7 +5295,14 @@
                                     "salary_component_id": {
                                         "type": "Int @unique"
                                     },
-                                    "employee_id": { "type": "Int @unique" }
+                                    "employee_id": { "type": "Int @unique" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -4691,7 +5329,12 @@
                                         "salary_component_id": {
                                             "type": "Int @unique"
                                         },
-                                        "employee_id": { "type": "Int @unique" }
+                                        "employee_id": {
+                                            "type": "Int @unique"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -4762,7 +5405,8 @@
                                 "value_type": { "type": "Int" },
                                 "value": { "type": "Float?" },
                                 "taxable": { "type": "Boolean?" },
-                                "chart_of_account_id": { "type": "Int" }
+                                "chart_of_account_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -4806,7 +5450,12 @@
                                         },
                                         "value_type": { "type": "Int" },
                                         "taxable": { "type": "Boolean?" },
-                                        "chart_of_account_id": { "type": "Int" }
+                                        "chart_of_account_id": {
+                                            "type": "Int"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -4820,7 +5469,18 @@
                                         "value_type": { "type": "Int" },
                                         "value": { "type": "Int" },
                                         "taxable": { "type": "Int" },
-                                        "chart_of_account_id": { "type": "Int" }
+                                        "chart_of_account_id": {
+                                            "type": "Int"
+                                        },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -4842,7 +5502,14 @@
                                     "value_type": { "type": "Int" },
                                     "value": { "type": "Float?" },
                                     "taxable": { "type": "Boolean?" },
-                                    "chart_of_account_id": { "type": "Int" }
+                                    "chart_of_account_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -4871,7 +5538,12 @@
                                         "value_type": { "type": "Int" },
                                         "value": { "type": "Float?" },
                                         "taxable": { "type": "Boolean?" },
-                                        "chart_of_account_id": { "type": "Int" }
+                                        "chart_of_account_id": {
+                                            "type": "Int"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -4939,7 +5611,8 @@
                             "properties": {
                                 "chart_of_account_id": { "type": "Int" },
                                 "business_unit_id": { "type": "Int" },
-                                "salary_component_id": { "type": "Int" }
+                                "salary_component_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -4981,7 +5654,12 @@
                                             "type": "Int"
                                         },
                                         "business_unit_id": { "type": "Int" },
-                                        "salary_component_id": { "type": "Int" }
+                                        "salary_component_id": {
+                                            "type": "Int"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -4992,7 +5670,18 @@
                                             "type": "Int"
                                         },
                                         "business_unit_id": { "type": "Int" },
-                                        "salary_component_id": { "type": "Int" }
+                                        "salary_component_id": {
+                                            "type": "Int"
+                                        },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -5011,7 +5700,14 @@
                                     "id": { "type": "Int" },
                                     "chart_of_account_id": { "type": "Int" },
                                     "business_unit_id": { "type": "Int" },
-                                    "salary_component_id": { "type": "Int" }
+                                    "salary_component_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -5037,7 +5733,12 @@
                                             "type": "Int"
                                         },
                                         "business_unit_id": { "type": "Int" },
-                                        "salary_component_id": { "type": "Int" }
+                                        "salary_component_id": {
+                                            "type": "Int"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }

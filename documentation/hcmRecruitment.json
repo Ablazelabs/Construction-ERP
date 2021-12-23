@@ -21,7 +21,8 @@
                                 "file": { "type": "String?" },
                                 "name": { "type": "String?" },
                                 "type": { "type": "String?" },
-                                "training_type_id": { "type": "Int" }
+                                "training_type_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -72,7 +73,10 @@
                                         "file": { "type": "String?" },
                                         "name": { "type": "String?" },
                                         "type": { "type": "String?" },
-                                        "training_type_id": { "type": "Int" }
+                                        "training_type_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -90,7 +94,16 @@
                                         "file": { "type": "Int" },
                                         "name": { "type": "Int" },
                                         "type": { "type": "Int" },
-                                        "training_type_id": { "type": "Int" }
+                                        "training_type_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -118,7 +131,14 @@
                                     "file": { "type": "String?" },
                                     "name": { "type": "String?" },
                                     "type": { "type": "String?" },
-                                    "training_type_id": { "type": "Int" }
+                                    "training_type_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -153,7 +173,10 @@
                                         "file": { "type": "String?" },
                                         "name": { "type": "String?" },
                                         "type": { "type": "String?" },
-                                        "training_type_id": { "type": "Int" }
+                                        "training_type_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -229,7 +252,8 @@
                                 "approved_by": { "type": "String?" },
                                 "remark": { "type": "String?" },
                                 "job_title_id": { "type": "Int" },
-                                "vacancy_request_reason_id": { "type": "Int?" }
+                                "vacancy_request_reason_id": { "type": "Int?" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -276,6 +300,9 @@
                                         "job_title_id": { "type": "Int" },
                                         "vacancy_request_reason_id": {
                                             "type": "Int?"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 },
@@ -295,6 +322,15 @@
                                         "job_title_id": { "type": "Int" },
                                         "vacancy_request_reason_id": {
                                             "type": "Int"
+                                        },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
                                         }
                                     }
                                 }
@@ -324,7 +360,14 @@
                                     "job_title_id": { "type": "Int" },
                                     "vacancy_request_reason_id": {
                                         "type": "Int?"
-                                    }
+                                    },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -358,6 +401,9 @@
                                         "job_title_id": { "type": "Int" },
                                         "vacancy_request_reason_id": {
                                             "type": "Int?"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 }
@@ -433,7 +479,8 @@
                                 "is_employee": { "type": "Int" },
                                 "external_applicant_id": { "type": "Int?" },
                                 "employee_id": { "type": "Int?" },
-                                "vacancy_id": { "type": "Int" }
+                                "vacancy_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -479,7 +526,10 @@
                                             "type": "Int?"
                                         },
                                         "employee_id": { "type": "Int?" },
-                                        "vacancy_id": { "type": "Int" }
+                                        "vacancy_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -497,7 +547,16 @@
                                             "type": "Int"
                                         },
                                         "employee_id": { "type": "Int" },
-                                        "vacancy_id": { "type": "Int" }
+                                        "vacancy_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -523,7 +582,14 @@
                                     "is_employee": { "type": "Int" },
                                     "external_applicant_id": { "type": "Int?" },
                                     "employee_id": { "type": "Int?" },
-                                    "vacancy_id": { "type": "Int" }
+                                    "vacancy_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -558,7 +624,10 @@
                                             "type": "Int?"
                                         },
                                         "employee_id": { "type": "Int?" },
-                                        "vacancy_id": { "type": "Int" }
+                                        "vacancy_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -625,7 +694,8 @@
                             "type": "object",
                             "properties": {
                                 "vacancy_id": { "type": "Int" },
-                                "employee_id": { "type": "Int" }
+                                "employee_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -664,7 +734,10 @@
                                     "properties": {
                                         "id": { "type": "Int" },
                                         "vacancy_id": { "type": "Int" },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -672,7 +745,16 @@
                                     "properties": {
                                         "id": { "type": "Int" },
                                         "vacancy_id": { "type": "Int" },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -690,7 +772,14 @@
                                 "properties": {
                                     "id": { "type": "Int" },
                                     "vacancy_id": { "type": "Int" },
-                                    "employee_id": { "type": "Int" }
+                                    "employee_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -713,7 +802,10 @@
                                     "type": "object",
                                     "properties": {
                                         "vacancy_id": { "type": "Int" },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -780,7 +872,8 @@
                             "type": "object",
                             "properties": {
                                 "employee_id": { "type": "Int" },
-                                "vacancy_id": { "type": "Int" }
+                                "vacancy_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -819,7 +912,10 @@
                                     "properties": {
                                         "id": { "type": "Int" },
                                         "employee_id": { "type": "Int" },
-                                        "vacancy_id": { "type": "Int" }
+                                        "vacancy_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -827,7 +923,16 @@
                                     "properties": {
                                         "id": { "type": "Int" },
                                         "employee_id": { "type": "Int" },
-                                        "vacancy_id": { "type": "Int" }
+                                        "vacancy_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -845,7 +950,14 @@
                                 "properties": {
                                     "id": { "type": "Int" },
                                     "employee_id": { "type": "Int" },
-                                    "vacancy_id": { "type": "Int" }
+                                    "vacancy_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -868,7 +980,10 @@
                                     "type": "object",
                                     "properties": {
                                         "employee_id": { "type": "Int" },
-                                        "vacancy_id": { "type": "Int" }
+                                        "vacancy_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -933,7 +1048,10 @@
                     "application/json": {
                         "schema": {
                             "type": "object",
-                            "properties": { "reason": { "type": "String" } }
+                            "properties": {
+                                "reason": { "type": "String" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
                         }
                     }
                 }
@@ -970,14 +1088,26 @@
                                     "type": "object",
                                     "properties": {
                                         "id": { "type": "Int" },
-                                        "reason": { "type": "String" }
+                                        "reason": { "type": "String" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
                                     "type": "object",
                                     "properties": {
                                         "id": { "type": "Int" },
-                                        "reason": { "type": "Int" }
+                                        "reason": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -994,7 +1124,14 @@
                                 "type": "object",
                                 "properties": {
                                     "id": { "type": "Int" },
-                                    "reason": { "type": "String" }
+                                    "reason": { "type": "String" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -1016,7 +1153,10 @@
                                 "updateData": {
                                     "type": "object",
                                     "properties": {
-                                        "reason": { "type": "String" }
+                                        "reason": { "type": "String" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }

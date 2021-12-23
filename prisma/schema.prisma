@@ -2001,60 +2001,6 @@ model training_type {
   external_applicant external_applicant[]
 }
 
-model attendance_abscence_type {
-  startDate             DateTime
-  endDate               DateTime
-  creationDate          DateTime            @default(now())
-  createdBy             String
-  revisionDate          DateTime            @updatedAt
-  revisedBy             String
-  status                Int                 @default(0)
-  isProtectedForEdit    Boolean             @default(false)
-  id                    Int                 @id @default(autoincrement())
-  aa_description        String
-  is_with_quota         Boolean?
-  is_with_pay           Boolean?
-  is_annual_leave       Boolean?
-  is_with_entitlement   Boolean?
-  is_regular_attendance Boolean?
-  number_of_days        Int
-  leave_assignment      leave_assignment[]
-  leave_entitlement     leave_entitlement[]
-}
-
-model shift_schedule_hdr {
-  startDate          DateTime
-  endDate            DateTime
-  creationDate       DateTime           @default(now())
-  createdBy          String
-  revisionDate       DateTime           @updatedAt
-  revisedBy          String
-  status             Int                @default(0)
-  isProtectedForEdit Boolean            @default(false)
-  id                 Int                @id @default(autoincrement())
-  shift_name         String
-  sub_shift_group_id Int
-  sub_shift_group    sub_shift_group?   @relation(fields: [sub_shift_group_id], references: [id])
-  shift_assignment   shift_assignment[]
-}
-
-model sub_shift_group {
-  startDate          DateTime
-  endDate            DateTime
-  creationDate       DateTime             @default(now())
-  createdBy          String
-  revisionDate       DateTime             @updatedAt
-  revisedBy          String
-  status             Int                  @default(0)
-  isProtectedForEdit Boolean              @default(false)
-  id                 Int                  @id @default(autoincrement())
-  sub_shift_name     String
-  morning_out        Float
-  afternoon_in       Float
-  tolerance_minutes  Int?
-  shift_schedule_hdr shift_schedule_hdr[]
-}
-
 model address {
   startDate          DateTime
   endDate            DateTime
@@ -2240,6 +2186,12 @@ model employee {
   payroll_summary_history          payroll_summary_history[]
   salary_adjustment                salary_adjustment[]
   overtime                         overtime[]
+  attendance_captured              attendance_captured[]
+  attendance_payroll               attendance_payroll[]
+  device_id_mapping                device_id_mapping[]
+  leave_plan                       leave_plan[]
+  punch                            punch[]
+  punch_time                       punch_time[]
 }
 
 model employee_action {
@@ -2285,9 +2237,6 @@ model employee_commitment {
   employee_id        Int
   employee           employee   @relation(fields: [employee_id], references: [id])
   commitment_type    commitment @relation(fields: [commitment_type_id], references: [id])
-
-  //needs employee
-  //needs commitment
 }
 
 model employee_contact {
@@ -2830,8 +2779,6 @@ model vacancy_request_reason {
   reason             String
   vacancy            vacancy[]
 }
-
-//today start
 
 model salary_component {
   startDate                        DateTime
@@ -3398,4 +3345,291 @@ model salary_component_account_mapping {
   //needs salary_component
   //needs chart_of_account
   //needs business_unit
+}
+
+model attendance_abscence_type {
+  startDate             DateTime
+  endDate               DateTime
+  creationDate          DateTime             @default(now())
+  createdBy             String
+  revisionDate          DateTime             @updatedAt
+  revisedBy             String
+  status                Int                  @default(0)
+  isProtectedForEdit    Boolean              @default(false)
+  id                    Int                  @id @default(autoincrement())
+  aa_description        String               @unique
+  is_with_quota         Boolean?
+  is_with_pay           Boolean?
+  is_annual_leave       Boolean?
+  is_with_entitlement   Boolean?
+  is_regular_attendance Boolean?
+  number_of_days        Int?
+  leave_assignment      leave_assignment[]
+  leave_entitlement     leave_entitlement[]
+  attendance_payroll    attendance_payroll[]
+}
+
+model shift_schedule_hdr {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime             @default(now())
+  createdBy          String
+  revisionDate       DateTime             @updatedAt
+  revisedBy          String
+  status             Int                  @default(0)
+  isProtectedForEdit Boolean              @default(false)
+  id                 Int                  @id @default(autoincrement())
+  shift_name         String               @unique
+  sub_shift_group_id Int
+  sub_shift_group    sub_shift_group      @relation(fields: [sub_shift_group_id], references: [id])
+  shift_assignment   shift_assignment[]
+  shift_schedule_dtl shift_schedule_dtl[]
+}
+
+model sub_shift_group {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime             @default(now())
+  createdBy          String
+  revisionDate       DateTime             @updatedAt
+  revisedBy          String
+  status             Int                  @default(0)
+  isProtectedForEdit Boolean              @default(false)
+  id                 Int                  @id @default(autoincrement())
+  sub_shift_name     String               @unique
+  morning_out        Float
+  afternoon_in       Float
+  tolerance_minutes  Int?
+  shift_schedule_hdr shift_schedule_hdr[]
+}
+
+model attendance_captured {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime      @default(now())
+  createdBy          String
+  revisionDate       DateTime      @updatedAt
+  revisedBy          String
+  status             Int           @default(0)
+  isProtectedForEdit Boolean       @default(false)
+  id                 Int           @id @default(autoincrement())
+  date               DateTime
+  in_out_mode        Int?
+  punch_device_id    Int?
+  employee_id        Int
+  employee           employee      @relation(fields: [employee_id], references: [id])
+  punch_device       punch_device? @relation(fields: [punch_device_id], references: [id])
+}
+
+model attendance_payroll {
+  startDate                   DateTime
+  endDate                     DateTime
+  creationDate                DateTime                  @default(now())
+  createdBy                   String
+  revisionDate                DateTime                  @updatedAt
+  revisedBy                   String
+  status                      Int                       @default(0)
+  isProtectedForEdit          Boolean                   @default(false)
+  id                          Int                       @id @default(autoincrement())
+  date                        DateTime
+  total_worked_hours          Float?
+  attendance_status           Int?
+  action_date                 DateTime?
+  delegated_username          String?
+  attendance_abscence_type_id Int?
+  employee_id                 Int
+  employee                    employee                  @relation(fields: [employee_id], references: [id])
+  attendance_abscence_type    attendance_abscence_type? @relation(fields: [attendance_abscence_type_id], references: [id])
+}
+
+model device_id_mapping {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime      @default(now())
+  createdBy          String
+  revisionDate       DateTime      @updatedAt
+  revisedBy          String
+  status             Int           @default(0)
+  isProtectedForEdit Boolean       @default(false)
+  id                 Int           @id @default(autoincrement())
+  finger_print_id    String        @unique
+  employee_id        Int           @unique
+  punch_device_id    Int?
+  employee           employee      @relation(fields: [employee_id], references: [id])
+  punch_device       punch_device? @relation(fields: [punch_device_id], references: [id])
+}
+
+model holiday {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime            @default(now())
+  createdBy          String
+  revisionDate       DateTime            @updatedAt
+  revisedBy          String
+  status             Int                 @default(0)
+  isProtectedForEdit Boolean             @default(false)
+  id                 Int                 @id @default(autoincrement())
+  holiday_name       String              @unique
+  is_recurring       Boolean?
+  holiday_character  holiday_character[]
+}
+
+model holiday_character {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  date               DateTime @unique
+  is_half_day        Boolean?
+  holiday_id         Int      @unique
+  holiday            holiday  @relation(fields: [holiday_id], references: [id])
+}
+
+model leave_period {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  date               DateTime
+}
+
+model leave_plan {
+  startDate            DateTime
+  endDate              DateTime
+  creationDate         DateTime  @default(now())
+  createdBy            String
+  revisionDate         DateTime  @updatedAt
+  revisedBy            String
+  status               Int       @default(0)
+  isProtectedForEdit   Boolean   @default(false)
+  id                   Int       @id @default(autoincrement())
+  is_half_day          Boolean
+  leave_request_status Int?
+  action_date          DateTime?
+  delegated_username   String?
+  employee_id          Int       @unique
+  employee             employee  @relation(fields: [employee_id], references: [id])
+}
+
+model punch {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime     @default(now())
+  createdBy          String
+  revisionDate       DateTime     @updatedAt
+  revisedBy          String
+  status             Int          @default(0)
+  isProtectedForEdit Boolean      @default(false)
+  id                 Int          @id @default(autoincrement())
+  punch_date         DateTime
+  in_out_mode        Int?
+  is_manual          Boolean?
+  imported_by        String?
+  approved_by        String?
+  verify_mode        Int?
+  imported_date      DateTime?
+  remark             String?
+  punch_device_id    Int
+  employee_id        Int
+  employee           employee     @relation(fields: [employee_id], references: [id])
+  punch_device       punch_device @relation(fields: [punch_device_id], references: [id])
+}
+
+model punch_device {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime              @default(now())
+  createdBy           String
+  revisionDate        DateTime              @updatedAt
+  revisedBy           String
+  status              Int                   @default(0)
+  isProtectedForEdit  Boolean               @default(false)
+  id                  Int                   @id @default(autoincrement())
+  device_name         String                @unique
+  ip_address          String
+  attendance_captured attendance_captured[]
+  device_id_mapping   device_id_mapping[]
+  punch               punch[]
+  punch_log           punch_log[]
+  punch_manual_import punch_manual_import[]
+}
+
+model punch_log {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime     @default(now())
+  createdBy          String
+  revisionDate       DateTime     @updatedAt
+  revisedBy          String
+  status             Int          @default(0)
+  isProtectedForEdit Boolean      @default(false)
+  id                 Int          @id @default(autoincrement())
+  imported_date      DateTime?
+  log_remark         String?
+  punch_device_id    Int
+  punch_device       punch_device @relation(fields: [punch_device_id], references: [id])
+}
+
+model punch_manual_import {
+  startDate             DateTime
+  endDate               DateTime
+  creationDate          DateTime     @default(now())
+  createdBy             String
+  revisionDate          DateTime     @updatedAt
+  revisedBy             String
+  status                Int          @default(0)
+  isProtectedForEdit    Boolean      @default(false)
+  id                    Int          @id @default(autoincrement())
+  is_processed          Boolean?
+  remark                String?
+  processing_date       DateTime?
+  is_processing_started Boolean?
+  punch_device_id       Int
+  punch_device          punch_device @relation(fields: [punch_device_id], references: [id])
+}
+
+model punch_time {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  date               DateTime
+  total_worked_hours Float?
+  employee_id        Int
+  employee           employee @relation(fields: [employee_id], references: [id])
+}
+
+model shift_schedule_dtl {
+  startDate              DateTime
+  endDate                DateTime
+  creationDate           DateTime            @default(now())
+  createdBy              String
+  revisionDate           DateTime            @updatedAt
+  revisedBy              String
+  status                 Int                 @default(0)
+  isProtectedForEdit     Boolean             @default(false)
+  id                     Int                 @id @default(autoincrement())
+  clock_in               Float //in hours(it's a timespan)
+  clock_out              Float //in hours(it's a timespan)
+  min_working_hours      Float //in hours(it's a timespan)
+  working_day            Int?
+  is_shift_span_next_day Boolean?
+  is_half_day            Boolean?
+  shift_schedule_hdr_id  Int?
+  shift_schedule_hdr     shift_schedule_hdr? @relation(fields: [shift_schedule_hdr_id], references: [id])
 }

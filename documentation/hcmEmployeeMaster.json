@@ -19,7 +19,8 @@
                                 "postal_box": { "type": "String?" },
                                 "email": { "type": "String?" },
                                 "employee_id": { "type": "Int" },
-                                "address_type_id": { "type": "Int?" }
+                                "address_type_id": { "type": "Int?" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -66,7 +67,10 @@
                                         "postal_box": { "type": "String?" },
                                         "email": { "type": "String?" },
                                         "employee_id": { "type": "Int" },
-                                        "address_type_id": { "type": "Int?" }
+                                        "address_type_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -82,7 +86,16 @@
                                         "postal_box": { "type": "Int" },
                                         "email": { "type": "Int" },
                                         "employee_id": { "type": "Int" },
-                                        "address_type_id": { "type": "Int" }
+                                        "address_type_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -108,7 +121,14 @@
                                     "postal_box": { "type": "String?" },
                                     "email": { "type": "String?" },
                                     "employee_id": { "type": "Int" },
-                                    "address_type_id": { "type": "Int?" }
+                                    "address_type_id": { "type": "Int?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -139,7 +159,10 @@
                                         "postal_box": { "type": "String?" },
                                         "email": { "type": "String?" },
                                         "employee_id": { "type": "Int" },
-                                        "address_type_id": { "type": "Int?" }
+                                        "address_type_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -210,7 +233,8 @@
                                 "name": { "type": "String?" },
                                 "size": { "type": "Int?" },
                                 "path": { "type": "String" },
-                                "employee_id": { "type": "Int?" }
+                                "employee_id": { "type": "Int?" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -253,7 +277,10 @@
                                         "name": { "type": "String?" },
                                         "size": { "type": "Int?" },
                                         "path": { "type": "String" },
-                                        "employee_id": { "type": "Int?" }
+                                        "employee_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -265,7 +292,16 @@
                                         "name": { "type": "Int" },
                                         "size": { "type": "Int" },
                                         "path": { "type": "Int" },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -287,7 +323,14 @@
                                     "name": { "type": "String?" },
                                     "size": { "type": "Int?" },
                                     "path": { "type": "String" },
-                                    "employee_id": { "type": "Int?" }
+                                    "employee_id": { "type": "Int?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -314,7 +357,10 @@
                                         "name": { "type": "String?" },
                                         "size": { "type": "Int?" },
                                         "path": { "type": "String" },
-                                        "employee_id": { "type": "Int?" }
+                                        "employee_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -385,7 +431,8 @@
                                 "dependent_date_of_birth": {
                                     "type": "DateTime?"
                                 },
-                                "employee_id": { "type": "Int" }
+                                "employee_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -425,7 +472,10 @@
                                         "id": { "type": "Int" },
                                         "fullname": { "type": "String" },
                                         "relationship": { "type": "Int" },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -437,7 +487,16 @@
                                         "dependent_date_of_birth": {
                                             "type": "Int"
                                         },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -459,7 +518,14 @@
                                     "dependent_date_of_birth": {
                                         "type": "DateTime?"
                                     },
-                                    "employee_id": { "type": "Int" }
+                                    "employee_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -486,7 +552,10 @@
                                         "dependent_date_of_birth": {
                                             "type": "DateTime?"
                                         },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -555,7 +624,8 @@
                                 "case_description": { "type": "String" },
                                 "attachment_id": { "type": "Int?" },
                                 "case_type_id": { "type": "Int?" },
-                                "employee_id": { "type": "Int" }
+                                "employee_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -598,7 +668,10 @@
                                         },
                                         "attachment_id": { "type": "Int?" },
                                         "case_type_id": { "type": "Int?" },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -608,7 +681,16 @@
                                         "case_description": { "type": "Int" },
                                         "attachment_id": { "type": "Int" },
                                         "case_type_id": { "type": "Int" },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -628,7 +710,14 @@
                                     "case_description": { "type": "String" },
                                     "attachment_id": { "type": "Int?" },
                                     "case_type_id": { "type": "Int?" },
-                                    "employee_id": { "type": "Int" }
+                                    "employee_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -655,7 +744,10 @@
                                         },
                                         "attachment_id": { "type": "Int?" },
                                         "case_type_id": { "type": "Int?" },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -726,7 +818,8 @@
                                 "field_of_study_id": { "type": "Int" },
                                 "duration_measure_id": { "type": "Int" },
                                 "training_type_id": { "type": "Int" },
-                                "employee_id": { "type": "Int" }
+                                "employee_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -771,7 +864,10 @@
                                             "type": "Int"
                                         },
                                         "training_type_id": { "type": "Int" },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -785,7 +881,16 @@
                                             "type": "Int"
                                         },
                                         "training_type_id": { "type": "Int" },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -807,7 +912,14 @@
                                     "field_of_study_id": { "type": "Int" },
                                     "duration_measure_id": { "type": "Int" },
                                     "training_type_id": { "type": "Int" },
-                                    "employee_id": { "type": "Int" }
+                                    "employee_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -836,7 +948,10 @@
                                             "type": "Int"
                                         },
                                         "training_type_id": { "type": "Int" },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -929,7 +1044,8 @@
                                 "language_id": { "type": "Int?" },
                                 "title_id": { "type": "Int?" },
                                 "religion_id": { "type": "Int?" },
-                                "employee_type_id": { "type": "Int?" }
+                                "employee_type_id": { "type": "Int?" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -989,7 +1105,10 @@
                                         "language_id": { "type": "Int?" },
                                         "title_id": { "type": "Int?" },
                                         "religion_id": { "type": "Int?" },
-                                        "employee_type_id": { "type": "Int?" }
+                                        "employee_type_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -1025,7 +1144,16 @@
                                         "language_id": { "type": "Int" },
                                         "title_id": { "type": "Int" },
                                         "religion_id": { "type": "Int" },
-                                        "employee_type_id": { "type": "Int" }
+                                        "employee_type_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -1073,7 +1201,14 @@
                                     "language_id": { "type": "Int?" },
                                     "title_id": { "type": "Int?" },
                                     "religion_id": { "type": "Int?" },
-                                    "employee_type_id": { "type": "Int?" }
+                                    "employee_type_id": { "type": "Int?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -1132,7 +1267,10 @@
                                         "language_id": { "type": "Int?" },
                                         "title_id": { "type": "Int?" },
                                         "religion_id": { "type": "Int?" },
-                                        "employee_type_id": { "type": "Int?" }
+                                        "employee_type_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -1201,7 +1339,8 @@
                                 "employee_status": { "type": "Int" },
                                 "attachment_id": { "type": "Int?" },
                                 "employee_id": { "type": "Int" },
-                                "action_reason_id": { "type": "Int" }
+                                "action_reason_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -1242,7 +1381,10 @@
                                         "employee_status": { "type": "Int" },
                                         "attachment_id": { "type": "Int?" },
                                         "employee_id": { "type": "Int" },
-                                        "action_reason_id": { "type": "Int" }
+                                        "action_reason_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -1252,7 +1394,16 @@
                                         "employee_status": { "type": "Int" },
                                         "attachment_id": { "type": "Int" },
                                         "employee_id": { "type": "Int" },
-                                        "action_reason_id": { "type": "Int" }
+                                        "action_reason_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -1272,7 +1423,14 @@
                                     "employee_status": { "type": "Int" },
                                     "attachment_id": { "type": "Int?" },
                                     "employee_id": { "type": "Int" },
-                                    "action_reason_id": { "type": "Int" }
+                                    "action_reason_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -1297,7 +1455,10 @@
                                         "employee_status": { "type": "Int" },
                                         "attachment_id": { "type": "Int?" },
                                         "employee_id": { "type": "Int" },
-                                        "action_reason_id": { "type": "Int" }
+                                        "action_reason_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -1365,7 +1526,8 @@
                             "properties": {
                                 "description": { "type": "String" },
                                 "path": { "type": "String?" },
-                                "employee_id": { "type": "Int" }
+                                "employee_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -1405,7 +1567,10 @@
                                         "id": { "type": "Int" },
                                         "description": { "type": "String" },
                                         "path": { "type": "String?" },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -1414,7 +1579,16 @@
                                         "id": { "type": "Int" },
                                         "description": { "type": "Int" },
                                         "path": { "type": "Int" },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -1433,7 +1607,14 @@
                                     "id": { "type": "Int" },
                                     "description": { "type": "String" },
                                     "path": { "type": "String?" },
-                                    "employee_id": { "type": "Int" }
+                                    "employee_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -1457,7 +1638,10 @@
                                     "properties": {
                                         "description": { "type": "String" },
                                         "path": { "type": "String?" },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -1525,7 +1709,8 @@
                             "properties": {
                                 "commitment_type_id": { "type": "Int" },
                                 "employee_id": { "type": "Int" },
-                                "remark": { "type": "String?" }
+                                "remark": { "type": "String?" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -1565,7 +1750,10 @@
                                         "id": { "type": "Int" },
                                         "commitment_type_id": { "type": "Int" },
                                         "employee_id": { "type": "Int" },
-                                        "remark": { "type": "String?" }
+                                        "remark": { "type": "String?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -1574,7 +1762,16 @@
                                         "id": { "type": "Int" },
                                         "commitment_type_id": { "type": "Int" },
                                         "employee_id": { "type": "Int" },
-                                        "remark": { "type": "Int" }
+                                        "remark": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -1593,7 +1790,14 @@
                                     "id": { "type": "Int" },
                                     "commitment_type_id": { "type": "Int" },
                                     "employee_id": { "type": "Int" },
-                                    "remark": { "type": "String?" }
+                                    "remark": { "type": "String?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -1617,7 +1821,10 @@
                                     "properties": {
                                         "commitment_type_id": { "type": "Int" },
                                         "employee_id": { "type": "Int" },
-                                        "remark": { "type": "String?" }
+                                        "remark": { "type": "String?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -1688,7 +1895,8 @@
                                 "address_line_1": { "type": "String" },
                                 "address_line_2": { "type": "String?" },
                                 "mobile_number": { "type": "String" },
-                                "employee_id": { "type": "Int" }
+                                "employee_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -1731,7 +1939,10 @@
                                         "address_line_1": { "type": "String" },
                                         "address_line_2": { "type": "String?" },
                                         "mobile_number": { "type": "String" },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -1743,7 +1954,16 @@
                                         "address_line_1": { "type": "Int" },
                                         "address_line_2": { "type": "Int" },
                                         "mobile_number": { "type": "Int" },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -1765,7 +1985,14 @@
                                     "address_line_1": { "type": "String" },
                                     "address_line_2": { "type": "String?" },
                                     "mobile_number": { "type": "String" },
-                                    "employee_id": { "type": "Int" }
+                                    "employee_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -1792,7 +2019,10 @@
                                         "address_line_1": { "type": "String" },
                                         "address_line_2": { "type": "String?" },
                                         "mobile_number": { "type": "String" },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -1861,7 +2091,8 @@
                                 "start": { "type": "Int" },
                                 "end": { "type": "Int" },
                                 "number_of_digit": { "type": "Int?" },
-                                "employee_type_id": { "type": "Int?" }
+                                "employee_type_id": { "type": "Int?" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -1902,7 +2133,10 @@
                                         "start": { "type": "Int" },
                                         "end": { "type": "Int" },
                                         "number_of_digit": { "type": "Int?" },
-                                        "employee_type_id": { "type": "Int?" }
+                                        "employee_type_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -1912,7 +2146,16 @@
                                         "start": { "type": "Int" },
                                         "end": { "type": "Int" },
                                         "number_of_digit": { "type": "Int" },
-                                        "employee_type_id": { "type": "Int" }
+                                        "employee_type_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -1932,7 +2175,14 @@
                                     "start": { "type": "Int" },
                                     "end": { "type": "Int" },
                                     "number_of_digit": { "type": "Int?" },
-                                    "employee_type_id": { "type": "Int?" }
+                                    "employee_type_id": { "type": "Int?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -1957,7 +2207,10 @@
                                         "start": { "type": "Int" },
                                         "end": { "type": "Int" },
                                         "number_of_digit": { "type": "Int?" },
-                                        "employee_type_id": { "type": "Int?" }
+                                        "employee_type_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -2026,7 +2279,8 @@
                                 "repayment_amount": { "type": "Float" },
                                 "total_amount": { "type": "Float" },
                                 "employee_id": { "type": "Int?" },
-                                "salary_component_id": { "type": "Int?" }
+                                "salary_component_id": { "type": "Int?" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -2067,6 +2321,9 @@
                                         "employee_id": { "type": "Int?" },
                                         "salary_component_id": {
                                             "type": "Int?"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 },
@@ -2077,7 +2334,18 @@
                                         "repayment_amount": { "type": "Int" },
                                         "total_amount": { "type": "Int" },
                                         "employee_id": { "type": "Int" },
-                                        "salary_component_id": { "type": "Int" }
+                                        "salary_component_id": {
+                                            "type": "Int"
+                                        },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -2097,7 +2365,14 @@
                                     "repayment_amount": { "type": "Float" },
                                     "total_amount": { "type": "Float" },
                                     "employee_id": { "type": "Int?" },
-                                    "salary_component_id": { "type": "Int?" }
+                                    "salary_component_id": { "type": "Int?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -2124,6 +2399,9 @@
                                         "employee_id": { "type": "Int?" },
                                         "salary_component_id": {
                                             "type": "Int?"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 }
@@ -2192,7 +2470,8 @@
                             "properties": {
                                 "expected_working_hrs": { "type": "Int" },
                                 "employee_id": { "type": "Int?" },
-                                "payroll_frequency_type_id": { "type": "Int?" }
+                                "payroll_frequency_type_id": { "type": "Int?" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -2236,6 +2515,9 @@
                                         "employee_id": { "type": "Int?" },
                                         "payroll_frequency_type_id": {
                                             "type": "Int?"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 },
@@ -2249,6 +2531,15 @@
                                         "employee_id": { "type": "Int" },
                                         "payroll_frequency_type_id": {
                                             "type": "Int"
+                                        },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
                                         }
                                     }
                                 }
@@ -2270,7 +2561,14 @@
                                     "employee_id": { "type": "Int?" },
                                     "payroll_frequency_type_id": {
                                         "type": "Int?"
-                                    }
+                                    },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -2298,6 +2596,9 @@
                                         "employee_id": { "type": "Int?" },
                                         "payroll_frequency_type_id": {
                                             "type": "Int?"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 }
@@ -2365,7 +2666,8 @@
                             "type": "object",
                             "properties": {
                                 "employee_id": { "type": "Int" },
-                                "paygrade_id": { "type": "Int" }
+                                "paygrade_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -2404,7 +2706,10 @@
                                     "properties": {
                                         "id": { "type": "Int" },
                                         "employee_id": { "type": "Int" },
-                                        "paygrade_id": { "type": "Int" }
+                                        "paygrade_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -2412,7 +2717,16 @@
                                     "properties": {
                                         "id": { "type": "Int" },
                                         "employee_id": { "type": "Int" },
-                                        "paygrade_id": { "type": "Int" }
+                                        "paygrade_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -2430,7 +2744,14 @@
                                 "properties": {
                                     "id": { "type": "Int" },
                                     "employee_id": { "type": "Int" },
-                                    "paygrade_id": { "type": "Int" }
+                                    "paygrade_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -2453,7 +2774,10 @@
                                     "type": "object",
                                     "properties": {
                                         "employee_id": { "type": "Int" },
-                                        "paygrade_id": { "type": "Int" }
+                                        "paygrade_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -2521,7 +2845,8 @@
                             "properties": {
                                 "amount": { "type": "Float?" },
                                 "employee_id": { "type": "Int" },
-                                "salary_component_id": { "type": "Int" }
+                                "salary_component_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -2560,7 +2885,12 @@
                                     "properties": {
                                         "id": { "type": "Int" },
                                         "employee_id": { "type": "Int" },
-                                        "salary_component_id": { "type": "Int" }
+                                        "salary_component_id": {
+                                            "type": "Int"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -2569,7 +2899,18 @@
                                         "id": { "type": "Int" },
                                         "amount": { "type": "Int" },
                                         "employee_id": { "type": "Int" },
-                                        "salary_component_id": { "type": "Int" }
+                                        "salary_component_id": {
+                                            "type": "Int"
+                                        },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -2588,7 +2929,14 @@
                                     "id": { "type": "Int" },
                                     "amount": { "type": "Float?" },
                                     "employee_id": { "type": "Int" },
-                                    "salary_component_id": { "type": "Int" }
+                                    "salary_component_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -2612,7 +2960,12 @@
                                     "properties": {
                                         "amount": { "type": "Float?" },
                                         "employee_id": { "type": "Int" },
-                                        "salary_component_id": { "type": "Int" }
+                                        "salary_component_id": {
+                                            "type": "Int"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -2682,7 +3035,8 @@
                                 "job_title": { "type": "String" },
                                 "salary": { "type": "Float?" },
                                 "comment": { "type": "String?" },
-                                "employee_id": { "type": "Int" }
+                                "employee_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -2723,7 +3077,10 @@
                                         "company": { "type": "String" },
                                         "job_title": { "type": "String" },
                                         "comment": { "type": "String?" },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -2734,7 +3091,16 @@
                                         "job_title": { "type": "Int" },
                                         "salary": { "type": "Int" },
                                         "comment": { "type": "Int" },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -2755,7 +3121,14 @@
                                     "job_title": { "type": "String" },
                                     "salary": { "type": "Float?" },
                                     "comment": { "type": "String?" },
-                                    "employee_id": { "type": "Int" }
+                                    "employee_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -2781,7 +3154,10 @@
                                         "job_title": { "type": "String" },
                                         "salary": { "type": "Float?" },
                                         "comment": { "type": "String?" },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -2855,7 +3231,8 @@
                                 "employee_id": { "type": "Int" },
                                 "attendance_abscence_type_id": {
                                     "type": "Int?"
-                                }
+                                },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -2906,6 +3283,9 @@
                                         "employee_id": { "type": "Int" },
                                         "attendance_abscence_type_id": {
                                             "type": "Int?"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 },
@@ -2927,6 +3307,15 @@
                                         "employee_id": { "type": "Int" },
                                         "attendance_abscence_type_id": {
                                             "type": "Int"
+                                        },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
                                         }
                                     }
                                 }
@@ -2954,7 +3343,14 @@
                                     "employee_id": { "type": "Int" },
                                     "attendance_abscence_type_id": {
                                         "type": "Int?"
-                                    }
+                                    },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -2990,6 +3386,9 @@
                                         "employee_id": { "type": "Int" },
                                         "attendance_abscence_type_id": {
                                             "type": "Int?"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 }
@@ -3057,7 +3456,10 @@
                             "type": "object",
                             "properties": {
                                 "employee_id": { "type": "Int" },
-                                "attendance_abscence_type_id": { "type": "Int" }
+                                "attendance_abscence_type_id": {
+                                    "type": "Int"
+                                },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -3098,6 +3500,9 @@
                                         "employee_id": { "type": "Int" },
                                         "attendance_abscence_type_id": {
                                             "type": "Int"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 },
@@ -3108,6 +3513,15 @@
                                         "employee_id": { "type": "Int" },
                                         "attendance_abscence_type_id": {
                                             "type": "Int"
+                                        },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
                                         }
                                     }
                                 }
@@ -3128,7 +3542,14 @@
                                     "employee_id": { "type": "Int" },
                                     "attendance_abscence_type_id": {
                                         "type": "Int"
-                                    }
+                                    },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -3153,6 +3574,9 @@
                                         "employee_id": { "type": "Int" },
                                         "attendance_abscence_type_id": {
                                             "type": "Int"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
                                         }
                                     }
                                 }
@@ -3226,7 +3650,8 @@
                                 "remark": { "type": "String" },
                                 "action_date": { "type": "DateTime?" },
                                 "delegated_user_name": { "type": "String?" },
-                                "employee_id": { "type": "Int" }
+                                "employee_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -3274,7 +3699,10 @@
                                         "delegated_user_name": {
                                             "type": "String?"
                                         },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -3292,7 +3720,16 @@
                                         "delegated_user_name": {
                                             "type": "Int"
                                         },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -3318,7 +3755,14 @@
                                     "delegated_user_name": {
                                         "type": "String?"
                                     },
-                                    "employee_id": { "type": "Int" }
+                                    "employee_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -3351,7 +3795,10 @@
                                         "delegated_user_name": {
                                             "type": "String?"
                                         },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -3421,7 +3868,8 @@
                                 "issued_date": { "type": "DateTime?" },
                                 "expiry_date": { "type": "DateTime" },
                                 "license_type_id": { "type": "Int?" },
-                                "employee_id": { "type": "Int?" }
+                                "employee_id": { "type": "Int?" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -3461,7 +3909,10 @@
                                         "id": { "type": "Int" },
                                         "license_number": { "type": "String?" },
                                         "license_type_id": { "type": "Int?" },
-                                        "employee_id": { "type": "Int?" }
+                                        "employee_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -3472,7 +3923,16 @@
                                         "issued_date": { "type": "Int" },
                                         "expiry_date": { "type": "Int" },
                                         "license_type_id": { "type": "Int" },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -3493,7 +3953,14 @@
                                     "issued_date": { "type": "DateTime?" },
                                     "expiry_date": { "type": "DateTime" },
                                     "license_type_id": { "type": "Int?" },
-                                    "employee_id": { "type": "Int?" }
+                                    "employee_id": { "type": "Int?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -3519,7 +3986,10 @@
                                         "issued_date": { "type": "DateTime?" },
                                         "expiry_date": { "type": "DateTime" },
                                         "license_type_id": { "type": "Int?" },
-                                        "employee_id": { "type": "Int?" }
+                                        "employee_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -3589,7 +4059,8 @@
                                 "location_id": { "type": "Int?" },
                                 "employee_action_id": { "type": "Int?" },
                                 "job_title_id": { "type": "Int" },
-                                "business_unit_id": { "type": "Int" }
+                                "business_unit_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -3633,7 +4104,10 @@
                                             "type": "Int?"
                                         },
                                         "job_title_id": { "type": "Int" },
-                                        "business_unit_id": { "type": "Int" }
+                                        "business_unit_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -3644,7 +4118,16 @@
                                         "location_id": { "type": "Int" },
                                         "employee_action_id": { "type": "Int" },
                                         "job_title_id": { "type": "Int" },
-                                        "business_unit_id": { "type": "Int" }
+                                        "business_unit_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -3665,7 +4148,14 @@
                                     "location_id": { "type": "Int?" },
                                     "employee_action_id": { "type": "Int?" },
                                     "job_title_id": { "type": "Int" },
-                                    "business_unit_id": { "type": "Int" }
+                                    "business_unit_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -3693,7 +4183,10 @@
                                             "type": "Int?"
                                         },
                                         "job_title_id": { "type": "Int" },
-                                        "business_unit_id": { "type": "Int" }
+                                        "business_unit_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -3760,7 +4253,8 @@
                             "type": "object",
                             "properties": {
                                 "allowance_pay": { "type": "Float" },
-                                "employee_id": { "type": "Int?" }
+                                "employee_id": { "type": "Int?" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -3798,7 +4292,10 @@
                                     "type": "object",
                                     "properties": {
                                         "id": { "type": "Int" },
-                                        "employee_id": { "type": "Int?" }
+                                        "employee_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -3806,7 +4303,16 @@
                                     "properties": {
                                         "id": { "type": "Int" },
                                         "allowance_pay": { "type": "Int" },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -3824,7 +4330,14 @@
                                 "properties": {
                                     "id": { "type": "Int" },
                                     "allowance_pay": { "type": "Float" },
-                                    "employee_id": { "type": "Int?" }
+                                    "employee_id": { "type": "Int?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -3847,7 +4360,10 @@
                                     "type": "object",
                                     "properties": {
                                         "allowance_pay": { "type": "Float" },
-                                        "employee_id": { "type": "Int?" }
+                                        "employee_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -3914,7 +4430,8 @@
                             "type": "object",
                             "properties": {
                                 "shift_schedule_hdr_id": { "type": "Int" },
-                                "employee_id": { "type": "Int" }
+                                "employee_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
                             }
                         }
                     }
@@ -3955,7 +4472,10 @@
                                         "shift_schedule_hdr_id": {
                                             "type": "Int"
                                         },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 },
                                 "sort": {
@@ -3965,7 +4485,16 @@
                                         "shift_schedule_hdr_id": {
                                             "type": "Int"
                                         },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
@@ -3983,7 +4512,14 @@
                                 "properties": {
                                     "id": { "type": "Int" },
                                     "shift_schedule_hdr_id": { "type": "Int" },
-                                    "employee_id": { "type": "Int" }
+                                    "employee_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
                                 }
                             }
                         }
@@ -4008,7 +4544,10 @@
                                         "shift_schedule_hdr_id": {
                                             "type": "Int"
                                         },
-                                        "employee_id": { "type": "Int" }
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }

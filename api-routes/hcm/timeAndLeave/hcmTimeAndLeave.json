@@ -1,0 +1,582 @@
+{
+    "allInputFilters": {
+        "attendance_abscence_type": { "aa_description": "string" },
+        "attendance_captured": { "date": "string", "employee_id": "number" },
+        "attendance_payroll": { "date": "string", "employee_id": "number" },
+        "device_id_mapping": {
+            "finger_print_id": "string",
+            "employee_id": "number"
+        },
+        "holiday": { "holiday_name": "string" },
+        "holiday_character": { "date": "string", "holiday_id": "number" },
+        "leave_period": { "date": "string" },
+        "leave_plan": { "is_half_day": "boolean", "employee_id": "number" },
+        "punch": {
+            "punch_date": "string",
+            "punch_device_id": "number",
+            "employee_id": "number"
+        },
+        "punch_device": { "device_name": "string", "ip_address": "string" },
+        "punch_log": { "punch_device_id": "number" },
+        "punch_manual_import": { "punch_device_id": "number" },
+        "punch_time": { "date": "string", "employee_id": "number" },
+        "shift_schedule_dtl": {
+            "clock_in": "number",
+            "clock_out": "number",
+            "min_working_hours": "number"
+        },
+        "shift_schedule_hdr": {
+            "shift_name": "string",
+            "sub_shift_group_id": "number"
+        },
+        "sub_shift_group": {
+            "sub_shift_name": "string",
+            "morning_out": "number",
+            "afternoon_in": "number"
+        }
+    },
+    "allRangeValues": {
+        "attendance_abscence_type": {},
+        "attendance_captured": {},
+        "attendance_payroll": {},
+        "device_id_mapping": {},
+        "holiday": {},
+        "holiday_character": {},
+        "leave_period": {},
+        "leave_plan": {},
+        "punch": {},
+        "punch_device": {},
+        "punch_log": {},
+        "punch_manual_import": {},
+        "punch_time": {},
+        "shift_schedule_dtl": {},
+        "shift_schedule_hdr": {},
+        "sub_shift_group": {}
+    },
+    "phoneValues": {
+        "attendance_abscence_type": [],
+        "attendance_captured": [],
+        "attendance_payroll": [],
+        "device_id_mapping": [],
+        "holiday": [],
+        "holiday_character": [],
+        "leave_period": [],
+        "leave_plan": [],
+        "punch": [],
+        "punch_device": [],
+        "punch_log": [],
+        "punch_manual_import": [],
+        "punch_time": [],
+        "shift_schedule_dtl": [],
+        "shift_schedule_hdr": [],
+        "sub_shift_group": []
+    },
+    "emailValues": {
+        "attendance_abscence_type": [],
+        "attendance_captured": [],
+        "attendance_payroll": [],
+        "device_id_mapping": [],
+        "holiday": [],
+        "holiday_character": [],
+        "leave_period": [],
+        "leave_plan": [],
+        "punch": [],
+        "punch_device": [],
+        "punch_log": [],
+        "punch_manual_import": [],
+        "punch_time": [],
+        "shift_schedule_dtl": [],
+        "shift_schedule_hdr": [],
+        "sub_shift_group": []
+    },
+    "allOptionalInputFilters": {
+        "attendance_abscence_type": {
+            "is_with_quota": "boolean",
+            "is_with_pay": "boolean",
+            "is_annual_leave": "boolean",
+            "is_with_entitlement": "boolean",
+            "is_regular_attendance": "boolean",
+            "number_of_days": "number"
+        },
+        "attendance_captured": {
+            "in_out_mode": "number",
+            "punch_device_id": "number"
+        },
+        "attendance_payroll": {
+            "total_worked_hours": "number",
+            "attendance_status": "number",
+            "action_date": "string",
+            "delegated_username": "string",
+            "attendance_abscence_type_id": "number"
+        },
+        "device_id_mapping": { "punch_device_id": "number" },
+        "holiday": { "is_recurring": "boolean" },
+        "holiday_character": { "is_half_day": "boolean" },
+        "leave_period": {},
+        "leave_plan": {
+            "leave_request_status": "number",
+            "action_date": "string",
+            "delegated_username": "string"
+        },
+        "punch": {
+            "in_out_mode": "number",
+            "is_manual": "boolean",
+            "imported_by": "string",
+            "approved_by": "string",
+            "verify_mode": "number",
+            "imported_date": "string",
+            "remark": "string"
+        },
+        "punch_device": {},
+        "punch_log": { "imported_date": "string", "log_remark": "string" },
+        "punch_manual_import": {
+            "is_processed": "boolean",
+            "remark": "string",
+            "processing_date": "string",
+            "is_processing_started": "boolean"
+        },
+        "punch_time": { "total_worked_hours": "number" },
+        "shift_schedule_dtl": {
+            "working_day": "number",
+            "is_shift_span_next_day": "boolean",
+            "is_half_day": "boolean",
+            "shift_schedule_hdr_id": "number"
+        },
+        "shift_schedule_hdr": {},
+        "sub_shift_group": { "tolerance_minutes": "number" }
+    },
+    "enums": {
+        "attendance_abscence_type": {},
+        "attendance_captured": {
+            "in_out_mode": [
+                "CheckIn",
+                "CheckOut",
+                "BreakOut",
+                "BreakIn",
+                "OT_In",
+                "OT_Out"
+            ]
+        },
+        "attendance_payroll": {
+            "attendance_status": [
+                "Pending",
+                "Released",
+                "Approved",
+                "Rejected",
+                "Locked"
+            ]
+        },
+        "device_id_mapping": {},
+        "holiday": {},
+        "holiday_character": {},
+        "leave_period": {},
+        "leave_plan": {
+            "leave_request_status": [
+                "Pending",
+                "Approved",
+                "Rejected",
+                "Released",
+                "Locked"
+            ]
+        },
+        "punch": {},
+        "punch_device": {},
+        "punch_log": {},
+        "punch_manual_import": {},
+        "punch_time": {},
+        "shift_schedule_dtl": {
+            "working_day": [
+                "Sunday",
+                "Monday",
+                "Tuesday",
+                "Wednsday",
+                "Thrusday",
+                "Friday",
+                "Saturday"
+            ]
+        },
+        "shift_schedule_hdr": {},
+        "sub_shift_group": {}
+    },
+    "dateValues": {
+        "attendance_abscence_type": [],
+        "attendance_captured": ["date"],
+        "attendance_payroll": ["date", "action_date"],
+        "device_id_mapping": [],
+        "holiday": [],
+        "holiday_character": ["date"],
+        "leave_period": ["date"],
+        "leave_plan": ["action_date"],
+        "punch": ["punch_date", "imported_date"],
+        "punch_device": [],
+        "punch_log": ["imported_date"],
+        "punch_manual_import": ["processing_date"],
+        "punch_time": ["date"],
+        "shift_schedule_dtl": [],
+        "shift_schedule_hdr": [],
+        "sub_shift_group": []
+    },
+    "allProjections": {
+        "attendance_abscence_type": {
+            "id": true,
+            "aa_description": true,
+            "is_with_quota": true,
+            "is_with_pay": true,
+            "is_annual_leave": true,
+            "is_with_entitlement": true,
+            "is_regular_attendance": true,
+            "number_of_days": true
+        },
+        "attendance_captured": {
+            "id": true,
+            "date": true,
+            "in_out_mode": true,
+            "punch_device": true,
+            "employee": true
+        },
+        "attendance_payroll": {
+            "id": true,
+            "date": true,
+            "total_worked_hours": true,
+            "attendance_status": true,
+            "action_date": true,
+            "delegated_username": true,
+            "attendance_abscence_type": true,
+            "employee": true
+        },
+        "device_id_mapping": {
+            "id": true,
+            "finger_print": true,
+            "employee": true,
+            "punch_device": true
+        },
+        "holiday": { "id": true, "holiday_name": true, "is_recurring": true },
+        "holiday_character": {
+            "id": true,
+            "date": true,
+            "is_half_day": true,
+            "holiday": true
+        },
+        "leave_period": { "id": true, "date": true },
+        "leave_plan": {
+            "id": true,
+            "is_half_day": true,
+            "leave_request_status": true,
+            "action_date": true,
+            "delegated_username": true,
+            "employee": true
+        },
+        "punch": {
+            "id": true,
+            "punch_date": true,
+            "in_out_mode": true,
+            "is_manual": true,
+            "imported_by": true,
+            "approved_by": true,
+            "verify_mode": true,
+            "imported_date": true,
+            "remark": true,
+            "punch_device": true,
+            "employee": true
+        },
+        "punch_device": { "id": true, "device_name": true, "ip_address": true },
+        "punch_log": {
+            "id": true,
+            "imported_date": true,
+            "log_remark": true,
+            "punch_device": true
+        },
+        "punch_manual_import": {
+            "id": true,
+            "is_processed": true,
+            "remark": true,
+            "processing_date": true,
+            "is_processing_started": true,
+            "punch_device": true
+        },
+        "punch_time": {
+            "id": true,
+            "date": true,
+            "total_worked_hours": true,
+            "employee": true
+        },
+        "shift_schedule_dtl": {
+            "id": true,
+            "clock_in": true,
+            "clock_out": true,
+            "min_working_hours": true,
+            "working_day": true,
+            "is_shift_span_next_day": true,
+            "is_half_day": true,
+            "shift_schedule_hdr": true
+        },
+        "shift_schedule_hdr": {
+            "id": true,
+            "shift_name": true,
+            "sub_shift_group": true
+        },
+        "sub_shift_group": {
+            "id": true,
+            "sub_shift_name": true,
+            "morning_out": true,
+            "afternoon_in": true,
+            "tolerance_minutes": true
+        }
+    },
+    "allFilters": {
+        "attendance_abscence_type": {
+            "id": "number",
+            "aa_description": "string",
+            "is_with_quota": "boolean",
+            "is_with_pay": "boolean",
+            "is_annual_leave": "boolean",
+            "is_with_entitlement": "boolean",
+            "is_regular_attendance": "boolean",
+            "number_of_days": "number"
+        },
+        "attendance_captured": {
+            "id": "number",
+            "in_out_mode": "number",
+            "punch_device_id": "number",
+            "employee_id": "number"
+        },
+        "attendance_payroll": {
+            "id": "number",
+            "total_worked_hours": "number",
+            "attendance_status": "number",
+            "delegated_username": "string",
+            "attendance_abscence_type_id": "number",
+            "employee_id": "number"
+        },
+        "device_id_mapping": {
+            "id": "number",
+            "finger_print_id": "string",
+            "employee_id": "number",
+            "punch_device_id": "number"
+        },
+        "holiday": {
+            "id": "number",
+            "holiday_name": "string",
+            "is_recurring": "boolean"
+        },
+        "holiday_character": {
+            "id": "number",
+            "is_half_day": "boolean",
+            "holiday_id": "number"
+        },
+        "leave_period": { "id": "number" },
+        "leave_plan": {
+            "id": "number",
+            "is_half_day": "boolean",
+            "leave_request_status": "number",
+            "delegated_username": "string",
+            "employee_id": "number"
+        },
+        "punch": {
+            "id": "number",
+            "in_out_mode": "number",
+            "is_manual": "boolean",
+            "imported_by": "string",
+            "approved_by": "string",
+            "verify_mode": "number",
+            "remark": "string",
+            "punch_device_id": "number",
+            "employee_id": "number"
+        },
+        "punch_device": {
+            "id": "number",
+            "device_name": "string",
+            "ip_address": "string"
+        },
+        "punch_log": {
+            "id": "number",
+            "log_remark": "string",
+            "punch_device_id": "number"
+        },
+        "punch_manual_import": {
+            "id": "number",
+            "is_processed": "boolean",
+            "remark": "string",
+            "is_processing_started": "boolean",
+            "punch_device_id": "number"
+        },
+        "punch_time": {
+            "id": "number",
+            "total_worked_hours": "number",
+            "employee_id": "number"
+        },
+        "shift_schedule_dtl": {
+            "id": "number",
+            "clock_in": "number",
+            "clock_out": "number",
+            "min_working_hours": "number",
+            "working_day": "number",
+            "is_shift_span_next_day": "boolean",
+            "is_half_day": "boolean",
+            "shift_schedule_hdr_id": "number"
+        },
+        "shift_schedule_hdr": {
+            "id": "number",
+            "shift_name": "string",
+            "sub_shift_group_id": "number"
+        },
+        "sub_shift_group": {
+            "id": "number",
+            "sub_shift_name": "string",
+            "morning_out": "number",
+            "afternoon_in": "number",
+            "tolerance_minutes": "number"
+        }
+    },
+    "allSorts": {
+        "attendance_abscence_type": {
+            "id": "number",
+            "aa_description": "number",
+            "is_with_quota": "number",
+            "is_with_pay": "number",
+            "is_annual_leave": "number",
+            "is_with_entitlement": "number",
+            "is_regular_attendance": "number",
+            "number_of_days": "number"
+        },
+        "attendance_captured": {
+            "id": "number",
+            "date": "number",
+            "in_out_mode": "number",
+            "punch_device_id": "number",
+            "employee_id": "number"
+        },
+        "attendance_payroll": {
+            "id": "number",
+            "date": "number",
+            "total_worked_hours": "number",
+            "attendance_status": "number",
+            "action_date": "number",
+            "delegated_username": "number",
+            "attendance_abscence_type_id": "number",
+            "employee_id": "number"
+        },
+        "device_id_mapping": {
+            "id": "number",
+            "finger_print_id": "number",
+            "employee_id": "number",
+            "punch_device_id": "number"
+        },
+        "holiday": {
+            "id": "number",
+            "holiday_name": "number",
+            "is_recurring": "number"
+        },
+        "holiday_character": {
+            "id": "number",
+            "date": "number",
+            "is_half_day": "number",
+            "holiday_id": "number"
+        },
+        "leave_period": { "id": "number", "date": "number" },
+        "leave_plan": {
+            "id": "number",
+            "is_half_day": "number",
+            "leave_request_status": "number",
+            "action_date": "number",
+            "delegated_username": "number",
+            "employee_id": "number"
+        },
+        "punch": {
+            "id": "number",
+            "punch_date": "number",
+            "in_out_mode": "number",
+            "is_manual": "number",
+            "imported_by": "number",
+            "approved_by": "number",
+            "verify_mode": "number",
+            "imported_date": "number",
+            "remark": "number",
+            "punch_device_id": "number",
+            "employee_id": "number"
+        },
+        "punch_device": {
+            "id": "number",
+            "device_name": "number",
+            "ip_address": "number"
+        },
+        "punch_log": {
+            "id": "number",
+            "imported_date": "number",
+            "log_remark": "number",
+            "punch_device_id": "number"
+        },
+        "punch_manual_import": {
+            "id": "number",
+            "is_processed": "number",
+            "remark": "number",
+            "processing_date": "number",
+            "is_processing_started": "number",
+            "punch_device_id": "number"
+        },
+        "punch_time": {
+            "id": "number",
+            "date": "number",
+            "total_worked_hours": "number",
+            "employee_id": "number"
+        },
+        "shift_schedule_dtl": {
+            "id": "number",
+            "clock_in": "number",
+            "clock_out": "number",
+            "min_working_hours": "number",
+            "working_day": "number",
+            "is_shift_span_next_day": "number",
+            "is_half_day": "number",
+            "shift_schedule_hdr_id": "number"
+        },
+        "shift_schedule_hdr": {
+            "id": "number",
+            "shift_name": "number",
+            "sub_shift_group_id": "number"
+        },
+        "sub_shift_group": {
+            "id": "number",
+            "sub_shift_name": "number",
+            "morning_out": "number",
+            "afternoon_in": "number",
+            "tolerance_minutes": "number"
+        }
+    },
+    "uniqueValues": {
+        "attendance_abscence_type": ["aa_description"],
+        "attendance_captured": [],
+        "attendance_payroll": [],
+        "device_id_mapping": ["finger_print_id", "employee_id"],
+        "holiday": ["holiday_name"],
+        "holiday_character": ["date", "holiday_id"],
+        "leave_period": [],
+        "leave_plan": ["employee_id"],
+        "punch": [],
+        "punch_device": ["device_name"],
+        "punch_log": [],
+        "punch_manual_import": [],
+        "punch_time": [],
+        "shift_schedule_dtl": [],
+        "shift_schedule_hdr": ["shift_name"],
+        "sub_shift_group": ["sub_shift_name"]
+    },
+    "allRoutes": [
+        "/attendance_abscence_type",
+        "/attendance_captured",
+        "/attendance_payroll",
+        "/device_id_mapping",
+        "/holiday",
+        "/holiday_character",
+        "/leave_period",
+        "/leave_plan",
+        "/punch",
+        "/punch_device",
+        "/punch_log",
+        "/punch_manual_import",
+        "/punch_time",
+        "/shift_schedule_dtl",
+        "/shift_schedule_hdr",
+        "/sub_shift_group"
+    ]
+}

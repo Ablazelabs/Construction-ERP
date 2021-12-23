@@ -1,1 +1,802 @@
-{"/hcm/company_structure/business_unit":{"post":{"summary":"creates a new business_unit","tags":["business_unit"],"requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","properties":{"name":{"type":"String"},"parent_id":{"type":"Int?"},"is_root":{"type":"Boolean?"},"cost_center_id":{"type":"Int?"},"employee_id":{"type":"Int?"}}}}}},"responses":{"200":{"description":"success message","content":{"application/json":{"schema":{"type":"object","properties":{"success":{"type":"boolean"}}}}}}}},"get":{"summary":"gets selected business_units","tags":["business_unit"],"requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","properties":{"limit":{"type":"Int"},"skip":{"type":"Int"},"filter":{"type":"object","properties":{"id":{"type":"Int"},"name":{"type":"String"},"parent_id":{"type":"Int?"},"is_root":{"type":"Boolean?"},"cost_center_id":{"type":"Int?"},"employee_id":{"type":"Int?"}}},"sort":{"type":"object","properties":{"id":{"type":"Int"},"name":{"type":"Int"},"parent_id":{"type":"Int"},"is_root":{"type":"Int"},"cost_center_id":{"type":"Int"},"employee_id":{"type":"Int"}}}}}}}},"responses":{"200":{"description":"fetched data","content":{"application/json":{"schema":{"type":"object","properties":{"id":{"type":"Int"},"name":{"type":"String"},"parent_id":{"type":"Int?"},"is_root":{"type":"Boolean?"},"cost_center_id":{"type":"Int?"},"employee_id":{"type":"Int?"}}}}}}}},"patch":{"summary":"updates a business_unit","tags":["business_unit"],"requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","properties":{"id":{"type":"Int"},"updateData":{"type":"object","properties":{"name":{"type":"String"},"parent_id":{"type":"Int?"},"is_root":{"type":"Boolean?"},"cost_center_id":{"type":"Int?"},"employee_id":{"type":"Int?"}}}}}}}},"responses":{"200":{"description":"success message","content":{"application/json":{"schema":{"type":"object","properties":{"success":{"type":"boolean"}}}}}}}},"delete":{"summary":"deletes a business_unit","tags":["business_unit"],"requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","properties":{"id":{"type":"Int"}}}}}},"responses":{"200":{"description":"success message","content":{"application/json":{"schema":{"type":"object","properties":{"success":{"type":"boolean"}}}}}}}}},"/hcm/company_structure/company":{"post":{"summary":"creates a new company","tags":["company"],"requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","properties":{"code":{"type":"String"},"name":{"type":"String"},"country_id":{"type":"Int?"},"currency_id":{"type":"Int?"},"logo":{"type":"String?"}}}}}},"responses":{"200":{"description":"success message","content":{"application/json":{"schema":{"type":"object","properties":{"success":{"type":"boolean"}}}}}}}},"get":{"summary":"gets selected companys","tags":["company"],"requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","properties":{"limit":{"type":"Int"},"skip":{"type":"Int"},"filter":{"type":"object","properties":{"id":{"type":"Int"},"code":{"type":"String"},"name":{"type":"String"},"country_id":{"type":"Int?"},"currency_id":{"type":"Int?"},"logo":{"type":"String?"}}},"sort":{"type":"object","properties":{"id":{"type":"Int"},"code":{"type":"Int"},"name":{"type":"Int"},"country_id":{"type":"Int"},"currency_id":{"type":"Int"},"logo":{"type":"Int"}}}}}}}},"responses":{"200":{"description":"fetched data","content":{"application/json":{"schema":{"type":"object","properties":{"id":{"type":"Int"},"code":{"type":"String"},"name":{"type":"String"},"country_id":{"type":"Int?"},"currency_id":{"type":"Int?"},"logo":{"type":"String?"}}}}}}}},"patch":{"summary":"updates a company","tags":["company"],"requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","properties":{"id":{"type":"Int"},"updateData":{"type":"object","properties":{"code":{"type":"String"},"name":{"type":"String"},"country_id":{"type":"Int?"},"currency_id":{"type":"Int?"},"logo":{"type":"String?"}}}}}}}},"responses":{"200":{"description":"success message","content":{"application/json":{"schema":{"type":"object","properties":{"success":{"type":"boolean"}}}}}}}},"delete":{"summary":"deletes a company","tags":["company"],"requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","properties":{"id":{"type":"Int"}}}}}},"responses":{"200":{"description":"success message","content":{"application/json":{"schema":{"type":"object","properties":{"success":{"type":"boolean"}}}}}}}}},"/hcm/company_structure/location":{"post":{"summary":"creates a new location","tags":["location"],"requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","properties":{"location_name":{"type":"String"},"address_1":{"type":"String"},"address_2":{"type":"String?"},"city":{"type":"String?"},"state_or_province":{"type":"String?"},"zip_or_portal_code":{"type":"String?"},"phone":{"type":"String?"},"fax":{"type":"String?"},"website":{"type":"String?"},"email":{"type":"String?"}}}}}},"responses":{"200":{"description":"success message","content":{"application/json":{"schema":{"type":"object","properties":{"success":{"type":"boolean"}}}}}}}},"get":{"summary":"gets selected locations","tags":["location"],"requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","properties":{"limit":{"type":"Int"},"skip":{"type":"Int"},"filter":{"type":"object","properties":{"id":{"type":"Int"},"location_name":{"type":"String"},"address_1":{"type":"String"},"address_2":{"type":"String?"},"city":{"type":"String?"},"state_or_province":{"type":"String?"},"zip_or_portal_code":{"type":"String?"},"phone":{"type":"String?"},"fax":{"type":"String?"},"website":{"type":"String?"},"email":{"type":"String?"}}},"sort":{"type":"object","properties":{"id":{"type":"Int"},"location_name":{"type":"Int"},"address_1":{"type":"Int"},"address_2":{"type":"Int"},"city":{"type":"Int"},"state_or_province":{"type":"Int"},"zip_or_portal_code":{"type":"Int"},"phone":{"type":"Int"},"fax":{"type":"Int"},"website":{"type":"Int"},"email":{"type":"Int"}}}}}}}},"responses":{"200":{"description":"fetched data","content":{"application/json":{"schema":{"type":"object","properties":{"id":{"type":"Int"},"location_name":{"type":"String"},"address_1":{"type":"String"},"address_2":{"type":"String?"},"city":{"type":"String?"},"state_or_province":{"type":"String?"},"zip_or_portal_code":{"type":"String?"},"phone":{"type":"String?"},"fax":{"type":"String?"},"website":{"type":"String?"},"email":{"type":"String?"}}}}}}}},"patch":{"summary":"updates a location","tags":["location"],"requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","properties":{"id":{"type":"Int"},"updateData":{"type":"object","properties":{"location_name":{"type":"String"},"address_1":{"type":"String"},"address_2":{"type":"String?"},"city":{"type":"String?"},"state_or_province":{"type":"String?"},"zip_or_portal_code":{"type":"String?"},"phone":{"type":"String?"},"fax":{"type":"String?"},"website":{"type":"String?"},"email":{"type":"String?"}}}}}}}},"responses":{"200":{"description":"success message","content":{"application/json":{"schema":{"type":"object","properties":{"success":{"type":"boolean"}}}}}}}},"delete":{"summary":"deletes a location","tags":["location"],"requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","properties":{"id":{"type":"Int"}}}}}},"responses":{"200":{"description":"success message","content":{"application/json":{"schema":{"type":"object","properties":{"success":{"type":"boolean"}}}}}}}}},"/hcm/company_structure/company_primary_contact":{"post":{"summary":"creates a new company_primary_contact","tags":["company_primary_contact"],"requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","properties":{"name":{"type":"String"},"phone":{"type":"String"},"email":{"type":"String?"},"location_id":{"type":"Int?"}}}}}},"responses":{"200":{"description":"success message","content":{"application/json":{"schema":{"type":"object","properties":{"success":{"type":"boolean"}}}}}}}},"get":{"summary":"gets selected company_primary_contacts","tags":["company_primary_contact"],"requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","properties":{"limit":{"type":"Int"},"skip":{"type":"Int"},"filter":{"type":"object","properties":{"id":{"type":"Int"},"name":{"type":"String"},"phone":{"type":"String"},"email":{"type":"String?"},"location_id":{"type":"Int?"}}},"sort":{"type":"object","properties":{"id":{"type":"Int"},"name":{"type":"Int"},"phone":{"type":"Int"},"email":{"type":"Int"},"location_id":{"type":"Int"}}}}}}}},"responses":{"200":{"description":"fetched data","content":{"application/json":{"schema":{"type":"object","properties":{"id":{"type":"Int"},"name":{"type":"String"},"phone":{"type":"String"},"email":{"type":"String?"},"location_id":{"type":"Int?"}}}}}}}},"patch":{"summary":"updates a company_primary_contact","tags":["company_primary_contact"],"requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","properties":{"id":{"type":"Int"},"updateData":{"type":"object","properties":{"name":{"type":"String"},"phone":{"type":"String"},"email":{"type":"String?"},"location_id":{"type":"Int?"}}}}}}}},"responses":{"200":{"description":"success message","content":{"application/json":{"schema":{"type":"object","properties":{"success":{"type":"boolean"}}}}}}}},"delete":{"summary":"deletes a company_primary_contact","tags":["company_primary_contact"],"requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","properties":{"id":{"type":"Int"}}}}}},"responses":{"200":{"description":"success message","content":{"application/json":{"schema":{"type":"object","properties":{"success":{"type":"boolean"}}}}}}}}}}
+{
+    "/hcm/company_structure/business_unit": {
+        "post": {
+            "summary": "creates a new business_unit",
+            "tags": ["business_unit"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "name": { "type": "String" },
+                                "parent_id": { "type": "Int?" },
+                                "is_root": { "type": "Boolean?" },
+                                "cost_center_id": { "type": "Int?" },
+                                "employee_id": { "type": "Int?" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected business_units",
+            "tags": ["business_unit"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "name": { "type": "String" },
+                                        "parent_id": { "type": "Int?" },
+                                        "is_root": { "type": "Boolean?" },
+                                        "cost_center_id": { "type": "Int?" },
+                                        "employee_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "name": { "type": "Int" },
+                                        "parent_id": { "type": "Int" },
+                                        "is_root": { "type": "Int" },
+                                        "cost_center_id": { "type": "Int" },
+                                        "employee_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "name": { "type": "String" },
+                                    "parent_id": { "type": "Int?" },
+                                    "is_root": { "type": "Boolean?" },
+                                    "cost_center_id": { "type": "Int?" },
+                                    "employee_id": { "type": "Int?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a business_unit",
+            "tags": ["business_unit"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": { "type": "String" },
+                                        "parent_id": { "type": "Int?" },
+                                        "is_root": { "type": "Boolean?" },
+                                        "cost_center_id": { "type": "Int?" },
+                                        "employee_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a business_unit",
+            "tags": ["business_unit"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/hcm/company_structure/company": {
+        "post": {
+            "summary": "creates a new company",
+            "tags": ["company"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "code": { "type": "String" },
+                                "name": { "type": "String" },
+                                "country_id": { "type": "Int?" },
+                                "currency_id": { "type": "Int?" },
+                                "logo": { "type": "String?" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected companys",
+            "tags": ["company"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "code": { "type": "String" },
+                                        "name": { "type": "String" },
+                                        "country_id": { "type": "Int?" },
+                                        "currency_id": { "type": "Int?" },
+                                        "logo": { "type": "String?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "code": { "type": "Int" },
+                                        "name": { "type": "Int" },
+                                        "country_id": { "type": "Int" },
+                                        "currency_id": { "type": "Int" },
+                                        "logo": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "code": { "type": "String" },
+                                    "name": { "type": "String" },
+                                    "country_id": { "type": "Int?" },
+                                    "currency_id": { "type": "Int?" },
+                                    "logo": { "type": "String?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a company",
+            "tags": ["company"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": { "type": "String" },
+                                        "name": { "type": "String" },
+                                        "country_id": { "type": "Int?" },
+                                        "currency_id": { "type": "Int?" },
+                                        "logo": { "type": "String?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a company",
+            "tags": ["company"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/hcm/company_structure/location": {
+        "post": {
+            "summary": "creates a new location",
+            "tags": ["location"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "location_name": { "type": "String" },
+                                "address_1": { "type": "String" },
+                                "address_2": { "type": "String?" },
+                                "city": { "type": "String?" },
+                                "state_or_province": { "type": "String?" },
+                                "zip_or_portal_code": { "type": "String?" },
+                                "phone": { "type": "String?" },
+                                "fax": { "type": "String?" },
+                                "website": { "type": "String?" },
+                                "email": { "type": "String?" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected locations",
+            "tags": ["location"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "location_name": { "type": "String" },
+                                        "address_1": { "type": "String" },
+                                        "address_2": { "type": "String?" },
+                                        "city": { "type": "String?" },
+                                        "state_or_province": {
+                                            "type": "String?"
+                                        },
+                                        "zip_or_portal_code": {
+                                            "type": "String?"
+                                        },
+                                        "phone": { "type": "String?" },
+                                        "fax": { "type": "String?" },
+                                        "website": { "type": "String?" },
+                                        "email": { "type": "String?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "location_name": { "type": "Int" },
+                                        "address_1": { "type": "Int" },
+                                        "address_2": { "type": "Int" },
+                                        "city": { "type": "Int" },
+                                        "state_or_province": { "type": "Int" },
+                                        "zip_or_portal_code": { "type": "Int" },
+                                        "phone": { "type": "Int" },
+                                        "fax": { "type": "Int" },
+                                        "website": { "type": "Int" },
+                                        "email": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "location_name": { "type": "String" },
+                                    "address_1": { "type": "String" },
+                                    "address_2": { "type": "String?" },
+                                    "city": { "type": "String?" },
+                                    "state_or_province": { "type": "String?" },
+                                    "zip_or_portal_code": { "type": "String?" },
+                                    "phone": { "type": "String?" },
+                                    "fax": { "type": "String?" },
+                                    "website": { "type": "String?" },
+                                    "email": { "type": "String?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a location",
+            "tags": ["location"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "location_name": { "type": "String" },
+                                        "address_1": { "type": "String" },
+                                        "address_2": { "type": "String?" },
+                                        "city": { "type": "String?" },
+                                        "state_or_province": {
+                                            "type": "String?"
+                                        },
+                                        "zip_or_portal_code": {
+                                            "type": "String?"
+                                        },
+                                        "phone": { "type": "String?" },
+                                        "fax": { "type": "String?" },
+                                        "website": { "type": "String?" },
+                                        "email": { "type": "String?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a location",
+            "tags": ["location"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/hcm/company_structure/company_primary_contact": {
+        "post": {
+            "summary": "creates a new company_primary_contact",
+            "tags": ["company_primary_contact"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "name": { "type": "String" },
+                                "phone": { "type": "String" },
+                                "email": { "type": "String?" },
+                                "location_id": { "type": "Int?" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected company_primary_contacts",
+            "tags": ["company_primary_contact"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "name": { "type": "String" },
+                                        "phone": { "type": "String" },
+                                        "email": { "type": "String?" },
+                                        "location_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "name": { "type": "Int" },
+                                        "phone": { "type": "Int" },
+                                        "email": { "type": "Int" },
+                                        "location_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "name": { "type": "String" },
+                                    "phone": { "type": "String" },
+                                    "email": { "type": "String?" },
+                                    "location_id": { "type": "Int?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a company_primary_contact",
+            "tags": ["company_primary_contact"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": { "type": "String" },
+                                        "phone": { "type": "String" },
+                                        "email": { "type": "String?" },
+                                        "location_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a company_primary_contact",
+            "tags": ["company_primary_contact"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
