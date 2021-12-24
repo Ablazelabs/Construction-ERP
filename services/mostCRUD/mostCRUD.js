@@ -1,18 +1,8 @@
-const { error } = require("../config/config");
+const { error } = require("../../config/config");
 const { PrismaClient } = require("@prisma/client");
 
-const { client } = new PrismaClient();
-
-const uniqueValues = [
-    "tradeName",
-    "tel",
-    "tinNumber",
-    "contactPersonEmail",
-    "contactPersonPhone",
-    "email",
-];
-
-const post = async (reqBody, creator, next) => {
+const allModels = new PrismaClient();
+const post = async (reqBody, modelName, creator, uniqueValues, next) => {
     for (let i in uniqueValues) {
         const uniqueKey = uniqueValues[i];
         if (
@@ -23,7 +13,7 @@ const post = async (reqBody, creator, next) => {
             continue;
         let whereData = {};
         whereData[uniqueKey] = reqBody[uniqueKey];
-        const queryData = await client.findUnique({
+        const queryData = await allModels[modelName].findUnique({
             where: {
                 ...whereData,
             },
@@ -33,7 +23,7 @@ const post = async (reqBody, creator, next) => {
         });
         if (queryData) {
             if (queryData.status == 1) {
-                await client.update({
+                await allModels[modelName].update({
                     where: { ...whereData },
                     data: {
                         status: 0,
@@ -43,7 +33,7 @@ const post = async (reqBody, creator, next) => {
                 });
                 return { success: true };
             }
-            error(`${uniqueKey}`, `client already exists`, next);
+            error(`${uniqueKey}`, `${modelName} already exists`, next);
             return false;
         }
     }
@@ -53,7 +43,7 @@ const post = async (reqBody, creator, next) => {
         status: 0,
     };
     try {
-        await client.create({
+        await allModels[modelName].create({
             data: {
                 ...defaultData,
                 ...reqBody,
@@ -76,8 +66,15 @@ const post = async (reqBody, creator, next) => {
         }
     }
 };
-const get = async (queryFilter, querySort, limit, skip, projection) => {
-    const data = await client.findMany({
+const get = async (
+    queryFilter,
+    querySort,
+    limit,
+    skip,
+    projection,
+    modelName
+) => {
+    const data = await allModels[modelName].findMany({
         where: {
             ...queryFilter,
             status: 0,
@@ -97,19 +94,21 @@ const patch = async (
     updateDataProjection,
     reqBody,
     updateData,
+    modelName,
     creator,
+    uniqueValues,
     next
 ) => {
-    const myModel = await client.findUnique({
+    const myModel = await allModels[modelName].findUnique({
         select: { ...updateDataProjection, isProtectedForEdit: true },
         where: { id: reqBody.id },
     });
     if (!myModel) {
-        error("id", `client doesn't exist`, next);
+        error("id", `${modelName} doesn't exist`, next);
         return false;
     }
     if (myModel.isProtectedForEdit) {
-        error("id", `this client is protected against edit`, next);
+        error("id", `this ${modelName} is protected against edit`, next);
         return false;
     }
     for (let i in uniqueValues) {
@@ -124,7 +123,7 @@ const patch = async (
             } else {
                 let whereData = {};
                 whereData[key] = updateData[key];
-                const data = await client.findUnique({
+                const data = await allModels[modelName].findUnique({
                     select: { id: true },
                     where: { ...whereData },
                 });
@@ -136,7 +135,7 @@ const patch = async (
         }
     }
     try {
-        await client.update({
+        await allModels[modelName].update({
             data: {
                 ...updateData,
                 revisedBy: String(creator),
@@ -159,13 +158,14 @@ const patch = async (
     }
     return { success: true };
 };
-const deleter = async (reqBody) => {
+const deleter = async (id, modelName) => {
     try {
-        await client.update({
-            where: { id: reqBody.id },
+        await allModels[modelName].update({
+            where: { id },
             data: { status: 1, endDate: new Date() },
         });
-    } catch {
+    } catch (e) {
+        console.log(e);
         return { success: false };
     }
     return { success: true };

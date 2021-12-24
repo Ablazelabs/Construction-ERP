@@ -1,20 +1,34 @@
 const { error } = require("../config/config");
 const { PrismaClient } = require("@prisma/client");
 
-const { client } = new PrismaClient();
+const {
+    unit_of_measure,
+    warehouse,
+    stock_batch,
+    stock_item,
+    stock_transaction_detail,
+    stock_transaction_header,
+} = new PrismaClient();
 
-const uniqueValues = [
-    "tradeName",
-    "tel",
-    "tinNumber",
-    "contactPersonEmail",
-    "contactPersonPhone",
-    "email",
-];
-
-const post = async (reqBody, creator, next) => {
-    for (let i in uniqueValues) {
-        const uniqueKey = uniqueValues[i];
+const allModels = {
+    unit_of_measure,
+    warehouse,
+    stock_batch,
+    stock_item,
+    stock_transaction_detail,
+    stock_transaction_header,
+};
+const uniqueValues = {
+    unit_of_measure: [],
+    warehouse: [],
+    stock_batch: [],
+    stock_item: [],
+    stock_transaction_detail: [],
+    stock_transaction_header: [],
+};
+const post = async (reqBody, operationDataType, creator, next) => {
+    for (let i in uniqueValues[operationDataType]) {
+        const uniqueKey = uniqueValues[operationDataType][i];
         if (
             !reqBody[uniqueKey] &&
             reqBody[uniqueKey] != 0 &&
@@ -23,7 +37,7 @@ const post = async (reqBody, creator, next) => {
             continue;
         let whereData = {};
         whereData[uniqueKey] = reqBody[uniqueKey];
-        const queryData = await client.findUnique({
+        const queryData = await allModels[operationDataType].findUnique({
             where: {
                 ...whereData,
             },
@@ -33,7 +47,7 @@ const post = async (reqBody, creator, next) => {
         });
         if (queryData) {
             if (queryData.status == 1) {
-                await client.update({
+                await allModels[operationDataType].update({
                     where: { ...whereData },
                     data: {
                         status: 0,
@@ -43,7 +57,7 @@ const post = async (reqBody, creator, next) => {
                 });
                 return { success: true };
             }
-            error(`${uniqueKey}`, `client already exists`, next);
+            error(`${uniqueKey}`, `${operationDataType} already exists`, next);
             return false;
         }
     }
@@ -53,7 +67,7 @@ const post = async (reqBody, creator, next) => {
         status: 0,
     };
     try {
-        await client.create({
+        await allModels[operationDataType].create({
             data: {
                 ...defaultData,
                 ...reqBody,
@@ -76,8 +90,15 @@ const post = async (reqBody, creator, next) => {
         }
     }
 };
-const get = async (queryFilter, querySort, limit, skip, projection) => {
-    const data = await client.findMany({
+const get = async (
+    queryFilter,
+    querySort,
+    limit,
+    skip,
+    projection,
+    operationDataType
+) => {
+    const data = await allModels[operationDataType].findMany({
         where: {
             ...queryFilter,
             status: 0,
@@ -97,23 +118,28 @@ const patch = async (
     updateDataProjection,
     reqBody,
     updateData,
+    operationDataType,
     creator,
     next
 ) => {
-    const myModel = await client.findUnique({
+    const myModel = await allModels[operationDataType].findUnique({
         select: { ...updateDataProjection, isProtectedForEdit: true },
         where: { id: reqBody.id },
     });
     if (!myModel) {
-        error("id", `client doesn't exist`, next);
+        error("id", `${operationDataType} doesn't exist`, next);
         return false;
     }
     if (myModel.isProtectedForEdit) {
-        error("id", `this client is protected against edit`, next);
+        error(
+            "id",
+            `this ${operationDataType} is protected against edit`,
+            next
+        );
         return false;
     }
-    for (let i in uniqueValues) {
-        const key = uniqueValues[i];
+    for (let i in uniqueValues[operationDataType]) {
+        const key = uniqueValues[operationDataType][i];
         if (
             updateData[key] ||
             updateData[key] == 0 ||
@@ -124,7 +150,7 @@ const patch = async (
             } else {
                 let whereData = {};
                 whereData[key] = updateData[key];
-                const data = await client.findUnique({
+                const data = await allModels[operationDataType].findUnique({
                     select: { id: true },
                     where: { ...whereData },
                 });
@@ -136,7 +162,7 @@ const patch = async (
         }
     }
     try {
-        await client.update({
+        await allModels[operationDataType].update({
             data: {
                 ...updateData,
                 revisedBy: String(creator),
@@ -159,13 +185,14 @@ const patch = async (
     }
     return { success: true };
 };
-const deleter = async (reqBody) => {
+const deleter = async ({ id }, operationDataType) => {
     try {
-        await client.update({
-            where: { id: reqBody.id },
+        await allModels[operationDataType].update({
+            where: { id },
             data: { status: 1, endDate: new Date() },
         });
-    } catch {
+    } catch (e) {
+        console.log(e);
         return { success: false };
     }
     return { success: true };

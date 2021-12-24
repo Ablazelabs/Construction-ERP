@@ -1222,6 +1222,215 @@
                 }
             }
         },
+        "/project/master/documentation": {
+            "post": {
+                "summary": "Creates a new documentation",
+                "tags": ["Documentation"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": { "type": "string" },
+                                    "description": { "type": "string" },
+                                    "document_category_id": {
+                                        "type": "string"
+                                    },
+                                    "isProtectedForEdit": { "type": "string" }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success message",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": { "type": "boolean" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "gets documentations based on given filter and sort",
+                "tags": ["Documentation"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "limit": { "type": "integer" },
+                                    "skip": { "type": "integer" },
+                                    "filter": {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": { "type": "string" },
+                                            "description": { "type": "string" },
+                                            "document_category_name": {
+                                                "type": "string"
+                                            },
+                                            "document_category_id": {
+                                                "type": "integer"
+                                            }
+                                        }
+                                    },
+                                    "sort": {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": { "type": "integer" },
+                                            "description": {
+                                                "type": "integer"
+                                            },
+                                            "document_category_id": {
+                                                "type": "integer"
+                                            },
+                                            "document_category_name": {
+                                                "type": "integer"
+                                            },
+                                            "id": { "type": "integer" },
+                                            "startDate": { "type": "integer" },
+                                            "endDate": { "type": "integer" },
+                                            "creationDate": {
+                                                "type": "integer"
+                                            },
+                                            "revisionDate": {
+                                                "type": "integer"
+                                            },
+                                            "isProtectedForEdit": {
+                                                "type": "integer"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success message",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": { "type": "number" },
+                                            "name": { "type": "string" },
+                                            "description": { "type": "string" },
+                                            "unit": { "type": "number" },
+                                            "document_category": {
+                                                "type": "object"
+                                            },
+                                            "startDate": { "type": "string" },
+                                            "endDate": { "type": "string" },
+                                            "creationDate": {
+                                                "type": "string"
+                                            },
+                                            "createdBy": { "type": "string" },
+                                            "revisionDate": {
+                                                "type": "string"
+                                            },
+                                            "revisedBy": { "type": "string" },
+                                            "isProtectedForEdit": {
+                                                "type": "boolean"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "updates a documentation",
+                "tags": ["Documentation"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "integer" },
+                                    "updateData": {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": { "type": "string" },
+                                            "description": { "type": "string" },
+                                            "document_category_id": {
+                                                "type": "integer"
+                                            },
+                                            "isProtectedForEdit": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success message",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": { "type": "boolean" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "deletes documentation",
+                "tags": ["Documentation"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": { "id": { "type": "integer" } }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success message",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": { "type": "boolean" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/project/master/tagname": {
             "post": {
                 "summary": "tagname stands for the name of the header(eg /equipment)",
@@ -1232,7 +1441,8 @@
                     "ManPower",
                     "Material Category",
                     "Phase",
-                    "Work Category"
+                    "Work Category",
+                    "Document Category"
                 ],
                 "requestBody": {
                     "required": true,
@@ -1274,7 +1484,8 @@
                     "ManPower",
                     "Material Category",
                     "Phase",
-                    "Work Category"
+                    "Work Category",
+                    "Document Category"
                 ],
                 "requestBody": {
                     "required": true,
@@ -1361,7 +1572,8 @@
                     "ManPower",
                     "Material Category",
                     "Phase",
-                    "Work Category"
+                    "Work Category",
+                    "Document Category"
                 ],
                 "requestBody": {
                     "required": true,
@@ -1411,7 +1623,8 @@
                     "ManPower",
                     "Material Category",
                     "Phase",
-                    "Work Category"
+                    "Work Category",
+                    "Document Category"
                 ],
                 "requestBody": {
                     "required": true,

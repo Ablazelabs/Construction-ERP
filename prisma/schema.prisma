@@ -1087,6 +1087,7 @@ model tax {
   tax_rule               tax_rule[]
   general_ledger         general_ledger[]
   general_journal_detail general_journal_detail[]
+  stock_item             stock_item[]
 }
 
 model tax_rule {
@@ -1230,6 +1231,9 @@ model chart_of_account {
   salary_component                 salary_component[]
   global_payroll_account_mapping   global_payroll_account_mapping[]
   salary_component_account_mapping salary_component_account_mapping[]
+  sales_stock_item                 stock_item[]                       @relation("sales_chart")
+  purchase_stock_item              stock_item[]                       @relation("purchase_chart")
+  inventory_stock_item             stock_item[]                       @relation("inventory_chart")
 }
 
 model account_type_financial_statement_section {
@@ -1721,6 +1725,7 @@ model country {
   contact_address    contact_address[]
   employee           employee[]
   company            company[]
+  warehouse          warehouse[]
 }
 
 model title {
@@ -3632,4 +3637,144 @@ model shift_schedule_dtl {
   is_half_day            Boolean?
   shift_schedule_hdr_id  Int?
   shift_schedule_hdr     shift_schedule_hdr? @relation(fields: [shift_schedule_hdr_id], references: [id])
+}
+
+model unit_of_measure {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime     @default(now())
+  createdBy          String
+  revisionDate       DateTime     @updatedAt
+  revisedBy          String
+  status             Int          @default(0)
+  isProtectedForEdit Boolean      @default(false)
+  id                 Int          @id @default(autoincrement())
+  description        String?
+  short_code         String
+  stock_item         stock_item[]
+}
+
+model warehouse {
+  startDate                DateTime
+  endDate                  DateTime
+  creationDate             DateTime                   @default(now())
+  createdBy                String
+  revisionDate             DateTime                   @updatedAt
+  revisedBy                String
+  status                   Int                        @default(0)
+  isProtectedForEdit       Boolean                    @default(false)
+  id                       Int                        @id @default(autoincrement())
+  name                     String
+  city                     String
+  state                    String?
+  zip_code                 String?
+  phone_no                 String?
+  email                    String?
+  is_primary               Boolean?
+  country_id               Int
+  country                  country                    @relation(fields: [country_id], references: [id])
+  stock_transaction_header stock_transaction_header[]
+}
+
+model stock_batch {
+  startDate                DateTime
+  endDate                  DateTime
+  creationDate             DateTime                   @default(now())
+  createdBy                String
+  revisionDate             DateTime                   @updatedAt
+  revisedBy                String
+  status                   Int                        @default(0)
+  isProtectedForEdit       Boolean                    @default(false)
+  id                       Int                        @id @default(autoincrement())
+  batch_ref                String
+  manufacturer             String?
+  manufactured_date        DateTime?
+  date_of_expiry           DateTime?
+  remark                   String?
+  stock_transaction_detail stock_transaction_detail[]
+}
+
+model stock_item {
+  startDate                              DateTime
+  endDate                                DateTime
+  creationDate                           DateTime                   @default(now())
+  createdBy                              String
+  revisionDate                           DateTime                   @updatedAt
+  revisedBy                              String
+  status                                 Int                        @default(0)
+  isProtectedForEdit                     Boolean                    @default(false)
+  id                                     Int                        @id @default(autoincrement())
+  item_name                              String
+  SKU                                    String
+  item_type                              Int
+  reorder_level                          Int
+  stock_item_tracking                    Int?
+  item_can_be                            Int?
+  is_item_returnable                     Boolean?
+  UPC                                    String?
+  EAN                                    String?
+  MPN                                    String?
+  ISBN                                   String?
+  selling_price                          Float?
+  additional_sales_info                  String?
+  purchasing_price                       Float?
+  addtional_purchase_info                String?
+  item_group_id                          Int?
+  dimensions                             String?
+  manufacturer                           String?
+  inventory_tracking_chart_of_account_id Int?
+  purchase_chart_of_account_id           Int?
+  sales_chart_of_account_id              Int?
+  unit_of_measure_id                     Int?
+  tax_id                                 Int?
+  unit_of_measure                        unit_of_measure?           @relation(fields: [unit_of_measure_id], references: [id])
+  tax                                    tax?                       @relation(fields: [tax_id], references: [id])
+  sales_chart_of_account                 chart_of_account?          @relation(name: "sales_chart", fields: [sales_chart_of_account_id], references: [id])
+  purchase_chart_of_account              chart_of_account?          @relation(name: "purchase_chart", fields: [purchase_chart_of_account_id], references: [id])
+  inventory_tracking_chart_of_account    chart_of_account?          @relation(name: "inventory_chart", fields: [inventory_tracking_chart_of_account_id], references: [id])
+  stock_transaction_header               stock_transaction_header[]
+}
+
+model stock_transaction_detail {
+  startDate                   DateTime
+  endDate                     DateTime
+  creationDate                DateTime                 @default(now())
+  createdBy                   String
+  revisionDate                DateTime                 @updatedAt
+  revisedBy                   String
+  status                      Int                      @default(0)
+  isProtectedForEdit          Boolean                  @default(false)
+  id                          Int                      @id @default(autoincrement())
+  transaction_date            DateTime?
+  note                        String?
+  price                       Float?
+  quantity                    Float?
+  order_no                    String?
+  transaction_ref             String?
+  is_opening_value            String?
+  stock_transaction_type      Int?
+  stock_transaction_source    Int?
+  remark                      String?
+  serial_number               String?
+  stock_batch_id              Int?
+  stock_transaction_header_id Int
+  stock_batch                 stock_batch?             @relation(fields: [stock_batch_id], references: [id])
+  stock_transaction_header    stock_transaction_header @relation(fields: [stock_transaction_header_id], references: [id])
+}
+
+model stock_transaction_header {
+  startDate                DateTime
+  endDate                  DateTime
+  creationDate             DateTime                   @default(now())
+  createdBy                String
+  revisionDate             DateTime                   @updatedAt
+  revisedBy                String
+  status                   Int                        @default(0)
+  isProtectedForEdit       Boolean                    @default(false)
+  id                       Int                        @id @default(autoincrement())
+  stock_item_id            Int
+  warehouse_id             Int
+  stock_item               stock_item?                @relation(fields: [stock_item_id], references: [id])
+  warehouse                warehouse                  @relation(fields: [warehouse_id], references: [id])
+  stock_transaction_detail stock_transaction_detail[]
 }

@@ -113,7 +113,7 @@ router.patch(allRoutes, async (req, res, next) => {
         emailValue = emailValues[operationDataType],
         rangeValues = allRangeValues[operationDataType];
 
-    const { updateData, updateDataProjection } = returnPatchData(
+    const data = returnPatchData(
         req.body,
         {
             requiredInputFilter,
@@ -126,6 +126,10 @@ router.patch(allRoutes, async (req, res, next) => {
         },
         next
     );
+    if (!data) {
+        return;
+    }
+    const { updateData, updateDataProjection } = data;
     try {
         const data = await patch(
             updateDataProjection,

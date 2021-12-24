@@ -8,24 +8,11 @@ const {
     patch,
     deleter,
 } = require("../../../services/accountingPeriod");
-const auditLogProjection = {
-    startDate: true,
-    endDate: true,
-    creationDate: true,
-    createdBy: true,
-    revisionDate: true,
-    revisedBy: true,
-    isProtectedForEdit: true,
-};
-const auditLogSort = {
-    startDate: "number",
-    endDate: "number",
-    creationDate: "number",
-    createdBy: "number",
-    revisionDate: "number",
-    revisedBy: "number",
-    isProtectedForEdit: "number",
-};
+const {
+    returnReqBody,
+    returnGetData,
+    returnPatchData,
+} = require("../../../validation/basicValidators");
 const enums = {
     months: [
         "january",
@@ -54,7 +41,6 @@ const data_projection = {
     is_year_end_closing: true,
     period_starting_date: true,
     period_ending_date: true,
-    ...auditLogProjection,
 };
 const data_filter = {
     months: "number", //["january","february","march","april","may","june","july","augest","september","october","november","december","other"],
@@ -74,63 +60,39 @@ const data_sort = {
     is_year_end_closing: "number",
     period_starting_date: "number",
     period_ending_date: "number",
-    ...auditLogSort,
+};
+const data_input = {
+    months: "number",
+    period_number: "number",
+    accounting_period_status: "number",
+    is_current_posting_period: "boolean",
+    is_year_end_closing: "boolean",
+    period_starting_date: "string",
+    period_ending_date: "string",
 };
 const url = "/accounting_period";
 router.post(url, async (req, res, next) => {
-    let reqBody = {};
-    try {
-        reqBody = inputFilter(
-            {
-                months: "number",
-                period_number: "number",
-                accounting_period_status: "number",
-                is_current_posting_period: "boolean",
-                is_year_end_closing: "boolean",
-                period_starting_date: "string",
-                period_ending_date: "string",
-            },
-            {
-                isProtectedForEdit: "boolean",
-            },
-            req.body,
-            4
-        );
-        reqBody.startDate = new Date();
-        reqBody.endDate = new Date("9999/12/31");
-        for (let i in data_dates) {
-            const key = data_dates[i];
-            if (!reqBody[key]) {
-                continue;
-            }
-            reqBody[key] = new Date(reqBody[key]);
-            if (!reqBody[key].getTime()) {
-                throw {
-                    key,
-                    message: "please send date in yyyy/mm/dd format",
-                };
-            }
-        }
-        for (let i in enums) {
-            const key = i;
-            const myArray = enums[i];
-            if (!reqBody[key] && reqBody[key] != 0) {
-                continue;
-            } else {
-                if (reqBody[key] < 1 || reqBody[key] > myArray.length) {
-                    throw {
-                        key,
-                        message: `please send a number between 1 and ${
-                            myArray.length
-                        }, as it identifies the following ${String(myArray)}`,
-                    };
-                } else {
-                    reqBody[key] = Math.floor(reqBody[key]);
-                }
-            }
-        }
-    } catch (e) {
-        error(e.key, e.message, next, 400);
+    const requiredInputFilter = data_input,
+        optionalInputFilter = {},
+        dateValue = data_dates,
+        myEnums = enums,
+        phoneValue = [],
+        emailValue = [],
+        rangeValues = {};
+    const reqBody = returnReqBody(
+        req.body,
+        {
+            requiredInputFilter,
+            optionalInputFilter,
+            dateValue,
+            myEnums,
+            phoneValue,
+            emailValue,
+            rangeValues,
+        },
+        next
+    );
+    if (!reqBody) {
         return;
     }
     try {
@@ -145,93 +107,52 @@ router.post(url, async (req, res, next) => {
     }
 });
 router.get(url, async (req, res, next) => {
-    let filter = {};
-    let sort = {};
-    let skip = 0;
-    let limit = 0;
-    try {
-        inputFilter(
-            { limit: "number" },
-            { skip: "number", filter: "object", sort: "object" },
-            req.body
-        );
-        limit = req.body.limit;
-        skip = req.body.skip || 0;
-        if (req.body.filter) {
-            filter = inputFilter(
-                {},
-                {
-                    ...data_filter,
-                },
-                req.body.filter
-            );
-        }
-        if (req.body.sort) {
-            //send 0 for decending
-            //send 1 for ascending
-            sort = inputFilter(
-                {},
-                {
-                    ...data_sort,
-                },
-                req.body.sort
-            );
-        }
-    } catch (e) {
-        error(e.key, e.message, next);
+    const filters = data_filter,
+        sorts = data_sort,
+        projections = data_projection;
+
+    const getData = returnGetData(
+        req.body,
+        { filters, sorts, projections },
+        next
+    );
+    if (!getData) {
         return;
     }
-    let queryFilter = {};
-    for (let i in filter) {
-        if (typeof filter[i] == "number")
-            queryFilter[i] = { equals: filter[i] };
-        else queryFilter[i] = { contains: filter[i] };
-    }
-    let querySort = {};
-    for (let i in sort) {
-        querySort[i] = sort[i] ? "asc" : "desc";
-    }
+    const { queryFilter, querySort, limit, skip, projection } = getData;
+
     try {
-        res.json(
-            await get(queryFilter, querySort, limit, skip, data_projection)
-        );
+        res.json(await get(queryFilter, querySort, limit, skip, projection));
     } catch (e) {
         console.log(e);
         error("database", "error", next, 500);
     }
 });
 router.patch(url, async (req, res, next) => {
-    let updateData = {};
-    try {
-        inputFilter({ id: "number", updateData: "object" }, {}, req.body);
-        updateData = inputFilter(
-            {},
-            {
-                months: "number",
-                period_number: "number",
-                accounting_period_status: "number",
-                is_current_posting_period: "boolean",
-                is_year_end_closing: "boolean",
-                period_starting_date: "string",
-                period_ending_date: "string",
-                isProtectedForEdit: "boolean",
-            },
-            req.body.updateData
-        );
-    } catch (e) {
-        error(e.key, e.message, next);
+    const requiredInputFilter = data_input,
+        optionalInputFilter = {},
+        dateValue = data_dates,
+        myEnums = enums,
+        phoneValue = [],
+        emailValue = [],
+        rangeValues = {};
+    const data = returnPatchData(
+        req.body,
+        {
+            requiredInputFilter,
+            optionalInputFilter,
+            dateValue,
+            myEnums,
+            phoneValue,
+            emailValue,
+            rangeValues,
+        },
+        next
+    );
+    if (!data) {
         return;
     }
-    if (Object.keys(updateData).length == 0) {
-        error("updateData", "no data has been sent for update", next);
-        return;
-    }
-    let updateDataProjection = {};
-    for (let i in updateData) {
-        if (updateData[i]) {
-            updateDataProjection[i] = true;
-        }
-    }
+    const { updateData, updateDataProjection } = data;
     try {
         const data = await patch(
             updateDataProjection,

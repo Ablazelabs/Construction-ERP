@@ -1,0 +1,358 @@
+{
+    "allInputFilters": {
+        "unit_of_measure": { "short_code": "string" },
+        "warehouse": {
+            "name": "string",
+            "city": "string",
+            "country_id": "number"
+        },
+        "stock_batch": { "batch_ref": "string" },
+        "stock_item": {
+            "item_name": "string",
+            "SKU": "string",
+            "item_type": "number",
+            "reorder_level": "number"
+        },
+        "stock_transaction_detail": { "stock_transaction_header_id": "number" },
+        "stock_transaction_header": {
+            "stock_item_id": "number",
+            "warehouse_id": "number"
+        }
+    },
+    "allOptionalInputFilters": {
+        "unit_of_measure": { "description": "string" },
+        "warehouse": {
+            "state": "string",
+            "zip_code": "string",
+            "phone_no": "string",
+            "email": "string",
+            "is_primary": "boolean"
+        },
+        "stock_batch": {
+            "manufacturer": "string",
+            "manufactured_date": "string",
+            "date_of_expiry": "string",
+            "remark": "string"
+        },
+        "stock_item": {
+            "stock_item_tracking": "number",
+            "item_can_be": "number",
+            "is_item_returnable": "boolean",
+            "UPC": "string",
+            "EAN": "string",
+            "MPN": "string",
+            "ISBN": "string",
+            "selling_price": "number",
+            "additional_sales_info": "string",
+            "purchasing_price": "number",
+            "addtional_purchase_info": "string",
+            "item_group_id": "number",
+            "dimensions": "string",
+            "manufacturer": "string",
+            "inventory_tracking_chart_of_account_id": "number",
+            "purchase_chart_of_account_id": "number",
+            "sales_chart_of_account_id": "number",
+            "unit_of_measure_id": "number",
+            "tax_id": "number"
+        },
+        "stock_transaction_detail": {
+            "transaction_date": "string",
+            "note": "string",
+            "price": "number",
+            "quantity": "number",
+            "order_no": "string",
+            "transaction_ref": "string",
+            "is_opening_value": "string",
+            "stock_transaction_type": "number",
+            "stock_transaction_source": "number",
+            "remark": "string",
+            "stock_batch_id": "number",
+            "serial_number": "string"
+        },
+        "stock_transaction_header": {}
+    },
+    "enums": {
+        "unit_of_measure": {},
+        "warehouse": {},
+        "stock_batch": {},
+        "stock_item": {
+            "item_type": ["Product", "Service"],
+            "stock_item_tracking": ["None", "SerialNumber", "Batch"],
+            "item_can_be": ["Purchased", "Sold", "Both"]
+        },
+        "stock_transaction_detail": {
+            "stock_transaction_type": ["Stock_In", "Stock_Out"],
+            "stock_transaction_source": [
+                "Sales",
+                "Purchase",
+                "Transfer",
+                "Adjustment"
+            ]
+        },
+        "stock_transaction_header": {}
+    },
+    "phoneValues": {
+        "unit_of_measure": [],
+        "warehouse": ["phone_no"],
+        "stock_batch": [],
+        "stock_item": [],
+        "stock_transaction_detail": [],
+        "stock_transaction_header": []
+    },
+    "emailValues": {
+        "unit_of_measure": [],
+        "warehouse": ["email"],
+        "stock_batch": [],
+        "stock_item": [],
+        "stock_transaction_detail": [],
+        "stock_transaction_header": []
+    },
+    "allRangeValues": {
+        "unit_of_measure": {},
+        "warehouse": {},
+        "stock_batch": {},
+        "stock_item": {},
+        "stock_transaction_detail": {},
+        "stock_transaction_header": {}
+    },
+    "dateValues": {
+        "unit_of_measure": [],
+        "warehouse": [],
+        "stock_batch": ["manufactured_date", "date_of_expiry"],
+        "stock_item": [],
+        "stock_transaction_detail": ["transaction_date"],
+        "stock_transaction_header": []
+    },
+    "allProjections": {
+        "unit_of_measure": {
+            "id": true,
+            "description": true,
+            "short_code": true
+        },
+        "warehouse": {
+            "id": true,
+            "name": true,
+            "city": true,
+            "state": true,
+            "zip_code": true,
+            "phone_no": true,
+            "email": true,
+            "is_primary": true,
+            "country": true
+        },
+        "stock_batch": {
+            "id": true,
+            "batch_ref": true,
+            "manufacturer": true,
+            "manufactured_date": true,
+            "date_of_expiry": true,
+            "remark": true
+        },
+        "stock_item": {
+            "id": true,
+            "item_name": true,
+            "SKU": true,
+            "item_type": true,
+            "reorder_level": true,
+            "stock_item_tracking": true,
+            "item_can_be": true,
+            "is_item_returnable": true,
+            "UPC": true,
+            "EAN": true,
+            "MPN": true,
+            "ISBN": true,
+            "selling_price": true,
+            "additional_sales_info": true,
+            "purchasing_price": true,
+            "addtional_purchase_info": true,
+            "item_group_id": true,
+            "dimensions": true,
+            "manufacturer": true,
+            "inventory_tracking_chart_of_account": true,
+            "purchase_chart_of_account": true,
+            "sales_chart_of_account": true,
+            "unit_of_measure": true,
+            "tax": true
+        },
+        "stock_transaction_detail": {
+            "id": true,
+            "stock_transaction_header": true,
+            "transaction_date": true,
+            "note": true,
+            "price": true,
+            "quantity": true,
+            "order_no": true,
+            "transaction_ref": true,
+            "is_opening_value": true,
+            "stock_transaction_type": true,
+            "stock_transaction_source": true,
+            "remark": true,
+            "stock_batch": true,
+            "serial_number": true
+        },
+        "stock_transaction_header": {
+            "id": true,
+            "stock_item": true,
+            "warehouse": true
+        }
+    },
+    "allFilters": {
+        "unit_of_measure": {
+            "id": "number",
+            "description": "string",
+            "short_code": "string"
+        },
+        "warehouse": {
+            "id": "number",
+            "name": "string",
+            "city": "string",
+            "state": "string",
+            "zip_code": "string",
+            "phone_no": "string",
+            "email": "string",
+            "is_primary": "boolean",
+            "country_id": "number"
+        },
+        "stock_batch": {
+            "id": "number",
+            "batch_ref": "string",
+            "manufacturer": "string",
+            "remark": "string"
+        },
+        "stock_item": {
+            "id": "number",
+            "item_name": "string",
+            "SKU": "string",
+            "item_type": "number",
+            "reorder_level": "number",
+            "stock_item_tracking": "number",
+            "item_can_be": "number",
+            "is_item_returnable": "boolean",
+            "UPC": "string",
+            "EAN": "string",
+            "MPN": "string",
+            "ISBN": "string",
+            "selling_price": "number",
+            "additional_sales_info": "string",
+            "purchasing_price": "number",
+            "addtional_purchase_info": "string",
+            "item_group_id": "number",
+            "dimensions": "string",
+            "manufacturer": "string",
+            "inventory_tracking_chart_of_account_id": "number",
+            "purchase_chart_of_account_id": "number",
+            "sales_chart_of_account_id": "number",
+            "unit_of_measure_id": "number",
+            "tax_id": "number"
+        },
+        "stock_transaction_detail": {
+            "id": "number",
+            "stock_transaction_header_id": "number",
+            "note": "string",
+            "price": "number",
+            "quantity": "number",
+            "order_no": "string",
+            "transaction_ref": "string",
+            "is_opening_value": "string",
+            "stock_transaction_type": "number",
+            "stock_transaction_source": "number",
+            "remark": "string",
+            "stock_batch_id": "number",
+            "serial_number": "string"
+        },
+        "stock_transaction_header": {
+            "id": "number",
+            "stock_item_id": "number",
+            "warehouse_id": "number"
+        }
+    },
+    "allSorts": {
+        "unit_of_measure": {
+            "id": "number",
+            "description": "number",
+            "short_code": "number"
+        },
+        "warehouse": {
+            "id": "number",
+            "name": "number",
+            "city": "number",
+            "state": "number",
+            "zip_code": "number",
+            "phone_no": "number",
+            "email": "number",
+            "is_primary": "number",
+            "country_id": "number"
+        },
+        "stock_batch": {
+            "id": "number",
+            "batch_ref": "number",
+            "manufacturer": "number",
+            "manufactured_date": "number",
+            "date_of_expiry": "number",
+            "remark": "number"
+        },
+        "stock_item": {
+            "id": "number",
+            "item_name": "number",
+            "SKU": "number",
+            "item_type": "number",
+            "reorder_level": "number",
+            "stock_item_tracking": "number",
+            "item_can_be": "number",
+            "is_item_returnable": "number",
+            "UPC": "number",
+            "EAN": "number",
+            "MPN": "number",
+            "ISBN": "number",
+            "selling_price": "number",
+            "additional_sales_info": "number",
+            "purchasing_price": "number",
+            "addtional_purchase_info": "number",
+            "item_group_id": "number",
+            "dimensions": "number",
+            "manufacturer": "number",
+            "inventory_tracking_chart_of_account_id": "number",
+            "purchase_chart_of_account_id": "number",
+            "sales_chart_of_account_id": "number",
+            "unit_of_measure_id": "number",
+            "tax_id": "number"
+        },
+        "stock_transaction_detail": {
+            "id": "number",
+            "stock_transaction_header_id": "number",
+            "transaction_date": "number",
+            "note": "number",
+            "price": "number",
+            "quantity": "number",
+            "order_no": "number",
+            "transaction_ref": "number",
+            "is_opening_value": "number",
+            "stock_transaction_type": "number",
+            "stock_transaction_source": "number",
+            "remark": "number",
+            "stock_batch_id": "number",
+            "serial_number": "number"
+        },
+        "stock_transaction_header": {
+            "id": "number",
+            "stock_item_id": "number",
+            "warehouse_id": "number"
+        }
+    },
+    "uniqueValues": {
+        "unit_of_measure": [],
+        "warehouse": [],
+        "stock_batch": [],
+        "stock_item": [],
+        "stock_transaction_detail": [],
+        "stock_transaction_header": []
+    },
+    "allRoutes": [
+        "/master/unit_of_measure",
+        "/master/warehouse",
+        "/stock/stock_batch",
+        "/stock/stock_item",
+        "/stock/stock_transaction_detail",
+        "/stock/stock_transaction_header"
+    ]
+}

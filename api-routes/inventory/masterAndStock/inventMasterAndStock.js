@@ -2,15 +2,20 @@ const express = require("express");
 const router = express.Router();
 const { error } = require("../../../config/config");
 const inputFilter = require("../../../validation/inputFilter");
-const validation = require("../../../validation/validation");
-const { post, get, patch, deleter } = require("../../../services/hcmPayroll");
+const {
+    post,
+    get,
+    patch,
+    deleter,
+} = require("../../../services/inventMasterAndStock");
 
 const {
     returnReqBody,
     returnGetData,
     returnPatchData,
 } = require("../../../validation/basicValidators");
-const allConfigs = require("./hcmPayroll.json");
+
+const allConfigs = require("./inventMasterAndStock.json");
 const {
     allRoutes,
     allInputFilters,

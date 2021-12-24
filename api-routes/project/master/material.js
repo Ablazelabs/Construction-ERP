@@ -20,18 +20,6 @@ router.post("/material", async (req, res, next) => {
         inputFilter({}, { description: "string" }, req.body, 0, 300);
         req.body.startDate = new Date();
         req.body.endDate = new Date("9999/12/31");
-        if (!req.body.startDate.getTime()) {
-            throw {
-                key: "startDate",
-                message: "please send date in yyyy/mm/dd format",
-            };
-        }
-        if (!req.body.endDate.getTime()) {
-            throw {
-                key: "endDate",
-                message: "please send date in yyyy/mm/dd format",
-            };
-        }
     } catch (e) {
         error(e.key, e.message, next, 400);
         return;

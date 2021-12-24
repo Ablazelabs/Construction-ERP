@@ -1,0 +1,388 @@
+{
+    "/inventory/master/unit_of_measure": {
+        "post": {
+            "summary": "creates a new unit_of_measure",
+            "tags": ["unit_of_measure"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "description": { "type": "String?" },
+                                "short_code": { "type": "String" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected unit_of_measures",
+            "tags": ["unit_of_measure"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "description": { "type": "String?" },
+                                        "short_code": { "type": "String" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "description": { "type": "Int" },
+                                        "short_code": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "description": { "type": "String?" },
+                                    "short_code": { "type": "String" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a unit_of_measure",
+            "tags": ["unit_of_measure"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "description": { "type": "String?" },
+                                        "short_code": { "type": "String" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a unit_of_measure",
+            "tags": ["unit_of_measure"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/inventory/master/warehouse": {
+        "post": {
+            "summary": "creates a new warehouse",
+            "tags": ["warehouse"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "name": { "type": "String" },
+                                "city": { "type": "String" },
+                                "state": { "type": "String?" },
+                                "zip_code": { "type": "String?" },
+                                "phone_no": { "type": "String?" },
+                                "email": { "type": "String?" },
+                                "is_primary": { "type": "Boolean?" },
+                                "country_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected warehouses",
+            "tags": ["warehouse"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "name": { "type": "String" },
+                                        "city": { "type": "String" },
+                                        "state": { "type": "String?" },
+                                        "zip_code": { "type": "String?" },
+                                        "phone_no": { "type": "String?" },
+                                        "email": { "type": "String?" },
+                                        "is_primary": { "type": "Boolean?" },
+                                        "country_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "name": { "type": "Int" },
+                                        "city": { "type": "Int" },
+                                        "state": { "type": "Int" },
+                                        "zip_code": { "type": "Int" },
+                                        "phone_no": { "type": "Int" },
+                                        "email": { "type": "Int" },
+                                        "is_primary": { "type": "Int" },
+                                        "country_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "name": { "type": "String" },
+                                    "city": { "type": "String" },
+                                    "state": { "type": "String?" },
+                                    "zip_code": { "type": "String?" },
+                                    "phone_no": { "type": "String?" },
+                                    "email": { "type": "String?" },
+                                    "is_primary": { "type": "Boolean?" },
+                                    "country_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a warehouse",
+            "tags": ["warehouse"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": { "type": "String" },
+                                        "city": { "type": "String" },
+                                        "state": { "type": "String?" },
+                                        "zip_code": { "type": "String?" },
+                                        "phone_no": { "type": "String?" },
+                                        "email": { "type": "String?" },
+                                        "is_primary": { "type": "Boolean?" },
+                                        "country_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a warehouse",
+            "tags": ["warehouse"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

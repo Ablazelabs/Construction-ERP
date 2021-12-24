@@ -1,0 +1,742 @@
+{
+    "allInputFilters": {
+        "project": {
+            "name": "string",
+            "project_manager": "string",
+            "project_start_date": "string",
+            "project_end_date": "string",
+            "project_id": "string",
+            "contract_number": "string",
+            "site_engineer": "string",
+            "dupty_manager": "string",
+            "project_address": "string",
+            "client_id": "number"
+        },
+        "daily_work_log": {
+            "weather": "string",
+            "day": "string",
+            "temprature": "string",
+            "time": "string",
+            "name_of_employee": "string",
+            "contact": "string",
+            "cell_phone": "string",
+            "contract_no": "string",
+            "location": "string",
+            "date": "string",
+            "project_id": "number"
+        },
+        "instruction_given_on_project": {
+            "yes_no": "boolean",
+            "date": "string",
+            "project_id": "number",
+            "instruction_id": "number"
+        },
+        "manpower_requirement": {
+            "number_of_planned_man_power": "number",
+            "food_expense": "number",
+            "wage": "number",
+            "house_rent": "number",
+            "transportation": "number",
+            "total_expense": "number",
+            "manpower_id": "number",
+            "project_id": "number"
+        },
+        "required_equipment": {
+            "planned_equipment_number": "number",
+            "equipment_lifetime": "string",
+            "expense": "number",
+            "house_rent": "number",
+            "transportation": "number",
+            "total_expense": "number",
+            "equipment_id": "number",
+            "project_id": "number"
+        },
+        "required_material": {
+            "planned_quantity": "number",
+            "planned_unit_price": "number",
+            "planned_total_amount": "number",
+            "material_id": "number",
+            "project_id": "number"
+        },
+        "risk_tracking": {
+            "impact": "string",
+            "risk_level": "string",
+            "risk_owner": "string",
+            "work_category_id": "number",
+            "project_id": "number"
+        },
+        "task_manager": {
+            "name": "string",
+            "task_start_date": "string",
+            "duration_in_days": "string",
+            "working_days": "string",
+            "project_id": "number"
+        },
+        "sub_task": {
+            "name": "string",
+            "task_start_date": "string",
+            "duration_in_days": "number",
+            "working_days": "number",
+            "task_manager_id": "number"
+        },
+        "simple_task": {
+            "note": "string",
+            "name": "string",
+            "task_start_date": "string",
+            "completed_percentage": "number",
+            "estimated_hours": "number",
+            "project_id": "number",
+            "priority_id": "number"
+        },
+        "work_log_and_branch_of_work": {
+            "skilled_worker": "number",
+            "hours": "number",
+            "date": "string",
+            "work_category_id": "number",
+            "daily_work_log_id": "number"
+        },
+        "weather_data": {
+            "total_lost_hour": "number",
+            "duration_of_lost_hour": "number",
+            "date": "string",
+            "reference": "string",
+            "project_id": "number",
+            "manpower_id": "number"
+        },
+        "todos": {
+            "notes": "string",
+            "name": "string",
+            "date": "string",
+            "project_id": "number",
+            "priority_id": "number"
+        },
+        "request": {
+            "RFI_no": "string",
+            "current_status": "string",
+            "request_by": "string",
+            "assigned_to": "string",
+            "date_requested": "string",
+            "notes": "string",
+            "project_id": "number",
+            "priority_id": "number"
+        },
+        "invoice_tracking": {
+            "amount": "number",
+            "amount_received": "number",
+            "balance": "number",
+            "invoice_number": "string",
+            "date_received": "string",
+            "notes": "string",
+            "client_id": "number"
+        },
+        "required_document": {
+            "spec_reference": "string",
+            "requested_by": "string",
+            "quantity_needed": "number",
+            "date_requested": "string",
+            "date_needed": "string",
+            "assigned_to": "string",
+            "location": "string",
+            "documentation_id": "number",
+            "project_id": "number"
+        }
+    },
+    "enums": {},
+    "allOptionalInputFilters": {
+        "project": { "project_description": "string" },
+        "daily_work_log": {},
+        "instruction_given_on_project": { "remarks": "string" },
+        "manpower_requirement": {
+            "number_of_actual_man_power": "number",
+            "remark": "string"
+        },
+        "required_equipment": {
+            "actual_equipment_number": "number",
+            "remark": "string"
+        },
+        "required_material": {
+            "delivered_quantity": "number",
+            "delivered_unit_price": "number",
+            "delivered_total_amount": "number",
+            "total_expense": "number",
+            "remark": "string",
+            "delivery_date": "string"
+        },
+        "risk_tracking": {
+            "description": "string",
+            "risk_response": "string",
+            "remark": "string"
+        },
+        "task_manager": { "description": "string", "task_end_date": "string" },
+        "sub_task": { "description": "string", "task_end_date": "string" },
+        "simple_task": { "task_end_date": "string" },
+        "work_log_and_branch_of_work": {},
+        "weather_data": { "reason": "string" },
+        "todos": {},
+        "request": {
+            "request_description": "string",
+            "date_required": "string",
+            "date_responded": "string"
+        },
+        "invoice_tracking": { "detail": "string" },
+        "required_document": { "received": "string", "received_date": "string" }
+    },
+    "allRangeValues": {},
+    "phoneValues": {
+        "project": [],
+        "daily_work_log": ["cell_phone"],
+        "instruction_given_on_project": [],
+        "manpower_requirement": [],
+        "required_equipment": [],
+        "required_material": [],
+        "risk_tracking": [],
+        "task_manager": [],
+        "sub_task": [],
+        "simple_task": [],
+        "work_log_and_branch_of_work": [],
+        "weather_data": [],
+        "todos": [],
+        "request": [],
+        "invoice_tracking": [],
+        "required_document": []
+    },
+    "emailValues": {
+        "project": [],
+        "daily_work_log": [],
+        "instruction_given_on_project": [],
+        "manpower_requirement": [],
+        "required_equipment": [],
+        "required_material": [],
+        "risk_tracking": [],
+        "task_manager": [],
+        "sub_task": [],
+        "simple_task": [],
+        "work_log_and_branch_of_work": [],
+        "weather_data": [],
+        "todos": [],
+        "request": [],
+        "invoice_tracking": [],
+        "required_document": []
+    },
+    "dateValues": {
+        "project": ["project_start_date", "project_end_date"],
+        "daily_work_log": ["date"],
+        "instruction_given_on_project": ["date"],
+        "manpower_requirement": [],
+        "required_equipment": [],
+        "required_material": ["delivery_date"],
+        "risk_tracking": [],
+        "task_manager": ["task_end_date", "task_start_date"],
+        "sub_task": ["task_end_date", "task_start_date"],
+        "simple_task": ["task_end_date", "task_start_date"],
+        "work_log_and_branch_of_work": ["date"],
+        "weather_data": ["date"],
+        "todos": ["date"],
+        "request": ["date_requested", "date_required", "date_responded"],
+        "invoice_tracking": ["date_received"],
+        "required_document": ["date_requested", "date_needed", "received_date"]
+    },
+    "allProjections": {
+        "project": {
+            "id": true,
+            "name": true,
+            "project_manager": true,
+            "project_start_date": true,
+            "project_end_date": true,
+            "project_description": true,
+            "project_id": true,
+            "contract_number": true,
+            "site_engineer": true,
+            "dupty_manager": true,
+            "project_address": true,
+            "client": true
+        },
+        "daily_work_log": {
+            "id": true,
+            "weather": true,
+            "day": true,
+            "temprature": true,
+            "time": true,
+            "name_of_employee": true,
+            "contact": true,
+            "cell_phone": true,
+            "contract_no": true,
+            "location": true,
+            "date": true,
+            "project": true
+        },
+        "instruction_given_on_project": {
+            "id": true,
+            "yes_no": true,
+            "remarks": true,
+            "date": true,
+            "project_id": true,
+            "instruction_id": true,
+            "project": true,
+            "instruction": true
+        },
+        "manpower_requirement": {
+            "id": true,
+            "number_of_planned_man_power": true,
+            "food_expense": true,
+            "wage": true,
+            "house_rent": true,
+            "transportation": true,
+            "total_expense": true,
+            "manpower_id": true,
+            "project_id": true,
+            "number_of_actual_man_power": true,
+            "remark": true
+        },
+        "required_equipment": {
+            "id": true,
+            "planned_equipment_number": true,
+            "actual_equipment_number": true,
+            "equipment_lifetime": true,
+            "expense": true,
+            "house_rent": true,
+            "transportation": true,
+            "total_expense": true,
+            "remark": true,
+            "equipment": true,
+            "project": true
+        },
+        "required_material": {
+            "id": true,
+            "planned_quantity": true,
+            "planned_unit_price": true,
+            "planned_total_amount": true,
+            "delivered_quantity": true,
+            "delivered_unit_price": true,
+            "delivered_total_amount": true,
+            "total_expense": true,
+            "remark": true,
+            "delivery_date": true,
+            "material": true,
+            "project": true
+        },
+        "risk_tracking": {
+            "id": true,
+            "description": true,
+            "impact": true,
+            "risk_response": true,
+            "risk_level": true,
+            "risk_owner": true,
+            "remark": true,
+            "work_category": true,
+            "project": true
+        },
+        "task_manager": {
+            "id": true,
+            "name": true,
+            "description": true,
+            "task_start_date": true,
+            "task_end_date": true,
+            "duration_in_days": true,
+            "working_days": true,
+            "project": true
+        },
+        "sub_task": {
+            "id": true,
+            "description": true,
+            "name": true,
+            "task_start_date": true,
+            "task_end_date": true,
+            "duration_in_days": true,
+            "working_days": true,
+            "task_manager": true
+        },
+        "simple_task": {
+            "id": true,
+            "note": true,
+            "name": true,
+            "task_start_date": true,
+            "task_end_date": true,
+            "completed_percentage": true,
+            "estimated_hours": true,
+            "project": true,
+            "priority": true
+        },
+        "work_log_and_branch_of_work": {
+            "id": true,
+            "skilled_worker": true,
+            "hours": true,
+            "date": true,
+            "work_category": true,
+            "daily_work_log": true
+        },
+        "weather_data": {
+            "id": true,
+            "total_lost_hour": true,
+            "duration_of_lost_hour": true,
+            "date": true,
+            "reason": true,
+            "reference": true,
+            "project": true,
+            "manpower": true
+        },
+        "todos": {
+            "id": true,
+            "notes": true,
+            "name": true,
+            "date": true,
+            "project": true,
+            "priority": true
+        },
+        "request": {
+            "id": true,
+            "RFI_no": true,
+            "current_status": true,
+            "request_description": true,
+            "request_by": true,
+            "assigned_to": true,
+            "date_requested": true,
+            "date_required": true,
+            "date_responded": true,
+            "notes": true,
+            "project": true,
+            "priority": true
+        },
+        "invoice_tracking": {
+            "id": true,
+            "detail": true,
+            "amount": true,
+            "amount_received": true,
+            "balance": true,
+            "invoice_number": true,
+            "date_received": true,
+            "notes": true,
+            "client": true
+        },
+        "required_document": {
+            "id": true,
+            "spec_reference": true,
+            "requested_by": true,
+            "quantity_needed": true,
+            "date_requested": true,
+            "date_needed": true,
+            "assigned_to": true,
+            "received": true,
+            "received_date": true,
+            "location": true,
+            "project": true,
+            "documentation": true
+        }
+    },
+    "allFilters": {
+        "project": {
+            "name": "string",
+            "project_manager": "string",
+            "project_description": "string",
+            "project_id": "string",
+            "contract_number": "string",
+            "site_engineer": "string",
+            "dupty_manager": "string",
+            "project_address": "string",
+            "client_id": "number"
+        },
+        "daily_work_log": {
+            "weather": "string",
+            "day": "string",
+            "temprature": "string",
+            "time": "string",
+            "name_of_employee": "string",
+            "contact": "string",
+            "cell_phone": "string",
+            "contract_no": "string",
+            "project_id": "number"
+        },
+        "instruction_given_on_project": {
+            "remarks": "string",
+            "project_id": "number",
+            "instruction_id": "number"
+        },
+        "manpower_requirement": {
+            "remarks": "string",
+            "manpower_id": "number",
+            "project_id": "number"
+        },
+        "required_equipment": {
+            "equipment_lifetime": "string",
+            "remark": "string",
+            "equipment_id": "number",
+            "project_id": "number"
+        },
+        "required_material": {
+            "remark": "string",
+            "material_id": "number",
+            "project_id": "number"
+        },
+        "risk_tracking": {
+            "impact": "string",
+            "risk_level": "string",
+            "risk_owner": "string",
+            "description": "string",
+            "risk_response": "string",
+            "remark": "string",
+            "work_category_id": "number",
+            "project_id": "number"
+        },
+        "task_manager": {
+            "name": "string",
+            "description": "string",
+            "duration_in_days": "string",
+            "working_days": "string",
+            "project_id": "number"
+        },
+        "sub_task": {
+            "description": "string",
+            "name": "string",
+            "task_manager_id": "number"
+        },
+        "simple_task": {
+            "note": "string",
+            "name": "string",
+            "project_id": "number",
+            "priority_id": "number"
+        },
+        "work_log_and_branch_of_work": {
+            "work_category_id": "number",
+            "daily_work_log_id": "number"
+        },
+        "weather_data": {
+            "reason": "string",
+            "reference": "string",
+            "project_id": "number",
+            "manpower_id": "number"
+        },
+        "todos": {
+            "notes": "string",
+            "name": "string",
+            "project_id": "number",
+            "priority_id": "number"
+        },
+        "request": {
+            "RFI_no": "string",
+            "current_status": "string",
+            "request_description": "string",
+            "request_by": "string",
+            "assigned_to": "string",
+            "notes": "string",
+            "project_id": "number",
+            "priority_id": "number"
+        },
+        "invoice_tracking": {
+            "detail": "string",
+            "invoice_number": "string",
+            "notes": "string",
+            "client_id": "number"
+        },
+        "required_document": {
+            "spec_reference": "string",
+            "requested_by": "string",
+            "assigned_to": "string",
+            "received": "string",
+            "location": "string",
+            "documentation_id": "number",
+            "project_id": "number"
+        }
+    },
+    "allSorts": {
+        "project": {
+            "id": "number",
+            "name": "number",
+            "project_manager": "number",
+            "project_start_date": "number",
+            "project_end_date": "number",
+            "project_description": "number",
+            "project_id": "number",
+            "contract_number": "number",
+            "site_engineer": "number",
+            "dupty_manager": "number",
+            "project_address": "number"
+        },
+        "daily_work_log": {
+            "id": "number",
+            "weather": "number",
+            "day": "number",
+            "temprature": "number",
+            "time": "number",
+            "name_of_employee": "number",
+            "contact": "number",
+            "cell_phone": "number",
+            "contract_no": "number",
+            "location": "number",
+            "date": "number",
+            "project_id": "number"
+        },
+        "instruction_given_on_project": {
+            "id": "number",
+            "yes_no": "number",
+            "remarks": "number",
+            "date": "number",
+            "project_id": "number",
+            "instruction_id": "number"
+        },
+        "manpower_requirement": {
+            "id": "number",
+            "number_of_planned_man_power": "number",
+            "number_of_actual_man_power": "number",
+            "food_expense": "number",
+            "wage": "number",
+            "house_rent": "number",
+            "transportation": "number",
+            "total_expense": "number",
+            "remark": "number",
+            "manpower_id": "number",
+            "project_id": "number"
+        },
+        "required_equipment": {
+            "id": "number",
+            "planned_equipment_number": "number",
+            "actual_equipment_number": "number",
+            "equipment_lifetime": "number",
+            "expense": "number",
+            "house_rent": "number",
+            "transportation": "number",
+            "total_expense": "number",
+            "remark": "number",
+            "equipment_id": "number",
+            "project_id": "number"
+        },
+        "required_material": {
+            "id": "number",
+            "planned_quantity": "number",
+            "planned_unit_price": "number",
+            "planned_total_amount": "number",
+            "delivered_quantity": "number",
+            "delivered_unit_price": "number",
+            "delivered_total_amount": "number",
+            "total_expense": "number",
+            "remark": "number",
+            "delivery_date": "number",
+            "material_id": "number",
+            "project_id": "number"
+        },
+        "risk_tracking": {
+            "id": "number",
+            "impact": "number",
+            "risk_level": "number",
+            "risk_owner": "number",
+            "work_category_id": "number",
+            "project_id": "number",
+            "description": "number",
+            "risk_response": "number",
+            "remark": "number"
+        },
+        "task_manager": {
+            "id": "number",
+            "name": "number",
+            "description": "number",
+            "task_start_date": "number",
+            "task_end_date": "number",
+            "duration_in_days": "number",
+            "working_days": "number",
+            "project_id": "number"
+        },
+        "sub_task": {
+            "id": "number",
+            "description": "number",
+            "name": "number",
+            "task_start_date": "number",
+            "task_end_date": "number",
+            "duration_in_days": "number",
+            "working_days": "number",
+            "task_manager_id": "number"
+        },
+        "simple_task": {
+            "id": "number",
+            "note": "number",
+            "name": "number",
+            "task_start_date": "number",
+            "task_end_date": "number",
+            "completed_percentage": "number",
+            "estimated_hours": "number",
+            "project_id": "number",
+            "priority_id": "number"
+        },
+        "work_log_and_branch_of_work": {
+            "id": "number",
+            "skilled_worker": "number",
+            "hours": "number",
+            "date": "number",
+            "work_category_id": "number",
+            "daily_work_log_id": "number"
+        },
+        "weather_data": {
+            "id": "number",
+            "total_lost_hour": "number",
+            "duration_of_lost_hour": "number",
+            "date": "number",
+            "reason": "number",
+            "reference": "number",
+            "project_id": "number",
+            "manpower_id": "number"
+        },
+        "todos": {
+            "id": "number",
+            "notes": "number",
+            "name": "number",
+            "date": "number",
+            "project": "number",
+            "priority": "number"
+        },
+        "request": {
+            "id": "number",
+            "RFI_no": "number",
+            "current_status": "number",
+            "request_description": "number",
+            "request_by": "number",
+            "assigned_to": "number",
+            "date_requested": "number",
+            "date_required": "number",
+            "date_responded": "number",
+            "notes": "number",
+            "project": "number",
+            "priority": "number"
+        },
+        "invoice_tracking": {
+            "id": "string",
+            "detail": "string",
+            "amount": "string",
+            "amount_received": "string",
+            "balance": "string",
+            "invoice_number": "string",
+            "date_received": "string",
+            "notes": "string",
+            "client": "string"
+        },
+        "required_document": {
+            "id": "number",
+            "spec_reference": "number",
+            "requested_by": "number",
+            "quantity_needed": "number",
+            "date_requested": "number",
+            "date_needed": "number",
+            "assigned_to": "number",
+            "received": "number",
+            "received_date": "number",
+            "location": "number",
+            "project": "number",
+            "documentation": "number"
+        }
+    },
+    "allRoutes": [
+        "/project",
+        "/daily_work_log",
+        "/instruction_given_on_project",
+        "/manpower_requirement",
+        "/required_equipment",
+        "/required_material",
+        "/risk_tracking",
+        "/task_manager",
+        "/sub_task",
+        "/simple_task",
+        "/work_log_and_branch_of_work",
+        "/weather_data",
+        "/todos",
+        "/request",
+        "/invoice_tracking",
+        "/required_document"
+    ]
+}

@@ -88,7 +88,6 @@ router.get("/documentation", async (req, res, next) => {
         name: true,
         description: true,
         id: true,
-        unit: true,
         document_category: true,
         startDate: true,
         endDate: true,
