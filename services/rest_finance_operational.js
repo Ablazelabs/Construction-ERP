@@ -1,5 +1,4 @@
-const { error } = require("../config/config");
-const { PrismaClient } = require("@prisma/client");
+const { error, allModels: models } = require("../config/config");
 
 const {
     accounting_period,
@@ -24,7 +23,7 @@ const {
     asset,
     general_journal_detail,
     recurring_general_journal,
-} = new PrismaClient();
+} = models;
 
 const allModels = {
     chart_of_account,

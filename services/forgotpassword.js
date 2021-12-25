@@ -1,6 +1,5 @@
-const { confirmCredential, error } = require("../config/config");
-const { PrismaClient } = require("@prisma/client");
-const { user } = new PrismaClient();
+const { confirmCredential, error, allModels } = require("../config/config");
+const { user } = allModels;
 
 module.exports = async (identifier, identifierValue, code, next) => {
     const myUser = await user.findUnique({

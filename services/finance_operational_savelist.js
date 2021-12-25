@@ -1,7 +1,5 @@
-const { PrismaClient } = require("@prisma/client");
-const { error } = require("../config/config");
+const { error, allModels: models } = require("../config/config");
 const inputFilter = require("../validation/inputFilter");
-const validation = require("../validation/validation");
 const {
     chart_of_account,
     chart_of_account_files,
@@ -9,7 +7,7 @@ const {
     general_journal_header,
     account_type,
     currency,
-} = new PrismaClient();
+} = models;
 const hasDuplicates = (array) => {
     return new Set(array).size !== array.length;
 };

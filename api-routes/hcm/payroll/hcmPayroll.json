@@ -1002,5 +1002,36 @@
         "/pay_scale_history_log",
         "/salary_adjustment",
         "/salary_component_account_mapping"
-    ]
+    ],
+    "uniqueValues": {
+        "employee_back_penality_deduction": [],
+        "employee_pay_scale": [],
+        "employee_penality": [],
+        "employee_penality_detail_mst": [],
+        "employee_penality_type": [],
+        "employee_tax": [],
+        "global_payroll_account_mapping": [],
+        "overtime": ["date", "employee_id"],
+        "overtime_rate": ["description"],
+        "paygrade": ["paygrade_name"],
+        "paygrade_salary_component": [],
+        "paygrade_scale": [],
+        "payroll_detail": [],
+        "payroll_detail_history": [],
+        "payroll_frequency_type": ["payroll_frequency_desc"],
+        "payroll_location_setting": [],
+        "payroll_log": [],
+        "payroll_log_employee": [],
+        "payroll_period_autogen": [],
+        "payroll_period_autogen_log": [],
+        "payroll_period_template": [],
+        "payroll_posting_log": [],
+        "payroll_processing_log": [],
+        "payroll_summary": [],
+        "payroll_summary_history": [],
+        "pay_scale_history_log": [],
+        "salary_adjustment": ["salary_component_id", "employee_id"],
+        "salary_component": ["name"],
+        "salary_component_account_mapping": []
+    }
 }

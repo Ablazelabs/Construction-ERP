@@ -1,7 +1,6 @@
-const { error } = require("../config/config");
-const { PrismaClient } = require("@prisma/client");
+const { error, allModels } = require("../config/config");
 
-const { accounting_period, transaction_lock } = new PrismaClient();
+const { accounting_period, transaction_lock } = allModels;
 const post = async (reqBody, creator, enums, next) => {
     const allowedAccountingPeriodStatus = [2, 3];
     if (

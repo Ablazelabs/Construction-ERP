@@ -908,5 +908,30 @@
         "/org_assignment",
         "/service_allowance_pay",
         "/shift_assignment"
-    ]
+    ],
+    "uniqueValues": {
+        "address": [],
+        "attachment": [],
+        "dependent": [],
+        "discipline": [],
+        "education": [],
+        "employee": [],
+        "employee_action": [],
+        "employee_attachment": [],
+        "employee_commitment": [],
+        "employee_contact": [],
+        "employee_id_range": [],
+        "employee_loan_repayment": [],
+        "employee_pay_frequency": [],
+        "employee_paygrade": [],
+        "employee_salary_component": [],
+        "experience": [],
+        "leave_assignment": [],
+        "leave_entitlement": [],
+        "leave_transfer": [],
+        "license": [],
+        "org_assignment": [],
+        "service_allowance_pay": [],
+        "shift_assignment": []
+    }
 }

@@ -1,8 +1,7 @@
 const { compare } = require("bcrypt");
-const { PrismaClient } = require("@prisma/client");
-const { user, refresh_tokens } = new PrismaClient();
+const { error, allModels } = require("../config/config");
+const { user, refresh_tokens } = allModels;
 const { sign } = require("jsonwebtoken");
-const { error } = require("../config/config");
 module.exports = async (identifier, reqBody, next) => {
     const queryResult = await user.findUnique({
         where: { ...identifier },

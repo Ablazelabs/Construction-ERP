@@ -948,5 +948,34 @@
         "/tax_group",
         "/tax_rule",
         "/journal_type"
-    ]
+    ],
+    "uniqueValues": {
+        "account_category": [],
+        "account_type": [],
+        "closing_note": [],
+        "financial_statement_section": [],
+        "bank": [],
+        "contact": [],
+        "contact_address": [],
+        "contact_person": [],
+        "cost_center": [],
+        "cost_center_accounts": [],
+        "payment_term": [],
+        "exchange_rate": [],
+        "company_address": [],
+        "date_format_type": [],
+        "financial_settings": [],
+        "industry": [],
+        "journal_users": [],
+        "primary_contact": [],
+        "foot_note": [],
+        "associated_tax_group": [],
+        "tax": [],
+        "tax_authority": [],
+        "tax_exemption": [],
+        "tax_group": [],
+        "tax_rule": [],
+        "accounting_period": [],
+        "journal_type": []
+    }
 }

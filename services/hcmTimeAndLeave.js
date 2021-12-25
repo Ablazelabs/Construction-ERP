@@ -1,35 +1,17 @@
-const uniqueValues = {
-    attendance_abscence_type: ["aa_description"],
-    attendance_captured: [],
-    attendance_payroll: [],
-    device_id_mapping: ["finger_print_id", "employee_id"],
-    holiday: ["holiday_name"],
-    holiday_character: ["date", "holiday_id"],
-    leave_period: [],
-    leave_plan: ["employee_id"],
-    punch: [],
-    punch_device: ["device_name"],
-    punch_log: [],
-    punch_manual_import: [],
-    punch_time: [],
-    shift_schedule_dtl: [],
-    shift_schedule_hdr: ["shift_name"],
-    sub_shift_group: ["sub_shift_name"],
-};
 const {
     post: mPost,
     get: mGet,
     patch: mPatch,
     deleter: mDelete,
 } = require("./mostCRUD/mostCRUD");
-const post = async (reqBody, operationDataType, creator, next) => {
-    return mPost(
-        reqBody,
-        operationDataType,
-        creator,
-        uniqueValues[operationDataType],
-        next
-    );
+const post = async (
+    reqBody,
+    operationDataType,
+    creator,
+    uniqueValues,
+    next
+) => {
+    return mPost(reqBody, operationDataType, creator, uniqueValues, next);
 };
 const get = async (
     queryFilter,
@@ -54,6 +36,7 @@ const patch = async (
     updateData,
     operationDataType,
     creator,
+    uniqueValues,
     next
 ) => {
     return mPatch(
@@ -62,7 +45,7 @@ const patch = async (
         updateData,
         operationDataType,
         creator,
-        uniqueValues[operationDataType],
+        uniqueValues,
         next
     );
 };
@@ -76,3 +59,4 @@ module.exports = {
     patch,
     deleter,
 };
+// same as the others

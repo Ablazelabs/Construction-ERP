@@ -393,5 +393,27 @@
         "/nationality",
         "/religion",
         "/training_type"
-    ]
+    ],
+    "uniqueValues": {
+        "currency": ["currency_code", "symbol"],
+        "country": ["country_code"],
+        "title": ["name"],
+        "language": ["name"],
+        "action_reason": ["reason_description"],
+        "action_type": ["action_type_description"],
+        "address_type": ["type_name"],
+        "commitment": ["type_name"],
+        "custom_report": ["query"],
+        "discipline_case_type": ["case_description"],
+        "duration_measure": ["measure"],
+        "employee_group": ["group_description"],
+        "employee_type": ["description"],
+        "field_of_study": ["field_of_study_name"],
+        "hcm_configuration": [],
+        "employee_transaction_lock": [],
+        "license_type": ["license_type_name"],
+        "nationality": ["nationality_name"],
+        "religion": ["name"],
+        "training_type": ["training_type_name"]
+    }
 }

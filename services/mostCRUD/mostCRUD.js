@@ -1,7 +1,4 @@
-const { error } = require("../../config/config");
-const { PrismaClient } = require("@prisma/client");
-
-const allModels = new PrismaClient();
+const { error, allModels } = require("../../config/config");
 const post = async (reqBody, modelName, creator, uniqueValues, next) => {
     for (let i in uniqueValues) {
         const uniqueKey = uniqueValues[i];

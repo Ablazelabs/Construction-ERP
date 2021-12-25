@@ -1,7 +1,6 @@
-const { error } = require("../config/config");
-const { PrismaClient } = require("@prisma/client");
+const { error, allModels: models } = require("../config/config");
 const { unlinkSync } = require("fs");
-const { company, external_applicant } = new PrismaClient();
+const { company, external_applicant } = models;
 
 const allModels = { company, external_applicant };
 const uniqueValues = { company: [], external_applicant: [] };

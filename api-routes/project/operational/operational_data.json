@@ -738,5 +738,23 @@
         "/request",
         "/invoice_tracking",
         "/required_document"
-    ]
+    ],
+    "uniqueValues": {
+        "project": ["project_id"],
+        "daily_work_log": [],
+        "instruction_given_on_project": [],
+        "manpower_requirement": [],
+        "required_equipment": [],
+        "required_material": [],
+        "risk_tracking": [],
+        "task_manager": [],
+        "sub_task": [],
+        "simple_task": [],
+        "work_log_and_branch_of_work": [],
+        "weather_data": [],
+        "todos": [],
+        "request": [],
+        "invoice_tracking": ["invoice_number"],
+        "required_document": []
+    }
 }

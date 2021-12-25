@@ -522,5 +522,21 @@
         "/recruitment/vacancy_examiner",
         "/recruitment/vacancy_internal_applicant",
         "/recruitment/vacancy_request_reason"
-    ]
+    ],
+    "uniqueValues": {
+        "job_category": [],
+        "job_safety_equipment": [],
+        "job_title": [],
+        "safety_equipment": [],
+        "business_unit": [],
+        "company": [],
+        "location": [],
+        "company_primary_contact": [],
+        "external_applicant": [],
+        "vacancy": [],
+        "vacancy_applicant": [],
+        "vacancy_examiner": [],
+        "vacancy_internal_applicant": [],
+        "vacancy_request_reason": []
+    }
 }

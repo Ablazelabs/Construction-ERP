@@ -1,19 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const { error } = require("../../../config/config");
-const inputFilter = require("../../../validation/inputFilter");
-const {
-    post,
-    get,
-    patch,
-    deleter,
-} = require("../../../services/hcmTimeAndLeave");
+const { post, get, patch } = require("../../../services/hcmTimeAndLeave");
 
 const {
     returnReqBody,
     returnGetData,
     returnPatchData,
 } = require("../../../validation/basicValidators");
+
+const defaultDeleter = require("../../defaultDeleter");
 
 const allConfigs = require("./hcmTimeAndLeave.json");
 const {
@@ -28,6 +24,7 @@ const {
     allProjections,
     allSorts,
     allFilters,
+    uniqueValues,
 } = allConfigs;
 router.post(allRoutes, async (req, res, next) => {
     const operationDataType = req.path.split("/").pop();
@@ -38,7 +35,6 @@ router.post(allRoutes, async (req, res, next) => {
         phoneValue = phoneValues[operationDataType],
         emailValue = emailValues[operationDataType],
         rangeValues = allRangeValues[operationDataType];
-
     const reqBody = returnReqBody(
         req.body,
         {
@@ -61,6 +57,7 @@ router.post(allRoutes, async (req, res, next) => {
             reqBody,
             operationDataType,
             res.locals.id,
+            uniqueValues[operationDataType],
             next
         );
         if (data == false) {
@@ -137,6 +134,7 @@ router.patch(allRoutes, async (req, res, next) => {
             updateData,
             operationDataType,
             res.locals.id,
+            uniqueValues[operationDataType],
             next
         );
         if (data == false) {
@@ -149,20 +147,5 @@ router.patch(allRoutes, async (req, res, next) => {
         return;
     }
 });
-router.delete(allRoutes, async (req, res, next) => {
-    const operationDataType = req.path.split("/").pop();
-    try {
-        inputFilter({ id: "number" }, {}, req.body);
-    } catch (e) {
-        error(e.key, e.message, next);
-        return;
-    }
-    try {
-        res.json(await deleter(req.body, operationDataType));
-    } catch (e) {
-        console.log(e);
-        error("database", "error", next, 500);
-        return;
-    }
-});
+router.delete(allRoutes, defaultDeleter);
 module.exports = router;

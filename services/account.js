@@ -2,12 +2,13 @@ const {
     error,
     confirmCredential,
     randomConcurrencyStamp,
+    allModels,
 } = require("../config/config");
-const { PrismaClient } = require("@prisma/client");
+
+const { user, refresh_tokens } = allModels;
 
 const { genSalt, hash } = require("bcrypt");
 const validation = require("../validation/validation");
-const { user, refresh_tokens } = new PrismaClient();
 
 const post = async (identifier, identifierKey, reqBody, next) => {
     const queryResult = await user.findUnique({

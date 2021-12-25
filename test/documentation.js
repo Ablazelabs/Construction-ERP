@@ -8,22 +8,21 @@ chai.use(chaiHttp);
 const { readFileSync } = require("fs");
 let accessToken = readFileSync("./test/accessToken.txt", "utf-8");
 
-const url2 = "/project/master/equipment";
+const url = "/project/master/documentation";
 
-describe("restMasterData Test", () => {
+describe("documentation Test", () => {
     /**
      * Test the post
      */
     const randomName = Math.floor(Math.random() * 1000000);
-    describe("/equipment post test", () => {
-        it("Should post a new equipment", (done) => {
+    describe("/documentation post test", () => {
+        it("Should post a new documentation", (done) => {
             chai.request(server)
-                .post(url2)
+                .post(url)
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
                     name: `${randomName}`,
-                    startDate: "2000/10/22",
-                    endDate: "2000/10/23",
+                    document_category_id: 1,
                 })
                 .end((err, response) => {
                     response.should.have.status(200);
@@ -32,14 +31,13 @@ describe("restMasterData Test", () => {
                     done();
                 });
         });
-        it("should return error 400, equipment already exists", (done) => {
+        it("should return error 400, documentation already exists", (done) => {
             chai.request(server)
-                .post(url2)
+                .post(url)
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
                     name: `${randomName}`,
-                    startDate: "2000/10/22",
-                    endDate: "2000/10/23",
+                    document_category_id: 1,
                 })
                 .end((err, response) => {
                     response.should.have.status(400);
@@ -54,9 +52,9 @@ describe("restMasterData Test", () => {
      */
     let randomGottenId; //this is to make sure delete later works
     describe("Get Test", () => {
-        it("should get equipments", (done) => {
+        it("should get documentations", (done) => {
             chai.request(server)
-                .get(url2)
+                .get(url)
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
                     limit: 10,
@@ -70,7 +68,7 @@ describe("restMasterData Test", () => {
         });
         it("should return 400, and no access token", (done) => {
             chai.request(server)
-                .get(url2)
+                .get(url)
                 .send({
                     limit: 10,
                 })
@@ -88,10 +86,10 @@ describe("restMasterData Test", () => {
      * Test the delete
      */
 
-    describe("/equipment delete", () => {
-        it("Should delete an equipment", (done) => {
+    describe("/documentation delete", () => {
+        it("Should delete a documentation", (done) => {
             chai.request(server)
-                .delete(url2)
+                .delete(url)
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
                     id: randomGottenId,
@@ -103,9 +101,9 @@ describe("restMasterData Test", () => {
                     done();
                 });
         });
-        it("Should return error 400(no equipment id sent)", (done) => {
+        it("Should return error 400(no documentation id sent)", (done) => {
             chai.request(server)
-                .delete(url2)
+                .delete(url)
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({})
                 .end((err, response) => {
@@ -122,10 +120,10 @@ describe("restMasterData Test", () => {
      * Test the patch
      */
 
-    describe("/equipment patch", () => {
-        it("Should update a equipment", (done) => {
+    describe("/documentation patch", () => {
+        it("Should update a documentation", (done) => {
             chai.request(server)
-                .patch(url2)
+                .patch(url)
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
                     id: 1,
@@ -142,7 +140,7 @@ describe("restMasterData Test", () => {
         });
         it("Should send 400 error message", (done) => {
             chai.request(server)
-                .patch(url2)
+                .patch(url)
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
                     updateData: {
@@ -159,7 +157,7 @@ describe("restMasterData Test", () => {
         });
         it("Should send 400 error message", (done) => {
             chai.request(server)
-                .patch(url2)
+                .patch(url)
                 .send({
                     id: 1,
                     updateData: {

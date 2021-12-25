@@ -1,14 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const { error } = require("../../../config/config");
-const inputFilter = require("../../../validation/inputFilter");
-
-const { post, get, patch, deleter } = require("../../../services/client");
+const { post, get, patch } = require("../../../services/client");
 const {
     returnReqBody,
     returnGetData,
     returnPatchData,
 } = require("../../../validation/basicValidators");
+
+const defaultDeleter = require("../../defaultDeleter");
+
 const requiredInputFilter = {
     name: "string",
     tradeName: "string",
@@ -74,6 +75,14 @@ const projections = {
     contactPersonEmail: true,
     email: true,
 };
+const uniqueValues = [
+    "tradeName",
+    "tel",
+    "tinNumber",
+    "contactPersonEmail",
+    "contactPersonPhone",
+    "email",
+];
 router.post("/client", async (req, res, next) => {
     const reqBody = returnReqBody(
         req.body,
@@ -92,7 +101,13 @@ router.post("/client", async (req, res, next) => {
         return;
     }
     try {
-        const data = await post(reqBody, res.locals.id, next);
+        const data = await post(
+            reqBody,
+            "client",
+            res.locals.id,
+            uniqueValues,
+            next
+        );
         if (data == false) {
             return;
         }
@@ -113,7 +128,9 @@ router.get("/client", async (req, res, next) => {
     }
     const { queryFilter, querySort, limit, skip, projection } = getData;
     try {
-        res.json(await get(queryFilter, querySort, limit, skip, projection));
+        res.json(
+            await get(queryFilter, querySort, limit, skip, projection, "client")
+        );
     } catch (e) {
         console.log(e);
         error("database", "error", next, 500);
@@ -142,7 +159,9 @@ router.patch("/client", async (req, res, next) => {
             updateDataProjection,
             req.body,
             updateData,
+            "client",
             res.locals.id,
+            uniqueValues,
             next
         );
         if (data == false) {
@@ -155,20 +174,5 @@ router.patch("/client", async (req, res, next) => {
         return;
     }
 });
-router.delete("/client", async (req, res, next) => {
-    try {
-        inputFilter({ id: "number" }, {}, req.body);
-    } catch (e) {
-        error(e.key, e.message, next);
-        return;
-    }
-    try {
-        res.json(await deleter(req.body));
-    } catch (e) {
-        console.log(e);
-        error("database", "error", next, 500);
-        return;
-    }
-});
-
+router.delete("/client", defaultDeleter);
 module.exports = router;

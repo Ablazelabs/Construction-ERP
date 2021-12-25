@@ -1,7 +1,6 @@
-const { error } = require("../config/config");
-const { PrismaClient } = require("@prisma/client");
+const { error, allModels: models } = require("../config/config");
 const { unlinkSync } = require("fs");
-const { employee, attachment, employee_attachment } = new PrismaClient();
+const { employee, attachment, employee_attachment } = models;
 
 const allModels = {
     employee,
