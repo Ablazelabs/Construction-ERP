@@ -10,15 +10,36 @@ const allInputFilters = {
     attachment: {},
     employee_attachment: {
         description: "string",
-        employee_id: "number",
+        employee_id: "string", //number
     },
     employee: {
-        id_number: "number",
+        id_number: "string", //number
         first_name: "string",
         middle_name: "string",
-        gender: "number", //["male", "female"],
+        gender: "string", //["male", "female"],
     },
-    //employee attachment is skipped bc it envolves file upload
+};
+const realTypes = {
+    attachment: {
+        employee_id: "number",
+        isProtectedForEdit: "boolean",
+    },
+    employee_attachment: {
+        employee_id: "number",
+        isProtectedForEdit: "boolean",
+    },
+    employee: {
+        marital_status: "number", //["Single", "Married", "Widowed", "Divorced"], //optional
+        is_employee_active: "boolean",
+        prev_employment_leave_days: "number",
+        nationality_id: "number",
+        country_id: "number",
+        language_id: "number",
+        title_id: "number",
+        religion_id: "number",
+        employee_type_id: "number",
+        isProtectedForEdit: "boolean",
+    },
 };
 const enums = {
     employee: {
@@ -29,29 +50,28 @@ const enums = {
 const allOptionalInputfilters = {
     attachment: {
         description: "string",
-        employee_id: "number",
+        employee_id: "string", //number
     },
     employee: {
         last_name: "string",
         date_of_birth: "string",
         employment_start_date: "string",
         date_of_joining: "string",
-        marital_status: "number", //["Single", "Married", "Widowed", "Divorced"], //optional
+        marital_status: "string", //["Single", "Married", "Widowed", "Divorced"], //optional
         marital_since: "string",
         place_of_birth: "string",
-        photo: "string",
-        is_employee_active: "boolean",
+        is_employee_active: "string",
         type: "string",
-        prev_employment_leave_days: "Float?",
+        prev_employment_leave_days: "string",
         bank_account_number: "string",
         document_ref: "string",
         pension_ref: "string",
-        nationality_id: "number",
-        country_id: "number",
-        language_id: "number",
-        title_id: "number",
-        religion_id: "number",
-        employee_type_id: "number",
+        nationality_id: "string",
+        country_id: "string",
+        language_id: "string",
+        title_id: "string",
+        religion_id: "string",
+        employee_type_id: "string",
     },
     employee_attachment: {},
 };
@@ -110,10 +130,30 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
             {
                 ...requiredInputFilter,
             },
-            { isProtectedForEdit: "boolean", ...optionalInputFilter },
+            { isProtectedForEdit: "string", ...optionalInputFilter },
             req.body,
             1
         );
+        for (let i in realTypes[operationDataType]) {
+            const type = realTypes[operationDataType][i];
+            if (!reqBody[i]) {
+                continue;
+            }
+            if (type == "number") {
+                reqBody[i] = Number(reqBody[i]);
+                if (reqBody[i] > 0 || reqBody[i] < 0 || reqBody[i] === 0) {
+                } else {
+                    throw { key: i, message: "please send number" };
+                }
+            } else if (type == "boolean") {
+                if (reqBody[i] === "false" || reqBody[i] === "true") {
+                    if (reqBody[i] === "false") reqBody[i] = false;
+                    if (reqBody[i] === "true") reqBody[i] = true;
+                } else {
+                    throw { key: i, message: "please send boolean" };
+                }
+            }
+        }
         reqBody.startDate = new Date();
         reqBody.endDate = new Date("9999/12/31");
         for (let i in dateValues[operationDataType]) {
@@ -234,17 +274,45 @@ router.patch(allRoutes, upload.single("file"), async (req, res, next) => {
     let updateData = {};
     try {
         if (!req.body.updateData) req.body.updateData = {};
-        inputFilter({ id: "number", updateData: "object" }, {}, req.body);
+        inputFilter({ id: "string", updateData: "object" }, {}, req.body);
         updateData = inputFilter(
             {},
             {
                 ...allInputFilters[operationDataType],
                 ...allOptionalInputfilters[operationDataType],
-                isProtectedForEdit: "boolean",
+                isProtectedForEdit: "string",
             },
             req.body.updateData
         );
-
+        req.body.id = Number(req.body.id);
+        if (req.body.id > 0 || req.body.id < 0 || req.body.id === 0) {
+        } else {
+            throw { key: "id", message: "please send number" };
+        }
+        for (let i in realTypes[operationDataType]) {
+            const type = realTypes[operationDataType][i];
+            if (!updateData[i]) {
+                continue;
+            }
+            if (type == "number") {
+                updateData[i] = Number(updateData[i]);
+                if (
+                    updateData[i] > 0 ||
+                    updateData[i] < 0 ||
+                    updateData[i] === 0
+                ) {
+                } else {
+                    throw { key: i, message: "please send number" };
+                }
+            } else if (type == "boolean") {
+                if (updateData[i] === "false" || updateData[i] === "true") {
+                    if (updateData[i] === "false") updateData[i] = false;
+                    if (updateData[i] === "true") updateData[i] = true;
+                } else {
+                    throw { key: i, message: "please send boolean" };
+                }
+            }
+        }
         // if date values sent in update data, transform them into a date value, if wrong format detected throw an error
 
         for (let i in dateValues[operationDataType]) {

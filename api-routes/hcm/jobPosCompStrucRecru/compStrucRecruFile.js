@@ -18,6 +18,20 @@ const allInputFilters = {
         training_type_id: "number",
     },
 };
+const realTypes = {
+    external_applicant: {
+        gender: "number",
+        training_type_id: "number",
+        experience_year: "number", //[0+]
+        marital_status: "number", // ["Single", "Married", "Widowed", "Divorced"], //optional
+        isProtectedForEdit: "boolean",
+    },
+    company: {
+        country_id: "number",
+        currency_id: "number",
+        isProtectedForEdit: "boolean",
+    },
+};
 const enums = {
     company: {},
     external_applicant: {
@@ -92,10 +106,30 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
             {
                 ...requiredInputFilter,
             },
-            { isProtectedForEdit: "boolean", ...optionalInputFilter },
+            { isProtectedForEdit: "string", ...optionalInputFilter },
             req.body,
             1
         );
+        for (let i in realTypes[operationDataType]) {
+            const type = realTypes[operationDataType][i];
+            if (!reqBody[i]) {
+                continue;
+            }
+            if (type == "number") {
+                reqBody[i] = Number(reqBody[i]);
+                if (reqBody[i] > 0 || reqBody[i] < 0 || reqBody[i] === 0) {
+                } else {
+                    throw { key: i, message: "please send number" };
+                }
+            } else if (type == "boolean") {
+                if (reqBody[i] === "false" || reqBody[i] === "true") {
+                    if (reqBody[i] === "false") reqBody[i] = false;
+                    if (reqBody[i] === "true") reqBody[i] = true;
+                } else {
+                    throw { key: i, message: "please send boolean" };
+                }
+            }
+        }
         reqBody.startDate = new Date();
         reqBody.endDate = new Date("9999/12/31");
         for (let i in dateValues[operationDataType]) {
@@ -231,17 +265,45 @@ router.patch(allRoutes, upload.single("file"), async (req, res, next) => {
     let updateData = {};
     try {
         if (!req.body.updateData) req.body.updateData = {};
-        inputFilter({ id: "number", updateData: "object" }, {}, req.body);
+        inputFilter({ id: "string", updateData: "object" }, {}, req.body);
         updateData = inputFilter(
             {},
             {
                 ...allInputFilters[operationDataType],
                 ...allOptionalInputfilters[operationDataType],
-                isProtectedForEdit: "boolean",
+                isProtectedForEdit: "string",
             },
             req.body.updateData
         );
-
+        req.body.id = Number(req.body.id);
+        if (req.body.id > 0 || req.body.id < 0 || req.body.id === 0) {
+        } else {
+            throw { key: "id", message: "please send number" };
+        }
+        for (let i in realTypes[operationDataType]) {
+            const type = realTypes[operationDataType][i];
+            if (!updateData[i]) {
+                continue;
+            }
+            if (type == "number") {
+                updateData[i] = Number(updateData[i]);
+                if (
+                    updateData[i] > 0 ||
+                    updateData[i] < 0 ||
+                    updateData[i] === 0
+                ) {
+                } else {
+                    throw { key: i, message: "please send number" };
+                }
+            } else if (type == "boolean") {
+                if (updateData[i] === "false" || updateData[i] === "true") {
+                    if (updateData[i] === "false") updateData[i] = false;
+                    if (updateData[i] === "true") updateData[i] = true;
+                } else {
+                    throw { key: i, message: "please send boolean" };
+                }
+            }
+        }
         // if date values sent in update data, transform them into a date value, if wrong format detected throw an error
 
         for (let i in dateValues[operationDataType]) {

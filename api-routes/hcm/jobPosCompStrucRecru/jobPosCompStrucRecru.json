@@ -185,7 +185,7 @@
         "job_category": { "id": true, "category_description": true },
         "job_safety_equipment": {
             "id": true,
-            "safety_equipment_id": true,
+            "safety_equipment": true,
             "job_title": true
         },
         "job_title": {
@@ -193,7 +193,7 @@
             "title_name": true,
             "job_specification": true,
             "min_experience": true,
-            "paygrade_id": true,
+            "paygrade": true,
             "training_type": true,
             "job_category": true
         },

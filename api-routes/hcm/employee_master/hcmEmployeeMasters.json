@@ -4,6 +4,7 @@
         "dependent": { "fullname": "string", "employee_id": "number" },
         "discipline": { "case_description": "string" },
         "education": {
+            "duration": "number",
             "field_of_study_id": "number",
             "duration_measure_id": "number",
             "training_type_id": "number",
@@ -144,7 +145,7 @@
             "photo": "string",
             "is_employee_active": "boolean",
             "type": "string",
-            "prev_employment_leave_days": "Float?",
+            "prev_employment_leave_days": "number",
             "bank_account_number": "string",
             "document_ref": "string",
             "pension_ref": "string",
@@ -174,8 +175,8 @@
             "payroll_frequency_type_id": "number"
         },
         "employee_paygrade": {},
-        "employee_salary_component": { "amount": "Float?" },
-        "experience": { "salary": "Float?", "comment": "string" },
+        "employee_salary_component": { "amount": "number" },
+        "experience": { "salary": "number", "comment": "string" },
         "leave_assignment": {
             "is_half_day": "boolean",
             "leave_assignment_type": "number",
@@ -542,7 +543,7 @@
             "place_of_birth": "string",
             "is_employee_active": "boolean",
             "type": "string",
-            "prev_employment_leave_days": "Float?",
+            "prev_employment_leave_days": "number",
             "bank_account_number": "string",
             "document_ref": "string",
             "pension_ref": "string",
@@ -607,7 +608,7 @@
         },
         "employee_salary_component": {
             "id": "number",
-            "amount": "Float?",
+            "amount": "number",
             "employee_id": "number",
             "salary_component_id": "number"
         },
@@ -615,7 +616,7 @@
             "id": "number",
             "company": "string",
             "job_title": "string",
-            "salary": "Float?",
+            "salary": "number",
             "comment": "string",
             "employee_id": "number"
         },

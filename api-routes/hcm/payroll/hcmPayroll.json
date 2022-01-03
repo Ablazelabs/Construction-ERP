@@ -111,7 +111,8 @@
         },
         "salary_component": {
             "name": "string",
-            "chart_of_account_id": "number"
+            "chart_of_account_id": "number",
+            "value_type": "number"
         },
         "salary_component_account_mapping": {
             "chart_of_account_id": "number",
@@ -290,7 +291,6 @@
         "salary_adjustment": { "payroll_date": "string" },
         "salary_component": {
             "salary_component_type": "number",
-            "value_type": "number",
             "value": "number",
             "taxable": "boolean"
         },
