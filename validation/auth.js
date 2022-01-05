@@ -17,6 +17,7 @@ const authorization = {
         const method = req.method;
         if (
             requestRoute == "login" ||
+            requestRoute == "logout" ||
             requestRoute == "forgotpassword" ||
             requestRoute == "refresh" ||
             requestRoute == "sendcode" ||

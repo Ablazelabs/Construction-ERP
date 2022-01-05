@@ -62,6 +62,7 @@ const post = async (reqBody, operationDataType, creator, next) => {
         //   console.log(data);
         return { success: true };
     } catch (e) {
+        console.log(e);
         if (e.meta.field_name) {
             const fieldModel = e.meta.field_name
                 .replace("_id", "")

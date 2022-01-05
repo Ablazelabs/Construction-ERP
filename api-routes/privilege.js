@@ -69,9 +69,11 @@ router.get("/privilege", async (req, res, next) => {
     for (let i in filter) {
         queryFilter[i] = { contains: filter[i] };
     }
-    let querySort = {};
+    let querySort = [];
     for (let i in sort) {
-        querySort[i] = sort[i] ? "asc" : "desc";
+        let pushedObj = {};
+        pushedObj[i] = sort[i] ? "asc" : "desc";
+        querySort.push(pushedObj);
     }
     try {
         res.json(await get(queryFilter, querySort, limit, skip, projection));

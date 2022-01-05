@@ -246,7 +246,7 @@
         },
         "device_id_mapping": {
             "id": true,
-            "finger_print": true,
+            "finger_print_id": true,
             "employee": true,
             "punch_device": true
         },

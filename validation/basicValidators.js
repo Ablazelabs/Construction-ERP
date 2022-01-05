@@ -152,9 +152,11 @@ const returnGetData = (reqBody, { filters, sorts, projections }, next) => {
             queryFilter[i] = { equals: filter[i] };
         else queryFilter[i] = { contains: filter[i] };
     }
-    let querySort = {};
+    let querySort = [];
     for (let i in sort) {
-        querySort[i] = sort[i] ? "asc" : "desc";
+        let pushedObj = {};
+        pushedObj[i] = sort[i] ? "asc" : "desc";
+        querySort.push(pushedObj);
     }
     return { queryFilter, querySort, limit, skip, projection };
 };
@@ -243,9 +245,10 @@ const returnPatchData = (
             if (!validation.checkPhoneNumber(updateData[phoneValue[i]], next))
                 return;
     }
+
     for (let i in emailValue) {
         if (updateData[emailValue[i]])
-            if (!validation.checkEmail(updateData[phoneValue[i]], next)) return;
+            if (!validation.checkEmail(updateData[emailValue[i]], next)) return;
     }
     let updateDataProjection = {};
     for (let i in updateData) {

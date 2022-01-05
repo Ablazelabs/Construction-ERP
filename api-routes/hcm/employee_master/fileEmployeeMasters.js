@@ -29,6 +29,7 @@ const realTypes = {
         isProtectedForEdit: "boolean",
     },
     employee: {
+        id_number: "number", //number
         marital_status: "number", //["Single", "Married", "Widowed", "Divorced"], //optional
         is_employee_active: "boolean",
         prev_employment_leave_days: "number",
@@ -282,7 +283,7 @@ router.patch(allRoutes, upload.single("file"), async (req, res, next) => {
                 ...allOptionalInputfilters[operationDataType],
                 isProtectedForEdit: "string",
             },
-            req.body.updateData
+            req.body
         );
         req.body.id = Number(req.body.id);
         if (req.body.id > 0 || req.body.id < 0 || req.body.id === 0) {
@@ -406,7 +407,7 @@ router.patch(allRoutes, upload.single("file"), async (req, res, next) => {
         if (updateData[emailValues[operationDataType][i]])
             if (
                 !validation.checkEmail(
-                    updateData[phoneValues[operationDataType][i]],
+                    updateData[emailValues[operationDataType][i]],
                     next
                 )
             )

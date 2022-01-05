@@ -56,9 +56,7 @@ const get = async (queryFilter, querySort, limit, skip, projection) => {
             ...queryFilter,
             status: 0,
         },
-        orderBy: {
-            ...querySort,
-        },
+        orderBy: [...querySort],
         take: limit,
         skip,
         select: {

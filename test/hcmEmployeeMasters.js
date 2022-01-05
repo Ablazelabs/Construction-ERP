@@ -21,10 +21,10 @@ describe("hcm employee master Test 1(employee)", () => {
                 .post(url)
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
-                    id_number: randomName,
+                    id_number: `${randomName}`,
                     first_name: `${randomName}`,
                     middle_name: `${randomName}`,
-                    gender: 1, //["male", "female"],
+                    gender: "1", //["male", "female"],
                 })
                 .end((err, response) => {
                     response.should.have.status(200);
@@ -38,10 +38,10 @@ describe("hcm employee master Test 1(employee)", () => {
                 .post(url)
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
-                    id_number: randomName,
+                    id_number: `${randomName}`,
                     first_name: `${randomName}`,
                     middle_name: `${randomName}`,
-                    gender: 3, //["male", "female"],
+                    gender: "3", //["male", "female"],
                 })
                 .end((err, response) => {
                     response.should.have.status(400);
@@ -133,10 +133,8 @@ describe("hcm employee master Test 1(employee)", () => {
                 .patch(url)
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
-                    id: randomGottenId,
-                    updateData: {
-                        first_name: "yared",
-                    },
+                    id: `${randomGottenId}`,
+                    first_name: "yared",
                 })
                 .end((err, response) => {
                     response.should.have.status(200);
@@ -150,9 +148,7 @@ describe("hcm employee master Test 1(employee)", () => {
                 .patch(url)
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
-                    updateData: {
-                        first_name: "yared",
-                    },
+                    first_name: "yared",
                 })
                 .end((err, response) => {
                     response.should.have.status(400);
@@ -166,10 +162,8 @@ describe("hcm employee master Test 1(employee)", () => {
             chai.request(server)
                 .patch(url)
                 .send({
-                    id: 1,
-                    updateData: {
-                        first_name: "yared",
-                    },
+                    id: "1",
+                    first_name: "yared",
                 })
                 .end((err, response) => {
                     response.should.have.status(401);

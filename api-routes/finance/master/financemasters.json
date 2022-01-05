@@ -438,7 +438,7 @@
             "company_name": true,
             "contact_display_name": true,
             "remark": true,
-            "chart_of_account_id": true,
+            "chart_of_account": true,
             "currency": true,
             "payment_term": true
         },

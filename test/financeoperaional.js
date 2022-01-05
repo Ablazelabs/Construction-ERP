@@ -8,27 +8,63 @@ chai.use(chaiHttp);
 const { readFileSync } = require("fs");
 let accessToken = readFileSync("./test/accessToken.txt", "utf-8");
 
-const url = "/finance/master/account_category";
+const url = "/finance/operational/bank_reconcilation";
 
-describe("finance master data Test 1(account category)", () => {
+describe("finance operational data Test 1(account category)", () => {
     /**
      * Test the post
      */
     const randomName = Math.floor(Math.random() * 1000000);
-    describe("/account_category post test", () => {
-        it("Should post a new account_category", (done) => {
+    describe("/bank_reconcilation post test", () => {
+        it("Should post a new bank_reconcilation", (done) => {
             chai.request(server)
                 .post(url)
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
-                    startDate: "2000/10/22",
-                    endDate: "2000/10/23",
-                    code: `${randomName}`,
+                    from_date: "2000/10/22",
+                    to_date: "2000/10/23",
+                    chart_of_account_id: 1,
                 })
                 .end((err, response) => {
+                    console.log("chart_of_account with id 1 needed");
                     response.should.have.status(200);
                     response.body.should.be.a("object");
                     response.body.should.have.property("success").equal(true);
+                    done();
+                });
+        });
+        it("Should return error 400 no chart of account sent", (done) => {
+            chai.request(server)
+                .post(url)
+                .set({ Authorization: `Bearer ${accessToken}` })
+                .send({
+                    from_date: "2000/10/22",
+                    to_date: "2000/10/23",
+                })
+                .end((err, response) => {
+                    response.should.have.status(400);
+                    response.body.should.be.a("object");
+                    response.body.should.have.property("error");
+                    response.body.error.should.have.property(
+                        "chart_of_account_id"
+                    );
+                    done();
+                });
+        });
+        it("Should return error 400 to date must be sent", (done) => {
+            chai.request(server)
+                .post(url)
+                .set({ Authorization: `Bearer ${accessToken}` })
+                .send({
+                    from_date: "2000/10/22",
+                    to_date: "this is clearly not a date",
+                    chart_of_account_id: 1,
+                })
+                .end((err, response) => {
+                    response.should.have.status(400);
+                    response.body.should.be.a("object");
+                    response.body.should.have.property("error");
+                    response.body.error.should.have.property("to_date");
                     done();
                 });
         });
@@ -38,17 +74,20 @@ describe("finance master data Test 1(account category)", () => {
      */
     let randomGottenId; //this is to make sure delete later works
     describe("Get Test", () => {
-        it("should get account_categories", (done) => {
+        it("should get bank reconcilations", (done) => {
             chai.request(server)
                 .get(url)
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
                     limit: 10,
+                    sort: {
+                        id: 0,
+                    },
                 })
                 .end((_err, response) => {
                     response.should.have.status(200);
                     response.body.should.be.a("array");
-                    randomGottenId = response.body[1].id;
+                    randomGottenId = response.body[0].id;
                     done();
                 });
         });
@@ -72,8 +111,8 @@ describe("finance master data Test 1(account category)", () => {
      * Test the delete
      */
 
-    describe("/account_category delete", () => {
-        it("Should delete a account_category", (done) => {
+    describe("/bank_reconcilation delete", () => {
+        it("Should delete a bank_reconcilation", (done) => {
             chai.request(server)
                 .delete(url)
                 .set({ Authorization: `Bearer ${accessToken}` })
@@ -87,7 +126,7 @@ describe("finance master data Test 1(account category)", () => {
                     done();
                 });
         });
-        it("Should return error 400(no account_category id sent)", (done) => {
+        it("Should return error 400(no bank_reconcilation id sent)", (done) => {
             chai.request(server)
                 .delete(url)
                 .set({ Authorization: `Bearer ${accessToken}` })
@@ -106,21 +145,39 @@ describe("finance master data Test 1(account category)", () => {
      * Test the patch
      */
 
-    describe("/account_category patch", () => {
-        it("Should update a account_category", (done) => {
+    describe("/bank_reconcilation patch", () => {
+        it("Should update a bank_reconcilation", (done) => {
             chai.request(server)
                 .patch(url)
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
                     id: randomGottenId,
                     updateData: {
-                        description: "hello account category here :)",
+                        from_date: "2000/10/10",
                     },
                 })
                 .end((err, response) => {
                     response.should.have.status(200);
                     response.body.should.be.a("object");
                     response.body.should.have.property("success").equal(true);
+                    done();
+                });
+        });
+        it("Should update a bank_reconcilation", (done) => {
+            chai.request(server)
+                .patch(url)
+                .set({ Authorization: `Bearer ${accessToken}` })
+                .send({
+                    id: randomGottenId,
+                    updateData: {
+                        from_date: "this also isn't a date",
+                    },
+                })
+                .end((err, response) => {
+                    response.should.have.status(400);
+                    response.body.should.be.a("object");
+                    response.body.should.have.property("error");
+                    response.body.error.should.have.property("from_date");
                     done();
                 });
         });
@@ -147,7 +204,7 @@ describe("finance master data Test 1(account category)", () => {
                 .send({
                     id: 1,
                     updateData: {
-                        username: "yared terefe",
+                        from_date: "yared terefe",
                     },
                 })
                 .end((err, response) => {
@@ -161,24 +218,21 @@ describe("finance master data Test 1(account category)", () => {
     });
 });
 
-const url2 = "/finance/master/account_type";
+const url2 = "/finance/operational/estimated_total_production_unit";
 
-describe("finance master data Test 2(account_type)", () => {
+describe("finance operational data Test 2(estimated_total_production_unit)", () => {
     /**
      * Test the post
      */
     const randomName = Math.floor(Math.random() * 1000000);
-    describe("/account_type post test", () => {
-        it("Should post a new account_type", (done) => {
+    describe("/estimated_total_production_unit post test", () => {
+        it("Should post a new estimated_total_production_unit", (done) => {
             chai.request(server)
                 .post(url2)
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
-                    account_category_id: 1,
-                    code: "string",
-                    type: "stringtype",
-                    startDate: "2000/10/22",
-                    endDate: "2000/10/23",
+                    unit_name: `${randomName}`,
+                    unit_symbol: `${randomName}`,
                 })
                 .end((err, response) => {
                     response.should.have.status(200);
@@ -193,12 +247,15 @@ describe("finance master data Test 2(account_type)", () => {
      */
     let randomGottenId; //this is to make sure delete later works
     describe("Get Test", () => {
-        it("should get account_types", (done) => {
+        it("should get estimated_total_production_units", (done) => {
             chai.request(server)
                 .get(url2)
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
                     limit: 10,
+                    sort: {
+                        id: 0,
+                    },
                 })
                 .end((_err, response) => {
                     response.should.have.status(200);
@@ -227,8 +284,8 @@ describe("finance master data Test 2(account_type)", () => {
      * Test the delete
      */
 
-    describe("/account_type delete", () => {
-        it("Should delete a account_type", (done) => {
+    describe("/estimated_total_production_unit delete", () => {
+        it("Should delete an estimated_total_production_unit", (done) => {
             chai.request(server)
                 .delete(url2)
                 .set({ Authorization: `Bearer ${accessToken}` })
@@ -242,7 +299,7 @@ describe("finance master data Test 2(account_type)", () => {
                     done();
                 });
         });
-        it("Should return error 400(no account_type id sent)", (done) => {
+        it("Should return error 400(no estimated_total_production_unit id sent)", (done) => {
             chai.request(server)
                 .delete(url2)
                 .set({ Authorization: `Bearer ${accessToken}` })
@@ -261,21 +318,36 @@ describe("finance master data Test 2(account_type)", () => {
      * Test the patch
      */
 
-    describe("/account_type patch", () => {
-        it("Should update a account_type", (done) => {
+    describe("/estimated_total_production_unit patch", () => {
+        it("Should update a estimated_total_production_unit", (done) => {
             chai.request(server)
                 .patch(url2)
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
                     id: randomGottenId,
                     updateData: {
-                        can_be_sub_account: true,
+                        unit_symbol: `${randomName}_updated_for_test`,
                     },
                 })
                 .end((err, response) => {
                     response.should.have.status(200);
                     response.body.should.be.a("object");
                     response.body.should.have.property("success").equal(true);
+                    done();
+                });
+        });
+        it("Should send 400 error message no update data", (done) => {
+            chai.request(server)
+                .patch(url2)
+                .set({ Authorization: `Bearer ${accessToken}` })
+                .send({
+                    id: randomGottenId,
+                })
+                .end((err, response) => {
+                    response.should.have.status(400);
+                    response.body.should.be.a("object");
+                    response.body.should.have.property("error");
+                    response.body.error.should.have.property("updateData");
                     done();
                 });
         });

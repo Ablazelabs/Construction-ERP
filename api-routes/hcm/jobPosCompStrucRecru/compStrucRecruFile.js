@@ -14,8 +14,8 @@ const allInputFilters = {
     external_applicant: {
         applicant_name: "string",
         father_name: "string",
-        gender: "number", // ["male", "female"],
-        training_type_id: "number",
+        gender: "string", // ["male", "female"],
+        training_type_id: "string",
     },
 };
 const realTypes = {
@@ -41,16 +41,16 @@ const enums = {
 };
 const allOptionalInputfilters = {
     company: {
-        country_id: "number",
-        currency_id: "number",
+        country_id: "string",
+        currency_id: "string`",
         logo: "string", //needs file handling
     },
     external_applicant: {
         grand_father_name: "string",
         mobile_number: "string",
         email: "string",
-        experience_year: "number", //[0+]
-        marital_status: "number", // ["Single", "Married", "Widowed", "Divorced"], //optional
+        experience_year: "string", //[0+]
+        marital_status: "string", // ["Single", "Married", "Widowed", "Divorced"], //optional
     },
 };
 const allRangeValues = {
@@ -273,7 +273,7 @@ router.patch(allRoutes, upload.single("file"), async (req, res, next) => {
                 ...allOptionalInputfilters[operationDataType],
                 isProtectedForEdit: "string",
             },
-            req.body.updateData
+            req.body
         );
         req.body.id = Number(req.body.id);
         if (req.body.id > 0 || req.body.id < 0 || req.body.id === 0) {
@@ -396,7 +396,7 @@ router.patch(allRoutes, upload.single("file"), async (req, res, next) => {
         if (updateData[emailValues[operationDataType][i]])
             if (
                 !validation.checkEmail(
-                    updateData[phoneValues[operationDataType][i]],
+                    updateData[emailValues[operationDataType][i]],
                     next
                 )
             )

@@ -77,13 +77,15 @@ router.get("/role", async (req, res, next) => {
     };
     let queryFilter = {};
     for (let i in filter) {
-        if (typeof filter[i] == "number")
+        if (typeof filter[i] !== "string")
             queryFilter[i] = { equals: filter[i] };
         else queryFilter[i] = { contains: filter[i] };
     }
-    let querySort = {};
+    let querySort = [];
     for (let i in sort) {
-        querySort[i] = sort[i] ? "asc" : "desc";
+        let pushedObj = {};
+        pushedObj[i] = sort[i] ? "asc" : "desc";
+        querySort.push(pushedObj);
     }
     try {
         res.json(await get(queryFilter, querySort, limit, skip, projection));

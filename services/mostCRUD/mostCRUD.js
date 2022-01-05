@@ -71,14 +71,13 @@ const get = async (
     projection,
     modelName
 ) => {
+    // console.log(querySort, "--");
     const data = await allModels[modelName].findMany({
         where: {
             ...queryFilter,
             status: 0,
         },
-        orderBy: {
-            ...querySort,
-        },
+        orderBy: [...querySort],
         take: limit,
         skip,
         select: {
