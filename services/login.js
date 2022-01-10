@@ -5,7 +5,12 @@ const { sign } = require("jsonwebtoken");
 module.exports = async (identifier, reqBody, next) => {
     const queryResult = await user.findUnique({
         where: { ...identifier },
-        select: { password: true, id: true, access_failed_count: true },
+        select: {
+            password: true,
+            id: true,
+            access_failed_count: true,
+            first_login: true,
+        },
     });
     let key;
     for (let i in identifier) {
@@ -49,12 +54,14 @@ module.exports = async (identifier, reqBody, next) => {
         },
         process.env.REFRESH_KEY
     );
-    await refresh_tokens.create({
-        data: {
-            refresh_token: refreshToken,
-            user_id: queryResult.id,
-        },
-    });
+    if (!queryResult.first_login) {
+        await refresh_tokens.create({
+            data: {
+                refresh_token: refreshToken,
+                user_id: queryResult.id,
+            },
+        });
+    }
     await user.update({
         data: {
             access_failed_count: 0,
@@ -63,5 +70,10 @@ module.exports = async (identifier, reqBody, next) => {
             ...identifier,
         },
     });
-    return { accessToken, refreshToken, id: queryResult.id };
+    return {
+        accessToken,
+        refreshToken,
+        id: queryResult.id,
+        first_login: Boolean(queryResult.first_login),
+    };
 };

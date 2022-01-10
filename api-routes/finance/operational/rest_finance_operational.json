@@ -44,7 +44,6 @@
             "period_month": "number"
         },
         "budget_control_action": {
-            "id": "number",
             "type": "number",
             "action_accumulated_monthly_budget_exceeded": "number"
         },
@@ -446,8 +445,8 @@
             "posting_reference": true,
             "reference_code": true,
             "amount_debit": true,
-            "tax_id": true,
-            "contact_id": true,
+            "tax": true,
+            "contact": true,
             "general_journal_header": true,
             "cost_center": true,
             "chart_of_account": true
@@ -543,11 +542,11 @@
         },
         "chart_of_account": {
             "id": "number",
-            "account_name": "number",
-            "account_code": "number",
-            "account_number": "number",
+            "account_name": "string",
+            "account_code": "string",
+            "account_number": "string",
             "is_active": "boolean",
-            "description": "number",
+            "description": "string",
             "add_to_dashboard_watch_list": "boolean",
             "attachment_path": "number",
             "is_sub_account": "boolean",

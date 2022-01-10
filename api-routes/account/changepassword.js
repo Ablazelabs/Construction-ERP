@@ -35,7 +35,11 @@ router.post("/account/changepassword", async (req, res, next) => {
                 selfUpdate = true;
                 id = res.locals.id;
             } else {
-                error("id", "must be given with access token", next);
+                error(
+                    "id",
+                    "must be given with access token,(password if self update)",
+                    next
+                );
                 return;
             }
         } else {

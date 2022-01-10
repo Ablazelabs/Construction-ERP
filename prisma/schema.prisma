@@ -643,8 +643,9 @@ model account_category {
   isProtectedForEdit Boolean        @default(false)
   id                 Int            @id @default(autoincrement())
   code               String
+  name               String         @unique @default("random")
   description        String?
-  is_debit           String?
+  is_debit           Boolean?
   account_type       account_type[]
 }
 
@@ -658,10 +659,10 @@ model closing_note {
   status             Int      @default(0)
   isProtectedForEdit Boolean  @default(false)
   id                 Int      @id @default(autoincrement())
-  closing_type       Int //[both,month_end,year_end]
-  title              String
-  note               String?
-  consideration      Int //[closing_note,closing_effect]
+  closing_type       Int? //[both,month_end,year_end]
+  title              String?
+  note               String
+  consideration      Int? //[closing_note,closing_effect]
 }
 
 model financial_statement_section {
@@ -674,7 +675,7 @@ model financial_statement_section {
   status                                   Int                                        @default(0)
   isProtectedForEdit                       Boolean                                    @default(false)
   id                                       Int                                        @id @default(autoincrement())
-  name                                     String
+  name                                     String                                     @unique
   description                              String?
   sequence_on_report                       Int
   financial_statement_type                 Int //[income_statement,balance_sheet,cash_flow_statement,owners_equity]
@@ -710,8 +711,8 @@ model payment_term {
   status             Int       @default(0)
   isProtectedForEdit Boolean   @default(false)
   id                 Int       @id @default(autoincrement())
-  show_it_as         String?
-  number_of_days     Int?
+  show_it_as         String
+  number_of_days     Int
   contact            contact[]
 }
 
@@ -769,7 +770,7 @@ model tax_authority {
   status             Int      @default(0)
   isProtectedForEdit Boolean  @default(false)
   id                 Int      @id @default(autoincrement())
-  name               String
+  name               String   @unique
   description        String?
   tax                tax[]
 }
@@ -784,7 +785,7 @@ model tax_exemption {
   status               Int      @default(0)
   isProtectedForEdit   Boolean  @default(false)
   id                   Int      @id @default(autoincrement())
-  tax_exemption_reason String?
+  tax_exemption_reason String   @unique
   code                 String
   description          String?
   tax_exemption_type   Int //[customer,item]
@@ -800,7 +801,7 @@ model tax_group {
   status               Int                    @default(0)
   isProtectedForEdit   Boolean                @default(false)
   id                   Int                    @id @default(autoincrement())
-  tax_group_name       String
+  tax_group_name       String                 @unique
   tax_group_percentage Float
   associated_tax_group associated_tax_group[]
   general_ledger       general_ledger[]
@@ -856,7 +857,7 @@ model account_type {
   status                                   Int                                        @default(0)
   isProtectedForEdit                       Boolean                                    @default(false)
   id                                       Int                                        @id @default(autoincrement())
-  code                                     String
+  code                                     String                                     @unique
   type                                     String
   description                              String?
   can_be_sub_account                       Boolean?
@@ -883,7 +884,7 @@ model bank {
   isProtectedForEdit Boolean  @default(false)
   id                 Int      @id @default(autoincrement())
   account_type       Int //[bank,credit_card]
-  account_name       String
+  account_name       String   @unique
   account_number     String?
   account_code       String?
   IBAN               String?
@@ -963,9 +964,9 @@ model journal_users {
   status             Int      @default(0)
   isProtectedForEdit Boolean  @default(false)
   id                 Int      @id @default(autoincrement())
-  access_name        Int? //[manual_journal,recurring_journal]
-  user_id            Int?
-  user               user?    @relation(fields: [user_id], references: [id])
+  access_name        Int //[manual_journal,recurring_journal]
+  user_id            Int
+  user               user     @relation(fields: [user_id], references: [id])
   //needs user
   //inside schema
 }
@@ -1009,7 +1010,7 @@ model cost_center_accounts {
   status              Int              @default(0)
   isProtectedForEdit  Boolean          @default(false)
   id                  Int              @id @default(autoincrement())
-  remark              String?
+  remark              String
   chart_of_account_id Int
   cost_center_id      Int
   cost_center         cost_center      @relation(fields: [cost_center_id], references: [id])
@@ -1124,7 +1125,7 @@ model contact_address {
   attention          String?
   street1            String?
   street2            String?
-  city               String?
+  city               String
   state              String?
   phone              String?
   fax                String?
@@ -2627,7 +2628,7 @@ model company {
   isProtectedForEdit Boolean   @default(false)
   id                 Int       @id @default(autoincrement())
   code               String
-  name               String
+  name               String @unique
   country_id         Int?
   currency_id        Int?
   logo               String? //needs file handling

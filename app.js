@@ -8,6 +8,7 @@ const app = express();
 
 const account = require("./api-routes/account");
 const login = require("./api-routes/account/login");
+const confirmAccount = require("./api-routes/account/confirmAccount");
 const logout = require("./api-routes/account/logout");
 const refresh = require("./api-routes/account/refresh");
 const forgotpassword = require("./api-routes/account/forgotpassword");
@@ -57,6 +58,7 @@ app.use((req, _res, next) => {
 app.use(login);
 app.use(logout);
 app.use(refresh);
+app.use(confirmAccount);
 
 app.use(account);
 app.use(forgotpassword);

@@ -8,6 +8,7 @@ const hcmPayrolls = require("./hcmPayrolls.json");
 const hcmTimeAndLeave = require("./hcmTimeAndLeave.json");
 const inventMaster = require("./inventMaster.json");
 const inventStock = require("./inventStock.json");
+const financeMaster = require("./financeMaster.json");
 const financeOperational = require("./financeOperational.json");
 const allNewDocs = {
     hcmEmployeeMaster,
@@ -18,6 +19,7 @@ const allNewDocs = {
     hcmTimeAndLeave,
     inventMaster,
     inventStock,
+    financeMaster,
     financeOperational,
 };
 for (let i in allNewDocs) {

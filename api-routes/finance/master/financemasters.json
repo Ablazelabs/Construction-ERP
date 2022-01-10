@@ -1,16 +1,12 @@
 {
     "allInputFilters": {
-        "account_category": { "code": "string" },
+        "account_category": { "code": "string", "name": "string" },
         "account_type": {
             "code": "string",
             "type": "string",
             "account_category_id": "number"
         },
-        "closing_note": {
-            "closing_type": "number",
-            "title": "string",
-            "consideration": "number"
-        },
+        "closing_note": { "note": "string" },
         "financial_statement_section": {
             "name": "string",
             "sequence_on_report": "number",
@@ -26,14 +22,19 @@
             "company_name": "string",
             "contact_display_name": "string"
         },
-        "contact_address": { "address_type": "number" },
+        "contact_address": {
+            "address_type": "number",
+            "city": "string",
+            "contact_id": "number"
+        },
         "contact_person": { "first_name": "string" },
         "cost_center": { "cost_center_code": "string" },
         "cost_center_accounts": {
+            "remark": "string",
             "chart_of_account_id": "number",
             "cost_center_id": "number"
         },
-        "payment_term": {},
+        "payment_term": { "show_it_as": "string", "number_of_days": "number" },
         "exchange_rate": {
             "rate": "number",
             "date": "string",
@@ -44,19 +45,17 @@
             "organization_profile_id": "number"
         },
         "date_format_type": {
-            "id": "number",
             "date_format": "string",
             "date_format_type_category": "number"
         },
         "financial_settings": {
-            "id": "number",
             "report_basis": "number",
             "fiscal_year": "number",
             "closing_type": "number",
             "base_currency_id": "number"
         },
         "industry": { "name": "string" },
-        "journal_users": {},
+        "journal_users": { "access_name": "number", "user_id": "number" },
         "primary_contact": { "name": "string", "email": "string" },
         "foot_note": { "title": "string" },
         "associated_tax_group": {
@@ -69,17 +68,127 @@
             "tax_authority_id": "number"
         },
         "tax_authority": { "name": "string" },
-        "tax_exemption": { "code": "string", "tax_exemption_type": "number" },
+        "tax_exemption": {
+            "tax_exemption_reason": "string",
+            "code": "string",
+            "tax_exemption_type": "number"
+        },
         "tax_group": {
             "tax_group_name": "string",
             "tax_group_percentage": "number"
         },
         "tax_rule": {
             "operator": "number",
-            "amount": "number",
-            "tax_id": "number"
+            "amount": "number"
         },
         "journal_type": { "type": "string" }
+    },
+    "allOptionalInputFilters": {
+        "account_category": { "description": "string", "is_debit": "boolean" },
+        "account_type": {
+            "description": "string",
+            "can_be_sub_account": "boolean",
+            "contain_account_number": "boolean",
+            "contain_currency": "boolean",
+            "tool_tip_description": "string",
+            "can_have_more_than_one_chart_of_account": "boolean"
+        },
+        "closing_note": {
+            "title": "string",
+            "closing_type": "number",
+            "consideration": "number"
+        },
+        "financial_statement_section": { "description": "string" },
+        "bank": {
+            "account_number": "string",
+            "account_code": "string",
+            "IBAN": "string",
+            "bank_name": "string",
+            "description": "string",
+            "is_primary": "boolean"
+        },
+        "contact": {
+            "remark": "string",
+            "chart_of_account_id": "number",
+            "currency_id": "number",
+            "payment_term_id": "number"
+        },
+        "contact_address": {
+            "attention": "string",
+            "street1": "string",
+            "street2": "string",
+            "state": "string",
+            "phone": "string",
+            "fax": "string",
+            "zip_code": "string",
+            "country_id": "number"
+        },
+        "contact_person": {
+            "last_name": "string",
+            "work_phone": "string",
+            "mobile": "string",
+            "email": "string",
+            "designation": "string",
+            "department": "string",
+            "is_primary_contact": "boolean",
+            "contact_id": "number",
+            "title_id": "number"
+        },
+        "cost_center": { "section_name": "string", "remark": "string" },
+        "cost_center_accounts": {},
+        "payment_term": {},
+        "exchange_rate": {},
+        "company_address": {
+            "address2": "string",
+            "city": "string",
+            "state_or_province": "string",
+            "zip_or_portal_code": "string",
+            "phone": "string",
+            "fax": "string",
+            "website": "string"
+        },
+        "date_format_type": {},
+        "financial_settings": {
+            "timezone": "string",
+            "tax_id_number": "string",
+            "auto_generate_journal_preference": "boolean",
+            "is_acc_code_mandatory": "boolean",
+            "enter_unique_acc_code": "boolean",
+            "is_profile_tax_applied": "boolean",
+            "is_legal_reserve_applied": "boolean",
+            "profit_tax": "number",
+            "legal_reserve": "number",
+            "company_id_number": "string",
+            "time_format_id": "number",
+            "company_id": "number",
+            "tax_id": "number",
+            "language_id": "number"
+        },
+        "industry": { "description": "string" },
+        "journal_users": {},
+        "primary_contact": { "organization_profile_id": "number" },
+        "foot_note": {
+            "description": "string",
+            "financial_statement_type": "number"
+        },
+        "associated_tax_group": {},
+        "tax": {
+            "is_value_added": "boolean",
+            "is_editable": "boolean",
+            "tax_type": "number",
+            "is_default_tax": "boolean",
+            "chart_of_account_debit_id": "number",
+            "chart_of_account_credit_id": "number"
+        },
+        "tax_authority": { "description": "string" },
+        "tax_exemption": { "description": "string" },
+        "tax_group": {},
+        "tax_rule": {
+            "remark": "string",
+            "tax_id": "number",
+            "sales_type": "number"
+        },
+        "journal_type": { "description": "string" }
     },
     "enums": {
         "account_category": {},
@@ -194,111 +303,6 @@
         },
         "journal_type": {}
     },
-    "allOptionalInputFilters": {
-        "account_category": { "description": "string", "is_debit": "string" },
-        "account_type": {
-            "description": "string",
-            "can_be_sub_account": "boolean",
-            "contain_account_number": "boolean",
-            "contain_currency": "boolean",
-            "tool_tip_description": "string",
-            "can_have_more_than_one_chart_of_account": "boolean"
-        },
-        "closing_note": { "note": "string" },
-        "financial_statement_section": { "description": "string" },
-        "bank": {
-            "account_number": "string",
-            "account_code": "string",
-            "IBAN": "string",
-            "bank_name": "string",
-            "description": "string",
-            "is_primary": "boolean"
-        },
-        "contact": {
-            "remark": "string",
-            "chart_of_account_id": "number",
-            "currency_id": "number",
-            "payment_term_id": "number"
-        },
-        "contact_address": {
-            "attention": "string",
-            "street1": "string",
-            "street2": "string",
-            "city": "string",
-            "state": "string",
-            "phone": "string",
-            "fax": "string",
-            "zip_code": "string",
-            "contact_id": "number",
-            "country_id": "number"
-        },
-        "contact_person": {
-            "last_name": "string",
-            "work_phone": "string",
-            "mobile": "string",
-            "email": "string",
-            "designation": "string",
-            "department": "string",
-            "is_primary_contact": "boolean",
-            "contact_id": "number",
-            "title_id": "number"
-        },
-        "cost_center": { "section_name": "string", "remark": "string" },
-        "cost_center_accounts": { "remark": "string" },
-        "payment_term": { "show_it_as": "string", "number_of_days": "number" },
-        "exchange_rate": {},
-        "company_address": {
-            "address2": "string",
-            "city": "string",
-            "state_or_province": "string",
-            "zip_or_portal_code": "string",
-            "phone": "string",
-            "fax": "string",
-            "website": "string"
-        },
-        "date_format_type": {},
-        "financial_settings": {
-            "timezone": "string",
-            "company_id": "number",
-            "tax_id": "number",
-            "tax_id_number": "string",
-            "auto_generate_journal_preference": "boolean",
-            "is_acc_code_mandatory": "boolean",
-            "enter_unique_acc_code": "boolean",
-            "is_profile_tax_applied": "boolean",
-            "is_legal_reserve_applied": "boolean",
-            "profit_tax": "number",
-            "legal_reserve": "number",
-            "company_id_number": "string",
-            "time_format_id": "number",
-            "language_id": "number"
-        },
-        "industry": { "description": "string" },
-        "journal_users": { "access_name": "number", "user_id": "number" },
-        "primary_contact": { "organization_profile_id": "number" },
-        "foot_note": {
-            "description": "string",
-            "financial_statement_type": "number"
-        },
-        "associated_tax_group": {},
-        "tax": {
-            "is_value_added": "boolean",
-            "is_editable": "boolean",
-            "is_default_tax": "boolean",
-            "tax_type": "number",
-            "chart_of_account_debit_id": "number",
-            "chart_of_account_credit_id": "number"
-        },
-        "tax_authority": { "description": "string" },
-        "tax_exemption": {
-            "tax_exemption_reason": "string",
-            "description": "string"
-        },
-        "tax_group": {},
-        "tax_rule": { "remark": "string", "sales_type": "number" },
-        "accounting_period": {},
-        "journal_type": { "description": "string" }
-    },
     "allRangeValues": {},
     "phoneValues": {
         "account_category": [],
@@ -391,6 +395,7 @@
         "account_category": {
             "id": true,
             "code": true,
+            "name": true,
             "description": true,
             "is_debit": true
         },
@@ -517,7 +522,6 @@
             "timezone": true,
             "company_id": true,
             "tax_id": true,
-            "tax_id_number": true,
             "auto_generate_journal_preference": true,
             "is_acc_code_mandatory": true,
             "enter_unique_acc_code": true,
@@ -525,7 +529,6 @@
             "is_legal_reserve_applied": true,
             "profit_tax": true,
             "legal_reserve": true,
-            "company_id_number": true,
             "time_format": true,
             "language": true,
             "base_currency": true
@@ -544,7 +547,7 @@
             "description": true,
             "financial_statement_type": true
         },
-        "associated_tax_group": { "id": true, "tax": true },
+        "associated_tax_group": { "id": true, "tax": true, "tax_group": true },
         "tax": {
             "id": true,
             "tax_name": true,
@@ -578,45 +581,57 @@
             "sales_type": true,
             "tax": true
         },
-        "accounting_period": {
-            "id": true,
-            "months": true,
-            "period_number": true,
-            "accounting_period_status": true,
-            "is_current_posting_period": true,
-            "is_year_end_closing": true,
-            "period_starting_date": true,
-            "period_ending_date": true
-        },
         "journal_type": { "id": true, "type": true, "description": true }
     },
     "allFilters": {
         "account_category": {
+            "id": "number",
             "code": "string",
+            "name": "string",
             "description": "string",
-            "is_debit": "string"
+            "is_debit": "boolean"
         },
         "account_type": {
+            "id": "number",
             "code": "string",
             "type": "string",
             "description": "string",
+            "can_be_sub_account": "boolean",
+            "contain_account_number": "boolean",
+            "contain_currency": "boolean",
+            "tool_tip_description": "string",
+            "can_have_more_than_one_chart_of_account": "boolean",
             "account_category_id": "number"
         },
-        "closing_note": { "title": "string", "note": "string" },
+        "closing_note": {
+            "id": "number",
+            "closing_type": "number",
+            "title": "string",
+            "note": "string",
+            "consideration": "number"
+        },
         "financial_statement_section": {
+            "id": "number",
             "name": "string",
-            "description": "string"
+            "description": "string",
+            "sequence_on_report": "number",
+            "financial_statement_type": "number"
         },
         "bank": {
+            "id": "number",
+            "account_type": "number",
             "account_name": "string",
             "account_number": "string",
             "account_code": "string",
             "IBAN": "string",
             "bank_name": "string",
             "description": "string",
-            "currency_id": "Number"
+            "is_primary": "boolean",
+            "currency_id": "number"
         },
         "contact": {
+            "id": "number",
+            "contact_type": "number",
             "company_name": "string",
             "contact_display_name": "string",
             "remark": "string",
@@ -625,6 +640,8 @@
             "payment_term_id": "number"
         },
         "contact_address": {
+            "id": "number",
+            "address_type": "number",
             "attention": "string",
             "street1": "string",
             "street2": "string",
@@ -637,6 +654,7 @@
             "country_id": "number"
         },
         "contact_person": {
+            "id": "number",
             "first_name": "string",
             "last_name": "string",
             "work_phone": "string",
@@ -644,22 +662,34 @@
             "email": "string",
             "designation": "string",
             "department": "string",
+            "is_primary_contact": "boolean",
             "contact_id": "number",
             "title_id": "number"
         },
         "cost_center": {
+            "id": "number",
             "cost_center_code": "string",
             "section_name": "string",
             "remark": "string"
         },
         "cost_center_accounts": {
+            "id": "number",
             "remark": "string",
             "chart_of_account_id": "number",
             "cost_center_id": "number"
         },
-        "payment_term": { "show_it_as": "string" },
-        "exchange_rate": { "currency_id": "number" },
+        "payment_term": {
+            "id": "number",
+            "show_it_as": "string",
+            "number_of_days": "number"
+        },
+        "exchange_rate": {
+            "id": "number",
+            "rate": "number",
+            "currency_id": "number"
+        },
         "company_address": {
+            "id": "number",
             "address1": "string",
             "address2": "string",
             "city": "string",
@@ -670,48 +700,107 @@
             "website": "string",
             "organization_profile_id": "number"
         },
-        "date_format_type": { "date_format": "string" },
-        "financial_settings": {
-            "timezone": "string",
-            "tax_id_number": "string",
-            "company_id_number": "string",
-            "base_currency_id": "number",
-            "time_format_id": "number",
-            "language_id": "number"
+        "date_format_type": {
+            "id": "number",
+            "date_format": "string",
+            "date_format_type_category": "number"
         },
-        "industry": { "name": "string", "description": "string" },
-        "journal_users": { "user_id": "number" },
+        "financial_settings": {
+            "id": "number",
+            "report_basis": "number",
+            "fiscal_year": "number",
+            "closing_type": "number",
+            "timezone": "string",
+            "company_id": "number",
+            "tax_id": "number",
+            "tax_id_number": "string",
+            "auto_generate_journal_preference": "boolean",
+            "is_acc_code_mandatory": "boolean",
+            "enter_unique_acc_code": "boolean",
+            "is_profile_tax_applied": "boolean",
+            "is_legal_reserve_applied": "boolean",
+            "profit_tax": "number",
+            "legal_reserve": "number",
+            "company_id_number": "string",
+            "time_format_id": "number",
+            "language_id": "number",
+            "base_currency_id": "number"
+        },
+        "industry": {
+            "id": "number",
+            "name": "string",
+            "description": "string"
+        },
+        "journal_users": {
+            "id": "number",
+            "access_name": "number",
+            "user_id": "number"
+        },
         "primary_contact": {
+            "id": "number",
             "name": "string",
             "email": "string",
             "organization_profile_id": "number"
         },
-        "foot_note": { "title": "string", "description": "string" },
+        "foot_note": {
+            "id": "number",
+            "title": "string",
+            "description": "string",
+            "financial_statement_type": "number"
+        },
         "associated_tax_group": {
+            "id": "number",
             "tax_id": "number",
             "tax_group_id": "number"
         },
         "tax": {
-            "tax_authority_id": "number",
+            "id": "number",
             "tax_name": "string",
+            "tax_percentage": "number",
+            "is_value_added": "boolean",
+            "is_editable": "boolean",
+            "is_default_tax": "boolean",
+            "tax_type": "number",
             "chart_of_account_debit_id": "number",
-            "chart_of_account_credit_id": "number"
+            "chart_of_account_credit_id": "number",
+            "tax_authority_id": "number"
         },
-        "tax_authority": { "name": "string", "description": "string" },
-        "tax_exemption": {
-            "tax_exemption_reason": "string",
-            "code": "string",
+        "tax_authority": {
+            "id": "number",
+            "name": "string",
             "description": "string"
         },
-        "tax_group": { "tax_group_name": "string" },
-        "tax_rule": { "remark": "string", "tax_id": "number" },
-        "accounting_period": {},
-        "journal_type": { "type": "string", "description": "string" }
+        "tax_exemption": {
+            "id": "number",
+            "tax_exemption_reason": "string",
+            "code": "string",
+            "description": "string",
+            "tax_exemption_type": "number"
+        },
+        "tax_group": {
+            "id": "number",
+            "tax_group_name": "string",
+            "tax_group_percentage": "number"
+        },
+        "tax_rule": {
+            "id": "number",
+            "operator": "number",
+            "amount": "number",
+            "remark": "string",
+            "sales_type": "number",
+            "tax_id": "number"
+        },
+        "journal_type": {
+            "id": "number",
+            "type": "string",
+            "description": "string"
+        }
     },
     "allSorts": {
         "account_category": {
             "id": "number",
             "code": "number",
+            "name": "number",
             "description": "number",
             "is_debit": "number"
         },
@@ -950,11 +1039,11 @@
         "/journal_type"
     ],
     "uniqueValues": {
-        "account_category": [],
-        "account_type": [],
+        "account_category": ["name"],
+        "account_type": ["code"],
         "closing_note": [],
-        "financial_statement_section": [],
-        "bank": [],
+        "financial_statement_section": ["name"],
+        "bank": ["account_name"],
         "contact": [],
         "contact_address": [],
         "contact_person": [],
@@ -971,11 +1060,10 @@
         "foot_note": [],
         "associated_tax_group": [],
         "tax": [],
-        "tax_authority": [],
-        "tax_exemption": [],
-        "tax_group": [],
+        "tax_authority": ["name"],
+        "tax_exemption": ["tax_exemption_reason"],
+        "tax_group": ["tax_group_name"],
         "tax_rule": [],
-        "accounting_period": [],
         "journal_type": []
     }
 }

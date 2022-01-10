@@ -21,14 +21,29 @@ describe("finance master data Test 1(account category)", () => {
                 .post(url)
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
-                    startDate: "2000/10/22",
-                    endDate: "2000/10/23",
                     code: `${randomName}`,
+                    name: `${randomName}`,
                 })
                 .end((err, response) => {
                     response.should.have.status(200);
                     response.body.should.be.a("object");
                     response.body.should.have.property("success").equal(true);
+                    done();
+                });
+        });
+        it("Should return error 400 name should be unique", (done) => {
+            chai.request(server)
+                .post(url)
+                .set({ Authorization: `Bearer ${accessToken}` })
+                .send({
+                    code: `${randomName}`,
+                    name: `${randomName}`,
+                })
+                .end((err, response) => {
+                    response.should.have.status(400);
+                    response.body.should.be.a("object");
+                    response.body.should.have.property("error");
+                    response.body.error.should.have.property("name");
                     done();
                 });
         });

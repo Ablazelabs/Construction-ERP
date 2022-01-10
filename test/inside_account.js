@@ -104,7 +104,7 @@ describe("Inside Account Test", () => {
         // });
         it("should return error 400, user isnt registered", (done) => {
             chai.request(server)
-                .post("/account")
+                .post("/account/login")
                 .send({
                     phone_number: `random phone number`,
                     password: "password",
@@ -188,7 +188,7 @@ describe("Inside Account Test", () => {
      * Test the change password
      */
 
-    describe("testing change password", () => {
+    describe("change password test", () => {
         it("should return success, temp change", (done) => {
             chai.request(server)
                 .post("/account/changepassword")

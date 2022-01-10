@@ -59,7 +59,7 @@ module.exports = (
         if (givenObj[i] != undefined) {
             try {
                 validator.checkType(givenObj[i], optionalObj[i]);
-                if (optionalObj == "string" || optionalObj == "array") {
+                if (optionalObj[i] == "string" || optionalObj[i] == "array") {
                     validator.checkLength(givenObj[i], minLength, 0);
                     validator.checkLength(givenObj[i], maxLength);
                 }

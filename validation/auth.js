@@ -21,12 +21,9 @@ const authorization = {
             requestRoute == "forgotpassword" ||
             requestRoute == "refresh" ||
             requestRoute == "sendcode" ||
+            requestRoute == "confirm_account" ||
             pass
         ) {
-            next();
-            return;
-        }
-        if (requestRoute == "account" && method == "POST") {
             next();
             return;
         }

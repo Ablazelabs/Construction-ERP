@@ -10,14 +10,13 @@ const { user, refresh_tokens } = allModels;
 const { genSalt, hash } = require("bcrypt");
 const validation = require("../validation/validation");
 
-const post = async (identifier, identifierKey, reqBody, next) => {
+const post = async (identifier, identifierKey, reqBody, otherData, next) => {
     const queryResult = await user.findUnique({
         where: { ...identifier },
         select: {
             deleted_status: true,
         },
     });
-
     if (queryResult) {
         if (queryResult.deleted_status == 1) {
             await user.update({
@@ -29,6 +28,34 @@ const post = async (identifier, identifierKey, reqBody, next) => {
         error(identifierKey, "account already registered", next);
         return false;
     }
+
+    if (otherData.email) {
+        if (!validation.checkEmail(otherData.email, next)) {
+            return false;
+        }
+        const data = await user.findUnique({
+            select: { email: true },
+            where: { email: otherData.email },
+        });
+        if (data) {
+            error("email", "already exists", next);
+            return false;
+        }
+    }
+    if (otherData.phone_number) {
+        if (!validation.checkPhoneNumber(otherData.phone_number, next)) {
+            return false;
+        }
+        const data = await user.findUnique({
+            select: { phone_number: true },
+            where: { phone_number: otherData.phone_number },
+        });
+        if (data) {
+            error("phone_number", "already exists", next);
+            return false;
+        }
+    }
+
     const salt = await genSalt(10);
     const hashPassword = await hash(reqBody.password, salt);
 
@@ -39,10 +66,12 @@ const post = async (identifier, identifierKey, reqBody, next) => {
 
     await user.create({
         data: {
+            ...otherData, //this should come first
             ...identifier,
             password: hashPassword,
             code: randomValue,
             concurrency_stamp: randomConcurrencyStamp(),
+            first_login: true,
         },
     });
     return { success: true };
@@ -111,8 +140,8 @@ const patch = async (updateDataProjection, reqBody, updateData, next) => {
             }
         }
     }
-    updateData.roleId = updateData.role;
-    updateData.role = undefined;
+    updateData.roleId = updateData.role_id;
+    updateData.role_id = undefined;
     try {
         await user.update({
             data: {
