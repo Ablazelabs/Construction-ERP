@@ -2,7 +2,10 @@
     "allInputFilters": {
         "address": { "address_line_1": "string", "employee_id": "number" },
         "dependent": { "fullname": "string", "employee_id": "number" },
-        "discipline": { "case_description": "string" },
+        "discipline": {
+            "case_description": "string",
+            "employee_id": "number"
+        },
         "education": {
             "duration": "number",
             "field_of_study_id": "number",
@@ -11,14 +14,16 @@
             "employee_id": "number"
         },
         "employee": {
-            "id_number": "number",
             "first_name": "string",
             "middle_name": "string",
-            "gender": "number"
+            "gender": "number",
+            "employee_type_id": "number"
         },
         "employee_action": {
             "employee_id": "number",
-            "action_reason_id": "number"
+            "action_reason_id": "number",
+            "startDate": "string",
+            "endDate": "string"
         },
         "employee_commitment": {
             "commitment_type_id": "number",
@@ -52,7 +57,6 @@
         },
         "leave_assignment": { "employee_id": "number" },
         "leave_entitlement": {
-            "id": "number",
             "employee_id": "number",
             "attendance_abscence_type_id": "number"
         },
@@ -130,8 +134,7 @@
         },
         "discipline": {
             "attachment_id": "number",
-            "case_type_id": "number",
-            "employee_id": "number"
+            "case_type_id": "number"
         },
         "education": { "score": "string" },
         "employee": {
@@ -153,11 +156,12 @@
             "country_id": "number",
             "language_id": "number",
             "title_id": "number",
+            "id_number": "string",
             "religion_id": "number",
-            "employee_type_id": "number"
+            "startDate": "string",
+            "endDate": "string"
         },
         "employee_action": {
-            "employee_status": "number",
             "attachment_id": "number"
         },
         "employee_commitment": { "remark": "string" },
@@ -279,9 +283,11 @@
             "date_of_birth",
             "employment_start_date",
             "date_of_joining",
-            "marital_since"
+            "marital_since",
+            "startDate",
+            "endDate"
         ],
-        "employee_action": [],
+        "employee_action": ["startDate", "endDate"],
         "employee_attachment": [],
         "employee_commitment": [],
         "employee_contact": [],
@@ -411,7 +417,7 @@
             "id": true,
             "repayment_amount": true,
             "total_amount": true,
-            "employee_id": true,
+            "employee": true,
             "salary_component": true
         },
         "employee_pay_frequency": {
@@ -484,7 +490,7 @@
         },
         "shift_assignment": {
             "id": true,
-            "shift_schedule_hdr_id": true,
+            "shift_schedule_hdr": true,
             "employee": true
         }
     },

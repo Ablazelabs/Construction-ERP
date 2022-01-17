@@ -6,18 +6,20 @@ const uploadValidation = require("../../../validation/uploadValidation");
 const validation = require("../../../validation/validation");
 const { post, patch } = require("../../../services/fileEmployeeMasters");
 const { renameSync, unlinkSync, mkdirSync, existsSync } = require("fs");
+const employeeData = require("./hcmEmployeeMasters.json");
+let stringInputFilters = {
+    ...employeeData.allInputFilters.employee,
+};
+for (let i in stringInputFilters) {
+    stringInputFilters[i] = "string";
+}
 const allInputFilters = {
     attachment: {},
     employee_attachment: {
         description: "string",
         employee_id: "string", //number
     },
-    employee: {
-        id_number: "string", //number
-        first_name: "string",
-        middle_name: "string",
-        gender: "string", //["male", "female"],
-    },
+    employee: stringInputFilters,
 };
 const realTypes = {
     attachment: {
@@ -29,71 +31,40 @@ const realTypes = {
         isProtectedForEdit: "boolean",
     },
     employee: {
-        id_number: "number", //number
-        marital_status: "number", //["Single", "Married", "Widowed", "Divorced"], //optional
-        is_employee_active: "boolean",
-        prev_employment_leave_days: "number",
-        nationality_id: "number",
-        country_id: "number",
-        language_id: "number",
-        title_id: "number",
-        religion_id: "number",
-        employee_type_id: "number",
-        isProtectedForEdit: "boolean",
+        ...employeeData.allInputFilters.employee,
+        ...employeeData.allOptionalInputFilters.employee,
     },
 };
 const enums = {
-    employee: {
-        gender: ["male", "female"],
-        marital_status: ["Single", "Married", "Widowed", "Divorced"], //optional
-    },
+    employee: employeeData.enums.employee,
 };
+let stringOptionalInputFilters = {
+    ...employeeData.allOptionalInputFilters.employee,
+};
+for (let i in stringOptionalInputFilters) {
+    stringOptionalInputFilters[i] = "string";
+}
 const allOptionalInputfilters = {
     attachment: {
         description: "string",
         employee_id: "string", //number
     },
-    employee: {
-        last_name: "string",
-        date_of_birth: "string",
-        employment_start_date: "string",
-        date_of_joining: "string",
-        marital_status: "string", //["Single", "Married", "Widowed", "Divorced"], //optional
-        marital_since: "string",
-        place_of_birth: "string",
-        is_employee_active: "string",
-        type: "string",
-        prev_employment_leave_days: "string",
-        bank_account_number: "string",
-        document_ref: "string",
-        pension_ref: "string",
-        nationality_id: "string",
-        country_id: "string",
-        language_id: "string",
-        title_id: "string",
-        religion_id: "string",
-        employee_type_id: "string",
-    },
+    employee: stringOptionalInputFilters,
     employee_attachment: {},
 };
 const phoneValues = {
     attachment: [],
-    employee: [],
+    employee: employeeData.phoneValues.employee,
     employee_attachment: [],
 };
 const emailValues = {
     attachment: [],
-    employee: [],
+    employee: employeeData.emailValues.employee,
     employee_attachment: [],
 };
 const dateValues = {
     attachment: [],
-    employee: [
-        "date_of_birth",
-        "employment_start_date",
-        "date_of_joining",
-        "marital_since",
-    ],
+    employee: employeeData.dateValues.employee,
     employee_attachment: [],
 };
 const fileRequired = {
@@ -122,7 +93,10 @@ const deleteUnusedFile = (file) => {
     } catch {}
 };
 router.post(allRoutes, upload.single("file"), async (req, res, next) => {
-    const operationDataType = req.path.split("/").pop();
+    const operationDataType =
+        req.path.split("/").pop() == ""
+            ? "attachment"
+            : req.path.split("/").pop();
     let reqBody;
     const requiredInputFilter = allInputFilters[operationDataType];
     const optionalInputFilter = allOptionalInputfilters[operationDataType];
@@ -355,12 +329,8 @@ router.patch(allRoutes, upload.single("file"), async (req, res, next) => {
             req.file,
             allowedFileTypes[operationDataType],
             next,
-            fileRequired[operationDataType]
+            false
         );
-        if (!fileIsGood && fileRequired[operationDataType]) {
-            deleteUnusedFile(req.file);
-            return;
-        }
         if (fileIsGood) {
             const fileType = req.file.originalname.split(".").pop();
             const newDestination = `uploads\\${operationDataType}\\${req.file.filename}.${fileType}`;

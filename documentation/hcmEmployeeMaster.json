@@ -1017,7 +1017,7 @@
                         "schema": {
                             "type": "object",
                             "properties": {
-                                "id_number": { "type": "Int" },
+                                "id_number": { "type": "String" },
                                 "first_name": { "type": "String" },
                                 "middle_name": { "type": "String" },
                                 "last_name": { "type": "String?" },
@@ -1083,7 +1083,7 @@
                                     "type": "object",
                                     "properties": {
                                         "id": { "type": "Int" },
-                                        "id_number": { "type": "Int" },
+                                        "id_number": { "type": "String" },
                                         "first_name": { "type": "String" },
                                         "middle_name": { "type": "String" },
                                         "last_name": { "type": "String?" },
@@ -1170,7 +1170,7 @@
                                 "type": "object",
                                 "properties": {
                                     "id": { "type": "Int" },
-                                    "id_number": { "type": "Int" },
+                                    "id_number": { "type": "String" },
                                     "first_name": { "type": "String" },
                                     "middle_name": { "type": "String" },
                                     "last_name": { "type": "String?" },
@@ -1230,7 +1230,7 @@
                                 "updateData": {
                                     "type": "object",
                                     "properties": {
-                                        "id_number": { "type": "Int" },
+                                        "id_number": { "type": "String" },
                                         "first_name": { "type": "String" },
                                         "middle_name": { "type": "String" },
                                         "last_name": { "type": "String?" },

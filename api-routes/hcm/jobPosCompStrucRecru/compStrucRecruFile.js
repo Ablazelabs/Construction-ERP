@@ -42,7 +42,7 @@ const enums = {
 const allOptionalInputfilters = {
     company: {
         country_id: "string",
-        currency_id: "string`",
+        currency_id: "string",
         logo: "string", //needs file handling
     },
     external_applicant: {
@@ -72,7 +72,7 @@ const dateValues = {
     external_applicant: [],
 };
 const fileRequired = {
-    company: true,
+    company: false,
     external_applicant: true,
 };
 const allowedFileTypes = {
@@ -345,12 +345,8 @@ router.patch(allRoutes, upload.single("file"), async (req, res, next) => {
             req.file,
             allowedFileTypes[operationDataType],
             next,
-            fileRequired[operationDataType]
+            false
         );
-        if (!fileIsGood && fileRequired[operationDataType]) {
-            deleteUnusedFile(req.file);
-            return;
-        }
         if (fileIsGood) {
             const fileType = req.file.originalname.split(".").pop();
             const newDestination = `uploads\\${operationDataType}\\${req.file.filename}.${fileType}`;

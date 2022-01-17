@@ -1,5 +1,12 @@
 const { error, allModels } = require("../../config/config");
-const post = async (reqBody, modelName, creator, uniqueValues, next) => {
+const post = async (
+    reqBody,
+    modelName,
+    creator,
+    uniqueValues,
+    next,
+    sendId = false
+) => {
     for (let i in uniqueValues) {
         const uniqueKey = uniqueValues[i];
         if (
@@ -40,14 +47,14 @@ const post = async (reqBody, modelName, creator, uniqueValues, next) => {
         status: 0,
     };
     try {
-        await allModels[modelName].create({
+        const data = await allModels[modelName].create({
             data: {
                 ...defaultData,
                 ...reqBody,
             },
         });
         //   console.log(data);
-        return { success: true };
+        return { success: true, id: sendId ? data.id : undefined };
     } catch (e) {
         console.log(e);
         if (e.meta.field_name) {
@@ -69,10 +76,11 @@ const get = async (
     limit,
     skip,
     projection,
-    modelName
+    modelName,
+    enums = []
 ) => {
     // console.log(querySort, "--");
-    const data = await allModels[modelName].findMany({
+    let data = await allModels[modelName].findMany({
         where: {
             ...queryFilter,
             status: 0,
@@ -84,6 +92,14 @@ const get = async (
             ...projection,
         },
     });
+    for (let i in data) {
+        element = data[i];
+        for (let k in enums) {
+            if (element[k]) {
+                element[k] = enums[k][element[k] - 1];
+            }
+        }
+    }
     return data;
 };
 const patch = async (

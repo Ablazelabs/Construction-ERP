@@ -12,7 +12,13 @@ const uniqueValues = {
     attachment: [],
     employee_attachment: [],
 };
-const post = async (reqBody, operationDataType, creator, next) => {
+const post = async (
+    reqBody,
+    operationDataType,
+    creator,
+    next,
+    sendId = false
+) => {
     for (let i in uniqueValues[operationDataType]) {
         const uniqueKey = uniqueValues[operationDataType][i];
         if (
@@ -53,14 +59,14 @@ const post = async (reqBody, operationDataType, creator, next) => {
         status: 0,
     };
     try {
-        await allModels[operationDataType].create({
+        const data = await allModels[operationDataType].create({
             data: {
                 ...defaultData,
                 ...reqBody,
             },
         });
         //   console.log(data);
-        return { success: true };
+        return { success: true, id: sendId ? data.id : undefined };
     } catch (e) {
         console.log(e);
         if (e.meta.field_name) {

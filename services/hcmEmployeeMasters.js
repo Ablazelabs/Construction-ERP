@@ -8,9 +8,17 @@ const post = async (
     operationDataType,
     creator,
     uniqueValues,
-    next
+    next,
+    sendId = false
 ) => {
-    return mPost(reqBody, operationDataType, creator, uniqueValues, next);
+    return mPost(
+        reqBody,
+        operationDataType,
+        creator,
+        uniqueValues,
+        next,
+        sendId
+    );
 };
 const get = async (
     queryFilter,

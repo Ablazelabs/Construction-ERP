@@ -10,6 +10,7 @@ module.exports = async (identifier, reqBody, next) => {
             id: true,
             access_failed_count: true,
             first_login: true,
+            deleted_status: true,
         },
     });
     let key;
@@ -19,6 +20,10 @@ module.exports = async (identifier, reqBody, next) => {
     }
     if (!queryResult) {
         error(key, "account doesn't exist", next);
+        return false;
+    }
+    if (queryResult.deleted_status) {
+        error(key, "account has been deleted", next);
         return false;
     }
     if (queryResult.access_failed_count >= 5) {

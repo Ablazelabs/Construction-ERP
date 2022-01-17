@@ -11,13 +11,20 @@
                             "type": "object",
                             "properties": {
                                 "aa_description": { "type": "String @unique" },
+                                "aa_type": { "type": "Int" },
                                 "is_with_quota": { "type": "Boolean?" },
                                 "is_with_pay": { "type": "Boolean?" },
                                 "is_annual_leave": { "type": "Boolean?" },
                                 "is_with_entitlement": { "type": "Boolean?" },
                                 "is_regular_attendance": { "type": "Boolean?" },
                                 "number_of_days": { "type": "Int?" },
-                                "isProtectedForEdit": { "type": "boolean" }
+                                "isProtectedForEdit": { "type": "boolean" },
+                                "number_of_increment_each_year": {
+                                    "type": "Float?"
+                                },
+                                "is_absence_includes_day_off": {
+                                    "type": "Boolean?"
+                                }
                             }
                         }
                     }
@@ -58,6 +65,7 @@
                                         "aa_description": {
                                             "type": "String @unique"
                                         },
+                                        "aa_type": { "type": "Int" },
                                         "is_with_quota": { "type": "Boolean?" },
                                         "is_with_pay": { "type": "Boolean?" },
                                         "is_annual_leave": {
@@ -72,6 +80,12 @@
                                         "number_of_days": { "type": "Int?" },
                                         "isProtectedForEdit": {
                                             "type": "boolean"
+                                        },
+                                        "number_of_increment_each_year": {
+                                            "type": "Float?"
+                                        },
+                                        "is_absence_includes_day_off": {
+                                            "type": "Boolean?"
                                         }
                                     }
                                 },
@@ -90,6 +104,12 @@
                                             "type": "Int"
                                         },
                                         "number_of_days": { "type": "Int" },
+                                        "number_of_increment_each_year": {
+                                            "type": "number"
+                                        },
+                                        "is_absence_includes_day_off": {
+                                            "type": "number"
+                                        },
                                         "startDate": { "type": "number" },
                                         "endDate": { "type": "number" },
                                         "creationDate": { "type": "number" },
@@ -118,6 +138,7 @@
                                     "aa_description": {
                                         "type": "String @unique"
                                     },
+                                    "aa_type": { "type": "Int" },
                                     "is_with_quota": { "type": "Boolean?" },
                                     "is_with_pay": { "type": "Boolean?" },
                                     "is_annual_leave": { "type": "Boolean?" },
@@ -128,6 +149,12 @@
                                         "type": "Boolean?"
                                     },
                                     "number_of_days": { "type": "Int?" },
+                                    "number_of_increment_each_year": {
+                                        "type": "Float?"
+                                    },
+                                    "is_absence_includes_day_off": {
+                                        "type": "Boolean?"
+                                    },
                                     "startDate": { "type": "string" },
                                     "endDate": { "type": "string" },
                                     "creationDate": { "type": "string" },
@@ -159,6 +186,7 @@
                                         "aa_description": {
                                             "type": "String @unique"
                                         },
+                                        "aa_type": { "type": "Int" },
                                         "is_with_quota": { "type": "Boolean?" },
                                         "is_with_pay": { "type": "Boolean?" },
                                         "is_annual_leave": {
@@ -171,6 +199,12 @@
                                             "type": "Boolean?"
                                         },
                                         "number_of_days": { "type": "Int?" },
+                                        "number_of_increment_each_year": {
+                                            "type": "Float?"
+                                        },
+                                        "is_absence_includes_day_off": {
+                                            "type": "Boolean?"
+                                        },
                                         "isProtectedForEdit": {
                                             "type": "boolean"
                                         }

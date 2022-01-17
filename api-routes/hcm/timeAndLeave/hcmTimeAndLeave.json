@@ -1,6 +1,9 @@
 {
     "allInputFilters": {
-        "attendance_abscence_type": { "aa_description": "string" },
+        "attendance_abscence_type": {
+            "aa_description": "string",
+            "aa_type": "number"
+        },
         "attendance_captured": { "date": "string", "employee_id": "number" },
         "attendance_payroll": { "date": "string", "employee_id": "number" },
         "device_id_mapping": {
@@ -96,7 +99,9 @@
             "is_annual_leave": "boolean",
             "is_with_entitlement": "boolean",
             "is_regular_attendance": "boolean",
-            "number_of_days": "number"
+            "number_of_days": "number",
+            "number_of_increment_each_year": "number",
+            "is_absence_includes_day_off": "boolean"
         },
         "attendance_captured": {
             "in_out_mode": "number",
@@ -146,7 +151,9 @@
         "sub_shift_group": { "tolerance_minutes": "number" }
     },
     "enums": {
-        "attendance_abscence_type": {},
+        "attendance_abscence_type": {
+            "aa_type": ["Attendance", "Absence"]
+        },
         "attendance_captured": {
             "in_out_mode": [
                 "CheckIn",
@@ -219,13 +226,16 @@
     "allProjections": {
         "attendance_abscence_type": {
             "id": true,
+            "aa_type": true,
             "aa_description": true,
             "is_with_quota": true,
             "is_with_pay": true,
             "is_annual_leave": true,
             "is_with_entitlement": true,
             "is_regular_attendance": true,
-            "number_of_days": true
+            "number_of_days": true,
+            "number_of_increment_each_year": true,
+            "is_absence_includes_day_off": true
         },
         "attendance_captured": {
             "id": true,
@@ -326,13 +336,16 @@
     "allFilters": {
         "attendance_abscence_type": {
             "id": "number",
+            "aa_type": "number",
             "aa_description": "string",
             "is_with_quota": "boolean",
             "is_with_pay": "boolean",
             "is_annual_leave": "boolean",
             "is_with_entitlement": "boolean",
             "is_regular_attendance": "boolean",
-            "number_of_days": "number"
+            "number_of_days": "number",
+            "number_of_increment_each_year": "number",
+            "is_absence_includes_day_off": "boolean"
         },
         "attendance_captured": {
             "id": "number",
@@ -431,13 +444,16 @@
     "allSorts": {
         "attendance_abscence_type": {
             "id": "number",
+            "aa_type": "number",
             "aa_description": "number",
             "is_with_quota": "number",
             "is_with_pay": "number",
             "is_annual_leave": "number",
             "is_with_entitlement": "number",
             "is_regular_attendance": "number",
-            "number_of_days": "number"
+            "number_of_days": "number",
+            "number_of_increment_each_year": "number",
+            "is_absence_includes_day_off": "number"
         },
         "attendance_captured": {
             "id": "number",

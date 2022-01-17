@@ -61,7 +61,9 @@ const authorization = {
                 !(await authorization.userHasPrivilegeOver(
                     payLoad.id,
                     req.body.id,
-                    PRIVILEGE_TYPE,
+                    PRIVILEGE_TYPE + req.body.role_id
+                        ? `ROLE_${req.body.role_id}`
+                        : "",
                     next
                 ))
             ) {

@@ -29,15 +29,42 @@ const financeUpload = require("./api-routes/finance/operational/upload");
 const hcmMasters = require("./api-routes/hcm/master/hcmMasters");
 const hcmEmployeeMasters = require("./api-routes/hcm/employee_master/hcmEmployeeMasters");
 const fileEmployeeMasters = require("./api-routes/hcm/employee_master/fileEmployeeMasters");
+const disciplineAttachment = require("./api-routes/hcm/employee_master/disciplineAttachment");
+const employeeAction = require("./api-routes/hcm/employee_master/employeeAction");
+const initialHiring = require("./api-routes/hcm/employee_master/initialHiring");
+const leaveTransferApproval = require("./api-routes/hcm/employee_master/leaveTransferApproval");
+const employeeActionMeasure = require("./api-routes/hcm/employee_master/employeeActionMeasure");
+
 const jobPosCompStrucRecru = require("./api-routes/hcm/jobPosCompStrucRecru/jobPosCompStrucRecru");
 const compStrucRecruFile = require("./api-routes/hcm/jobPosCompStrucRecru/compStrucRecruFile");
 const hcmPayroll = require("./api-routes/hcm/payroll/hcmPayroll");
+const employeePayscaleUpload = require("./api-routes/hcm/payroll/employeePayscaleUpload");
 const hcmTimeAndLeave = require("./api-routes/hcm/timeAndLeave/hcmTimeAndLeave");
 const inventMasterAndStock = require("./api-routes/inventory/masterAndStock/inventMasterAndStock");
 const cors = require("cors");
 
 app.use(json());
 app.use(cors());
+const request = require("supertest");
+app.get(
+    "/some-random-thing",
+    (req, res, next) => {
+        req.body.hi = "hi";
+        req.path = "/new-path";
+        console.log(req.body.hi, req.path);
+        next();
+    },
+    (req, res, next) => {
+        res.json({ success: req.body.hi, path: req.path.split("/").pop() });
+        return;
+    }
+);
+app.get("/some-random-thing-2", async (req, res, next) => {
+    const client = request(req.app);
+    const { body } = await client.get("/some-random-thing").send();
+    res.json({ ...body, doubleS: true });
+});
+
 app.use(authenticate);
 
 app.use((req, _res, next) => {
@@ -73,21 +100,28 @@ app.use("/project/master", material);
 app.use("/project/master", documentation);
 app.use("/project/master", restMasterData);
 app.use("/project/operational", operationalData);
+
 app.use("/finance/master", financemasters);
 app.use("/finance/master", accountingPeriod);
 app.use("/finance/operational", restFinanceOperational);
 app.use("/finance/operational", financeUpload);
+
 app.use("/hcm/master", hcmMasters);
 app.use("/hcm/employee_master", hcmEmployeeMasters);
+app.use("/hcm/employee_master", disciplineAttachment);
+app.use("/hcm/employee_master", employeeAction);
+app.use("/hcm/employee_master", leaveTransferApproval);
+app.use("/hcm/employee_master", employeeActionMeasure);
 app.use("/hcm/employee_master", fileEmployeeMasters);
+app.use("/hcm/employee_master", initialHiring);
 app.use("/hcm", jobPosCompStrucRecru);
 app.use("/hcm", compStrucRecruFile);
 app.use("/hcm/payroll", hcmPayroll);
+app.use("/hcm/payroll", employeePayscaleUpload);
 app.use("/hcm/time_and_leave", hcmTimeAndLeave);
+
 app.use("/inventory", inventMasterAndStock);
-
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
 app.use((err, _req, res, _next) => {
     let myError = JSON.parse(err.message);
     const status = myError.status;

@@ -30,6 +30,7 @@ module.exports = async (selfUpdate, id, reqBody, next) => {
         data: {
             password: hashPassword,
             first_login: false,
+            access_failed_count: 0,
         },
     });
     return { success: true };

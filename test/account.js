@@ -20,6 +20,7 @@ describe("Account Test", () => {
                 .send({
                     email: `${randomEmailNum}@gmail.com`,
                     password: "password",
+                    username: `name ${Math.floor(randomEmailNum / 1000)}`,
                 })
                 .end((err, response) => {
                     response.should.have.status(200);
@@ -35,6 +36,7 @@ describe("Account Test", () => {
                 .send({
                     email: `${randomEmailNum}@gmail.com`,
                     password: "password",
+                    username: `name ${Math.floor(randomEmailNum / 1000)}`,
                 })
                 .end((err, response) => {
                     response.should.have.status(400);
@@ -47,7 +49,11 @@ describe("Account Test", () => {
             chai.request(server)
                 .post(url)
                 .set({ Authorization: `Bearer ${accessToken}` })
-                .send({ phone_number: `251-934175272`, password: "password" })
+                .send({
+                    phone_number: `251-934175272`,
+                    password: "password",
+                    username: `name ${Math.floor(randomEmailNum / 1000)}`,
+                })
                 .end((err, response) => {
                     response.should.have.status(400);
                     response.body.should.have.property("error");
@@ -59,7 +65,11 @@ describe("Account Test", () => {
             chai.request(server)
                 .post(url)
                 .set({ Authorization: `Bearer ${accessToken}` })
-                .send({ phone_number: `251-93417527`, password: "password" })
+                .send({
+                    phone_number: `251-93417527`,
+                    password: "password",
+                    username: `name ${Math.floor(randomEmailNum / 1000)}`,
+                })
                 .end((err, response) => {
                     response.should.have.status(400);
                     response.body.should.have.property("error");

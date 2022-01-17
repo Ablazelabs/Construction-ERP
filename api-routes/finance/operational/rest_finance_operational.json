@@ -198,7 +198,11 @@
             "currency_id": "number"
         },
         "account_type_financial_statement_section": {},
-        "bank_reconcilation": { "from_date": "string", "to_date": "string" },
+        "bank_reconcilation": {
+            "from_date": "string",
+            "to_date": "string",
+            "closing_amount": "number"
+        },
         "reconcilation_transaction": {},
         "asset": {
             "acquisition_date": "string",
@@ -335,14 +339,14 @@
             "path": true,
             "name": true,
             "type": true,
-            "chart_of_account_id": true
+            "chart_of_account": true
         },
         "general_journal_files": {
             "id": true,
             "path": true,
             "name": true,
             "type": true,
-            "general_journal_header_id": true
+            "general_journal_header": true
         },
         "chart_of_account": {
             "id": true,
@@ -494,7 +498,7 @@
             "recurring_general_journal": true
         },
         "number_tracker": {
-            "Id": true,
+            "id": true,
             "prefix": true,
             "starting_number": true,
             "next_number": true,

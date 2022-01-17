@@ -145,7 +145,7 @@
                                             "phone_number": {
                                                 "type": "string"
                                             },
-                                            "role": { "type": "number" },
+                                            "role_id": { "type": "number" },
                                             "two_factor_enabled": {
                                                 "type": "boolean"
                                             }

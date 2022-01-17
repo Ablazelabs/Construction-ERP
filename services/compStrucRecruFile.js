@@ -1,8 +1,13 @@
 const { error, allModels: models } = require("../config/config");
 const { unlinkSync } = require("fs");
-const { company, external_applicant } = models;
+const { company, external_applicant, business_unit } = models;
+const { post: buPost, patch: buPatch } = require("./jobPosCompStrucRecru");
 
-const allModels = { company, external_applicant };
+const buUniqueValues =
+    require("../api-routes/hcm/jobPosCompStrucRecru/jobPosCompStrucRecru.json")
+        .uniqueValues.business_unit;
+
+const allModels = { company, external_applicant, business_unit };
 const uniqueValues = { company: [], external_applicant: [] };
 const post = async (reqBody, operationDataType, creator, next) => {
     for (let i in uniqueValues[operationDataType]) {
@@ -33,6 +38,16 @@ const post = async (reqBody, operationDataType, creator, next) => {
                         endDate: reqBody.endDate,
                     },
                 });
+                if (operationDataType == "company") {
+                    await allModels.business_unit.updateMany({
+                        where: { name: reqBody.name },
+                        data: {
+                            status: 0,
+                            startDate: reqBody.startDate,
+                            endDate: reqBody.endDate,
+                        },
+                    });
+                }
                 return { success: true };
             }
             error(`${uniqueKey}`, `${operationDataType} already exists`, next);
@@ -51,7 +66,21 @@ const post = async (reqBody, operationDataType, creator, next) => {
                 ...reqBody,
             },
         });
-        //   console.log(data);
+        if (operationDataType == "company") {
+            await buPost(
+                {
+                    name: reqBody.name,
+                    parent_id: 0,
+                    is_root: true,
+                    startDate: reqBody.startDate,
+                    endDate: reqBody.endDate,
+                },
+                "business_unit",
+                creator,
+                buUniqueValues
+            );
+        }
+
         return { success: true };
     } catch (e) {
         if (e.meta.field_name) {
@@ -129,6 +158,28 @@ const patch = async (
             },
             where: { id: reqBody.id },
         });
+        if (operationDataType == "company") {
+            if (updateDataProjection["name"]) {
+                const buId = await allModels.business_unit.findFirst({
+                    where: {
+                        name: myModel.name,
+                    },
+                    select: {
+                        id: true,
+                    },
+                });
+                await buPatch(
+                    { name: true },
+                    { reqBody, ...buId },
+                    { name: updateData.name },
+                    "business_unit",
+                    creator,
+                    buUniqueValues,
+                    next
+                );
+            }
+        }
+        return { success: true };
     } catch (e) {
         console.log(e);
         if (e.meta.field_name) {
@@ -142,8 +193,8 @@ const patch = async (
             );
             return false;
         }
+        return false;
     }
-    return { success: true };
 };
 
 module.exports = {

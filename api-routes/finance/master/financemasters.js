@@ -75,6 +75,7 @@ router.get(allRoutes, async (req, res, next) => {
     const operationDataType = req.path.split("/").pop();
     const filters = allFilters[operationDataType],
         sorts = allSorts[operationDataType],
+        myEnums = enums[operationDataType],
         projections = allProjections[operationDataType];
     const getData = returnGetData(
         req.body,
@@ -93,7 +94,8 @@ router.get(allRoutes, async (req, res, next) => {
                 limit,
                 skip,
                 projection,
-                operationDataType
+                operationDataType,
+                myEnums
             )
         );
     } catch (e) {

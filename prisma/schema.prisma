@@ -1510,7 +1510,7 @@ model number_tracker {
   revisedBy          String
   status             Int      @default(0)
   isProtectedForEdit Boolean  @default(false)
-  Id                 Int      @id @default(autoincrement())
+  id                 Int      @id @default(autoincrement())
   prefix             String?
   starting_number    Int
   next_number        Int
@@ -2127,7 +2127,7 @@ model employee {
   status                     Int       @default(0)
   isProtectedForEdit         Boolean   @default(false)
   id                         Int       @id @default(autoincrement())
-  id_number                  Int
+  id_number                  String
   first_name                 String
   middle_name                String
   last_name                  String?
@@ -2237,6 +2237,14 @@ model employee_attachment {
 }
 
 model employee_commitment {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime   @default(now())
+  createdBy          String
+  revisionDate       DateTime   @updatedAt
+  revisedBy          String
+  status             Int        @default(0)
+  isProtectedForEdit Boolean    @default(false)
   id                 Int        @id @default(autoincrement())
   commitment_type_id Int
   remark             String?
@@ -2628,7 +2636,7 @@ model company {
   isProtectedForEdit Boolean   @default(false)
   id                 Int       @id @default(autoincrement())
   code               String
-  name               String @unique
+  name               String    @unique
   country_id         Int?
   currency_id        Int?
   logo               String? //needs file handling
@@ -3354,25 +3362,28 @@ model salary_component_account_mapping {
 }
 
 model attendance_abscence_type {
-  startDate             DateTime
-  endDate               DateTime
-  creationDate          DateTime             @default(now())
-  createdBy             String
-  revisionDate          DateTime             @updatedAt
-  revisedBy             String
-  status                Int                  @default(0)
-  isProtectedForEdit    Boolean              @default(false)
-  id                    Int                  @id @default(autoincrement())
-  aa_description        String               @unique
-  is_with_quota         Boolean?
-  is_with_pay           Boolean?
-  is_annual_leave       Boolean?
-  is_with_entitlement   Boolean?
-  is_regular_attendance Boolean?
-  number_of_days        Int?
-  leave_assignment      leave_assignment[]
-  leave_entitlement     leave_entitlement[]
-  attendance_payroll    attendance_payroll[]
+  startDate                     DateTime
+  endDate                       DateTime
+  creationDate                  DateTime             @default(now())
+  createdBy                     String
+  revisionDate                  DateTime             @updatedAt
+  revisedBy                     String
+  status                        Int                  @default(0)
+  isProtectedForEdit            Boolean              @default(false)
+  id                            Int                  @id @default(autoincrement())
+  aa_description                String               @unique
+  aa_type                       Int                  @default(1)
+  is_with_quota                 Boolean?
+  is_with_pay                   Boolean?
+  is_annual_leave               Boolean?
+  is_with_entitlement           Boolean?
+  is_regular_attendance         Boolean?
+  number_of_days                Int?
+  number_of_increment_each_year Float?
+  is_absence_includes_day_off   Boolean?
+  leave_assignment              leave_assignment[]
+  leave_entitlement             leave_entitlement[]
+  attendance_payroll            attendance_payroll[]
 }
 
 model shift_schedule_hdr {
@@ -3468,19 +3479,19 @@ model device_id_mapping {
 model holiday {
   startDate          DateTime
   endDate            DateTime
-  creationDate       DateTime            @default(now())
+  creationDate       DateTime           @default(now())
   createdBy          String
-  revisionDate       DateTime            @updatedAt
+  revisionDate       DateTime           @updatedAt
   revisedBy          String
-  status             Int                 @default(0)
-  isProtectedForEdit Boolean             @default(false)
-  id                 Int                 @id @default(autoincrement())
-  holiday_name       String              @unique
+  status             Int                @default(0)
+  isProtectedForEdit Boolean            @default(false)
+  id                 Int                @id @default(autoincrement())
+  holiday_name       String             @unique
   is_recurring       Boolean?
-  holiday_character  holiday_character[]
+  holiday_calendar   holiday_calendar[]
 }
 
-model holiday_character {
+model holiday_calendar {
   startDate          DateTime
   endDate            DateTime
   creationDate       DateTime @default(now())

@@ -11,11 +11,12 @@ router.post("/account", async (req, res, next) => {
     let otherData = {};
     try {
         otherData = inputFilter(
-            {},
+            {
+                username: "string",
+            },
             {
                 phone_number: "string",
                 email: "string",
-                username: "string",
                 email: "string",
                 phone_number: "string",
                 two_factor_enabled: "boolean",

@@ -56,7 +56,7 @@ module.exports = (
         throw { key: e, message: "is empty or wasn't set" };
     }
     for (let i in optionalObj) {
-        if (givenObj[i] != undefined) {
+        if (givenObj[i] != undefined && optionalObj[i] != undefined) {
             try {
                 validator.checkType(givenObj[i], optionalObj[i]);
                 if (optionalObj[i] == "string" || optionalObj[i] == "array") {
@@ -69,6 +69,9 @@ module.exports = (
         }
     }
     for (let i in expectedObj) {
+        if (!expectedObj[i]) {
+            continue;
+        }
         try {
             validator.checkType(givenObj[i], expectedObj[i]);
             if (expectedObj[i] == "string" || expectedObj[i] == "array") {

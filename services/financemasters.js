@@ -18,7 +18,8 @@ const get = async (
     limit,
     skip,
     projection,
-    operationDataType
+    operationDataType,
+    enums
 ) => {
     return mGet(
         queryFilter,
@@ -26,7 +27,8 @@ const get = async (
         limit,
         skip,
         projection,
-        operationDataType
+        operationDataType,
+        enums
     );
 };
 const patch = async (
