@@ -1042,10 +1042,10 @@
             }
         }
     },
-    "/hcm/time_and_leave/holiday_character": {
+    "/hcm/time_and_leave/holiday_calendar": {
         "post": {
-            "summary": "creates a new holiday_character",
-            "tags": ["holiday_character"],
+            "summary": "creates a new holiday_calendar",
+            "tags": ["holiday_calendar"],
             "requestBody": {
                 "required": true,
                 "content": {
@@ -1079,8 +1079,8 @@
             }
         },
         "get": {
-            "summary": "gets selected holiday_characters",
-            "tags": ["holiday_character"],
+            "summary": "gets selected holiday_calendars",
+            "tags": ["holiday_calendar"],
             "requestBody": {
                 "required": true,
                 "content": {
@@ -1151,8 +1151,8 @@
             }
         },
         "patch": {
-            "summary": "updates a holiday_character",
-            "tags": ["holiday_character"],
+            "summary": "updates a holiday_calendar",
+            "tags": ["holiday_calendar"],
             "requestBody": {
                 "required": true,
                 "content": {
@@ -1194,8 +1194,8 @@
             }
         },
         "delete": {
-            "summary": "deletes a holiday_character",
-            "tags": ["holiday_character"],
+            "summary": "deletes a holiday_calendar",
+            "tags": ["holiday_calendar"],
             "requestBody": {
                 "required": true,
                 "content": {

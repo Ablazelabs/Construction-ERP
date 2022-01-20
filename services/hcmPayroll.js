@@ -1,3 +1,5 @@
+const { allModels, error } = require("../config/config");
+const { overtime } = allModels;
 const {
     post: mPost,
     get: mGet,
@@ -38,6 +40,26 @@ const patch = async (
     uniqueValues,
     next
 ) => {
+    if (operationDataType == "overtime") {
+        const ot = await overtime.findUnique({
+            where: {
+                id: reqBody.id,
+            },
+            select: {
+                overtime_status: true,
+            },
+        });
+        if (ot) {
+            if (ot.overtime_status === 2 || ot.overtime_status === 5) {
+                error(
+                    "overtime_status",
+                    "You can not edit approved overtime",
+                    next
+                );
+                return false;
+            }
+        }
+    }
     return mPatch(
         updateDataProjection,
         reqBody,
@@ -48,10 +70,33 @@ const patch = async (
         next
     );
 };
-
+const deleteLogic = async (id, operationDataType, next) => {
+    if (operationDataType == "overtime") {
+        const ot = await overtime.findUnique({
+            where: {
+                id: id,
+            },
+            select: {
+                overtime_status: true,
+            },
+        });
+        if (ot) {
+            if (ot.overtime_status === 2 || ot.overtime_status === 5) {
+                error(
+                    "overtime_status",
+                    "You can not delete approved overtime",
+                    next
+                );
+                return false;
+            }
+        }
+    }
+    return true;
+};
 module.exports = {
     post,
     get,
     patch,
+    deleteLogic,
 };
 // same as the others

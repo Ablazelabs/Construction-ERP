@@ -1,4 +1,14 @@
 const { error, allModels } = require("../../config/config");
+/**
+ *
+ * @param {object} reqBody object to be posted
+ * @param {string} modelName name of the model to post the obj to
+ * @param {number} creator id of the user posting
+ * @param {array} uniqueValues list of keys that shouldn't have a duplicate in db
+ * @param {function} next if this is called the fn returns false and sends an error to client
+ * @param {boolean} sendId if this is true returns id of posted data with success message
+ * @returns boolean|object
+ */
 const post = async (
     reqBody,
     modelName,
@@ -76,11 +86,9 @@ const get = async (
     limit,
     skip,
     projection,
-    modelName,
-    enums = []
+    modelName
 ) => {
-    // console.log(querySort, "--");
-    let data = await allModels[modelName].findMany({
+    const data = await allModels[modelName].findMany({
         where: {
             ...queryFilter,
             status: 0,
@@ -92,14 +100,6 @@ const get = async (
             ...projection,
         },
     });
-    for (let i in data) {
-        element = data[i];
-        for (let k in enums) {
-            if (element[k]) {
-                element[k] = enums[k][element[k] - 1];
-            }
-        }
-    }
     return data;
 };
 const patch = async (

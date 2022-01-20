@@ -1,7 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const { error } = require("../../../config/config");
-const { post, get, patch } = require("../../../services/hcmPayroll");
+const {
+    post,
+    get,
+    patch,
+    deleteLogic,
+} = require("../../../services/hcmPayroll");
 
 const {
     returnReqBody,
@@ -149,5 +154,26 @@ router.patch(allRoutes, async (req, res, next) => {
         return;
     }
 });
-router.delete(allRoutes, defaultDeleter);
+router.delete(
+    allRoutes,
+    async (req, res, next) => {
+        const operationDataType = req.path.split("/").pop();
+        if (
+            req?.body?.id &&
+            typeof req.body.id === "number" &&
+            operationDataType === "overtime"
+        ) {
+            const logicDone = await deleteLogic(
+                req.body.id,
+                operationDataType,
+                next
+            );
+            if (!logicDone) {
+                return;
+            }
+        }
+        next();
+    },
+    defaultDeleter
+);
 module.exports = router;

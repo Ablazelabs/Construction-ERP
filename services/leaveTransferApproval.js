@@ -1,14 +1,7 @@
 const { error, allModels } = require("../config/config");
 const getLeaveBalance = require("./approval/leaveDays");
 const { patch: updateLeaveTransfer } = require("./hcmEmployeeMasters");
-const {
-    action_type,
-    employee_action,
-    org_assignment,
-    leave_period,
-    leave_transfer,
-    attendance_abscence_type,
-} = allModels;
+const { leave_period, leave_transfer, attendance_abscence_type } = allModels;
 module.exports = async (leaveList, creator, next) => {
     const leavePeriod = await leave_period.findFirst({ where: { status: 0 } });
     if (!leavePeriod) {

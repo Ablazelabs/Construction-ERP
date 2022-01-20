@@ -1,39 +1,12 @@
-const { error, allModels: models } = require("../config/config");
+const { error, allModels } = require("../config/config");
 const inputFilter = require("../validation/inputFilter");
-const validation = require("../validation/validation");
-const { employee, employee_pay_scale } = models;
+const { employee, employee_pay_scale } = allModels;
 const { patch: mPatch, post: mPost } = require("./mostCRUD/mostCRUD");
-const hasDuplicates = (array) => {
-    return new Set(array).size !== array.length;
-};
-const checkUnique = async (data, model, key, ignored, rowIndex) => {
-    let query = {};
-    query[key] = data;
-    const queryData = await model.findUnique({
-        where: {
-            ...query,
-        },
-        select: {
-            status: true,
-            id: true,
-        },
-    });
-    if (queryData) {
-        if (queryData.status == 1) {
-            ignored[rowIndex] = queryData.id;
-            return true;
-        }
-        return false;
-    }
-    return true;
-};
 module.exports = async (data, uniqueValues, creator, next) => {
     if (data.length < 2) {
         error("file", "no data has been sent for creation", next);
         return false;
     }
-    let continueDbCheck = true;
-    let ignoredRows = {};
     const firstRow = ["employee_id", "scale"];
     const columnNumber = firstRow.length;
     if (data[0].length != columnNumber) {
@@ -61,7 +34,6 @@ module.exports = async (data, uniqueValues, creator, next) => {
                 column: Number(e.key) + 1,
                 message: e.message,
             });
-            continueDbCheck = false;
         }
     }
     if (allErrors.length > 0) {
@@ -74,7 +46,6 @@ module.exports = async (data, uniqueValues, creator, next) => {
         startDate: minDate,
         endDate: maxDate,
     };
-    console.log(data);
     for (let i in data) {
         if (i == 0) {
             continue;
@@ -95,7 +66,6 @@ module.exports = async (data, uniqueValues, creator, next) => {
                     id: true,
                 },
             });
-            console.log(i, prevEmpScale);
             if (prevEmpScale) {
                 await mPatch(
                     { scale: true, status: true },
@@ -103,7 +73,7 @@ module.exports = async (data, uniqueValues, creator, next) => {
                     { scale, status: 0 },
                     "employee_pay_scale",
                     creator,
-                    [],
+                    [], //error 500 if next called so.
                     (whatever) => {
                         console.log(whatever);
                     }

@@ -31,7 +31,15 @@ const validator = {
         }
     },
 };
-
+/**
+ *
+ * @param {object} expectedObj givenObj requires this objet's keys(and type also)
+ * @param {object} optionalObj givenObj doesn't require this objet's keys(type conflict raises error also)
+ * @param {object} givenObj the object to be filtered
+ * @param {number} minLength minimum length of string length in givenObj
+ * @param {number} maxLength maximum number of string length in givenObj
+ * @returns object
+ */
 module.exports = (
     expectedObj,
     optionalObj,

@@ -11,7 +11,7 @@
             "employee_id": "number"
         },
         "holiday": { "holiday_name": "string" },
-        "holiday_character": { "date": "string", "holiday_id": "number" },
+        "holiday_calendar": { "date": "string", "holiday_id": "number" },
         "leave_period": { "date": "string" },
         "leave_plan": { "is_half_day": "boolean", "employee_id": "number" },
         "punch": {
@@ -44,7 +44,7 @@
         "attendance_payroll": {},
         "device_id_mapping": {},
         "holiday": {},
-        "holiday_character": {},
+        "holiday_calendar": {},
         "leave_period": {},
         "leave_plan": {},
         "punch": {},
@@ -62,7 +62,7 @@
         "attendance_payroll": [],
         "device_id_mapping": [],
         "holiday": [],
-        "holiday_character": [],
+        "holiday_calendar": [],
         "leave_period": [],
         "leave_plan": [],
         "punch": [],
@@ -80,7 +80,7 @@
         "attendance_payroll": [],
         "device_id_mapping": [],
         "holiday": [],
-        "holiday_character": [],
+        "holiday_calendar": [],
         "leave_period": [],
         "leave_plan": [],
         "punch": [],
@@ -116,7 +116,7 @@
         },
         "device_id_mapping": { "punch_device_id": "number" },
         "holiday": { "is_recurring": "boolean" },
-        "holiday_character": { "is_half_day": "boolean" },
+        "holiday_calendar": { "is_half_day": "boolean" },
         "leave_period": {},
         "leave_plan": {
             "leave_request_status": "number",
@@ -175,7 +175,7 @@
         },
         "device_id_mapping": {},
         "holiday": {},
-        "holiday_character": {},
+        "holiday_calendar": {},
         "leave_period": {},
         "leave_plan": {
             "leave_request_status": [
@@ -211,7 +211,7 @@
         "attendance_payroll": ["date", "action_date"],
         "device_id_mapping": [],
         "holiday": [],
-        "holiday_character": ["date"],
+        "holiday_calendar": ["date"],
         "leave_period": ["date"],
         "leave_plan": ["action_date"],
         "punch": ["punch_date", "imported_date"],
@@ -261,7 +261,7 @@
             "punch_device": true
         },
         "holiday": { "id": true, "holiday_name": true, "is_recurring": true },
-        "holiday_character": {
+        "holiday_calendar": {
             "id": true,
             "date": true,
             "is_half_day": true,
@@ -372,7 +372,7 @@
             "holiday_name": "string",
             "is_recurring": "boolean"
         },
-        "holiday_character": {
+        "holiday_calendar": {
             "id": "number",
             "is_half_day": "boolean",
             "holiday_id": "number"
@@ -483,7 +483,7 @@
             "holiday_name": "number",
             "is_recurring": "number"
         },
-        "holiday_character": {
+        "holiday_calendar": {
             "id": "number",
             "date": "number",
             "is_half_day": "number",
@@ -565,7 +565,7 @@
         "attendance_payroll": [],
         "device_id_mapping": ["finger_print_id", "employee_id"],
         "holiday": ["holiday_name"],
-        "holiday_character": ["date", "holiday_id"],
+        "holiday_calendar": ["date", "holiday_id"],
         "leave_period": [],
         "leave_plan": ["employee_id"],
         "punch": [],
@@ -583,7 +583,7 @@
         "/attendance_payroll",
         "/device_id_mapping",
         "/holiday",
-        "/holiday_character",
+        "/holiday_calendar",
         "/leave_period",
         "/leave_plan",
         "/punch",

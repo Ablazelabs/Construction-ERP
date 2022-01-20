@@ -19,7 +19,7 @@ router.patch("/leave_transfer_approve", async (req, res, next) => {
         if (!reqBody.approvalLeaveList.length) {
             throw {
                 key: "approvalLeaveList",
-                message: "length of array can't be empty",
+                message: "array can't be empty",
             };
         }
     } catch (e) {

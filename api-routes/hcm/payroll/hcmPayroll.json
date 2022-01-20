@@ -519,7 +519,7 @@
         },
         "payroll_period_autogen": {
             "id": true,
-            "period": true,
+            "period_id": true,
             "start_period": true,
             "end_period": true,
             "year": true,
@@ -537,7 +537,7 @@
         },
         "payroll_period_template": {
             "id": true,
-            "period": true,
+            "period_id": true,
             "start_period": true,
             "end_period": true,
             "payroll_frequency_type": true
