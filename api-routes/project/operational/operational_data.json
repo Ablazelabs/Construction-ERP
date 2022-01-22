@@ -283,7 +283,7 @@
             "house_rent": true,
             "transportation": true,
             "total_expense": true,
-            "manpower_id": true,
+            "manpower": true,
             "project_id": true,
             "number_of_actual_man_power": true,
             "remark": true

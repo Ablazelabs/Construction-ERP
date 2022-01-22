@@ -10,7 +10,7 @@ const {
     leave_entitlement,
     leave_transfer,
 } = allModels;
-module.exports = async (employeeId, leaveTypeId, startDate, next) => {
+const getLeaveBalance = async (employeeId, leaveTypeId, startDate, next) => {
     const leaveType = await attendance_abscence_type.findFirst({
         where: {
             id: leaveTypeId,
@@ -238,7 +238,7 @@ const checkForHoliday = async (date) => {
     if (holidayCalendar) {
         return holidayCalendar;
     }
-    const holidayList = holiday_calendar.findMany({
+    const holidayList = await holiday_calendar.findMany({
         where: {
             holiday: {
                 isRecurring: true,
@@ -309,6 +309,11 @@ const datesAreEqual = (date1, date2) => {
         date1.getDate() == date2.getDate()
     );
 };
+/**
+ *
+ * @param {Date} date
+ * @param {number} employeeId
+ */
 const getEmployeeShiftSchedule = async (date, employeeId) => {
     const shiftAssignment = await shift_assignment.findFirst({
         where: {
@@ -328,6 +333,13 @@ const getEmployeeShiftSchedule = async (date, employeeId) => {
         where: {
             shift_schedule_hdr_id: shiftAssignment.shift_schedule_hdr_id,
         },
+        include: {
+            shift_schedule_hdr: {
+                include: {
+                    sub_shift_group: true,
+                },
+            },
+        },
     });
     for (let i in shiftSchedules) {
         const shiftSchedule = shiftSchedules[i];
@@ -337,13 +349,39 @@ const getEmployeeShiftSchedule = async (date, employeeId) => {
     }
     //continue from here
 };
+/**
+ *
+ * @param {Date} date
+ * @param {import("@prisma/client").shift_schedule_dtl} shiftSchedule
+ */
 const checkShiftDay = (date, shiftSchedule) => {
-    const fDay = date.getDay();
+    const fDay = date.getDay() + 1;
     const lDay = shiftSchedule.working_day;
     if (fDay === lDay) {
-        if (fDay > 0 && fDay < 8) {
-            return true;
-        }
+        return true;
     }
     return false;
+};
+/**
+ *
+ * @param {Date} date
+ * @param {import("@prisma/client").shift_schedule_dtl} shiftSchedule
+ */
+const getShiftDay = (date, shiftSchedule) => {
+    const status = checkShiftDay(date, shiftSchedule);
+    if (status) {
+        if (shiftSchedule.is_half_day) {
+            return 0.5;
+        }
+        return 1;
+    } else {
+        return 0;
+    }
+};
+//users leavedays, payrollcontrol
+module.exports = {
+    getLeaveBalance,
+    getEmployeeShiftSchedule,
+    getShiftDay,
+    checkForHoliday,
 };

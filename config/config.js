@@ -8,6 +8,13 @@ const confirmCredential = async (to, code) => {
 const randomConcurrencyStamp = () => {
     return "random";
 };
+/**
+ *
+ * @param {string} key argument of the error
+ * @param {string} message error message to send client
+ * @param {Function} next the next middleware function of express
+ * @param {number} status status of the error(default 400)
+ */
 const error = (key, message, next, status = 400) => {
     const myError = { status };
     myError[key] = message;

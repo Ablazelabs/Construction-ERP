@@ -531,7 +531,9 @@
             "legal_reserve": true,
             "time_format": true,
             "language": true,
-            "base_currency": true
+            "base_currency": true,
+            "tax_id_number": true,
+            "company_id_number": true
         },
         "industry": { "id": true, "name": true, "description": true },
         "journal_users": { "id": true, "access_name": true, "user": true },

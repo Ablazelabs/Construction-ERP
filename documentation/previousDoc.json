@@ -2225,6 +2225,7 @@
                                             "name_of_employee": {
                                                 "type": "string"
                                             },
+                                            "project_id": { "type": "number" },
                                             "contact": { "type": "string" },
                                             "cell_phone": { "type": "string" },
                                             "contract_no": { "type": "string" }
@@ -4066,7 +4067,17 @@
                                 "properties": {
                                     "limit": { "type": "integer" },
                                     "skip": { "type": "integer" },
-                                    "filter": { "type": "object" },
+                                    "filter": {
+                                        "type": "object",
+                                        "properties": {
+                                            "work_category_id": {
+                                                "type": "number"
+                                            },
+                                            "daily_work_log_id": {
+                                                "type": "number"
+                                            }
+                                        }
+                                    },
                                     "sort": {
                                         "type": "object",
                                         "properties": {

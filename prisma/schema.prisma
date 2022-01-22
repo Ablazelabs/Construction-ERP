@@ -792,19 +792,20 @@ model tax_exemption {
 }
 
 model tax_group {
-  startDate            DateTime
-  endDate              DateTime
-  creationDate         DateTime               @default(now())
-  createdBy            String
-  revisionDate         DateTime               @updatedAt
-  revisedBy            String
-  status               Int                    @default(0)
-  isProtectedForEdit   Boolean                @default(false)
-  id                   Int                    @id @default(autoincrement())
-  tax_group_name       String                 @unique
-  tax_group_percentage Float
-  associated_tax_group associated_tax_group[]
-  general_ledger       general_ledger[]
+  startDate              DateTime
+  endDate                DateTime
+  creationDate           DateTime                 @default(now())
+  createdBy              String
+  revisionDate           DateTime                 @updatedAt
+  revisedBy              String
+  status                 Int                      @default(0)
+  isProtectedForEdit     Boolean                  @default(false)
+  id                     Int                      @id @default(autoincrement())
+  tax_group_name         String                   @unique
+  tax_group_percentage   Float
+  associated_tax_group   associated_tax_group[]
+  general_ledger         general_ledger[]
+  general_journal_detail general_journal_detail[]
 }
 
 // model transaction_type {
@@ -1617,7 +1618,6 @@ model general_journal_detail {
   id                        Int                    @id @default(autoincrement())
   description               String?
   debit_or_credit           Int
-  tax_group_id              Int?
   amount_credit             Float?
   posting_reference         String                 @unique //needs its own implementation  ( sequential string
   reference_code            String?
@@ -1627,6 +1627,8 @@ model general_journal_detail {
   general_journal_header_id Int
   cost_center_id            Int?
   chart_of_account_id       Int
+  tax_group_id              Int?
+  tax_group                 tax_group?             @relation(fields: [tax_group_id], references: [id])
   tax                       tax?                   @relation(fields: [tax_id], references: [id])
   contact                   contact?               @relation(fields: [contact_id], references: [id])
   general_journal_header    general_journal_header @relation(fields: [general_journal_header_id], references: [id])

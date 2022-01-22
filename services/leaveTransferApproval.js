@@ -1,5 +1,5 @@
 const { error, allModels } = require("../config/config");
-const getLeaveBalance = require("./approval/leaveDays");
+const { getLeaveBalance } = require("./approval/leaveDays");
 const { patch: updateLeaveTransfer } = require("./hcmEmployeeMasters");
 const { leave_period, leave_transfer, attendance_abscence_type } = allModels;
 module.exports = async (leaveList, creator, next) => {
