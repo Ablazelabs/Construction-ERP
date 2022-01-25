@@ -18,7 +18,7 @@ const validator = {
     //checkes if expected keys are sent within the object(req.body object mostly)
     checkKeys: (keys, obj) => {
         for (let i in keys) {
-            //handle the number 0(  returns false )
+            //handle the number 0 and false
             if (obj[keys[i]] === 0) {
                 return;
             }
@@ -61,7 +61,7 @@ module.exports = (
     try {
         validator.checkKeys(keys, givenObj);
     } catch (e) {
-        throw { key: e, message: "is empty or wasn't set" };
+        throw { key: e, message: `${e} is empty or wasn't set` };
     }
     for (let i in optionalObj) {
         if (givenObj[i] != undefined && optionalObj[i] != undefined) {
@@ -72,7 +72,7 @@ module.exports = (
                     validator.checkLength(givenObj[i], maxLength);
                 }
             } catch (e) {
-                throw { key: i, message: e };
+                throw { key: i, message: `${i} ${e}` };
             }
         }
     }
@@ -87,7 +87,7 @@ module.exports = (
                 validator.checkLength(givenObj[i], maxLength);
             }
         } catch (e) {
-            throw { key: i, message: e };
+            throw { key: i, message: `${i} ${e}` };
         }
     }
     let returnedObj = {};

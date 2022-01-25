@@ -33,6 +33,7 @@ const realTypes = {
     employee: {
         ...employeeData.allInputFilters.employee,
         ...employeeData.allOptionalInputFilters.employee,
+        isProtectedForEdit: "boolean",
     },
 };
 const enums = {
