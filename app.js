@@ -36,6 +36,8 @@ const leaveTransferApproval = require("./api-routes/hcm/employee_master/leaveTra
 const employeeActionMeasure = require("./api-routes/hcm/employee_master/employeeActionMeasure");
 
 const hcmVacancyApplicant = require("./api-routes/hcm/jobPosCompStrucRecru/vacancyApplicant");
+const hcmVacancyExaminer = require("./api-routes/hcm/jobPosCompStrucRecru/vacancyExaminer");
+const hcmVacancyResult = require("./api-routes/hcm/jobPosCompStrucRecru/vacancyResult");
 const jobPosCompStrucRecru = require("./api-routes/hcm/jobPosCompStrucRecru/jobPosCompStrucRecru");
 const compStrucRecruFile = require("./api-routes/hcm/jobPosCompStrucRecru/compStrucRecruFile");
 const hcmPayroll = require("./api-routes/hcm/payroll/hcmPayroll");
@@ -120,6 +122,8 @@ app.use("/hcm/employee_master", employeeActionMeasure);
 app.use("/hcm/employee_master", fileEmployeeMasters);
 app.use("/hcm/employee_master", initialHiring);
 app.use("/hcm/recruitment", hcmVacancyApplicant);
+app.use("/hcm/recruitment", hcmVacancyExaminer);
+app.use("/hcm/recruitment", hcmVacancyResult);
 app.use("/hcm", jobPosCompStrucRecru);
 app.use("/hcm", compStrucRecruFile);
 app.use("/hcm/payroll", paygradeScale);

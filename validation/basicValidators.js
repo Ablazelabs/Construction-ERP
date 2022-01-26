@@ -124,7 +124,11 @@ const returnGetData = (reqBody, { filters, sorts, projections }, next) => {
         limit = reqBody.limit;
         skip = reqBody.skip || 0;
         if (reqBody.filter) {
-            filter = inputFilter({}, { ...filters }, reqBody.filter);
+            filter = inputFilter(
+                {},
+                { ...filters, all: "string" },
+                reqBody.filter
+            );
         }
         if (reqBody.sort) {
             //send 0 for decending
@@ -148,9 +152,22 @@ const returnGetData = (reqBody, { filters, sorts, projections }, next) => {
     };
     let queryFilter = {};
     for (let i in filter) {
+        if (i === "all") {
+            continue;
+        }
         if (typeof filter[i] == "number")
             queryFilter[i] = { equals: filter[i] };
         else queryFilter[i] = { contains: filter[i] };
+    }
+    if (filter.all) {
+        queryFilter["OR"] = [];
+        for (let i in filters) {
+            if (filters[i] === "string") {
+                let temp = {};
+                temp[i] = { contains: filter.all };
+                queryFilter["OR"].push({ ...temp });
+            }
+        }
     }
     let querySort = [];
     for (let i in sort) {

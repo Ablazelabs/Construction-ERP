@@ -1,11 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const { error } = require("../../../config/config");
-const { post, deleteFn } = require("../../../services/jobPosCompStrucRecru");
-const { deleter: mDelete } = require("../../../services/mostCRUD/mostCRUD");
+const {
+    post,
+    deleteFnExternal,
+    deleteFnInternal,
+} = require("../../../services/vacancyApplicant");
 const { returnReqBody } = require("../../../validation/basicValidators");
-
-const defaultDeleter = require("../../defaultDeleter");
+const inputFilter = require("../../../validation/inputFilter");
 
 const allConfigs = require("./jobPosCompStrucRecru.json");
 const {
@@ -98,24 +100,95 @@ router.post("/vacancy_applicant_external", async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
-router.delete(
-    "/vacancy_applicant_external",
-    async (req, _res, next) => {
-        const operationDataType = "external_applicant";
-        try {
-            inputFilter({ id: "number" }, {}, req.body);
-        } catch (e) {
-            error(e.key, e.message, next);
+router.delete("/vacancy_applicant_external", async (req, res, next) => {
+    try {
+        inputFilter({ id: "number" }, {}, req.body);
+        console.log(req.body);
+    } catch (e) {
+        error(e.key, e.message, next);
+        return;
+    }
+    try {
+        res.json(await deleteFnExternal(req.body.id));
+    } catch (e) {
+        console.log(e);
+        error("database", "error", next, 500);
+        return;
+    }
+});
+router.post("/vacancy_applicant_internal", async (req, res, next) => {
+    const operationDataType = "vacancy_internal_applicant";
+    const optionalInputFilter = allOptionalInputFilters[operationDataType],
+        dateValue = dateValues[operationDataType],
+        myEnums = enums[operationDataType],
+        phoneValue = phoneValues[operationDataType],
+        emailValue = emailValues[operationDataType],
+        rangeValues = allRangeValues[operationDataType];
+
+    const requiredInputFilter = allInputFilters[operationDataType];
+
+    const reqBody = returnReqBody(
+        req.body,
+        {
+            requiredInputFilter,
+            optionalInputFilter,
+            dateValue,
+            myEnums,
+            phoneValue,
+            emailValue,
+            rangeValues,
+        },
+        next
+    );
+    if (!reqBody) {
+        return;
+    }
+    try {
+        const data = await post(
+            {
+                ...reqBody,
+                application_date: new Date(),
+                application_status: 1,
+                is_employee: 1,
+            },
+            "vacancy_applicant",
+            res.locals.id,
+            uniqueValues["vacancy_applicant"],
+            next
+        );
+        if (data == false) {
             return;
         }
-        try {
-            await deleteFn(req.body.id);
-        } catch (e) {
-            console.log(e);
-            error("database", "error", next, 500);
+        const data2 = await post(
+            reqBody,
+            operationDataType,
+            res.locals.id,
+            uniqueValues[operationDataType],
+            next
+        );
+        if (data2 == false) {
             return;
         }
-    },
-    defaultDeleter
-);
+        res.json(data2);
+    } catch (e) {
+        console.log(e);
+        error("database", "error", next, 500);
+    }
+});
+router.delete("/vacancy_applicant_internal", async (req, res, next) => {
+    try {
+        inputFilter({ id: "number" }, {}, req.body);
+    } catch (e) {
+        error(e.key, e.message, next);
+        return;
+    }
+    try {
+        res.json(await deleteFnInternal(req.body.id));
+    } catch (e) {
+        console.log(e);
+        error("database", "error", next, 500);
+        return;
+    }
+});
+
 module.exports = router;
