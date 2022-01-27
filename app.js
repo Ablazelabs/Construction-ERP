@@ -46,6 +46,7 @@ const paygradeScale = require("./api-routes/hcm/payroll/paygradeScale");
 const payrollControl = require("./api-routes/hcm/payroll/payrollControl");
 const accountMapping = require("./api-routes/hcm/payroll/accountMapping");
 const paygradeSalaryComponent = require("./api-routes/hcm/payroll/paygradeSalaryComponent");
+const hcmShiftSchedule = require("./api-routes/hcm/timeAndLeave/shiftSchedule");
 const hcmTimeAndLeave = require("./api-routes/hcm/timeAndLeave/hcmTimeAndLeave");
 const inventMasterAndStock = require("./api-routes/inventory/masterAndStock/inventMasterAndStock");
 const cors = require("cors");
@@ -132,6 +133,7 @@ app.use("/hcm/payroll", accountMapping);
 app.use("/hcm/payroll", paygradeSalaryComponent);
 app.use("/hcm/payroll", hcmPayroll);
 app.use("/hcm/payroll", employeePayscaleUpload);
+app.use("/hcm/time_and_leave", hcmShiftSchedule);
 app.use("/hcm/time_and_leave", hcmTimeAndLeave);
 
 app.use("/inventory", inventMasterAndStock);

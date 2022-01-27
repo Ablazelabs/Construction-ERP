@@ -10,6 +10,7 @@ const {
 } = require("../../../validation/basicValidators");
 
 const defaultDeleter = require("../../defaultDeleter");
+const aaTypeFilter = require("./aaTypeFilter");
 
 const allConfigs = require("./hcmTimeAndLeave.json");
 const {
@@ -35,7 +36,7 @@ router.post(allRoutes, async (req, res, next) => {
         phoneValue = phoneValues[operationDataType],
         emailValue = emailValues[operationDataType],
         rangeValues = allRangeValues[operationDataType];
-    const reqBody = returnReqBody(
+    let reqBody = returnReqBody(
         req.body,
         {
             requiredInputFilter,
@@ -51,7 +52,12 @@ router.post(allRoutes, async (req, res, next) => {
     if (!reqBody) {
         return;
     }
-
+    if (operationDataType === "attendance_abscence_type") {
+        reqBody = aaTypeFilter(reqBody, next);
+        if (!reqBody) {
+            return;
+        }
+    }
     try {
         const data = await post(
             reqBody,

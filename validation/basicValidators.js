@@ -19,6 +19,13 @@ const auditLogSort = {
     revisedBy: "number",
     isProtectedForEdit: "number",
 };
+/**
+ *
+ * @param {object} reqBody the object to be processed
+ * @param {{phoneValue:Array<string>,email:Array<string>,emailValue:Array<string>,dateValue:Array<string>}} param1
+ * @param {Function} next
+ * @returns
+ */
 const returnReqBody = (
     reqBody,
     {
@@ -41,8 +48,12 @@ const returnReqBody = (
             reqBody,
             1
         );
-        reqBody.startDate = new Date();
-        reqBody.endDate = new Date("9999/12/31");
+        if (!reqBody.startDate) {
+            reqBody.startDate = new Date();
+        }
+        if (!reqBody.endDate) {
+            reqBody.endDate = new Date("9999/12/31");
+        }
         for (let i in dateValue) {
             if (!reqBody[dateValue[i]]) {
                 continue;

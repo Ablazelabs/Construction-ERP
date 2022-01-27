@@ -22,7 +22,7 @@ describe("hcm time_and_leave Test 1(attendance_abscence_type)", () => {
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
                     aa_description: `${randomName}`,
-                    number_of_days: 10,
+                    aa_type: 1,
                 })
                 .end((err, response) => {
                     response.should.have.status(200);
@@ -37,12 +37,32 @@ describe("hcm time_and_leave Test 1(attendance_abscence_type)", () => {
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
                     aa_description: `${randomName}`,
-                    number_of_days: 10,
+                    aa_type: 1,
                 })
                 .end((err, response) => {
                     response.should.have.status(400);
                     response.body.should.have.property("error");
                     response.body.error.should.have.property("aa_description");
+                    done();
+                });
+        });
+        it("should return error 400, absence requires is with pay ", (done) => {
+            chai.request(server)
+                .post(url)
+                .set({ Authorization: `Bearer ${accessToken}` })
+                .send({
+                    aa_description: `${randomName}`,
+                    aa_type: 2,
+                    is_with_quota: true,
+                    is_with_entitlement: true,
+                    number_of_days: 10,
+                    is_annual_leave: true,
+                    number_of_increment_each_year: 10,
+                })
+                .end((err, response) => {
+                    response.should.have.status(400);
+                    response.body.should.have.property("error");
+                    response.body.error.should.have.property("is_with_pay");
                     done();
                 });
         });

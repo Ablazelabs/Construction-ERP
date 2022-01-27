@@ -13,7 +13,12 @@
         "holiday": { "holiday_name": "string" },
         "holiday_calendar": { "date": "string", "holiday_id": "number" },
         "leave_period": { "date": "string" },
-        "leave_plan": { "is_half_day": "boolean", "employee_id": "number" },
+        "leave_plan": {
+            "is_half_day": "boolean",
+            "employee_id": "number",
+            "startDate": "string",
+            "endDate": "string"
+        },
         "punch": {
             "punch_date": "string",
             "punch_device_id": "number",
@@ -213,7 +218,7 @@
         "holiday": [],
         "holiday_calendar": ["date"],
         "leave_period": ["date"],
-        "leave_plan": ["action_date"],
+        "leave_plan": ["action_date", "startDate", "endDate"],
         "punch": ["punch_date", "imported_date"],
         "punch_device": [],
         "punch_log": ["imported_date"],

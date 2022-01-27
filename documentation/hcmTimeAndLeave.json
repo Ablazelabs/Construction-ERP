@@ -1409,6 +1409,8 @@
                             "properties": {
                                 "is_half_day": { "type": "Boolean" },
                                 "leave_request_status": { "type": "Int" },
+                                "startDate": { "type": "DateTime?" },
+                                "endDate": { "type": "DateTime?" },
                                 "action_date": { "type": "DateTime?" },
                                 "delegated_username": { "type": "String?" },
                                 "employee_id": { "type": "Int @unique" },
@@ -1538,6 +1540,8 @@
                                         "leave_request_status": {
                                             "type": "Int"
                                         },
+                                        "startDate": { "type": "DateTime?" },
+                                        "endDate": { "type": "DateTime?" },
                                         "action_date": { "type": "DateTime?" },
                                         "delegated_username": {
                                             "type": "String?"

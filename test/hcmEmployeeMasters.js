@@ -24,6 +24,7 @@ describe("hcm employee master Test 1(employee)", () => {
                     id_number: `${randomName}`,
                     first_name: `${randomName}`,
                     middle_name: `${randomName}`,
+                    employee_type_id: `1`,
                     gender: "1", //["male", "female"],
                 })
                 .end((err, response) => {
@@ -40,6 +41,7 @@ describe("hcm employee master Test 1(employee)", () => {
                 .send({
                     id_number: `${randomName}`,
                     first_name: `${randomName}`,
+                    employee_type_id: `1`,
                     middle_name: `${randomName}`,
                     gender: "3", //["male", "female"],
                 })
