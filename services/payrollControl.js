@@ -28,6 +28,13 @@ const {
     journal_comment,
     company,
     chart_of_account,
+    global_payroll_account_mapping,
+    payroll_summary_history,
+    payroll_detail_history,
+    salary_component_account_mapping,
+    number_tracker,
+    journal_type,
+    user,
 } = allModels;
 const {
     getEmployeeShiftSchedule,
@@ -384,7 +391,8 @@ const processPostingToGl = async (
     const message = await summarizePayrollAndPostToGl(
         startDate,
         endDate,
-        payroll_frequency_type_id
+        payroll_frequency_type_id,
+        creator
     );
     //jumped summarizePayrollAndPostToGl
 };
@@ -393,11 +401,14 @@ const processPostingToGl = async (
  * @param {Date} startDate
  * @param {Date} endDate
  * @param {number} payroll_frequency_type_id
+ * @param {number} creator
  */
 const summarizePayrollAndPostToGl = async (
     startDate,
     endDate,
-    payroll_frequency_type_id
+    payroll_frequency_type_id,
+    creator,
+    hashedUserId
 ) => {
     let isPostingProcessHasError = false;
     const processStartTime = new Date();
@@ -405,84 +416,602 @@ const summarizePayrollAndPostToGl = async (
     const hcmConfig = await hcm_configuration.findFirst();
     const comp = await company.findFirst();
     let errorMessages = [];
-    if (hcmConfig && comp) {
-        //#region
-        const employeeIncomeControlAccount = await chart_of_account.findUnique({
-            where: {
-                id: hcmConfig.income_tax_payable_id,
-            },
-        });
-        if (!employeeIncomeControlAccount) {
-            errorMessages.push(
-                "HCM Configuration->Employee Tax Control Account is not found"
-            );
-            isPostingProcessHasError = true;
-        }
-        const employeerPensionAccount = await chart_of_account.findUnique({
-            where: {
-                id: hcmConfig.employer_tax_id,
-            },
-        });
-        if (!employeerPensionAccount) {
-            errorMessages.push(
-                "HCM Configuration->Employeer Pension Expense(11%) is not found"
-            );
-            isPostingProcessHasError = true;
-        }
-        const employeerPensionControlAccount =
-            await chart_of_account.findUnique({
+    try {
+        if (hcmConfig && comp) {
+            //#region
+            const employeeIncomeControlAccount =
+                await chart_of_account.findUnique({
+                    where: {
+                        id: hcmConfig.income_tax_payable_id,
+                    },
+                });
+            if (!employeeIncomeControlAccount) {
+                errorMessages.push(
+                    "HCM Configuration->Employee Tax Control Account is not found"
+                );
+                isPostingProcessHasError = true;
+            }
+            const employeerPensionAccount = await chart_of_account.findUnique({
                 where: {
-                    id: hcmConfig.employer_tax_control_id,
+                    id: hcmConfig.employer_tax_id,
                 },
             });
-        if (!employeerPensionControlAccount) {
-            errorMessages.push(
-                "HCM Configuration->Employeer Pension Payable(11%) is not found"
-            );
-            isPostingProcessHasError = true;
-        }
-        const employeePensionAccount = await chart_of_account.findUnique({
-            where: {
-                id: hcmConfig.employer_pension_account_id, //wrong key(consider this as employee_pension_account_id)(employer=>employee)
-            },
-        });
-        if (!employeePensionAccount) {
-            errorMessages.push(
-                "HCM Configuration->Employee Pension Payable(7%) is not found"
-            );
-            isPostingProcessHasError = true;
-        }
-        //#endregion
-        if (!isPostingProcessHasError) {
-            //#region aggregate values
-            const payrollHdr = await payroll_summary.findMany({
+            if (!employeerPensionAccount) {
+                errorMessages.push(
+                    "HCM Configuration->Employeer Pension Expense(11%) is not found"
+                );
+                isPostingProcessHasError = true;
+            }
+            const employeerPensionControlAccount =
+                await chart_of_account.findUnique({
+                    where: {
+                        id: hcmConfig.employer_tax_control_id,
+                    },
+                });
+            if (!employeerPensionControlAccount) {
+                errorMessages.push(
+                    "HCM Configuration->Employeer Pension Payable(11%) is not found"
+                );
+                isPostingProcessHasError = true;
+            }
+            const employeePensionAccount = await chart_of_account.findUnique({
                 where: {
-                    payroll_frequency_type_id,
-                    startDate: {
-                        gte: startDate,
-                        lt: new Date(
-                            new Date(startDate).setDate(startDate.getDate() + 1)
-                        ),
-                    },
-                    endDate: {
-                        gte: endDate,
-                        lt: new Date(
-                            new Date(endDate).setDate(endDate.getDate() + 1)
-                        ),
-                    },
-                },
-                include: {
-                    payroll_frequency_type: true,
-                    business_unit: true,
-                    employee: true,
+                    id: hcmConfig.employer_pension_account_id, //wrong key(consider this as employee_pension_account_id)(employer=>employee)
                 },
             });
-            for (let i in payrollHdr) {
-                const hdr = payrollHdr[i];
-                //paused here, let me finish the others and get back here(this is taking a very long time)
+            if (!employeePensionAccount) {
+                errorMessages.push(
+                    "HCM Configuration->Employee Pension Payable(7%) is not found"
+                );
+                isPostingProcessHasError = true;
             }
             //#endregion
+            if (!isPostingProcessHasError) {
+                //#region aggregate values
+                const payrollHdr = await payroll_summary.findMany({
+                    where: {
+                        payroll_frequency_type_id,
+                        startDate: {
+                            gte: startDate,
+                            lt: new Date(
+                                new Date(startDate).setDate(
+                                    startDate.getDate() + 1
+                                )
+                            ),
+                        },
+                        endDate: {
+                            gte: endDate,
+                            lt: new Date(
+                                new Date(endDate).setDate(endDate.getDate() + 1)
+                            ),
+                        },
+                    },
+                    include: {
+                        payroll_frequency_type: true,
+                        business_unit: true,
+                        employee: true,
+                    },
+                });
+                for (let i in payrollHdr) {
+                    const hdr = payrollHdr[i];
+                    //paused here, let me finish the others and get back here(this is taking a very long time)
+                    const employeePenalityAccount =
+                        await global_payroll_account_mapping.findFirst({
+                            where: {
+                                payroll_account_type: 5,
+                                business_unit_id: hdr.business_unit_id,
+                            },
+                        });
+                    if (!employeePenalityAccount) {
+                        isPostingProcessHasError = true;
+                        errorMessages.push(
+                            `Penality Account not mapped to business unit ${hdr.business_unit.name} for Employee# ${hdr.employee.id_number}`
+                        );
+                        break;
+                    }
+                    const salaryExpenseAccount =
+                        await global_payroll_account_mapping.findFirst({
+                            where: {
+                                payroll_account_type: 1,
+                                business_unit_id: hdr.business_unit_id,
+                            },
+                        });
+                    if (!salaryExpenseAccount) {
+                        isPostingProcessHasError = true;
+                        errorMessages.push(
+                            `Salary Expense Account not mapped to business unit ${hdr.business_unit.name} for Employee# ${hdr.employee.id_number}`
+                        );
+                        break;
+                    }
+
+                    const overTimeAccount =
+                        await global_payroll_account_mapping.findFirst({
+                            where: {
+                                payroll_account_type: 3,
+                                business_unit_id: hdr.business_unit_id,
+                            },
+                        });
+                    if (!overTimeAccount) {
+                        isPostingProcessHasError = true;
+                        errorMessages.push(
+                            `Over-Time Expense Account not mapped to business unit ${hdr.business_unit.name} for Employee# ${hdr.employee.id_number}`
+                        );
+                        break;
+                    }
+
+                    const netPayControl =
+                        await global_payroll_account_mapping.findFirst({
+                            where: {
+                                payroll_account_type: 4,
+                                business_unit_id: hdr.business_unit_id,
+                            },
+                        });
+
+                    if (!netPayControl) {
+                        errorMessages.push(
+                            `Net-Pay Control Account not mapped to business unit ${hdr.business_unit.name} for Employee# ${hdr.employee.id_number}`
+                        );
+                        isPostingProcessHasError = true;
+                        break;
+                    }
+
+                    const lostTimeAccount =
+                        await global_payroll_account_mapping.findFirst({
+                            where: {
+                                payroll_account_type: 2,
+                                business_unit_id: hdr.business_unit_id,
+                            },
+                        });
+
+                    if (!lostTimeAccount) {
+                        isPostingProcessHasError = true;
+                        errorMessages.push(
+                            `Lost-Time Deduction Account not mapped to business unit ${hdr.business_unit.name} for Employee# ${hdr.employee.id_number}`
+                        );
+                        break;
+                    }
+                    //#region save payroll summery history
+                    const {
+                        business_unit_id,
+                        createdBy,
+                        creationDate,
+                        employee_id,
+                        endDate,
+                        payroll_frequency_type_id,
+                        revisedBy,
+                        startDate,
+                        status,
+                        revisionDate,
+                        total_absent_amount,
+                        total_absent_hours,
+                        total_amount,
+                        total_worked_hours,
+                        total_worked_OT_amount,
+                        total_worked_OT_hours,
+                        expected_working_hours,
+                    } = hdr;
+                    const payrollSummaryHistory =
+                        await payroll_summary_history.create({
+                            data: {
+                                business_unit_id,
+                                createdBy,
+                                creationDate,
+                                employee_id,
+                                endDate,
+                                payroll_frequency_type_id,
+                                revisedBy,
+                                startDate,
+                                status,
+                                revisionDate,
+                                total_absent_amount,
+                                total_absent_hours,
+                                total_amount,
+                                total_worked_hours,
+                                total_worked_OT_amount,
+                                total_worked_OT_hours,
+                                expected_working_hours,
+                                is_payroll_posted: true,
+                            },
+                        });
+                    //#endregion
+                    const payrollDetail = await payroll_detail.findMany({
+                        where: {
+                            payroll_summary_id: hdr.id,
+                        },
+                        include: { salary_component: true },
+                    });
+
+                    let payrollEntryListTemp = [];
+                    let earning = 0;
+                    let deduction = 0;
+
+                    let payrollEntryNetPay = {};
+                    for (let i in payrollDetail) {
+                        //#region saving payroll detial history
+                        const dtl = payrollDetail[i];
+                        const {
+                            createdBy,
+                            creationDate,
+                            endDate,
+                            revisedBy,
+                            revisionDate,
+                            startDate,
+                            status,
+                            description,
+                            isEarning,
+                            isEmployerPart,
+                            salary_component_id,
+                            total_amount,
+                            payroll_posting_entry_type,
+                            payroll_component,
+                        } = dtl;
+                        const payrollDetailHistory =
+                            await payroll_detail_history.create({
+                                data: {
+                                    createdBy,
+                                    creationDate,
+                                    endDate,
+                                    revisedBy,
+                                    revisionDate,
+                                    startDate,
+                                    status,
+                                    description,
+                                    isEarning,
+                                    isEmployerPart,
+                                    salary_component_id,
+                                    total_amount,
+                                    payroll_posting_entry_type,
+                                    payroll_component,
+                                    payroll_summary_history_id:
+                                        payrollSummaryHistory.id,
+                                },
+                            });
+                        // #endregion
+                        let payrollEntry = {};
+                        let payrollEntryDouble = {};
+
+                        payrollEntry.employee_id = hdr.employee.id_number;
+
+                        if (!dtl.isEmployerPart) {
+                            if (dtl.isEarning) earning += dtl.total_amount;
+                            else deduction += dtl.total_amount;
+                        }
+                        const PayrollComponent = {
+                            Basic: 1,
+                            Earning: 2,
+                            Deduction: 3,
+                            Loan: 4,
+                            IncomeTax: 5,
+                            OverTime: 6,
+                            EmployeerPension: 7,
+                            EarningAdj: 8,
+                            DeductionAdj: 9,
+                            EmployeePension: 10,
+                            LostTime: 11,
+                            NetPay: 12,
+                            Penality: 13,
+                        };
+
+                        if (dtl.salary_component_id != null) {
+                            /*all salary components will have associated account
+                             * including(loan,salary adjustment(earning,deduction)
+                             */
+
+                            const salaryComponentAccount =
+                                await salary_component_account_mapping.findFirst(
+                                    {
+                                        where: {
+                                            business_unit_id:
+                                                hdr.business_unit_id,
+                                            salary_component_id:
+                                                dtl.salary_component_id,
+                                        },
+                                    }
+                                );
+                            if (!salaryComponentAccount) {
+                                errorMessages.push(
+                                    `${dtl.salary_component.name} is not mapped to business unit ${hdr.business_unit.name} for Employee# ${hdr.employee.id_number}`
+                                );
+                                isPostingProcessHasError = true;
+                                break;
+                            }
+                            payrollEntry.account_id =
+                                salaryComponentAccount.chart_of_account_id;
+                        } else {
+                            //get account from config
+
+                            if (
+                                dtl.payroll_component == PayrollComponent.Basic
+                            ) {
+                                payrollEntry.account_id =
+                                    salaryExpenseAccount.chart_of_account_id;
+                            } else if (
+                                dtl.payroll_component ==
+                                PayrollComponent.IncomeTax
+                            ) {
+                                payrollEntry.account_id =
+                                    employeeIncomeControlAccount.id;
+                            } else if (
+                                dtl.payroll_component ==
+                                PayrollComponent.EmployeerPension
+                            ) {
+                                payrollEntry.account_id =
+                                    employeerPensionAccount.id;
+                            } else if (
+                                dtl.payroll_component ==
+                                PayrollComponent.OverTime
+                            ) {
+                                payrollEntry.account_id =
+                                    overTimeAccount.chart_of_account_id;
+                            } else if (
+                                dtl.payroll_component ==
+                                PayrollComponent.EmployeePension
+                            ) {
+                                payrollEntry.account_id =
+                                    employeePensionAccount.id;
+                            } else if (
+                                dtl.payroll_component ==
+                                PayrollComponent.LostTime
+                            ) {
+                                payrollEntry.account_id =
+                                    lostTimeAccount.chart_of_account_id;
+                            } else if (
+                                dtl.payroll_component ==
+                                PayrollComponent.Penality
+                            ) {
+                                payrollEntry.account_id =
+                                    employeePenalityAccount.chart_of_account_id;
+                            } else {
+                                errorMessages.push(
+                                    `Account is not defined for payroll component( ${dtl.description} ) skip processing for the current employee=> ${hdr.employee.id_number}`
+                                );
+                                //TODO check if posting errorMessages.push() s true here cause were setting an errorMessages.push() here and breaking
+                                // isPostingProcessHasError = true;
+                                payrollEntryListTemp = [];
+                                break;
+                            }
+                        }
+                        payrollEntryDouble.employee_id =
+                            payrollEntry.employee_id;
+                        const PayrollPostingEntryType = {
+                            Gross: 1,
+                            IncomeTax: 2,
+                            OtherDeduction: 3,
+                            EmployeerTax: 4,
+                        };
+                        //all gross are expense to the company
+                        if (
+                            dtl.payroll_posting_entry_type ==
+                            PayrollPostingEntryType.Gross
+                        ) {
+                            payrollEntry.AmountDr = dtl.total_amount;
+                            payrollEntry.DrCr = "Dr";
+                        } else if (
+                            dtl.payroll_posting_entry_type ==
+                            PayrollPostingEntryType.EmployeerTax
+                        ) {
+                            //Employer tax
+                            payrollEntry.AmountDr = dtl.total_amount;
+                            payrollEntry.DrCr = "Dr";
+
+                            //Employer tax control
+                            payrollEntryDouble.AmountCr = dtl.total_amount;
+                            payrollEntryDouble.DrCr = "Cr";
+                            payrollEntryDouble.account_id =
+                                employeerPensionControlAccount.id;
+                            payrollEntryListTemp.Add(payrollEntryDouble);
+                        } else {
+                            //credit all the rest, at they are liability for the company
+                            payrollEntry.AmountCr = dtl.total_amount;
+                            payrollEntry.DrCr = "Cr";
+                        }
+
+                        payrollEntryListTemp.push(payrollEntry);
+                        payrollEntryNetPay.employee_id =
+                            payrollEntry.employee_id;
+                    }
+                    if (payrollEntryListTemp.length) {
+                        if (deduction > earning) {
+                            await payroll_summary_history.update({
+                                where: { id: payroll_summary_history },
+                                data: { is_payroll_posted: false },
+                            });
+                            errorMessages.push(
+                                "Employee Payroll earnings can not be less than from total deductions, ID=>"
+                            );
+                            continue;
+                        } else {
+                            const netPay = earning - deduction;
+                            payrollEntryNetPay.AmountCr = netPay;
+                            payrollEntryNetPay.DrCr = "Cr";
+                            payrollEntryNetPay.AmountDr = 0;
+                            payrollEntryNetPay.account_id =
+                                netPayControl.chart_of_account_id;
+                            payrollEntryListTemp.push(payrollEntryNetPay);
+                            payrollEntryList = [
+                                ...payrollEntryList,
+                                ...payrollEntryListTemp,
+                            ];
+                        }
+                    }
+                }
+                //#endregion
+
+                //post \value to transaction header and detial
+                let aggregatedPayrollDtl = [];
+
+                let totalPayrollPostingAmount = 0.0;
+                // implementing the c# group by function(test group by function and what it does when trying to understand this)
+                // basically groups arrays with the same keys of first parameter and if specific true returnes the grouped array with the other key(only one length) of added values of the group
+                // [{name:"yared",value:1},{name:"yared",value:1}] changes to [{name:"yared",value:2}] if first param is name and third param is value
+                // this is the best explanation i can do for now! the loop is pretty straight forward from here
+                const tempGrouped1 = groupByFn(
+                    ["account_id", "employee_id", "DrCr"],
+                    payrollEntryList,
+                    ["AmountCr"],
+                    true
+                );
+                const tempGrouped2 = groupByFn(
+                    ["account_id", "employee_id", "DrCr"],
+                    payrollEntryList,
+                    ["AmountDr"],
+                    true
+                );
+                let groupAccDepPayroll = [];
+                for (let i in tempGrouped1) {
+                    groupAccDepPayroll.push({
+                        ...tempGrouped1[i],
+                        ...tempGrouped2[i],
+                    });
+                }
+                if (groupAccDepPayroll.length) {
+                    for (let i in groupAccDepPayroll) {
+                        aggregatedPayrollDtl.push({
+                            account_id: groupAccDepPayroll[i].account_id,
+                            employee_id: groupAccDepPayroll[i].employee_id,
+                            DrCr: groupAccDepPayroll[i].DrCr,
+                            AmountCr: groupAccDepPayroll[i].AmountCr, //this is the total sum of the group mind u
+                            AmountDr: groupAccDepPayroll[i].AmountDr, //this is the total sum of the group mind u
+                        });
+                        totalPayrollPostingAmount +=
+                            groupAccDepPayroll[i].AmountCr;
+                    }
+                    //#region SavePayrollDetail
+                    const payrollFreq = await payroll_period_autogen.findFirst({
+                        where: { payroll_frequency_type_id },
+                        include: { payroll_frequency_type: true },
+                    });
+
+                    let postingRef = "";
+
+                    if (payrollFreq)
+                        postingRef = `${
+                            payrollFreq.payroll_frequency_type
+                                .payroll_frequency_desc
+                        }/${startDate.toLocaleDateString()}/${endDate.toLocaleDateString()}`;
+                    const journalHeaderNumberTracker =
+                        await number_tracker.findFirst({
+                            where: {
+                                reason: 1,
+                            },
+                        });
+                    const journalHeader = await general_journal_header.create({
+                        data: {
+                            currency_id: comp.currency_id,
+                            createdBy: String(creator),
+                            revisedBy: String(creator),
+                            startDate,
+                            endDate,
+                            journal_date: endDate,
+                            journal_posting_status: 2,
+                            reference_number: postingRef,
+                            notes: postingRef,
+                            report_basis: 2,
+                            posting_reference: journalHeaderNumberTracker
+                                ? `${journalHeaderNumberTracker.prefix}P-${journalHeaderNumberTracker.next_number}`
+                                : "",
+                            posting_responsible_user_id: Number(
+                                String(num).match(/[0-9]*/)[0]
+                            ),
+                            total_amount: totalPayrollPostingAmount,
+                            journal_source: 2,
+                        },
+                    });
+                    const journalType = await journal_type.findFirst({
+                        where: {
+                            type: "General Jounal",
+                        },
+                    });
+
+                    if (journalType)
+                        await general_journal_header.update({
+                            where: { id: journalHeader.id },
+                            data: {
+                                journal_type_id: journalType.id,
+                                journal_status: 1,
+                            },
+                        });
+                    if (journalHeaderNumberTracker) {
+                        await number_tracker.update({
+                            where: { id: journalHeaderNumberTracker.id },
+                            data: {
+                                next_number: { increment: 1 },
+                                revisedBy: String(creator),
+                            },
+                        });
+                    }
+                    //i could just do creator(cause its userid but if later if we wanna do id-name this will extract the id(ik smart))
+                    const myUser = await user.findUnique({
+                        where: { id: Number(String(num).match(/[0-9]*/)[0]) },
+                    });
+                    if (myUser) {
+                        await journal_comment.create({
+                            data: {
+                                comment: `Payroll journal created for the month ${journalHeader.reference_number} with total amount ${journalHeader.total_amount}`,
+                                application_user_id: myUser.id,
+                                general_journal_header_id: journalHeader.id,
+                                startDate,
+                                endDate,
+                                createdBy: String(creator),
+                                revisedBy: String(creator),
+                            },
+                        });
+                    }
+
+                    const journalDetailNumberTracker =
+                        await number_tracker.findFirst({
+                            where: {
+                                reason: 2,
+                            },
+                        });
+                    for (let i in aggregatedPayrollDtl) {
+                        const dtl = aggregatedPayrollDtl[i];
+                        await general_journal_detail.create({
+                            data: {
+                                general_journal_header_id: journalHeader.id,
+                                startDate,
+                                endDate,
+                                createdBy: String(creator),
+                                revisedBy: String(creator),
+                                chart_of_account_id: dtl.account_id,
+                                amount_credit: dtl.AmountCr,
+                                amount_debit: dtl.AmountDr,
+                                debit_or_credit: dtl.AmountDr > 0 ? 2 : 1,
+                                posting_reference: journalDetailNumberTracker
+                                    ? `${journalDetailNumberTracker.prefix}P-${journalDetailNumberTracker.next_number}`
+                                    : "",
+                            },
+                        });
+                        if (
+                            journalDetailNumberTracker &&
+                            aggregatedPayrollDtl.length
+                        ) {
+                            await number_tracker.update({
+                                where: { id: journalDetailNumberTracker.id },
+                                data: {
+                                    next_number:
+                                        journalDetailNumberTracker.next_number +
+                                        aggregatedPayrollDtl.length,
+                                    revisedBy: String(creator),
+                                },
+                            });
+                        }
+                        // #endregion
+                    }
+                    //#endregion
+                }
+            }
+        } else {
+            if (!comp) {
+                errorMessages.push("HCM Company is not maintained");
+                isPostingProcessHasError = true;
+            } else {
+                errorMessages.push("HCM Configuration must be maintained");
+                isPostingProcessHasError = true;
+            }
         }
+    } catch {
+        errorMessages.push("something went wrong");
     }
 };
 /**
@@ -649,7 +1178,6 @@ const processPayroll = async (
             is_payroll_processed: message.success,
         },
     });
-    //jumped here computeemployeesalary
 };
 /**
  *
@@ -1133,7 +1661,13 @@ const computeEmployeeSalary = async (
         if (!skipEmployeePayrollProcessing && payrollDetails.length) {
             // #region save aggregated payroll summery and detail
             let createdPayrollSummary = await payroll_summary.create({
-                data: payrollSummaryData,
+                data: {
+                    ...payrollSummaryData,
+                    startDate,
+                    endDate,
+                    createdBy: String(creator),
+                    revisedBy: String(creator),
+                },
             });
             let payrollDetails = groupByFn(
                 [
@@ -1269,6 +1803,10 @@ const computeEmployeeSalary = async (
                             payroll_component: 13,
                             payroll_posting_entry_type: 3,
                             payroll_summary_id: createdPayrollSummary.id,
+                            startDate,
+                            endDate,
+                            createdBy: String(creator),
+                            revisedBy: String(creator),
                         },
                     });
                     totalPayrollAmount += penalityForCurrentMonthDeduction;
@@ -1290,6 +1828,7 @@ const computeEmployeeSalary = async (
                         payroll_frequency_type_id,
                         is_payroll_posted: false,
                         createdBy: String(creator),
+                        revisedBy: String(creator),
                     },
                 });
             }

@@ -38,6 +38,7 @@ allInputFilters.initial_hiring = {
     ...allInputFilters.org_assignment,
     ...allInputFilters.employee_action,
 };
+delete allInputFilters.initial_hiring.id_number;
 let realTypes = {
     employee: {
         ...employeeMastersData.allOptionalInputFilters.employee,
@@ -93,6 +94,7 @@ let allOptionalInputFilters = {
     employee: stringOptionalInputFilters,
     org_assignment: stringOptionalOrg,
     employee_action: stringOptionalAction,
+    id_number: "string",
 };
 // adding vacancy applicant id for the last operation
 // Chnage application status if action is initiated from recruitment(there fore we need vacancy applicant id)
@@ -163,8 +165,7 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
                 isProtectedForEdit: "string",
                 ...optionalInputFilter,
             },
-            req.body,
-            1
+            req.body
         );
         for (let i in realTypes[operationDataType]) {
             const type = realTypes[operationDataType][i];
@@ -196,7 +197,7 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
             if (!reqBody[dateValues[operationDataType][i]].getTime()) {
                 throw {
                     key: dateValues[operationDataType][i],
-                    message: "please send date in yyyy/mm/dd format",
+                    message: `please send date in yyyy/mm/dd format`,
                 };
             }
         }
@@ -219,7 +220,7 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
             }
         }
     } catch (e) {
-        error(e.key, e.message, next, 400);
+        error(e.key, e.key + " " + e.message, next, 400);
         deleteUnusedFile(req.file);
         return;
     }

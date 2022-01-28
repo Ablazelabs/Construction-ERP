@@ -115,13 +115,13 @@ app.use("/finance/operational", restFinanceOperational);
 app.use("/finance/operational", financeUpload);
 
 app.use("/hcm/master", hcmMasters);
-app.use("/hcm/employee_master", hcmEmployeeMasters);
 app.use("/hcm/employee_master", disciplineAttachment);
 app.use("/hcm/employee_master", employeeAction);
 app.use("/hcm/employee_master", leaveTransferApproval);
 app.use("/hcm/employee_master", employeeActionMeasure);
 app.use("/hcm/employee_master", fileEmployeeMasters);
 app.use("/hcm/employee_master", initialHiring);
+app.use("/hcm/employee_master", hcmEmployeeMasters);
 app.use("/hcm/recruitment", hcmVacancyApplicant);
 app.use("/hcm/recruitment", hcmVacancyExaminer);
 app.use("/hcm/recruitment", hcmVacancyResult);

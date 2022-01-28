@@ -5,7 +5,7 @@ const examinersAdd = require("../../../services/vacancyExaminer");
 const inputFilter = require("../../../validation/inputFilter");
 
 //make sure of something here
-router.put("/vacancy_examiner", async (req, res, next) => {
+router.post("/vacancy_examiner", async (req, res, next) => {
     let reqBody;
     try {
         reqBody = inputFilter(

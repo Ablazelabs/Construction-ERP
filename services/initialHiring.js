@@ -136,7 +136,7 @@ const generateId = async (id_number, employee_type_id, next) => {
             employee_type_id,
         },
         orderBy: {
-            id: "desc",
+            id_number: "desc",
         },
     });
     if (lastEmp && lastEmp.id_number) {
@@ -145,7 +145,8 @@ const generateId = async (id_number, employee_type_id, next) => {
         if (nextIdNumber > idRange.end) {
             error(
                 "id_number",
-                "IdNumber OverFlow, Increase the End IDRange for This Employee Type!!"
+                `IdNumber OverFlow, Increase the End IDRange for This Employee Type!!(last id number is ${lastIdNumber})`,
+                next
             );
             return false;
         }

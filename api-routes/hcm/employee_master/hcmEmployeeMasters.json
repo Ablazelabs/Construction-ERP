@@ -162,7 +162,8 @@
             "endDate": "string"
         },
         "employee_action": {
-            "attachment_id": "number"
+            "attachment_id": "number",
+            "employee_status": "number"
         },
         "employee_commitment": { "remark": "string" },
         "employee_contact": { "address_line_2": "string" },

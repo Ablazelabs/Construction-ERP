@@ -139,7 +139,7 @@ const fileRequired = {
 const allowedFileTypes = {
     employee_action_attachment: ["pdf"],
 };
-const allRoutes = ["/employee_action_attachment"];
+const allRoutes = ["/employee_action"];
 
 const multer = require("multer");
 
