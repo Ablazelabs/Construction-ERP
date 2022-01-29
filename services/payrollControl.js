@@ -312,6 +312,15 @@ const postPost = async (id, creator, next) => {
         postingUser,
         next
     );
+    if (processResult == false) {
+        return;
+    }
+    if (!processResult.success) {
+        error("posting", processResult.message);
+        return false;
+    } else {
+        return processResult;
+    }
     //jumped here processPostingToGl
 };
 /**
@@ -394,7 +403,16 @@ const processPostingToGl = async (
         payroll_frequency_type_id,
         creator
     );
-    //jumped summarizePayrollAndPostToGl
+    if (payrollPeriod) {
+        await payroll_period_autogen.update({
+            where: { id: payrollPeriod.id },
+            data: {
+                is_payroll_interfaced_to_FI: message.success,
+                is_processing_started: false,
+            },
+        });
+    }
+    return message;
 };
 /**
  *
@@ -407,8 +425,7 @@ const summarizePayrollAndPostToGl = async (
     startDate,
     endDate,
     payroll_frequency_type_id,
-    creator,
-    hashedUserId
+    creator
 ) => {
     let isPostingProcessHasError = false;
     const processStartTime = new Date();
@@ -1012,6 +1029,16 @@ const summarizePayrollAndPostToGl = async (
         }
     } catch {
         errorMessages.push("something went wrong");
+        isPostingProcessHasError = true;
+    }
+    const timeTaken = new Date() - processStartTime;
+    if (isPostingProcessHasError) {
+        errorMessages.unshift(
+            `Payroll posting completed with error(${timeTaken}ms taken), please check all encounetered errors below`
+        );
+        return { success: false, message: errorMessages };
+    } else {
+        return { success: true };
     }
 };
 /**
@@ -2079,7 +2106,6 @@ const getPayAdjustmentEarning = async (startDate, endDate, empId, basicPay) => {
     }
     return returnedMessage;
 };
-
 /**
  *
  * @param {Date} startDate

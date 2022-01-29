@@ -4,7 +4,7 @@ const { error, allModels } = require("../../config/config");
  * @param {object} reqBody object to be posted
  * @param {string} modelName name of the model to post the obj to
  * @param {number} creator id of the user posting
- * @param {array} uniqueValues list of keys that shouldn't have a duplicate in db
+ * @param {Array<string>} uniqueValues list of keys that shouldn't have a duplicate in db
  * @param {function} next if this is called the fn returns false and sends an error to client
  * @param {boolean} sendId if this is true returns id of posted data with success message
  * @returns boolean|object
@@ -37,7 +37,7 @@ const post = async (
         });
         if (queryData) {
             if (queryData.status == 1) {
-                await allModels[modelName].update({
+                const data = await allModels[modelName].update({
                     where: { ...whereData },
                     data: {
                         status: 0,
@@ -45,7 +45,7 @@ const post = async (
                         endDate: reqBody.endDate,
                     },
                 });
-                return { success: true };
+                return { success: true, id: sendId ? data.id : undefined };
             }
             error(`${uniqueKey}`, `${modelName} already exists`, next);
             return false;
