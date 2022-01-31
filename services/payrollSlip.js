@@ -1,11 +1,58 @@
-const { allModels, error } = require("../config/config");
+const { allModels, error, sendEmail } = require("../config/config");
 
 const {
     employee,
     employee_action,
     payroll_summary_history,
     payroll_detail_history,
+    address,
 } = allModels;
+/**
+ *
+ * @param {{pdf: Buffer,employee_id: string}[]} constructedPdf
+ * @param {{html: string,EmployeeId: string}[]} slipDetails
+ */
+const sendSlip = async (constructedPdf, slipDetails) => {
+    const addresses = await address.findMany({
+        where: {
+            employee: {
+                OR: constructedPdf.map(({ employee_id }) => {
+                    return { id_number: employee_id };
+                }),
+            },
+        },
+        select: {
+            employee: true,
+            email: true,
+        },
+    });
+    for (let i in constructedPdf) {
+        const empAddress = addresses.find(
+            ({ employee: emp }) =>
+                emp.id_number == constructedPdf[i].employee_id
+        );
+        const fullName = `${empAddress.employee.first_name?.toUpperCase()} ${empAddress.employee.middle_name?.toUpperCase()} ${
+            empAddress.employee.last_name?.toUpperCase() || ""
+        }`;
+        const body =
+            `<b>Dear ${fullName}</b></br>` +
+            `<p>Attached herewith, Please Find Your Salary Slip for ${fromDate.toLocaleDateString()} - ${toDate.toLocaleDateString()}. </p><br>` +
+            `<p>This Payslip is brought to you by the customer</br></p>` +
+            `<p>This is an Auto generated e-mail by ${"Elhadar-PLC"}. Please don't reply.</p></br>` +
+            `<p>Regards,</p></br>` +
+            `<p>Payroll Manager</p></br>`;
+        await sendEmail(
+            empAddress.email,
+            "Payroll Slip",
+            `SALARY SLIP - ${empAddress.employee.id_number} - ${fullName}.`,
+            body,
+            {
+                fileName: `SALARY SLIP - ${empAddress.employee.id_number} - ${fullName}.pdf`,
+                file: constructedPdf[i].pdf,
+            }
+        );
+    }
+};
 /**
  *
  * @param {Array<number>} selectedEmps
@@ -20,8 +67,6 @@ const getSlip = async (
     activeEmployees = false
 ) => {
     let stringBuilders = [];
-
-    ac;
     let activeFilter = {};
     if (activeEmployees) {
         activeFilter = { is_employee_active: true };
@@ -75,6 +120,7 @@ const getSlip = async (
             }),
         },
     });
+    console.log({ payrollSummaryHistories, payrollDetailHistories });
     if (payrollSummaryHistories.length) {
         let rows = [];
         for (let i in payrollSummaryHistories) {
@@ -85,12 +131,10 @@ const getSlip = async (
             const orgAssignment = seletedEmpAction.org_assignment.find(
                 (item) => item.employee_action_id === seletedEmpAction.id
             );
-            Where(
-                (item) => item.EmployeeActionId == seletedEmpAction.Id
-            )?.FirstOrDefault();
-
             let slipHeadDetails = {
-                name: `${payrollSummary.employee.first_name?.toUpperCase()} ${payrollSummary.employee.middle_name?.toUpperCase()} ${payrollSummary.employee.last_name?.toUpperCase()}`,
+                name: `${payrollSummary.employee.first_name?.toUpperCase()} ${payrollSummary.employee.middle_name?.toUpperCase()} ${
+                    payrollSummary.employee.last_name?.toUpperCase() || ""
+                }`,
                 employeeNo: payrollSummary.employee.id_number,
                 dateOfJoining: payrollSummary.employee.employment_start_date,
                 dateMonth: new Date(),
@@ -137,8 +181,8 @@ const getSlip = async (
                     earnValue = earnings[i].total_amount;
                 }
                 if (i < deductions.length) {
-                    deductName = deductions[i].Description;
-                    deductValue = deductions[i].TotalAmount;
+                    deductName = deductions[i].description;
+                    deductValue = deductions[i].total_amount;
                 }
                 rows.push({ earnName, earnValue, deductName, deductValue });
             }
@@ -154,6 +198,7 @@ const getSlip = async (
             });
         }
     }
+    return stringBuilders;
 };
 /**
  *
@@ -279,7 +324,7 @@ const constructHTML = (slipHeadDetails, dt, fromDate, toDate) => {
     let deductsSum = 0;
     dt.forEach(({ earnValue, deductValue }) => {
         earningsSum += earnValue;
-        deductsSum += earnValue;
+        deductsSum += deductValue;
     });
     sb += earningsSum;
     sb += "</td>";
@@ -295,7 +340,7 @@ const constructHTML = (slipHeadDetails, dt, fromDate, toDate) => {
     sb += columns.length;
     sb += "'>NET SALARY: <b>";
     const netSalary = earningsSum - deductsSum;
-    const fractionNumber = parseInt(netSalary);
+    const fractionNumber = Number(String(netSalary).split(".")[1]) || 0;
     sb +=
         netSalary +
         "   " +
@@ -313,7 +358,73 @@ const constructHTML = (slipHeadDetails, dt, fromDate, toDate) => {
 
     return sb;
 };
+/**
+ *
+ * @param {number} number
+ * @returns {string}
+ */
+const numberToWords = (number) => {
+    if (number == 0) return "ZERO";
+    if (number < 0) return "MINUS " + numberToWords(Math.abs(number));
+    let words = "";
+    if (number > 1000000) {
+        words += numberToWords(parseInt(number / 1000000)) + " MILLION ";
+        number %= 1000000;
+    }
+    if (number > 1000) {
+        words += numberToWords(parseInt(number / 1000)) + " THOUSAND ";
+        number %= 1000;
+    }
+    if (number > 100) {
+        words += numberToWords(parseInt(number / 100)) + " HUNDRED ";
+        number %= 100;
+    }
+    if (number > 0) {
+        if (words != "") words += " AND ";
+
+        const unitsMap = [
+            "ZERO",
+            "ONE",
+            "TWO",
+            "THREE",
+            "FOUR",
+            "FIVE",
+            "SIX",
+            "SEVEN",
+            "EIGHT",
+            "NINE",
+            "TEN",
+            "ELEVEN",
+            "TWELVE",
+            "THIRTEEN",
+            "FOURTEEN",
+            "FIVTEEN",
+            "SIXTEEN",
+            "SEVENTEEN",
+            "EIGHTEEN",
+            "NINETEEN",
+        ];
+        const tensMap = [
+            "ZERO",
+            "TEN",
+            "TWENTY",
+            "THIRTY",
+            "FORTY",
+            "FIFTY",
+            "SIXTY",
+            "SEVENTY",
+            "EIGHTY",
+            "NINETY",
+        ];
+
+        if (number < 20) words += unitsMap[number];
+        else {
+            words += tensMap[number / 10];
+            if (number % 10 > 0) words += "-" + unitsMap[number % 10];
+        }
+    }
+    return words;
+};
 module.exports = {
     getSlip,
 };
-// same as the others

@@ -41,7 +41,10 @@ const hcmVacancyResult = require("./api-routes/hcm/jobPosCompStrucRecru/vacancyR
 const hcmJobTitle = require("./api-routes/hcm/jobPosCompStrucRecru/jobTitle");
 const jobPosCompStrucRecru = require("./api-routes/hcm/jobPosCompStrucRecru/jobPosCompStrucRecru");
 const compStrucRecruFile = require("./api-routes/hcm/jobPosCompStrucRecru/compStrucRecruFile");
+
 const hcmPayroll = require("./api-routes/hcm/payroll/hcmPayroll");
+const hcmPayrollSlip = require("./api-routes/hcm/payroll/payrollSlip");
+
 const employeePayscaleUpload = require("./api-routes/hcm/payroll/employeePayscaleUpload");
 const paygradeScale = require("./api-routes/hcm/payroll/paygradeScale");
 const payrollControl = require("./api-routes/hcm/payroll/payrollControl");
@@ -54,25 +57,6 @@ const cors = require("cors");
 
 app.use(json());
 app.use(cors());
-const request = require("supertest");
-app.get(
-    "/some-random-thing",
-    (req, res, next) => {
-        req.body.hi = "hi";
-        req.path = "/new-path";
-        console.log(req.body.hi, req.path);
-        next();
-    },
-    (req, res, next) => {
-        res.json({ success: req.body.hi, path: req.path.split("/").pop() });
-        return;
-    }
-);
-app.get("/some-random-thing-2", async (req, res, next) => {
-    const client = request(req.app);
-    const { body } = await client.get("/some-random-thing").send();
-    res.json({ ...body, doubleS: true });
-});
 
 app.use(authenticate);
 
@@ -108,6 +92,7 @@ app.use("/project/master", client);
 app.use("/project/master", material);
 app.use("/project/master", documentation);
 app.use("/project/master", restMasterData);
+
 app.use("/project/operational", operationalData);
 
 app.use("/finance/master", financemasters);
@@ -123,23 +108,29 @@ app.use("/hcm/employee_master", employeeActionMeasure);
 app.use("/hcm/employee_master", fileEmployeeMasters);
 app.use("/hcm/employee_master", initialHiring);
 app.use("/hcm/employee_master", hcmEmployeeMasters);
+
 app.use("/hcm/recruitment", hcmVacancyApplicant);
 app.use("/hcm/recruitment", hcmVacancyExaminer);
 app.use("/hcm/recruitment", hcmVacancyResult);
 app.use("/hcm/job_positions", hcmJobTitle);
+
 app.use("/hcm", jobPosCompStrucRecru);
 app.use("/hcm", compStrucRecruFile);
+
 app.use("/hcm/payroll", paygradeScale);
 app.use("/hcm/payroll", payrollControl);
 app.use("/hcm/payroll", accountMapping);
 app.use("/hcm/payroll", paygradeSalaryComponent);
+app.use("/hcm/payroll", hcmPayrollSlip);
 app.use("/hcm/payroll", hcmPayroll);
 app.use("/hcm/payroll", employeePayscaleUpload);
+
 app.use("/hcm/time_and_leave", hcmShiftSchedule);
 app.use("/hcm/time_and_leave", hcmTimeAndLeave);
 
 app.use("/inventory", inventMasterAndStock);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 app.use((err, _req, res, _next) => {
     let myError = JSON.parse(err.message);
     const status = myError.status;

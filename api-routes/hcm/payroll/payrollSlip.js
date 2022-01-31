@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const { error } = require("../../../config/config");
+const { error, sendEmail } = require("../../../config/config");
 const { getSlip } = require("../../../services/payrollSlip");
 const inputFilter = require("../../../validation/inputFilter");
+const pdf = require("pdf-creator-node");
 
 const dateValue = ["fromDate", "toDate"];
 
-router.get("payroll_slip", async (req, res, next) => {
+router.get("/payroll_slip", async (req, res, next) => {
     try {
         reqBody = inputFilter(
             {
@@ -16,6 +17,7 @@ router.get("payroll_slip", async (req, res, next) => {
             },
             {
                 activeEmployees: "boolean",
+                sendOrGet: "boolean",
             },
             req.body
         );
@@ -45,7 +47,7 @@ router.get("payroll_slip", async (req, res, next) => {
         return;
     }
     let { selectedEmployees } = reqBody;
-    const { fromDate, toDate, activeEmployees } = reqBody;
+    const { fromDate, toDate, activeEmployees, sendOrGet } = reqBody;
     let listError = false;
     for (let i in selectedEmployees) {
         try {
@@ -74,123 +76,80 @@ router.get("payroll_slip", async (req, res, next) => {
             toDate,
             activeEmployees ? true : false
         );
+        const options = {
+            format: "A3",
+            orientation: "portrait",
+            border: "10mm",
+        };
+        const document = {
+            data: {},
+            path: "./output.pdf",
+            type: "buffer",
+        };
+        let constructedPdf = [];
+        for (let i in slipDetails) {
+            const slipDetail = slipDetails[i];
+            constructedPdf.push({
+                pdf: await pdf.create(
+                    { ...document, html: slipDetail.html },
+                    options
+                ),
+                employee_id: slipDetail.EmployeeId,
+            });
+        }
+        if (!sendOrGet) {
+            res.json(constructedPdf);
+        } else {
+            await sendSlip(constructedPdf);
+            res.json({ success: true });
+        }
     } catch (e) {
         console.log(e);
         error("database", "error", next, 500);
     }
 });
-router.post("payroll_slip", async (req, res, next) => {
-    const operationDataType = req.path.split("/").pop();
-    const requiredInputFilter = allInputFilters[operationDataType],
-        optionalInputFilter = allOptionalInputFilters[operationDataType],
-        dateValue = dateValues[operationDataType],
-        myEnums = enums[operationDataType],
-        phoneValue = phoneValues[operationDataType],
-        emailValue = emailValues[operationDataType],
-        rangeValues = allRangeValues[operationDataType];
+// router.post("/payroll_slip", async (req, res, next) => {
+//     const operationDataType = req.path.split("/").pop();
+//     const requiredInputFilter = allInputFilters[operationDataType],
+//         optionalInputFilter = allOptionalInputFilters[operationDataType],
+//         dateValue = dateValues[operationDataType],
+//         myEnums = enums[operationDataType],
+//         phoneValue = phoneValues[operationDataType],
+//         emailValue = emailValues[operationDataType],
+//         rangeValues = allRangeValues[operationDataType];
 
-    const reqBody = returnReqBody(
-        req.body,
-        {
-            requiredInputFilter,
-            optionalInputFilter,
-            dateValue,
-            myEnums,
-            phoneValue,
-            emailValue,
-            rangeValues,
-        },
-        next
-    );
-    if (!reqBody) {
-        return;
-    }
+//     const reqBody = returnReqBody(
+//         req.body,
+//         {
+//             requiredInputFilter,
+//             optionalInputFilter,
+//             dateValue,
+//             myEnums,
+//             phoneValue,
+//             emailValue,
+//             rangeValues,
+//         },
+//         next
+//     );
+//     if (!reqBody) {
+//         return;
+//     }
 
-    try {
-        const data = await post(
-            reqBody,
-            operationDataType,
-            res.locals.id,
-            uniqueValues[operationDataType],
-            next
-        );
-        if (data == false) {
-            return;
-        }
-        res.json(data);
-    } catch (e) {
-        console.log(e);
-        error("database", "error", next, 500);
-    }
-});
-router.patch("payroll_slip", async (req, res, next) => {
-    const operationDataType = req.path.split("/").pop();
-
-    const requiredInputFilter = allInputFilters[operationDataType],
-        optionalInputFilter = allOptionalInputFilters[operationDataType],
-        dateValue = dateValues[operationDataType],
-        myEnums = enums[operationDataType],
-        phoneValue = phoneValues[operationDataType],
-        emailValue = emailValues[operationDataType],
-        rangeValues = allRangeValues[operationDataType];
-
-    const data = returnPatchData(
-        req.body,
-        {
-            requiredInputFilter,
-            optionalInputFilter,
-            dateValue,
-            myEnums,
-            phoneValue,
-            emailValue,
-            rangeValues,
-        },
-        next
-    );
-    if (!data) {
-        return;
-    }
-    const { updateData, updateDataProjection } = data;
-    try {
-        const data = await patch(
-            updateDataProjection,
-            req.body,
-            updateData,
-            operationDataType,
-            res.locals.id,
-            uniqueValues[operationDataType],
-            next
-        );
-        if (data == false) {
-            return;
-        }
-        res.json(data);
-    } catch (e) {
-        console.log(e);
-        error("database", "error", next, 500);
-        return;
-    }
-});
-router.delete(
-    allRoutes,
-    async (req, res, next) => {
-        const operationDataType = req.path.split("/").pop();
-        if (
-            req?.body?.id &&
-            typeof req.body.id === "number" &&
-            operationDataType === "overtime"
-        ) {
-            const logicDone = await deleteLogic(
-                req.body.id,
-                operationDataType,
-                next
-            );
-            if (!logicDone) {
-                return;
-            }
-        }
-        next();
-    },
-    defaultDeleter
-);
+//     try {
+//         const data = await post(
+//             reqBody,
+//             operationDataType,
+//             res.locals.id,
+//             uniqueValues[operationDataType],
+//             next
+//         );
+//         if (data == false) {
+//             return;
+//         }
+//         res.json(data);
+//     } catch (e) {
+//         console.log(e);
+//         error("database", "error", next, 500);
+//     }
+// });
 module.exports = router;

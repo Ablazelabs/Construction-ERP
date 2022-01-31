@@ -328,7 +328,8 @@
         "shift_schedule_hdr": {
             "id": true,
             "shift_name": true,
-            "sub_shift_group": true
+            "sub_shift_group": true,
+            "shift_schedule_dtl": true
         },
         "sub_shift_group": {
             "id": true,

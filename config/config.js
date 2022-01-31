@@ -5,6 +5,15 @@ const confirmCredential = async (to, code) => {
      * nothing else to worry about
      */
 };
+/**
+ *
+ * @param {string} to email receiver
+ * @param {string} title
+ * @param {string} subject
+ * @param {string} body
+ * @param {Array<{fileName:string, file:Buffer}>} attachments
+ */
+const sendEmail = async (to, title, subject, body, attachments) => {};
 const randomConcurrencyStamp = () => {
     return "random";
 };
@@ -25,6 +34,7 @@ const { PrismaClient } = require("@prisma/client");
 const allModels = new PrismaClient();
 module.exports = {
     error,
+    sendEmail,
     confirmCredential,
     randomConcurrencyStamp,
     allModels,
