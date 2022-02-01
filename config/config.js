@@ -13,7 +13,16 @@ const confirmCredential = async (to, code) => {
  * @param {string} body
  * @param {Array<{fileName:string, file:Buffer}>} attachments
  */
-const sendEmail = async (to, title, subject, body, attachments) => {};
+const sendEmail = async (to, title, subject, body, attachments) => {
+    console.log({
+        to,
+        title,
+        subject,
+        body,
+        attachments,
+    });
+    return { success: true };
+};
 const randomConcurrencyStamp = () => {
     return "random";
 };
@@ -38,4 +47,5 @@ module.exports = {
     confirmCredential,
     randomConcurrencyStamp,
     allModels,
+    COMPANY_NAME: "ElHadar-PLC",
 };

@@ -32,7 +32,7 @@ const fileEmployeeMasters = require("./api-routes/hcm/employee_master/fileEmploy
 const disciplineAttachment = require("./api-routes/hcm/employee_master/disciplineAttachment");
 const employeeAction = require("./api-routes/hcm/employee_master/employeeAction");
 const initialHiring = require("./api-routes/hcm/employee_master/initialHiring");
-const leaveTransferApproval = require("./api-routes/hcm/employee_master/leaveTransferApproval");
+const hcmApprovals = require("./api-routes/hcm/employee_master/hcmApprovals");
 const employeeActionMeasure = require("./api-routes/hcm/employee_master/employeeActionMeasure");
 
 const hcmVacancyApplicant = require("./api-routes/hcm/jobPosCompStrucRecru/vacancyApplicant");
@@ -103,7 +103,7 @@ app.use("/finance/operational", financeUpload);
 app.use("/hcm/master", hcmMasters);
 app.use("/hcm/employee_master", disciplineAttachment);
 app.use("/hcm/employee_master", employeeAction);
-app.use("/hcm/employee_master", leaveTransferApproval);
+app.use("/hcm", hcmApprovals);
 app.use("/hcm/employee_master", employeeActionMeasure);
 app.use("/hcm/employee_master", fileEmployeeMasters);
 app.use("/hcm/employee_master", initialHiring);

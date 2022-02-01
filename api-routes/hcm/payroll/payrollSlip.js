@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { error, sendEmail } = require("../../../config/config");
-const { getSlip } = require("../../../services/payrollSlip");
+const { getSlip, sendSlip } = require("../../../services/payrollSlip");
 const inputFilter = require("../../../validation/inputFilter");
 const pdf = require("pdf-creator-node");
 
@@ -100,7 +100,15 @@ router.get("/payroll_slip", async (req, res, next) => {
         if (!sendOrGet) {
             res.json(constructedPdf);
         } else {
-            await sendSlip(constructedPdf);
+            const data = await sendSlip(constructedPdf, fromDate, toDate);
+            if (!data) {
+                error(
+                    "employee",
+                    "error happened while sending email(employee has no email)",
+                    next
+                );
+                return false;
+            }
             res.json({ success: true });
         }
     } catch (e) {

@@ -1,4 +1,9 @@
-const { allModels, error, sendEmail } = require("../config/config");
+const {
+    allModels,
+    error,
+    sendEmail,
+    COMPANY_NAME,
+} = require("../config/config");
 
 const {
     employee,
@@ -10,9 +15,10 @@ const {
 /**
  *
  * @param {{pdf: Buffer,employee_id: string}[]} constructedPdf
- * @param {{html: string,EmployeeId: string}[]} slipDetails
+ * @param {Date} fromDate
+ * @param {Date} toDate
  */
-const sendSlip = async (constructedPdf, slipDetails) => {
+const sendSlip = async (constructedPdf, fromDate, toDate) => {
     const addresses = await address.findMany({
         where: {
             employee: {
@@ -38,10 +44,10 @@ const sendSlip = async (constructedPdf, slipDetails) => {
             `<b>Dear ${fullName}</b></br>` +
             `<p>Attached herewith, Please Find Your Salary Slip for ${fromDate.toLocaleDateString()} - ${toDate.toLocaleDateString()}. </p><br>` +
             `<p>This Payslip is brought to you by the customer</br></p>` +
-            `<p>This is an Auto generated e-mail by ${"Elhadar-PLC"}. Please don't reply.</p></br>` +
+            `<p>This is an Auto generated e-mail by ${COMPANY_NAME}. Please don't reply.</p></br>` +
             `<p>Regards,</p></br>` +
             `<p>Payroll Manager</p></br>`;
-        await sendEmail(
+        return await sendEmail(
             empAddress.email,
             "Payroll Slip",
             `SALARY SLIP - ${empAddress.employee.id_number} - ${fullName}.`,
@@ -120,7 +126,6 @@ const getSlip = async (
             }),
         },
     });
-    console.log({ payrollSummaryHistories, payrollDetailHistories });
     if (payrollSummaryHistories.length) {
         let rows = [];
         for (let i in payrollSummaryHistories) {
@@ -427,4 +432,5 @@ const numberToWords = (number) => {
 };
 module.exports = {
     getSlip,
+    sendSlip,
 };

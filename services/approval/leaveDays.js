@@ -87,6 +87,157 @@ const getLeaveBalance = async (employeeId, leaveTypeId, startDate, next) => {
     }
     return totalBalanceDays;
 };
+const getLeaveBalance2 = async (
+    employeeId,
+    leaveTypeId,
+    startDate,
+    endDate,
+    is_half_day,
+    next
+) => {
+    const leaveType = await attendance_abscence_type.findFirst({
+        where: {
+            id: leaveTypeId,
+        },
+    });
+    if (!leaveType) {
+        error("leave_type_id", "no attendance leave type exists", next);
+        return "error";
+    }
+    const employeeOne = await employee.findFirst({
+        where: {
+            id: employeeId,
+        },
+    });
+    if (!employeeOne) {
+        error("employee", "no employee exists", next);
+        return "error";
+    }
+    if (await isLeaveWithQuota(leaveType)) {
+        return true;
+    }
+    const leaveTakenDays = await getLeaveTakenDays(
+        employeeOne,
+        leaveType,
+        startDate,
+        next
+    );
+    if (leaveTakenDays === false) {
+        return "error";
+    }
+    const leaveEntitlementDays = await getLeaveEntitlementDays(
+        employeeOne,
+        leaveType,
+        startDate,
+        next
+    );
+    if (leaveTakenDays === false) {
+        return "error";
+    }
+    let usedLeaveTransferDays = 0,
+        gainedLeaveTransferDays = 0,
+        totalBalanceDays = 0;
+    if (leaveType.is_annual_leave) {
+        const usedLeaveTransfer = await leave_transfer.findMany({
+            where: {
+                employee_id: employeeOne.id,
+                from_year: startDate.getFullYear(),
+                leave_request_status: 2,
+            },
+            select: {
+                number_of_days: true,
+            },
+        });
+        for (let i in usedLeaveTransfer) {
+            usedLeaveTransferDays += usedLeaveTransfer[i].number_of_days;
+        }
+        const gainedLeaveTransfer = await leave_transfer.findMany({
+            where: {
+                employee_id: employeeOne.id,
+                to_year: startDate.getFullYear(),
+                leave_request_status: 2,
+            },
+            select: {
+                number_of_days: true,
+            },
+        });
+        for (let i in gainedLeaveTransfer) {
+            gainedLeaveTransferDays += gainedLeaveTransfer[i].number_of_days;
+        }
+        totalBalanceDays =
+            leaveEntitlementDays +
+            gainedLeaveTransferDays -
+            (leaveTakenDays + usedLeaveTransferDays);
+    }
+    let totalRequestedLeaveDays = 0;
+    if (is_half_day) {
+        totalRequestedLeaveDays = 0.5;
+    } else {
+        if (leaveType.is_absence_includes_day_off) {
+            totalRequestedLeaveDays =
+                Math.round((endDate - startDate) / (1000 * 3600 * 24)) + 1;
+        } else {
+            totalRequestedLeaveDays = await getEmployeeWorkingDays(
+                startDate,
+                endDate,
+                employeeId
+            );
+        }
+    }
+    if (totalBalanceDays < totalRequestedLeaveDays || !totalBalanceDays) {
+        return false;
+    } else {
+        return true;
+    }
+};
+const getEmployeeWorkingDays = async (startDate, endDate, employeeId) => {
+    let totalWorkingDays = 0;
+
+    for (var dt = startDate; dt <= endDate; dt = dt.AddDays(1)) {
+        for (
+            let dt = new Date(startDate);
+            dt < leaveAssignment.endDate;
+            dt.setDate(dt.getDate() + 1)
+        ) {
+            //var shift = GetEmployeeShiftSchedule(dt, employeeId);
+            //if (shift != null)
+            //	totalWorkingDays++;
+
+            //shift day
+            const shiftSchedule = await getEmployeeShiftSchedule(
+                dt,
+                employeeId
+            );
+            const holiday = await checkForHoliday(dt);
+
+            if (!shiftSchedule)
+                //day off
+                continue;
+            else if (holiday && shiftSchedule) {
+                //ignore half day holiday, half day shift
+                //ignore full day holiday, full day shift
+                //ignore full day holiday, half day shift
+
+                if (holiday.is_half_day && !shiftSchedule.is_half_day) {
+                    //half day holiday, full shift
+                    totalWorkingDays += 0.5;
+                }
+            } else if (!holiday && shiftSchedule) {
+                if (shiftSchedule.is_half_day) {
+                    //half day shift
+                    totalWorkingDays += 0.5;
+                } //full day shift
+                else {
+                    totalWorkingDays += 1;
+                }
+            } //neither holiday nor working day=> day off
+            else {
+                continue;
+            }
+        }
+    }
+    return totalWorkingDays;
+};
 const getLeaveEntitlementDays = async (
     employee,
     leaveType,
@@ -378,10 +529,34 @@ const getShiftDay = (date, shiftSchedule) => {
         return 0;
     }
 };
+/**
+ *
+ * @param {Date} startDate
+ * @param {Date} endDate
+ * @returns
+ */
+const isLeaveInTheSamePeriod = async (startDate, endDate) => {
+    const leavePeriod = await leave_period.findFirst();
+
+    let sYear = new Date(
+        `${startDate.getFullYear()}/${
+            leavePeriod.date.getMonth() + 1
+        }/${leavePeriod.date.getDate()}`
+    );
+    if (sYear > startDate) sYear.setFullYear(sYear.getFullYear() + 1);
+
+    let eYear = new Date(sYear.getFullYear() + 1);
+    eYear.setDate(eYear.getDate() - 1);
+    if (startDate >= sYear && endDate <= eYear) return true;
+
+    return false;
+};
 //users leavedays, payrollcontrol
 module.exports = {
     getLeaveBalance,
     getEmployeeShiftSchedule,
     getShiftDay,
     checkForHoliday,
+    isLeaveInTheSamePeriod,
+    getLeaveBalance2,
 };

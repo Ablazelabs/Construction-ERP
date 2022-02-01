@@ -2539,4 +2539,5 @@ module.exports = {
     postRun,
     getPost,
     postPost,
+    getEmployeeDepartment,
 };
