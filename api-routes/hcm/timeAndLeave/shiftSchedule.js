@@ -151,15 +151,20 @@ router.patch("/shift_schedule_hdr", async (req, res, next) => {
     let reqBody = {};
     try {
         reqBody = inputFilter(
-            { shiftScheduleDtls: "object", shiftScheduleHdrId: "number" },
+            { id: "number", updateData: "object" },
             {},
-            req.body,
+            req.body
+        );
+        reqBody.updateData = inputFilter(
+            { shiftScheduleDtls: "object" },
+            {},
+            req.body.updateData,
             1
         );
-        if (!Array.isArray(reqBody.shiftScheduleDtls)) {
+        if (!Array.isArray(reqBody.updateData.shiftScheduleDtls)) {
             throw { key: "shiftScheduleDtls", message: "please send array" };
         }
-        if (!reqBody.shiftScheduleDtls.length) {
+        if (!reqBody.updateData.shiftScheduleDtls.length) {
             throw {
                 key: "shiftScheduleDtls",
                 message: "array can't be empty",
@@ -169,7 +174,7 @@ router.patch("/shift_schedule_hdr", async (req, res, next) => {
         error(e.key, e.message, next);
         return;
     }
-    let { shiftScheduleDtls, shiftScheduleHdrId } = reqBody;
+    let { shiftScheduleDtls } = reqBody.updateData;
     let listError = "";
     for (let i in shiftScheduleDtls) {
         shiftScheduleDtls[i] = returnReqBody(
@@ -188,6 +193,8 @@ router.patch("/shift_schedule_hdr", async (req, res, next) => {
         if (!shiftScheduleDtls[i]) {
             return;
         }
+        delete shiftScheduleDtls[i].startDate;
+        delete shiftScheduleDtls[i].endDate;
         const item = shiftScheduleDtls[i];
         if (item.clock_in && item.clock_out) {
             if (
@@ -230,11 +237,7 @@ router.patch("/shift_schedule_hdr", async (req, res, next) => {
         return;
     }
     try {
-        const data = await put(
-            shiftScheduleHdrId,
-            shiftScheduleDtls,
-            res.locals.id
-        );
+        const data = await put(req.body.id, shiftScheduleDtls, res.locals.id);
         res.json(data);
     } catch (e) {
         console.log(e);

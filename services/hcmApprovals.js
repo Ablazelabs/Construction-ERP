@@ -95,13 +95,13 @@ const transferApproval = async (leaveList, creator, next) => {
 };
 /**
  *
- * @param {{startDate:Date, endDate:Date, employee_id:number, delegated_user_name:string}} param0
+ * @param {{startDate:Date, endDate:Date, employee_id:number, delegated_username:string}} param0
  */
 const getLeaveTransfer = async ({
     startDate,
     endDate,
     employee_id,
-    delegated_user_name,
+    delegated_username: delegated_user_name,
 }) => {
     let employeeFilter = {};
     if (employee_id) {
@@ -127,7 +127,7 @@ const getLeaveAssignment = async ({
     startDate,
     endDate,
     employee_id,
-    delegated_user_name,
+    delegated_username: delegated_user_name,
 }) => {
     let employeeFilter = {};
     if (employee_id) {
@@ -289,6 +289,12 @@ const overtimeApproval = async (leaveList, creator, next) => {
     }
     return { success: true };
 };
+/**
+ *
+ * @param {Array<{id:number,approve:boolean}>} leaveList
+ * @param {number} creator
+ * @param {Function} next
+ */
 const assignmentApproval = async (leaveList, creator, next) => {
     const leavePeriod = await leave_period.findFirst({ where: { status: 0 } });
     if (!leavePeriod) {
@@ -420,6 +426,12 @@ const assignmentApproval = async (leaveList, creator, next) => {
     }
     return { success };
 };
+/**
+ *
+ * @param {Array<{id:number,approve:boolean}>} leaveList
+ * @param {number} creator
+ * @param {Function} next
+ */
 const planApproval = async (leaveList, creator, next) => {
     const leavePeriod = await leave_period.findFirst({ where: { status: 0 } });
     if (!leavePeriod) {
@@ -535,6 +547,7 @@ const planApproval = async (leaveList, creator, next) => {
                         action_date: leavePlan.action_date,
                         leave_request_status: 2,
                         createdBy: String(creator),
+                        revisedBy: String(creator),
                     },
                 });
             } else {

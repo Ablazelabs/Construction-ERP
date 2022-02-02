@@ -11,6 +11,7 @@ const {
     attendanceApproval,
     getOvertime,
     overtimeApproval,
+    planApproval,
 } = require("../../../services/hcmApprovals");
 const inputFilter = require("../../../validation/inputFilter");
 
@@ -88,7 +89,7 @@ router.get(
                 {
                     startDate: "string",
                     endDate: "string",
-                    delegated_user_name: "string",
+                    delegated_username: "string",
                 },
                 {
                     employee_id: "number",
@@ -109,7 +110,7 @@ router.get(
                 }
             }
         } catch (e) {
-            error(e.key, e.message);
+            error(e.key, e.message, next);
             return false;
         }
         try {
@@ -117,15 +118,15 @@ router.get(
                 ? await getLeaveTransfer(reqBody)
                 : operationDataType.match(/assignment/i)
                 ? await getLeaveAssignment(reqBody)
-                : operationDataType.match(/assignment/i)
+                : operationDataType.match(/plan/i)
                 ? await getLeavePlan(reqBody)
                 : operationDataType.match(/attendance/i)
                 ? await getAttendance(reqBody)
                 : await getOvertime(reqBody);
-            if (data == false) {
+            if (data === false) {
                 return;
             }
-            return data;
+            res.json(data);
         } catch (e) {
             console.log(e);
             error("database", "error", next, 500);
@@ -314,6 +315,60 @@ router.patch("/leave_assignment_approve", async (req, res, next) => {
             return;
         } else res.json(data);
     } catch (e) {
+        error("database", "error", next, 500);
+        return false;
+    }
+});
+router.patch("/leave_plan_approve", async (req, res, next) => {
+    let reqBody;
+    try {
+        reqBody = inputFilter({ approvalPlanList: "object" }, {}, req.body, 1);
+        if (!Array.isArray(reqBody.approvalPlanList)) {
+            throw {
+                key: "approvalPlanList",
+                message: "please send array",
+            };
+        }
+        if (!reqBody.approvalPlanList.length) {
+            throw {
+                key: "approvalPlanList",
+                message: "array can't be empty",
+            };
+        }
+    } catch (e) {
+        error(e.key, e.message, next);
+        return;
+    }
+    let { approvalPlanList } = reqBody;
+    let listError = false;
+    for (let i in approvalPlanList) {
+        try {
+            approvalPlanList[i] = inputFilter(
+                arrayInput,
+                {},
+                approvalPlanList[i]
+            );
+        } catch (e) {
+            console.log(e);
+            listError = true;
+            break;
+        }
+    }
+    if (listError) {
+        error(
+            "approvalPlanList",
+            "some inputs don't have id(int), approve(bool) format",
+            next
+        );
+        return;
+    }
+    try {
+        const data = await planApproval(approvalPlanList, res.locals.id, next);
+        if (!data) {
+            return;
+        } else res.json(data);
+    } catch (e) {
+        console.log(e);
         error("database", "error", next, 500);
         return false;
     }

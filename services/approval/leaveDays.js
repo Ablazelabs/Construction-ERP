@@ -545,11 +545,10 @@ const isLeaveInTheSamePeriod = async (startDate, endDate) => {
     );
     if (sYear > startDate) sYear.setFullYear(sYear.getFullYear() + 1);
 
-    let eYear = new Date(sYear.getFullYear() + 1);
+    let eYear = new Date();
+    eYear.setFullYear(sYear.getFullYear() + 1);
     eYear.setDate(eYear.getDate() - 1);
-    if (startDate >= sYear && endDate <= eYear) return true;
-
-    return false;
+    return startDate >= sYear && endDate <= eYear;
 };
 //users leavedays, payrollcontrol
 module.exports = {
