@@ -5,6 +5,7 @@ const {
     getRelease,
     postRelease,
     postCreate,
+    getCreate,
 } = require("../../../services/attendanceSheet");
 
 const { returnReqBody } = require("../../../validation/basicValidators");
@@ -53,7 +54,7 @@ router.get("/release", async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
-router.post("release", async () => {
+router.post("/release", async () => {
     try {
         reqBody = inputFilter(
             {
@@ -157,7 +158,7 @@ router.get("/create", async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
-router.post("create", async () => {
+router.post("/create", async () => {
     try {
         reqBody = inputFilter(
             {

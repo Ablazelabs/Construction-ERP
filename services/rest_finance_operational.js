@@ -23,6 +23,15 @@ const {
     asset,
     general_journal_detail,
     recurring_general_journal,
+    cash_payment_custom,
+    cash_payment_voucher,
+    cpv_bank,
+    cpv_payment_request,
+    cpv_receipt,
+    cpv_type,
+    petty_cash,
+    crv_payment,
+    crv_type,
 } = models;
 
 const allModels = {
@@ -47,6 +56,15 @@ const allModels = {
     asset,
     general_journal_detail,
     recurring_general_journal,
+    cash_payment_custom,
+    cash_payment_voucher,
+    cpv_bank,
+    cpv_payment_request,
+    cpv_receipt,
+    cpv_type,
+    petty_cash,
+    crv_payment,
+    crv_type,
 };
 const generatedStrings = {
     chart_of_account: {},
@@ -230,6 +248,7 @@ const post = async (reqBody, operationDataType, creator, next) => {
         //   console.log(data);
         return { success: true };
     } catch (e) {
+        console.log(e);
         if (e.meta.field_name) {
             const fieldModel = e.meta.field_name
                 .replace("_id", "")

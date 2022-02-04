@@ -79,7 +79,16 @@
         "opening_balance": {
             "opening_balance_date": "string",
             "month": "number"
-        }
+        },
+        "cash_payment_custom": { "date": "string" },
+        "cash_payment_voucher": { "date": "string" },
+        "cpv_bank": { "name": "string" },
+        "cpv_payment_request": { "date": "string" },
+        "cpv_receipt": { "date": "string" },
+        "cpv_type": { "name": "string", "description": "string" },
+        "petty_cash": { "date": "string" },
+        "crv_payment": {},
+        "crv_type": { "name": "string" }
     },
     "enums": {
         "chart_of_account": {},
@@ -180,7 +189,28 @@
                 "december",
                 "other"
             ]
-        }
+        },
+        "cash_payment_custom": {},
+        "cash_payment_voucher": {},
+        "cpv_bank": {},
+        "cpv_payment_request": {},
+        "cpv_receipt": {},
+        "cpv_type": {
+            "cpv_types": [
+                "PettyCash",
+                "Receipt",
+                "Transportation",
+                "House_Rent",
+                "Per_Diem",
+                "Allownace",
+                "Food_Expenses",
+                "Sponsorship",
+                "Other"
+            ]
+        },
+        "petty_cash": {},
+        "crv_payment": {},
+        "crv_type": { "crv_types": ["Cash", "Check"] }
     },
     "allOptionalInputFilters": {
         "chart_of_account": {
@@ -267,7 +297,81 @@
             "recurring_journal_occurrence_id": "number"
         },
         "transaction_lock": { "enable_transaction_locking": "boolean" },
-        "opening_balance": { "price_precision": "number", "amount": "number" }
+        "opening_balance": { "price_precision": "number", "amount": "number" },
+        "cash_payment_custom": {
+            "customer": "string",
+            "amount": "number",
+            "tin_number": "string",
+            "tax": "number",
+            "withholding": "number",
+            "merchant_record_card_code": "string",
+            "number": "string"
+        },
+        "cash_payment_voucher": {
+            "paid_to": "string",
+            "amount": "number",
+            "description": "string",
+            "check_number": "string",
+            "pv_number": "number",
+            "remaining_balance": "number",
+            "cpv_bank_id": "number",
+            "prepared_by_id": "number",
+            "checked_by_id": "number",
+            "project_id": "number",
+            "cpv_type_id": "number",
+            "request_payment_id": "number"
+        },
+        "cpv_bank": { "description": "string" },
+        "cpv_payment_request": {
+            "amount": "number",
+            "description": "string",
+            "check_number": "string",
+            "remaining_balance": "number",
+            "from_id": "number",
+            "project_id": "number",
+            "prepared_by_id": "number",
+            "checked_by_id": "number",
+            "approved_by_id": "number",
+            "cash_payment_voucher_id": "number"
+        },
+        "cpv_receipt": {
+            "company_name": "string",
+            "tin_number": "string",
+            "amount": "number",
+            "vat": "number",
+            "withholding": "number",
+            "machine_code": "string",
+            "receipt_number": "string",
+            "cash_payment_voucher_id": "number"
+        },
+        "cpv_type": { "cpv_types": "number" },
+        "petty_cash": {
+            "pcpv": "string",
+            "remark": "string",
+            "description": "string",
+            "debit": "number",
+            "credit": "number",
+            "balance": "number",
+            "project_id": "number",
+            "issued_by_id": "number",
+            "cash_payment_voucher_id": "number"
+        },
+        "crv_payment": {
+            "date": "string",
+            "name": "string",
+            "customer_name": "string",
+            "description": "string",
+            "amount_before_vat": "number",
+            "vat": "number",
+            "amount_with_vat": "number",
+            "payment_description": "string",
+            "withholding": "number",
+            "check_amount": "number",
+            "cash_amount": "number",
+            "project_id": "number",
+            "crv_type_id": "number"
+        },
+        "crv_type": { "description": "string", "crv_types": "number" }
     },
     "allRangeValues": {},
     "phoneValues": {
@@ -331,7 +435,16 @@
         "number_tracker": [],
         "recurring_general_journal": ["start_on", "end_on"],
         "transaction_lock": ["lock_date"],
-        "opening_balance": ["opening_balance_date"]
+        "opening_balance": ["opening_balance_date"],
+        "cash_payment_custom": ["date"],
+        "cash_payment_voucher": ["date"],
+        "cpv_bank": [],
+        "cpv_payment_request": ["date"],
+        "cpv_receipt": ["date"],
+        "cpv_type": [],
+        "petty_cash": ["date"],
+        "crv_payment": ["date"],
+        "crv_type": []
     },
     "allProjections": {
         "chart_of_account_files": {
@@ -527,6 +640,101 @@
             "price_precision": true,
             "amount": true,
             "month": true
+        },
+        "cash_payment_custom": {
+            "id": true,
+            "date": true,
+            "customer": true,
+            "amount": true,
+            "tin_number": true,
+            "tax": true,
+            "withholding": true,
+            "merchant_record_card_code": true,
+            "number": true
+        },
+        "cash_payment_voucher": {
+            "id": true,
+            "date": true,
+            "paid_to": true,
+            "amount": true,
+            "description": true,
+            "check_number": true,
+            "pv_number": true,
+            "remaining_balance": true,
+            "cpv_bank": true,
+            "prepared_by": true,
+            "checked_by": true,
+            "project": true,
+            "cpv_type": true,
+            "request_payment": true
+        },
+        "cpv_bank": { "id": true, "name": true, "description": true },
+        "cpv_payment_request": {
+            "id": true,
+            "date": true,
+            "amount": true,
+            "description": true,
+            "check_number": true,
+            "remaining_balance": true,
+            "from": true,
+            "project": true,
+            "prepared_by": true,
+            "checked_by": true,
+            "approved_by": true,
+            "cash_payment_voucher": true
+        },
+        "cpv_receipt": {
+            "id": true,
+            "date": true,
+            "company_name": true,
+            "tin_number": true,
+            "amount": true,
+            "vat": true,
+            "withholding": true,
+            "machine_code": true,
+            "receipt_number": true,
+            "cash_payment_voucher": true
+        },
+        "cpv_type": {
+            "id": true,
+            "name": true,
+            "description": true,
+            "cpv_types": true
+        },
+        "petty_cash": {
+            "id": true,
+            "date": true,
+            "pcpv": true,
+            "remark": true,
+            "description": true,
+            "debit": true,
+            "credit": true,
+            "balance": true,
+            "project": true,
+            "issued_by": true,
+            "cash_payment_voucher": true
+        },
+        "crv_payment": {
+            "id": true,
+            "date": true,
+            "name": true,
+            "customer_name": true,
+            "description": true,
+            "amount_before_vat": true,
+            "vat": true,
+            "amount_with_vat": true,
+            "payment_description": true,
+            "withholding": true,
+            "check_amount": true,
+            "cash_amount": true,
+            "project": true,
+            "crv_type": true
+        },
+        "crv_type": {
+            "id": true,
+            "name": true,
+            "description": true,
+            "crv_types": true
         }
     },
     "allFilters": {
@@ -705,6 +913,99 @@
             "price_precision": "number",
             "amount": "number",
             "month": "number"
+        },
+        "cash_payment_custom": {
+            "id": "number",
+            "customer": "string",
+            "amount": "number",
+            "tin_number": "string",
+            "tax": "number",
+            "withholding": "number",
+            "merchant_record_card_code": "string",
+            "number": "string"
+        },
+        "cash_payment_voucher": {
+            "id": "number",
+            "paid_to": "string",
+            "amount": "number",
+            "description": "string",
+            "check_number": "string",
+            "pv_number": "number",
+            "remaining_balance": "number",
+            "cpv_bank_id": "number",
+            "prepared_by_id": "number",
+            "checked_by_id": "number",
+            "project_id": "number",
+            "cpv_type_id": "number",
+            "request_payment_id": "number"
+        },
+        "cpv_bank": {
+            "id": "number",
+            "name": "string",
+            "description": "string"
+        },
+        "cpv_payment_request": {
+            "id": "number",
+            "amount": "number",
+            "description": "string",
+            "check_number": "string",
+            "remaining_balance": "number",
+            "from_id": "number",
+            "project_id": "number",
+            "prepared_by_id": "number",
+            "checked_by_id": "number",
+            "approved_by_id": "number",
+            "cash_payment_voucher_id": "number"
+        },
+        "cpv_receipt": {
+            "id": "number",
+            "company_name": "string",
+            "tin_number": "string",
+            "amount": "number",
+            "vat": "number",
+            "withholding": "number",
+            "machine_code": "string",
+            "receipt_number": "string",
+            "cash_payment_voucher_id": "number"
+        },
+        "cpv_type": {
+            "id": "number",
+            "name": "string",
+            "description": "string",
+            "cpv_types": "number"
+        },
+        "petty_cash": {
+            "id": "number",
+            "pcpv": "string",
+            "remark": "string",
+            "description": "string",
+            "debit": "number",
+            "credit": "number",
+            "balance": "number",
+            "project_id": "number",
+            "issued_by_id": "number",
+            "cash_payment_voucher_id": "number"
+        },
+        "crv_payment": {
+            "id": "number",
+            "name": "string",
+            "customer_name": "string",
+            "description": "string",
+            "amount_before_vat": "number",
+            "vat": "number",
+            "amount_with_vat": "number",
+            "payment_description": "string",
+            "withholding": "number",
+            "check_amount": "number",
+            "cash_amount": "number",
+            "project_id": "number",
+            "crv_type_id": "number"
+        },
+        "crv_type": {
+            "id": "number",
+            "name": "string",
+            "description": "string",
+            "crv_types": "number"
         }
     },
     "allSorts": {
@@ -901,6 +1202,105 @@
             "price_precision": "number",
             "amount": "number",
             "month": "number"
+        },
+        "cash_payment_custom": {
+            "id": "number",
+            "date": "number",
+            "customer": "number",
+            "amount": "number",
+            "tin_number": "number",
+            "tax": "number",
+            "withholding": "number",
+            "merchant_record_card_code": "number",
+            "number": "number"
+        },
+        "cash_payment_voucher": {
+            "id": "number",
+            "date": "number",
+            "paid_to": "number",
+            "amount": "number",
+            "description": "number",
+            "check_number": "number",
+            "pv_number": "number",
+            "remaining_balance": "number",
+            "cpv_bank_id": "number",
+            "prepared_by_id": "number",
+            "checked_by_id": "number",
+            "project_id": "number",
+            "cpv_type_id": "number",
+            "request_payment_id": "number"
+        },
+        "cpv_bank": {
+            "id": "number",
+            "name": "number",
+            "description": "number"
+        },
+        "cpv_payment_request": {
+            "id": "number",
+            "date": "number",
+            "amount": "number",
+            "description": "number",
+            "check_number": "number",
+            "remaining_balance": "number",
+            "from_id": "number",
+            "project_id": "number",
+            "prepared_by_id": "number",
+            "checked_by_id": "number",
+            "approved_by_id": "number",
+            "cash_payment_voucher_id": "number"
+        },
+        "cpv_receipt": {
+            "id": "number",
+            "date": "number",
+            "company_name": "number",
+            "tin_number": "number",
+            "amount": "number",
+            "vat": "number",
+            "withholding": "number",
+            "machine_code": "number",
+            "receipt_number": "number",
+            "cash_payment_voucher_id": "number"
+        },
+        "cpv_type": {
+            "id": "number",
+            "name": "number",
+            "description": "number",
+            "cpv_types": "number"
+        },
+        "petty_cash": {
+            "id": "number",
+            "date": "number",
+            "pcpv": "number",
+            "remark": "number",
+            "description": "number",
+            "debit": "number",
+            "credit": "number",
+            "balance": "number",
+            "project_id": "number",
+            "issued_by_id": "number",
+            "cash_payment_voucher_id": "number"
+        },
+        "crv_payment": {
+            "id": "number",
+            "date": "number",
+            "name": "number",
+            "customer_name": "number",
+            "description": "number",
+            "amount_before_vat": "number",
+            "vat": "number",
+            "amount_with_vat": "number",
+            "payment_description": "number",
+            "withholding": "number",
+            "check_amount": "number",
+            "cash_amount": "number",
+            "project_id": "number",
+            "crv_type_id": "number"
+        },
+        "crv_type": {
+            "id": "number",
+            "name": "number",
+            "description": "number",
+            "crv_types": "number"
         }
     },
     "allRoutes": [
@@ -924,7 +1324,16 @@
         "/asset",
         "/general_journal_detail",
         "/general_journal_files",
-        "/recurring_general_journal"
+        "/recurring_general_journal",
+        "/cash_payment_custom",
+        "/cash_payment_voucher",
+        "/cpv_bank",
+        "/cpv_payment_request",
+        "/cpv_receipt",
+        "/cpv_type",
+        "/petty_cash",
+        "/crv_payment",
+        "/crv_type"
     ],
     "allPostRoutes": [
         "/chart_of_account",
@@ -945,6 +1354,15 @@
         "/reconcilation_transaction",
         "/asset",
         "/general_journal_detail",
-        "/recurring_general_journal"
+        "/recurring_general_journal",
+        "/cash_payment_custom",
+        "/cash_payment_voucher",
+        "/cpv_bank",
+        "/cpv_payment_request",
+        "/cpv_receipt",
+        "/cpv_type",
+        "/petty_cash",
+        "/crv_payment",
+        "/crv_type"
     ]
 }

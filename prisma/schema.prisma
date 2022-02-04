@@ -148,6 +148,8 @@ model manpower {
   isProtectedForEdit    Boolean                @default(false)
   manpower_requirements manpower_requirement[]
   weather_data          weather_data[]
+  cpv_payment_request   cpv_payment_request[]
+  request_payment       request_payment[]
 }
 
 model material_category {
@@ -297,6 +299,10 @@ model project {
   todos                        todos[]
   request                      request[]
   required_document            required_document[]
+  cash_payment_voucher         cash_payment_voucher[]
+  cpv_payment_request          cpv_payment_request[]
+  crv_payment                  crv_payment[]
+  request_payment              request_payment[]
 }
 
 model daily_work_log {
@@ -1549,6 +1555,277 @@ model opening_balance {
   month                Int
 }
 
+model cash_payment_custom {
+  startDate                 DateTime
+  endDate                   DateTime
+  creationDate              DateTime @default(now())
+  createdBy                 String
+  revisionDate              DateTime @updatedAt
+  revisedBy                 String
+  status                    Int      @default(0)
+  isProtectedForEdit        Boolean  @default(false)
+  id                        Int      @id @default(autoincrement())
+  date                      DateTime
+  customer                  String?
+  amount                    Float?
+  tin_number                String?
+  tax                       Float?
+  withholding               Float?
+  merchant_record_card_code String?
+  number                    String?
+}
+
+model cash_payment_voucher {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime              @default(now())
+  createdBy           String
+  revisionDate        DateTime              @updatedAt
+  revisedBy           String
+  status              Int                   @default(0)
+  isProtectedForEdit  Boolean               @default(false)
+  id                  Int                   @id @default(autoincrement())
+  date                DateTime
+  paid_to             String?
+  amount              Float?
+  description         String?
+  check_number        String?
+  pv_number           Int?
+  remaining_balance   Int?
+  cpv_bank_id         Int?
+  prepared_by_id      Int?
+  checked_by_id       Int?
+  project_id          Int?
+  cpv_type_id         Int?
+  request_payment_id  Int?
+  cpv_bank            cpv_bank?             @relation(fields: [cpv_bank_id], references: [id])
+  checked_by          employee?             @relation(fields: [checked_by_id], references: [id])
+  project             project?              @relation(fields: [project_id], references: [id])
+  cpv_type            cpv_type?             @relation(fields: [cpv_type_id], references: [id])
+  //
+  //
+  //
+  //
+  // request_payment            request_payment?             @relation(fields: [request_payment_id], references: [id])
+  //
+  //
+  //
+  //
+  //huge error here(tables reference eachother)
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //needs	cpv_bank
+  //needs	employee(preparedBy checkedBy)
+  //needs	project
+  //needs	cpv_type
+  //needs	request_payment
+  //create this model it isn't in project operational
+  cpv_payment_request cpv_payment_request[]
+  cpv_receipt         cpv_receipt[]
+  petty_cash          petty_cash[]
+  request_payment     request_payment[]
+}
+
+model request_payment {
+  startDate               DateTime
+  endDate                 DateTime
+  creationDate            DateTime              @default(now())
+  createdBy               String
+  revisionDate            DateTime              @updatedAt
+  revisedBy               String
+  status                  Int                   @default(0)
+  isProtectedForEdit      Boolean               @default(false)
+  id                      Int                   @id @default(autoincrement())
+  date                    DateTime
+  amount                  Float?
+  request_type            Int?
+  approval_status         Int?
+  description             String?
+  check_number            String?
+  remaining_balance       Int?
+  prepared_by_id          Int?
+  checked_by_id           Int?
+  approved_by_id          Int?
+  project_id              Int?
+  cash_payment_voucher_id Int?
+  from_id                 Int?
+  from                    manpower?             @relation(fields: [from_id], references: [id])
+  project                 project?              @relation(fields: [project_id], references: [id])
+  prepared_by             employee?             @relation(fields: [prepared_by_id], references: [id], name: "prepared_by_req_pay")
+  checked_by              employee?             @relation(fields: [checked_by_id], references: [id], name: "checked_by_req_pay")
+  approved_by             employee?             @relation(fields: [approved_by_id], references: [id], name: "approved_by_req_pay")
+  cash_payment_voucher    cash_payment_voucher? @relation(fields: [cash_payment_voucher_id], references: [id])
+  //needs project
+  //needs employee(prepared_by, approved_by, checked_by)
+  //needs cash_payment_voucher
+  //needs manpower(from)
+}
+
+model cpv_bank {
+  startDate            DateTime
+  endDate              DateTime
+  creationDate         DateTime               @default(now())
+  createdBy            String
+  revisionDate         DateTime               @updatedAt
+  revisedBy            String
+  status               Int                    @default(0)
+  isProtectedForEdit   Boolean                @default(false)
+  id                   Int                    @id @default(autoincrement())
+  name                 String
+  description          String?
+  cash_payment_voucher cash_payment_voucher[]
+}
+
+model cpv_payment_request {
+  startDate               DateTime
+  endDate                 DateTime
+  creationDate            DateTime              @default(now())
+  createdBy               String
+  revisionDate            DateTime              @updatedAt
+  revisedBy               String
+  status                  Int                   @default(0)
+  isProtectedForEdit      Boolean               @default(false)
+  id                      Int                   @id @default(autoincrement())
+  date                    DateTime
+  amount                  Float?
+  description             String?
+  check_number            String?
+  remaining_balance       Int?
+  from_id                 Int?
+  project_id              Int?
+  prepared_by_id          Int?
+  checked_by_id           Int?
+  approved_by_id          Int?
+  cash_payment_voucher_id Int?
+  from                    manpower?             @relation(fields: [from_id], references: [id])
+  project                 project?              @relation(fields: [project_id], references: [id])
+  prepared_by             employee?             @relation(fields: [prepared_by_id], references: [id], name: "prepared_by")
+  checked_by              employee?             @relation(fields: [checked_by_id], references: [id], name: "checked_by")
+  approved_by             employee?             @relation(fields: [approved_by_id], references: [id], name: "approved_by")
+  cash_payment_voucher    cash_payment_voucher? @relation(fields: [cash_payment_voucher_id], references: [id])
+}
+
+model cpv_receipt {
+  startDate               DateTime
+  endDate                 DateTime
+  creationDate            DateTime              @default(now())
+  createdBy               String
+  revisionDate            DateTime              @updatedAt
+  revisedBy               String
+  status                  Int                   @default(0)
+  isProtectedForEdit      Boolean               @default(false)
+  id                      Int                   @id @default(autoincrement())
+  date                    DateTime
+  company_name            String?
+  tin_number              String?
+  amount                  Float?
+  vat                     Float?
+  withholding             Float?
+  machine_code            String?
+  receipt_number          String?
+  cash_payment_voucher_id Int?
+  cash_payment_voucher    cash_payment_voucher? @relation(fields: [cash_payment_voucher_id], references: [id])
+  //needs cash_payment_voucher
+}
+
+model cpv_type {
+  startDate            DateTime
+  endDate              DateTime
+  creationDate         DateTime               @default(now())
+  createdBy            String
+  revisionDate         DateTime               @updatedAt
+  revisedBy            String
+  status               Int                    @default(0)
+  isProtectedForEdit   Boolean                @default(false)
+  id                   Int                    @id @default(autoincrement())
+  name                 String
+  description          String
+  cpv_types            Int?
+  cash_payment_voucher cash_payment_voucher[]
+}
+
+model petty_cash {
+  startDate               DateTime
+  endDate                 DateTime
+  creationDate            DateTime              @default(now())
+  createdBy               String
+  revisionDate            DateTime              @updatedAt
+  revisedBy               String
+  status                  Int                   @default(0)
+  isProtectedForEdit      Boolean               @default(false)
+  id                      Int                   @id @default(autoincrement())
+  date                    DateTime
+  pcpv                    String?
+  remark                  String?
+  description             String?
+  debit                   Float?
+  credit                  Float?
+  balance                 Float?
+  project_id              Int?
+  issued_by_id            Int?
+  cash_payment_voucher_id Int?
+  cash_payment_voucher    cash_payment_voucher? @relation(fields: [cash_payment_voucher_id], references: [id])
+
+  //needs cash_payment_voucher
+  //needs project
+  //needs employee(issued_by)
+}
+
+model crv_payment {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime  @default(now())
+  createdBy           String
+  revisionDate        DateTime  @updatedAt
+  revisedBy           String
+  status              Int       @default(0)
+  isProtectedForEdit  Boolean   @default(false)
+  id                  Int       @id @default(autoincrement())
+  date                DateTime?
+  name                String?
+  customer_name       String?
+  description         String?
+  amount_before_vat   Float?
+  vat                 Float?
+  amount_with_vat     Float?
+  payment_description String?
+  withholding         Float?
+  check_amount        Float?
+  cash_amount         Float?
+  project_id          Int?
+  crv_type_id         Int?
+  project             project?  @relation(fields: [project_id], references: [id])
+  crv_type            crv_type? @relation(fields: [crv_type_id], references: [id])
+
+  //needs project
+  //needs crv_type
+}
+
+model crv_type {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime      @default(now())
+  createdBy          String
+  revisionDate       DateTime      @updatedAt
+  revisedBy          String
+  status             Int           @default(0)
+  isProtectedForEdit Boolean       @default(false)
+  id                 Int           @id @default(autoincrement())
+  name               String
+  description        String?
+  crv_types          Int?
+  crv_payment        crv_payment[]
+}
+
 model reconcilation_transaction {
   startDate             DateTime
   endDate               DateTime
@@ -2200,6 +2477,16 @@ model employee {
   leave_plan                       leave_plan[]
   punch                            punch[]
   punch_time                       punch_time[]
+  cash_payment_voucher             cash_payment_voucher[]
+  payment_preparers                cpv_payment_request[]              @relation("prepared_by")
+  payment_checkers                 cpv_payment_request[]              @relation("checked_by")
+  payment_requests                 cpv_payment_request[]              @relation("approved_by")
+  // request_payment_prepared_by      request_payment[]                  @relation("prepared_by")
+  // request_payment_checked_by       request_payment[]                  @relation("checked_by")
+  // request_payment_approved_by      request_payment[]                  @relation("approved_by")
+  request_payment_prepared_by      request_payment[]                  @relation("prepared_by_req_pay")
+  request_payment_checked_by       request_payment[]                  @relation("checked_by_req_pay")
+  request_payment_approved_by      request_payment[]                  @relation("approved_by_req_pay")
 }
 
 model employee_action {

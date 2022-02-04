@@ -16,7 +16,6 @@ const meta = require("./jobPosCompStrucRecru.json");
  * @param {Response<any, Record<string, any>, number>} res
  * @param {NextFunction} next
  * @param {boolean} create
- * @returns
  */
 const createAndEdit = async (req, res, next, create) => {
     const operationDataType = "vacancy_applicant";
@@ -91,6 +90,7 @@ const createAndEdit = async (req, res, next, create) => {
         return;
     }
 };
+
 router.post("/vacancy_result", async (req, res, next) => {
     return await createAndEdit(req, res, next, true);
 });
@@ -109,7 +109,10 @@ router.get("/vacancy_result", async (req, res, next) => {
         sorts = meta.allSorts.vacancy_applicant,
         projections = meta.allProjections.vacancy_applicant;
     const getData = returnGetData(
-        { ...req.body, filter: { vacancy_id: req.body.vacancy_id } },
+        {
+            ...req.body,
+            filter: { ...req.body.filter, vacancy_id: req.body.vacancy_id },
+        },
         { filters, sorts, projections },
         next
     );

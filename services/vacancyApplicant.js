@@ -9,7 +9,7 @@ const post = async (
     next,
     sendId = false
 ) => {
-    if (operationDataType === "vacancy_applicant") {
+    if (operationDataType === "vacancy_applicant" && reqBody.employee_id) {
         const vacApp = await vacancy_applicant.findFirst({
             where: {
                 vacancy_id: reqBody.vacancy_id,

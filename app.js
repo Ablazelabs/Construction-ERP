@@ -34,7 +34,6 @@ const employeeAction = require("./api-routes/hcm/employee_master/employeeAction"
 const initialHiring = require("./api-routes/hcm/employee_master/initialHiring");
 const hcmApprovals = require("./api-routes/hcm/employee_master/hcmApprovals");
 const employeeActionMeasure = require("./api-routes/hcm/employee_master/employeeActionMeasure");
-
 const hcmVacancyApplicant = require("./api-routes/hcm/jobPosCompStrucRecru/vacancyApplicant");
 const hcmVacancyExaminer = require("./api-routes/hcm/jobPosCompStrucRecru/vacancyExaminer");
 const hcmVacancyResult = require("./api-routes/hcm/jobPosCompStrucRecru/vacancyResult");
@@ -50,8 +49,11 @@ const paygradeScale = require("./api-routes/hcm/payroll/paygradeScale");
 const payrollControl = require("./api-routes/hcm/payroll/payrollControl");
 const accountMapping = require("./api-routes/hcm/payroll/accountMapping");
 const paygradeSalaryComponent = require("./api-routes/hcm/payroll/paygradeSalaryComponent");
+
+const attendanceSheet = require("./api-routes/hcm/timeAndLeave/attendanceSheet");
 const hcmShiftSchedule = require("./api-routes/hcm/timeAndLeave/shiftSchedule");
 const hcmTimeAndLeave = require("./api-routes/hcm/timeAndLeave/hcmTimeAndLeave");
+
 const inventMasterAndStock = require("./api-routes/inventory/masterAndStock/inventMasterAndStock");
 const cors = require("cors");
 
@@ -125,6 +127,7 @@ app.use("/hcm/payroll", hcmPayrollSlip);
 app.use("/hcm/payroll", hcmPayroll);
 app.use("/hcm/payroll", employeePayscaleUpload);
 
+app.use("/hcm/time_and_leave/attendance_payroll", attendanceSheet);
 app.use("/hcm/time_and_leave", hcmShiftSchedule);
 app.use("/hcm/time_and_leave", hcmTimeAndLeave);
 

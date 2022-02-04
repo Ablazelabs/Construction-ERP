@@ -486,8 +486,8 @@
                         "schema": {
                             "type": "object",
                             "properties": {
-                                "from_date": { "type": "Datetime?" },
-                                "to_date": { "type": "Datetime?" },
+                                "from_date": { "type": "DateTime?" },
+                                "to_date": { "type": "DateTime?" },
                                 "closing_amount": { "type": "Float?" },
                                 "chart_of_account_id": { "type": "Int" },
                                 "isProtectedForEdit": { "type": "boolean" }
@@ -571,8 +571,8 @@
                                 "type": "object",
                                 "properties": {
                                     "id": { "type": "Int" },
-                                    "from_date": { "type": "Datetime?" },
-                                    "to_date": { "type": "Datetime?" },
+                                    "from_date": { "type": "DateTime?" },
+                                    "to_date": { "type": "DateTime?" },
                                     "closing_amount": { "type": "Float?" },
                                     "chart_of_account_id": { "type": "Int" },
                                     "startDate": { "type": "string" },
@@ -603,8 +603,8 @@
                                 "updateData": {
                                     "type": "object",
                                     "properties": {
-                                        "from_date": { "type": "Datetime?" },
-                                        "to_date": { "type": "Datetime?" },
+                                        "from_date": { "type": "DateTime?" },
+                                        "to_date": { "type": "DateTime?" },
                                         "closing_amount": { "type": "Float?" },
                                         "chart_of_account_id": {
                                             "type": "Int"
@@ -1057,11 +1057,11 @@
                             "properties": {
                                 "name": { "type": "String" },
                                 "tag_number": { "type": "String" },
-                                "acquisition_date": { "type": "Datetime?" },
+                                "acquisition_date": { "type": "DateTime?" },
                                 "description": { "type": "String" },
                                 "economic_value": { "type": "Float" },
                                 "depreciation_methods": { "type": "Int" },
-                                "useful_life": { "type": "Datetime" },
+                                "useful_life": { "type": "DateTime" },
                                 "current_value": { "type": "Float" },
                                 "asset_type": { "type": "Int" },
                                 "asset_status": { "type": "Int" },
@@ -1198,11 +1198,11 @@
                                     "id": { "type": "Int" },
                                     "name": { "type": "String" },
                                     "tag_number": { "type": "String" },
-                                    "acquisition_date": { "type": "Datetime?" },
+                                    "acquisition_date": { "type": "DateTime?" },
                                     "description": { "type": "String" },
                                     "economic_value": { "type": "Float" },
                                     "depreciation_methods": { "type": "Int" },
-                                    "useful_life": { "type": "Datetime" },
+                                    "useful_life": { "type": "DateTime" },
                                     "current_value": { "type": "Float" },
                                     "asset_type": { "type": "Int" },
                                     "asset_status": { "type": "Int" },
@@ -1252,14 +1252,14 @@
                                         "name": { "type": "String" },
                                         "tag_number": { "type": "String" },
                                         "acquisition_date": {
-                                            "type": "Datetime?"
+                                            "type": "DateTime?"
                                         },
                                         "description": { "type": "String" },
                                         "economic_value": { "type": "Float" },
                                         "depreciation_methods": {
                                             "type": "Int"
                                         },
-                                        "useful_life": { "type": "Datetime" },
+                                        "useful_life": { "type": "DateTime" },
                                         "current_value": { "type": "Float" },
                                         "asset_type": { "type": "Int" },
                                         "asset_status": { "type": "Int" },
@@ -1715,7 +1715,7 @@
                             "properties": {
                                 "name": { "type": "String?" },
                                 "fiscal_year": {
-                                    "type": "Datetime @default(now())"
+                                    "type": "DateTime @default(now())"
                                 },
                                 "budget_reason": { "type": "Int" },
                                 "project_name": { "type": "String?" },
@@ -1803,7 +1803,7 @@
                                     "id": { "type": "Int" },
                                     "name": { "type": "String?" },
                                     "fiscal_year": {
-                                        "type": "Datetime @default(now())"
+                                        "type": "DateTime @default(now())"
                                     },
                                     "budget_reason": { "type": "Int" },
                                     "project_name": { "type": "String?" },
@@ -1838,7 +1838,7 @@
                                     "properties": {
                                         "name": { "type": "String?" },
                                         "fiscal_year": {
-                                            "type": "Datetime @default(now())"
+                                            "type": "DateTime @default(now())"
                                         },
                                         "budget_reason": { "type": "Int" },
                                         "project_name": { "type": "String?" },
@@ -2917,7 +2917,7 @@
                         "schema": {
                             "type": "object",
                             "properties": {
-                                "journal_date": { "type": "Datetime" },
+                                "journal_date": { "type": "DateTime" },
                                 "posting_reference": {
                                     "type": "String @unique"
                                 },
@@ -3055,7 +3055,7 @@
                                 "type": "object",
                                 "properties": {
                                     "id": { "type": "Int" },
-                                    "journal_date": { "type": "Datetime" },
+                                    "journal_date": { "type": "DateTime" },
                                     "posting_reference": {
                                         "type": "String @unique"
                                     },
@@ -3105,7 +3105,7 @@
                                 "updateData": {
                                     "type": "object",
                                     "properties": {
-                                        "journal_date": { "type": "Datetime" },
+                                        "journal_date": { "type": "DateTime" },
                                         "posting_reference": {
                                             "type": "String @unique"
                                         },
@@ -3209,9 +3209,9 @@
                                     "type": "String @unique"
                                 },
                                 "description": { "type": "String?" },
-                                "journal_date": { "type": "Datetime" },
+                                "journal_date": { "type": "DateTime" },
                                 "posting_date": {
-                                    "type": "Datetime @default(now)"
+                                    "type": "DateTime @default(now)"
                                 },
                                 "currency_id": { "type": "Int" },
                                 "tax_id": { "type": "Int?" },
@@ -3336,9 +3336,9 @@
                                         "type": "String @unique"
                                     },
                                     "description": { "type": "String?" },
-                                    "journal_date": { "type": "Datetime" },
+                                    "journal_date": { "type": "DateTime" },
                                     "posting_date": {
-                                        "type": "Datetime @default(now)"
+                                        "type": "DateTime @default(now)"
                                     },
                                     "currency_id": { "type": "Int" },
                                     "tax_id": { "type": "Int?" },
@@ -3385,9 +3385,9 @@
                                             "type": "String @unique"
                                         },
                                         "description": { "type": "String?" },
-                                        "journal_date": { "type": "Datetime" },
+                                        "journal_date": { "type": "DateTime" },
                                         "posting_date": {
-                                            "type": "Datetime @default(now)"
+                                            "type": "DateTime @default(now)"
                                         },
                                         "currency_id": { "type": "Int" },
                                         "tax_id": { "type": "Int?" },
@@ -3467,7 +3467,7 @@
                             "type": "object",
                             "properties": {
                                 "commented_date": {
-                                    "type": "Datetime @default(now())"
+                                    "type": "DateTime @default(now())"
                                 },
                                 "comment": { "type": "String" },
                                 "application_user_id": { "type": "Int" },
@@ -3572,7 +3572,7 @@
                                 "properties": {
                                     "id": { "type": "Int" },
                                     "commented_date": {
-                                        "type": "Datetime @default(now())"
+                                        "type": "DateTime @default(now())"
                                     },
                                     "comment": { "type": "String" },
                                     "application_user_id": { "type": "Int" },
@@ -3612,7 +3612,7 @@
                                     "type": "object",
                                     "properties": {
                                         "commented_date": {
-                                            "type": "Datetime @default(now())"
+                                            "type": "DateTime @default(now())"
                                         },
                                         "comment": { "type": "String" },
                                         "application_user_id": {
@@ -3693,6 +3693,7 @@
                         "schema": {
                             "type": "object",
                             "properties": {
+                                "Id": { "type": "Int" },
                                 "prefix": { "type": "String?" },
                                 "starting_number": { "type": "Int" },
                                 "next_number": { "type": "Int" },
@@ -3734,7 +3735,7 @@
                                 "filter": {
                                     "type": "object",
                                     "properties": {
-                                        "id": { "type": "Int" },
+                                        "Id": { "type": "Int" },
                                         "prefix": { "type": "String?" },
                                         "starting_number": { "type": "Int" },
                                         "next_number": { "type": "Int" },
@@ -3747,7 +3748,7 @@
                                 "sort": {
                                     "type": "object",
                                     "properties": {
-                                        "id": { "type": "Int" },
+                                        "Id": { "type": "Int" },
                                         "prefix": { "type": "Int" },
                                         "starting_number": { "type": "Int" },
                                         "next_number": { "type": "Int" },
@@ -3776,7 +3777,7 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "id": { "type": "Int" },
+                                    "Id": { "type": "Int" },
                                     "prefix": { "type": "String?" },
                                     "starting_number": { "type": "Int" },
                                     "next_number": { "type": "Int" },
@@ -3809,6 +3810,7 @@
                                 "updateData": {
                                     "type": "object",
                                     "properties": {
+                                        "Id": { "type": "Int" },
                                         "prefix": { "type": "String?" },
                                         "starting_number": { "type": "Int" },
                                         "next_number": { "type": "Int" },
@@ -3882,8 +3884,8 @@
                             "type": "object",
                             "properties": {
                                 "profile_name": { "type": "String" },
-                                "start_on": { "type": "Datetime?" },
-                                "end_on": { "type": "Datetime?" },
+                                "start_on": { "type": "DateTime?" },
+                                "end_on": { "type": "DateTime?" },
                                 "never_expires": { "type": "Boolean?" },
                                 "depreciable_value": { "type": "Float?" },
                                 "recurring_general_journal_status": {
@@ -3987,8 +3989,8 @@
                                 "properties": {
                                     "id": { "type": "Int" },
                                     "profile_name": { "type": "String" },
-                                    "start_on": { "type": "Datetime?" },
-                                    "end_on": { "type": "Datetime?" },
+                                    "start_on": { "type": "DateTime?" },
+                                    "end_on": { "type": "DateTime?" },
                                     "never_expires": { "type": "Boolean?" },
                                     "depreciable_value": { "type": "Float?" },
                                     "recurring_general_journal_status": {
@@ -4027,8 +4029,8 @@
                                     "type": "object",
                                     "properties": {
                                         "profile_name": { "type": "String" },
-                                        "start_on": { "type": "Datetime?" },
-                                        "end_on": { "type": "Datetime?" },
+                                        "start_on": { "type": "DateTime?" },
+                                        "end_on": { "type": "DateTime?" },
                                         "never_expires": { "type": "Boolean?" },
                                         "depreciable_value": {
                                             "type": "Float?"
@@ -4300,7 +4302,7 @@
                         "schema": {
                             "type": "object",
                             "properties": {
-                                "opening_balance_date": { "type": "Datetime" },
+                                "opening_balance_date": { "type": "DateTime" },
                                 "price_precision": { "type": "Int?" },
                                 "amount": { "type": "Float?" },
                                 "month": { "type": "Int" },
@@ -4385,7 +4387,7 @@
                                 "properties": {
                                     "id": { "type": "Int" },
                                     "opening_balance_date": {
-                                        "type": "Datetime"
+                                        "type": "DateTime"
                                     },
                                     "price_precision": { "type": "Int?" },
                                     "amount": { "type": "Float?" },
@@ -4419,7 +4421,7 @@
                                     "type": "object",
                                     "properties": {
                                         "opening_balance_date": {
-                                            "type": "Datetime"
+                                            "type": "DateTime"
                                         },
                                         "price_precision": { "type": "Int?" },
                                         "amount": { "type": "Float?" },
@@ -4453,6 +4455,1903 @@
         "delete": {
             "summary": "deletes a opening_balance",
             "tags": ["opening_balance"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/finance/operational/cash_payment_custom": {
+        "post": {
+            "summary": "creates a new cash_payment_custom",
+            "tags": ["cash_payment_custom"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "date": { "type": "DateTime" },
+                                "customer": { "type": "String?" },
+                                "amount": { "type": "Float?" },
+                                "tin_number": { "type": "String?" },
+                                "tax": { "type": "Float?" },
+                                "withholding": { "type": "Float?" },
+                                "merchant_record_card_code": {
+                                    "type": "String?"
+                                },
+                                "number": { "type": "String?" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected cash_payment_customs",
+            "tags": ["cash_payment_custom"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "customer": { "type": "String?" },
+                                        "tin_number": { "type": "String?" },
+                                        "merchant_record_card_code": {
+                                            "type": "String?"
+                                        },
+                                        "number": { "type": "String?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "date": { "type": "Int" },
+                                        "customer": { "type": "Int" },
+                                        "amount": { "type": "Int" },
+                                        "tin_number": { "type": "Int" },
+                                        "tax": { "type": "Int" },
+                                        "withholding": { "type": "Int" },
+                                        "merchant_record_card_code": {
+                                            "type": "Int"
+                                        },
+                                        "number": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "date": { "type": "DateTime" },
+                                    "customer": { "type": "String?" },
+                                    "amount": { "type": "Float?" },
+                                    "tin_number": { "type": "String?" },
+                                    "tax": { "type": "Float?" },
+                                    "withholding": { "type": "Float?" },
+                                    "merchant_record_card_code": {
+                                        "type": "String?"
+                                    },
+                                    "number": { "type": "String?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a cash_payment_custom",
+            "tags": ["cash_payment_custom"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "date": { "type": "DateTime" },
+                                        "customer": { "type": "String?" },
+                                        "amount": { "type": "Float?" },
+                                        "tin_number": { "type": "String?" },
+                                        "tax": { "type": "Float?" },
+                                        "withholding": { "type": "Float?" },
+                                        "merchant_record_card_code": {
+                                            "type": "String?"
+                                        },
+                                        "number": { "type": "String?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a cash_payment_custom",
+            "tags": ["cash_payment_custom"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/finance/operational/cash_payment_voucher": {
+        "post": {
+            "summary": "creates a new cash_payment_voucher",
+            "tags": ["cash_payment_voucher"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "date": { "type": "DateTime" },
+                                "paid_to": { "type": "String?" },
+                                "amount": { "type": "Float?" },
+                                "description": { "type": "String?" },
+                                "check_number": { "type": "String?" },
+                                "pv_number": { "type": "Int?" },
+                                "remaining_balance": { "type": "Int?" },
+                                "cpv_bank_id": { "type": "Int?" },
+                                "prepared_by_id": { "type": "Int?" },
+                                "checked_by_id": { "type": "Int?" },
+                                "project_id": { "type": "Int?" },
+                                "cpv_type_id": { "type": "Int?" },
+                                "request_payment_id": { "type": "Int?" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected cash_payment_vouchers",
+            "tags": ["cash_payment_voucher"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "paid_to": { "type": "String?" },
+                                        "description": { "type": "String?" },
+                                        "check_number": { "type": "String?" },
+                                        "pv_number": { "type": "Int?" },
+                                        "remaining_balance": { "type": "Int?" },
+                                        "cpv_bank_id": { "type": "Int?" },
+                                        "prepared_by_id": { "type": "Int?" },
+                                        "checked_by_id": { "type": "Int?" },
+                                        "project_id": { "type": "Int?" },
+                                        "cpv_type_id": { "type": "Int?" },
+                                        "request_payment_id": {
+                                            "type": "Int?"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "date": { "type": "Int" },
+                                        "paid_to": { "type": "Int" },
+                                        "amount": { "type": "Int" },
+                                        "description": { "type": "Int" },
+                                        "check_number": { "type": "Int" },
+                                        "pv_number": { "type": "Int" },
+                                        "remaining_balance": { "type": "Int" },
+                                        "cpv_bank_id": { "type": "Int" },
+                                        "prepared_by_id": { "type": "Int" },
+                                        "checked_by_id": { "type": "Int" },
+                                        "project_id": { "type": "Int" },
+                                        "cpv_type_id": { "type": "Int" },
+                                        "request_payment_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "date": { "type": "DateTime" },
+                                    "paid_to": { "type": "String?" },
+                                    "amount": { "type": "Float?" },
+                                    "description": { "type": "String?" },
+                                    "check_number": { "type": "String?" },
+                                    "pv_number": { "type": "Int?" },
+                                    "remaining_balance": { "type": "Int?" },
+                                    "cpv_bank_id": { "type": "Int?" },
+                                    "prepared_by_id": { "type": "Int?" },
+                                    "checked_by_id": { "type": "Int?" },
+                                    "project_id": { "type": "Int?" },
+                                    "cpv_type_id": { "type": "Int?" },
+                                    "request_payment_id": { "type": "Int?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a cash_payment_voucher",
+            "tags": ["cash_payment_voucher"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "date": { "type": "DateTime" },
+                                        "paid_to": { "type": "String?" },
+                                        "amount": { "type": "Float?" },
+                                        "description": { "type": "String?" },
+                                        "check_number": { "type": "String?" },
+                                        "pv_number": { "type": "Int?" },
+                                        "remaining_balance": { "type": "Int?" },
+                                        "cpv_bank_id": { "type": "Int?" },
+                                        "prepared_by_id": { "type": "Int?" },
+                                        "checked_by_id": { "type": "Int?" },
+                                        "project_id": { "type": "Int?" },
+                                        "cpv_type_id": { "type": "Int?" },
+                                        "request_payment_id": {
+                                            "type": "Int?"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a cash_payment_voucher",
+            "tags": ["cash_payment_voucher"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/finance/operational/cpv_bank": {
+        "post": {
+            "summary": "creates a new cpv_bank",
+            "tags": ["cpv_bank"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "name": { "type": "String" },
+                                "description": { "type": "String?" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected cpv_banks",
+            "tags": ["cpv_bank"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "name": { "type": "String" },
+                                        "description": { "type": "String?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "name": { "type": "Int" },
+                                        "description": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "name": { "type": "String" },
+                                    "description": { "type": "String?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a cpv_bank",
+            "tags": ["cpv_bank"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": { "type": "String" },
+                                        "description": { "type": "String?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a cpv_bank",
+            "tags": ["cpv_bank"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/finance/operational/cpv_payment_request": {
+        "post": {
+            "summary": "creates a new cpv_payment_request",
+            "tags": ["cpv_payment_request"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "date": { "type": "DateTime" },
+                                "amount": { "type": "Float?" },
+                                "description": { "type": "String?" },
+                                "check_number": { "type": "String?" },
+                                "remaining_balance": { "type": "Int?" },
+                                "from_id": { "type": "Int?" },
+                                "project_id": { "type": "Int?" },
+                                "prepared_by_id": { "type": "Int?" },
+                                "checked_by_id": { "type": "Int?" },
+                                "approved_by_id": { "type": "Int?" },
+                                "cash_payment_voucher_id": { "type": "Int?" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected cpv_payment_requests",
+            "tags": ["cpv_payment_request"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "description": { "type": "String?" },
+                                        "check_number": { "type": "String?" },
+                                        "remaining_balance": { "type": "Int?" },
+                                        "from_id": { "type": "Int?" },
+                                        "project_id": { "type": "Int?" },
+                                        "prepared_by_id": { "type": "Int?" },
+                                        "checked_by_id": { "type": "Int?" },
+                                        "approved_by_id": { "type": "Int?" },
+                                        "cash_payment_voucher_id": {
+                                            "type": "Int?"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "date": { "type": "Int" },
+                                        "amount": { "type": "Int" },
+                                        "description": { "type": "Int" },
+                                        "check_number": { "type": "Int" },
+                                        "remaining_balance": { "type": "Int" },
+                                        "from_id": { "type": "Int" },
+                                        "project_id": { "type": "Int" },
+                                        "prepared_by_id": { "type": "Int" },
+                                        "checked_by_id": { "type": "Int" },
+                                        "approved_by_id": { "type": "Int" },
+                                        "cash_payment_voucher_id": {
+                                            "type": "Int"
+                                        },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "date": { "type": "DateTime" },
+                                    "amount": { "type": "Float?" },
+                                    "description": { "type": "String?" },
+                                    "check_number": { "type": "String?" },
+                                    "remaining_balance": { "type": "Int?" },
+                                    "from_id": { "type": "Int?" },
+                                    "project_id": { "type": "Int?" },
+                                    "prepared_by_id": { "type": "Int?" },
+                                    "checked_by_id": { "type": "Int?" },
+                                    "approved_by_id": { "type": "Int?" },
+                                    "cash_payment_voucher_id": {
+                                        "type": "Int?"
+                                    },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a cpv_payment_request",
+            "tags": ["cpv_payment_request"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "date": { "type": "DateTime" },
+                                        "amount": { "type": "Float?" },
+                                        "description": { "type": "String?" },
+                                        "check_number": { "type": "String?" },
+                                        "remaining_balance": { "type": "Int?" },
+                                        "from_id": { "type": "Int?" },
+                                        "project_id": { "type": "Int?" },
+                                        "prepared_by_id": { "type": "Int?" },
+                                        "checked_by_id": { "type": "Int?" },
+                                        "approved_by_id": { "type": "Int?" },
+                                        "cash_payment_voucher_id": {
+                                            "type": "Int?"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a cpv_payment_request",
+            "tags": ["cpv_payment_request"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/finance/operational/cpv_receipt": {
+        "post": {
+            "summary": "creates a new cpv_receipt",
+            "tags": ["cpv_receipt"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "date": { "type": "DateTime" },
+                                "company_name": { "type": "String?" },
+                                "tin_number": { "type": "String?" },
+                                "amount": { "type": "Float?" },
+                                "vat": { "type": "Float?" },
+                                "withholding": { "type": "Float?" },
+                                "machine_code": { "type": "String?" },
+                                "receipt_number": { "type": "String?" },
+                                "cash_payment_voucher_id": { "type": "Int?" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected cpv_receipts",
+            "tags": ["cpv_receipt"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "company_name": { "type": "String?" },
+                                        "tin_number": { "type": "String?" },
+                                        "machine_code": { "type": "String?" },
+                                        "receipt_number": { "type": "String?" },
+                                        "cash_payment_voucher_id": {
+                                            "type": "Int?"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "date": { "type": "Int" },
+                                        "company_name": { "type": "Int" },
+                                        "tin_number": { "type": "Int" },
+                                        "amount": { "type": "Int" },
+                                        "vat": { "type": "Int" },
+                                        "withholding": { "type": "Int" },
+                                        "machine_code": { "type": "Int" },
+                                        "receipt_number": { "type": "Int" },
+                                        "cash_payment_voucher_id": {
+                                            "type": "Int"
+                                        },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "date": { "type": "DateTime" },
+                                    "company_name": { "type": "String?" },
+                                    "tin_number": { "type": "String?" },
+                                    "amount": { "type": "Float?" },
+                                    "vat": { "type": "Float?" },
+                                    "withholding": { "type": "Float?" },
+                                    "machine_code": { "type": "String?" },
+                                    "receipt_number": { "type": "String?" },
+                                    "cash_payment_voucher_id": {
+                                        "type": "Int?"
+                                    },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a cpv_receipt",
+            "tags": ["cpv_receipt"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "date": { "type": "DateTime" },
+                                        "company_name": { "type": "String?" },
+                                        "tin_number": { "type": "String?" },
+                                        "amount": { "type": "Float?" },
+                                        "vat": { "type": "Float?" },
+                                        "withholding": { "type": "Float?" },
+                                        "machine_code": { "type": "String?" },
+                                        "receipt_number": { "type": "String?" },
+                                        "cash_payment_voucher_id": {
+                                            "type": "Int?"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a cpv_receipt",
+            "tags": ["cpv_receipt"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/finance/operational/cpv_type": {
+        "post": {
+            "summary": "creates a new cpv_type",
+            "tags": ["cpv_type"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "name": { "type": "String" },
+                                "description": { "type": "String" },
+                                "cpv_types": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected cpv_types",
+            "tags": ["cpv_type"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "name": { "type": "String" },
+                                        "description": { "type": "String" },
+                                        "cpv_types": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "name": { "type": "Int" },
+                                        "description": { "type": "Int" },
+                                        "cpv_types": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "name": { "type": "String" },
+                                    "description": { "type": "String" },
+                                    "cpv_types": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a cpv_type",
+            "tags": ["cpv_type"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": { "type": "String" },
+                                        "description": { "type": "String" },
+                                        "cpv_types": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a cpv_type",
+            "tags": ["cpv_type"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/finance/operational/petty_cash": {
+        "post": {
+            "summary": "creates a new petty_cash",
+            "tags": ["petty_cash"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "date": { "type": "DateTime" },
+                                "pcpv": { "type": "String?" },
+                                "remark": { "type": "String?" },
+                                "description": { "type": "String?" },
+                                "debit": { "type": "Float?" },
+                                "credit": { "type": "Float?" },
+                                "balance": { "type": "Float?" },
+                                "project_id": { "type": "Int?" },
+                                "issued_by_id": { "type": "Int?" },
+                                "cash_payment_voucher_id": { "type": "Int?" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected petty_cashs",
+            "tags": ["petty_cash"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "pcpv": { "type": "String?" },
+                                        "remark": { "type": "String?" },
+                                        "description": { "type": "String?" },
+                                        "project_id": { "type": "Int?" },
+                                        "issued_by_id": { "type": "Int?" },
+                                        "cash_payment_voucher_id": {
+                                            "type": "Int?"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "date": { "type": "Int" },
+                                        "pcpv": { "type": "Int" },
+                                        "remark": { "type": "Int" },
+                                        "description": { "type": "Int" },
+                                        "debit": { "type": "Int" },
+                                        "credit": { "type": "Int" },
+                                        "balance": { "type": "Int" },
+                                        "project_id": { "type": "Int" },
+                                        "issued_by_id": { "type": "Int" },
+                                        "cash_payment_voucher_id": {
+                                            "type": "Int"
+                                        },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "date": { "type": "DateTime" },
+                                    "pcpv": { "type": "String?" },
+                                    "remark": { "type": "String?" },
+                                    "description": { "type": "String?" },
+                                    "debit": { "type": "Float?" },
+                                    "credit": { "type": "Float?" },
+                                    "balance": { "type": "Float?" },
+                                    "project_id": { "type": "Int?" },
+                                    "issued_by_id": { "type": "Int?" },
+                                    "cash_payment_voucher_id": {
+                                        "type": "Int?"
+                                    },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a petty_cash",
+            "tags": ["petty_cash"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "date": { "type": "DateTime" },
+                                        "pcpv": { "type": "String?" },
+                                        "remark": { "type": "String?" },
+                                        "description": { "type": "String?" },
+                                        "debit": { "type": "Float?" },
+                                        "credit": { "type": "Float?" },
+                                        "balance": { "type": "Float?" },
+                                        "project_id": { "type": "Int?" },
+                                        "issued_by_id": { "type": "Int?" },
+                                        "cash_payment_voucher_id": {
+                                            "type": "Int?"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a petty_cash",
+            "tags": ["petty_cash"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/finance/operational/crv_payment": {
+        "post": {
+            "summary": "creates a new crv_payment",
+            "tags": ["crv_payment"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "date": { "type": "DateTime?" },
+                                "name": { "type": "String?" },
+                                "customer_name": { "type": "String?" },
+                                "description": { "type": "String?" },
+                                "amount_before_vat": { "type": "Float?" },
+                                "vat": { "type": "Float?" },
+                                "amount_with_vat": { "type": "Float?" },
+                                "payment_description": { "type": "String?" },
+                                "withholding": { "type": "Float?" },
+                                "check_amount": { "type": "Float?" },
+                                "cash_amount": { "type": "Float?" },
+                                "project_id": { "type": "Int?" },
+                                "crv_type_id": { "type": "Int?" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected crv_payments",
+            "tags": ["crv_payment"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "name": { "type": "String?" },
+                                        "customer_name": { "type": "String?" },
+                                        "description": { "type": "String?" },
+                                        "payment_description": {
+                                            "type": "String?"
+                                        },
+                                        "project_id": { "type": "Int?" },
+                                        "crv_type_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "date": { "type": "Int" },
+                                        "name": { "type": "Int" },
+                                        "customer_name": { "type": "Int" },
+                                        "description": { "type": "Int" },
+                                        "amount_before_vat": { "type": "Int" },
+                                        "vat": { "type": "Int" },
+                                        "amount_with_vat": { "type": "Int" },
+                                        "payment_description": {
+                                            "type": "Int"
+                                        },
+                                        "withholding": { "type": "Int" },
+                                        "check_amount": { "type": "Int" },
+                                        "cash_amount": { "type": "Int" },
+                                        "project_id": { "type": "Int" },
+                                        "crv_type_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "date": { "type": "DateTime?" },
+                                    "name": { "type": "String?" },
+                                    "customer_name": { "type": "String?" },
+                                    "description": { "type": "String?" },
+                                    "amount_before_vat": { "type": "Float?" },
+                                    "vat": { "type": "Float?" },
+                                    "amount_with_vat": { "type": "Float?" },
+                                    "payment_description": {
+                                        "type": "String?"
+                                    },
+                                    "withholding": { "type": "Float?" },
+                                    "check_amount": { "type": "Float?" },
+                                    "cash_amount": { "type": "Float?" },
+                                    "project_id": { "type": "Int?" },
+                                    "crv_type_id": { "type": "Int?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a crv_payment",
+            "tags": ["crv_payment"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "date": { "type": "DateTime?" },
+                                        "name": { "type": "String?" },
+                                        "customer_name": { "type": "String?" },
+                                        "description": { "type": "String?" },
+                                        "amount_before_vat": {
+                                            "type": "Float?"
+                                        },
+                                        "vat": { "type": "Float?" },
+                                        "amount_with_vat": { "type": "Float?" },
+                                        "payment_description": {
+                                            "type": "String?"
+                                        },
+                                        "withholding": { "type": "Float?" },
+                                        "check_amount": { "type": "Float?" },
+                                        "cash_amount": { "type": "Float?" },
+                                        "project_id": { "type": "Int?" },
+                                        "crv_type_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a crv_payment",
+            "tags": ["crv_payment"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/finance/operational/crv_type": {
+        "post": {
+            "summary": "creates a new crv_type",
+            "tags": ["crv_type"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "name": { "type": "String" },
+                                "description": { "type": "String?" },
+                                "crv_types": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected crv_types",
+            "tags": ["crv_type"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "name": { "type": "String" },
+                                        "description": { "type": "String?" },
+                                        "crv_types": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "name": { "type": "Int" },
+                                        "description": { "type": "Int" },
+                                        "crv_types": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "name": { "type": "String" },
+                                    "description": { "type": "String?" },
+                                    "crv_types": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a crv_type",
+            "tags": ["crv_type"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": { "type": "String" },
+                                        "description": { "type": "String?" },
+                                        "crv_types": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a crv_type",
+            "tags": ["crv_type"],
             "requestBody": {
                 "required": true,
                 "content": {

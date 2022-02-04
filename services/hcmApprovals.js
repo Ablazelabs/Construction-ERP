@@ -117,6 +117,9 @@ const getLeaveTransfer = async ({
             ...employeeFilter,
             OR: [{ leave_request_status: 1 }, { leave_request_status: 4 }],
         },
+        include: {
+            employee: true,
+        },
     });
 };
 /**
@@ -145,8 +148,12 @@ const getLeaveAssignment = async ({
         },
         include: {
             attendance_abscence_type: {
-                select: { is_absence_includes_day_off },
+                select: {
+                    is_absence_includes_day_off: true,
+                    aa_description: true,
+                },
             },
+            employee: true,
         },
     });
 };

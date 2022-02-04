@@ -20,66 +20,13 @@ const arrayInput = {
     approve: "boolean",
 };
 
-router.patch("/leave_transfer_approve", async (req, res, next) => {
-    let reqBody;
-    try {
-        reqBody = inputFilter({ approvalLeaveList: "object" }, {}, req.body, 1);
-        if (!Array.isArray(reqBody.approvalLeaveList)) {
-            throw { key: "approvalLeaveList", message: "please send array" };
-        }
-        if (!reqBody.approvalLeaveList.length) {
-            throw {
-                key: "approvalLeaveList",
-                message: "array can't be empty",
-            };
-        }
-    } catch (e) {
-        error(e.key, e.message, next);
-        return;
-    }
-    let { approvalLeaveList } = reqBody;
-    let listError = false;
-    for (let i in approvalLeaveList) {
-        try {
-            approvalLeaveList[i] = inputFilter(
-                arrayInput,
-                {},
-                approvalLeaveList[i]
-            );
-        } catch (e) {
-            console.log(e);
-            listError = true;
-            break;
-        }
-    }
-    if (listError) {
-        error(
-            "approvalLeaveList",
-            "some inputs don't have id(int), approve(bool) format",
-            next
-        );
-        return;
-    }
-    try {
-        const data = await transferApproval(
-            approvalLeaveList,
-            res.locals.id,
-            next
-        );
-        if (!data) {
-            return;
-        } else res.json(data);
-    } catch (e) {
-        error("database", "error", next, 500);
-        return false;
-    }
-});
 router.get(
     [
         "/leave_transfer_approve",
         "/leave_assignment_approve",
         "/leave_plan_approve",
         "/overtime_approve",
+        "/attendance_approve",
     ],
     async (req, res, next) => {
         let reqBody = {};
@@ -133,24 +80,16 @@ router.get(
         }
     }
 );
-router.patch("/attendance_approve", async (req, res, next) => {
+router.patch("/leave_transfer_approve", async (req, res, next) => {
     let reqBody;
     try {
-        reqBody = inputFilter(
-            { approvalAttendanceList: "object" },
-            {},
-            req.body,
-            1
-        );
-        if (!Array.isArray(reqBody.approvalAttendanceList)) {
-            throw {
-                key: "approvalAttendanceList",
-                message: "please send array",
-            };
+        reqBody = inputFilter({ approvalList: "object" }, {}, req.body, 1);
+        if (!Array.isArray(reqBody.approvalList)) {
+            throw { key: "approvalList", message: "please send array" };
         }
-        if (!reqBody.approvalAttendanceList.length) {
+        if (!reqBody.approvalList.length) {
             throw {
-                key: "approvalAttendanceList",
+                key: "approvalList",
                 message: "array can't be empty",
             };
         }
@@ -158,15 +97,11 @@ router.patch("/attendance_approve", async (req, res, next) => {
         error(e.key, e.message, next);
         return;
     }
-    let { approvalAttendanceList } = reqBody;
+    let { approvalList } = reqBody;
     let listError = false;
-    for (let i in approvalAttendanceList) {
+    for (let i in approvalList) {
         try {
-            approvalAttendanceList[i] = inputFilter(
-                arrayInput,
-                {},
-                approvalAttendanceList[i]
-            );
+            approvalList[i] = inputFilter(arrayInput, {}, approvalList[i]);
         } catch (e) {
             console.log(e);
             listError = true;
@@ -175,7 +110,56 @@ router.patch("/attendance_approve", async (req, res, next) => {
     }
     if (listError) {
         error(
-            "approvalAttendanceList",
+            "approvalList",
+            "some inputs don't have id(int), approve(bool) format",
+            next
+        );
+        return;
+    }
+    try {
+        const data = await transferApproval(approvalList, res.locals.id, next);
+        if (!data) {
+            return;
+        } else res.json(data);
+    } catch (e) {
+        error("database", "error", next, 500);
+        return false;
+    }
+});
+router.patch("/attendance_approve", async (req, res, next) => {
+    let reqBody;
+    try {
+        reqBody = inputFilter({ approvalList: "object" }, {}, req.body, 1);
+        if (!Array.isArray(reqBody.approvalList)) {
+            throw {
+                key: "approvalList",
+                message: "please send array",
+            };
+        }
+        if (!reqBody.approvalList.length) {
+            throw {
+                key: "approvalList",
+                message: "array can't be empty",
+            };
+        }
+    } catch (e) {
+        error(e.key, e.message, next);
+        return;
+    }
+    let { approvalList } = reqBody;
+    let listError = false;
+    for (let i in approvalList) {
+        try {
+            approvalList[i] = inputFilter(arrayInput, {}, approvalList[i]);
+        } catch (e) {
+            console.log(e);
+            listError = true;
+            break;
+        }
+    }
+    if (listError) {
+        error(
+            "approvalList",
             "some inputs don't have id(int), approve(bool) format",
             next
         );
@@ -183,7 +167,7 @@ router.patch("/attendance_approve", async (req, res, next) => {
     }
     try {
         const data = await attendanceApproval(
-            approvalAttendanceList,
+            approvalList,
             res.locals.id,
             next
         );
@@ -198,21 +182,16 @@ router.patch("/attendance_approve", async (req, res, next) => {
 router.patch("/overtime_approve", async (req, res, next) => {
     let reqBody;
     try {
-        reqBody = inputFilter(
-            { approvalOvertimeStatus: "object" },
-            {},
-            req.body,
-            1
-        );
-        if (!Array.isArray(reqBody.approvalOvertimeStatus)) {
+        reqBody = inputFilter({ approvalList: "object" }, {}, req.body, 1);
+        if (!Array.isArray(reqBody.approvalList)) {
             throw {
-                key: "approvalOvertimeStatus",
+                key: "approvalList",
                 message: "please send array",
             };
         }
-        if (!reqBody.approvalOvertimeStatus.length) {
+        if (!reqBody.approvalList.length) {
             throw {
-                key: "approvalOvertimeStatus",
+                key: "approvalList",
                 message: "array can't be empty",
             };
         }
@@ -220,15 +199,11 @@ router.patch("/overtime_approve", async (req, res, next) => {
         error(e.key, e.message, next);
         return;
     }
-    let { approvalOvertimeStatus } = reqBody;
+    let { approvalList } = reqBody;
     let listError = false;
-    for (let i in approvalOvertimeStatus) {
+    for (let i in approvalList) {
         try {
-            approvalOvertimeStatus[i] = inputFilter(
-                arrayInput,
-                {},
-                approvalOvertimeStatus[i]
-            );
+            approvalList[i] = inputFilter(arrayInput, {}, approvalList[i]);
         } catch (e) {
             console.log(e);
             listError = true;
@@ -237,18 +212,14 @@ router.patch("/overtime_approve", async (req, res, next) => {
     }
     if (listError) {
         error(
-            "approvalOvertimeStatus",
+            "approvalList",
             "some inputs don't have id(int), approve(bool) format",
             next
         );
         return;
     }
     try {
-        const data = await overtimeApproval(
-            approvalOvertimeStatus,
-            res.locals.id,
-            next
-        );
+        const data = await overtimeApproval(approvalList, res.locals.id, next);
         if (!data) {
             return;
         } else res.json(data);
@@ -260,21 +231,16 @@ router.patch("/overtime_approve", async (req, res, next) => {
 router.patch("/leave_assignment_approve", async (req, res, next) => {
     let reqBody;
     try {
-        reqBody = inputFilter(
-            { approvalAssignmentList: "object" },
-            {},
-            req.body,
-            1
-        );
-        if (!Array.isArray(reqBody.approvalAssignmentList)) {
+        reqBody = inputFilter({ approvalList: "object" }, {}, req.body, 1);
+        if (!Array.isArray(reqBody.approvalList)) {
             throw {
-                key: "approvalAssignmentList",
+                key: "approvalList",
                 message: "please send array",
             };
         }
-        if (!reqBody.approvalAssignmentList.length) {
+        if (!reqBody.approvalList.length) {
             throw {
-                key: "approvalAssignmentList",
+                key: "approvalList",
                 message: "array can't be empty",
             };
         }
@@ -282,15 +248,11 @@ router.patch("/leave_assignment_approve", async (req, res, next) => {
         error(e.key, e.message, next);
         return;
     }
-    let { approvalAssignmentList } = reqBody;
+    let { approvalList } = reqBody;
     let listError = false;
-    for (let i in approvalAssignmentList) {
+    for (let i in approvalList) {
         try {
-            approvalAssignmentList[i] = inputFilter(
-                arrayInput,
-                {},
-                approvalAssignmentList[i]
-            );
+            approvalList[i] = inputFilter(arrayInput, {}, approvalList[i]);
         } catch (e) {
             console.log(e);
             listError = true;
@@ -299,7 +261,7 @@ router.patch("/leave_assignment_approve", async (req, res, next) => {
     }
     if (listError) {
         error(
-            "approvalAssignmentList",
+            "approvalList",
             "some inputs don't have id(int), approve(bool) format",
             next
         );
@@ -307,7 +269,7 @@ router.patch("/leave_assignment_approve", async (req, res, next) => {
     }
     try {
         const data = await assignmentApproval(
-            approvalAssignmentList,
+            approvalList,
             res.locals.id,
             next
         );
@@ -322,16 +284,16 @@ router.patch("/leave_assignment_approve", async (req, res, next) => {
 router.patch("/leave_plan_approve", async (req, res, next) => {
     let reqBody;
     try {
-        reqBody = inputFilter({ approvalPlanList: "object" }, {}, req.body, 1);
-        if (!Array.isArray(reqBody.approvalPlanList)) {
+        reqBody = inputFilter({ approvalList: "object" }, {}, req.body, 1);
+        if (!Array.isArray(reqBody.approvalList)) {
             throw {
-                key: "approvalPlanList",
+                key: "approvalList",
                 message: "please send array",
             };
         }
-        if (!reqBody.approvalPlanList.length) {
+        if (!reqBody.approvalList.length) {
             throw {
-                key: "approvalPlanList",
+                key: "approvalList",
                 message: "array can't be empty",
             };
         }
@@ -339,15 +301,11 @@ router.patch("/leave_plan_approve", async (req, res, next) => {
         error(e.key, e.message, next);
         return;
     }
-    let { approvalPlanList } = reqBody;
+    let { approvalList } = reqBody;
     let listError = false;
-    for (let i in approvalPlanList) {
+    for (let i in approvalList) {
         try {
-            approvalPlanList[i] = inputFilter(
-                arrayInput,
-                {},
-                approvalPlanList[i]
-            );
+            approvalList[i] = inputFilter(arrayInput, {}, approvalList[i]);
         } catch (e) {
             console.log(e);
             listError = true;
@@ -356,14 +314,14 @@ router.patch("/leave_plan_approve", async (req, res, next) => {
     }
     if (listError) {
         error(
-            "approvalPlanList",
+            "approvalList",
             "some inputs don't have id(int), approve(bool) format",
             next
         );
         return;
     }
     try {
-        const data = await planApproval(approvalPlanList, res.locals.id, next);
+        const data = await planApproval(approvalList, res.locals.id, next);
         if (!data) {
             return;
         } else res.json(data);

@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { error, sendEmail } = require("../../../config/config");
+const { error } = require("../../../config/config");
 const { getSlip, sendSlip } = require("../../../services/payrollSlip");
 const inputFilter = require("../../../validation/inputFilter");
 const pdf = require("pdf-creator-node");
-
+const fs = require("fs");
 const dateValue = ["fromDate", "toDate"];
 
 router.get("/payroll_slip", async (req, res, next) => {
@@ -87,17 +87,24 @@ router.get("/payroll_slip", async (req, res, next) => {
             type: "buffer",
         };
         let constructedPdf = [];
+        let buff;
         for (let i in slipDetails) {
             const slipDetail = slipDetails[i];
+            buff = await pdf.create(
+                { ...document, html: slipDetail.html },
+                options
+            );
             constructedPdf.push({
-                pdf: await pdf.create(
-                    { ...document, html: slipDetail.html },
-                    options
-                ),
+                pdf: buff,
                 employee_id: slipDetail.EmployeeId,
+                first_name: slipDetail.first_name,
+                middle_name: slipDetail.middle_name,
+                last_name: slipDetail.last_name,
+                id: slipDetail.id,
             });
         }
         if (!sendOrGet) {
+            fs.writeFileSync("./output.pdf", buff);
             res.json(constructedPdf);
         } else {
             const data = await sendSlip(constructedPdf, fromDate, toDate);
@@ -116,48 +123,4 @@ router.get("/payroll_slip", async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
-// router.post("/payroll_slip", async (req, res, next) => {
-//     const operationDataType = req.path.split("/").pop();
-//     const requiredInputFilter = allInputFilters[operationDataType],
-//         optionalInputFilter = allOptionalInputFilters[operationDataType],
-//         dateValue = dateValues[operationDataType],
-//         myEnums = enums[operationDataType],
-//         phoneValue = phoneValues[operationDataType],
-//         emailValue = emailValues[operationDataType],
-//         rangeValues = allRangeValues[operationDataType];
-
-//     const reqBody = returnReqBody(
-//         req.body,
-//         {
-//             requiredInputFilter,
-//             optionalInputFilter,
-//             dateValue,
-//             myEnums,
-//             phoneValue,
-//             emailValue,
-//             rangeValues,
-//         },
-//         next
-//     );
-//     if (!reqBody) {
-//         return;
-//     }
-
-//     try {
-//         const data = await post(
-//             reqBody,
-//             operationDataType,
-//             res.locals.id,
-//             uniqueValues[operationDataType],
-//             next
-//         );
-//         if (data == false) {
-//             return;
-//         }
-//         res.json(data);
-//     } catch (e) {
-//         console.log(e);
-//         error("database", "error", next, 500);
-//     }
-// });
 module.exports = router;

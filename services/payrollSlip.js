@@ -200,6 +200,10 @@ const getSlip = async (
             stringBuilders.push({
                 html: constructedHTML,
                 EmployeeId: payrollSummary.employee.id_number,
+                id: payrollSummary.employee.id,
+                first_name: payrollSummary.employee.first_name,
+                middle_name: payrollSummary.employee.middle_name,
+                last_name: payrollSummary.employee.last_name,
             });
         }
     }
