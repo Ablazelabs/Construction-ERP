@@ -6,6 +6,7 @@ const {
     postRelease,
     postCreate,
     getCreate,
+    getAAtype,
 } = require("../../../services/attendanceSheet");
 
 const { returnReqBody } = require("../../../validation/basicValidators");
@@ -39,22 +40,31 @@ router.get("/release", async (req, res, next) => {
                 };
             }
         }
+        const diffDays =
+            (reqBody.endDate - reqBody.startDate) / (1000 * 3600 * 24);
+        if (diffDays > 31) {
+            throw {
+                message:
+                    "Number of days in the date range(Start Date - End Date) can't be greater than from 31",
+                key: "endDate",
+            };
+        }
     } catch (e) {
-        error(e.key, e.message);
+        error(e.key, e.message, next);
         return false;
     }
     try {
         const data = await getRelease(reqBody);
-        if (data == false) {
+        if (data === false) {
             return;
         }
-        return data;
+        res.json(data);
     } catch (e) {
         console.log(e);
         error("database", "error", next, 500);
     }
 });
-router.post("/release", async () => {
+router.patch("/release", async (req, res, next) => {
     try {
         reqBody = inputFilter(
             {
@@ -111,7 +121,7 @@ router.post("/release", async () => {
         if (data == false) {
             return;
         }
-        return data;
+        res.json(data);
     } catch (e) {
         console.log(e);
         error("database", "error", next, 500);
@@ -142,23 +152,43 @@ router.get("/create", async (req, res, next) => {
                 };
             }
         }
+        const diffDays =
+            (reqBody.endDate - reqBody.startDate) / (1000 * 3600 * 24);
+        if (diffDays > 31) {
+            throw {
+                message:
+                    "Number of days in the date range(Start Date - End Date) can't be greater than from 31",
+                key: "endDate",
+            };
+        }
     } catch (e) {
-        error(e.key, e.message);
+        error(e.key, e.message, next);
         return false;
     }
     try {
-        // not my code, frontender does this by himself
-        const data = await getCreate(reqBody);
+        const data = await getCreate(reqBody, next);
         if (data == false) {
             return;
         }
-        return data;
+        res.json(data);
     } catch (e) {
         console.log(e);
         error("database", "error", next, 500);
     }
 });
-router.post("/create", async () => {
+router.get("/aa_type", async (req, res, next) => {
+    try {
+        const data = await getAAtype();
+        if (data == false) {
+            return;
+        }
+        res.json(data);
+    } catch (e) {
+        console.log(e);
+        error("database", "error", next, 500);
+    }
+});
+router.patch("/create", async (req, res, next) => {
     try {
         reqBody = inputFilter(
             {
@@ -215,7 +245,7 @@ router.post("/create", async () => {
             }
             for (let k in attendanceList[i].aaDateHours) {
                 attendanceList[i].aaDateHours[k] = returnReqBody(
-                    attendanceList[i].aaDateHours[k].aaDateHours,
+                    attendanceList[i].aaDateHours[k],
                     {
                         requiredInputFilter: {
                             date: "string",
@@ -257,7 +287,7 @@ router.post("/create", async () => {
         if (data == false) {
             return;
         }
-        return data;
+        res.json(data);
     } catch (e) {
         console.log(e);
         error("database", "error", next, 500);

@@ -381,7 +381,7 @@ const checkForHoliday = async (date) => {
         where: {
             startDate: {
                 gte: date,
-                lt: new Date(date).setDate(date.getDate() + 1),
+                lt: new Date(new Date(date).setDate(date.getDate() + 1)),
             },
             status: 0,
         },
@@ -392,8 +392,8 @@ const checkForHoliday = async (date) => {
     const holidayList = await holiday_calendar.findMany({
         where: {
             holiday: {
-                isRecurring: true,
-                staus: 0,
+                is_recurring: true,
+                status: 0,
             },
         },
     });
