@@ -22,10 +22,13 @@ const material = require("./api-routes/project/master/material");
 const documentation = require("./api-routes/project/master/documentation");
 const restMasterData = require("./api-routes/project/master/restMasterData");
 const operationalData = require("./api-routes/project/operational/operational_data");
+
+const financeContact = require("./api-routes/finance/master/contact");
 const financemasters = require("./api-routes/finance/master/financemasters");
 const accountingPeriod = require("./api-routes/finance/master/accountingPeriod");
 const restFinanceOperational = require("./api-routes/finance/operational/rest_finance_operational");
 const financeUpload = require("./api-routes/finance/operational/upload");
+
 const hcmMasters = require("./api-routes/hcm/master/hcmMasters");
 const hcmEmployeeMasters = require("./api-routes/hcm/employee_master/hcmEmployeeMasters");
 const fileEmployeeMasters = require("./api-routes/hcm/employee_master/fileEmployeeMasters");
@@ -97,6 +100,7 @@ app.use("/project/master", restMasterData);
 
 app.use("/project/operational", operationalData);
 
+app.use("/finance/master", financeContact);
 app.use("/finance/master", financemasters);
 app.use("/finance/master", accountingPeriod);
 app.use("/finance/operational", restFinanceOperational);

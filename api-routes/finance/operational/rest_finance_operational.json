@@ -246,7 +246,8 @@
         "budget": {
             "name": "string",
             "project_name": "string",
-            "cost_center_id": "number"
+            "cost_center_id": "number",
+            "fiscal_year": "string"
         },
         "budget_account": {
             "budget_id": "number",

@@ -135,44 +135,58 @@ const getCreate = async ({ startDate, endDate, employee_id }) => {
     );
     for (let r = 0; r < 6; r++) {
         let attendanceSheet = {};
-        if (aaTypeList != null && aaTypeList.Count > 0 && aaTypeList.Count > r)
-            attendanceSheet.AAType = `${aaTypeList[r]}`;
+        if (
+            aaTypeList != null &&
+            aaTypeList.length > 0 &&
+            aaTypeList.length > r
+        )
+            attendanceSheet.AAType = await attendance_abscence_type.findUnique({
+                where: { id: aaTypeList[r] },
+                select: { id: true, aa_description: true },
+            });
 
         attendanceSheet.AADateHours = [];
-        attendanceSheet.targetHours = [];
-        attendanceSheet.actualHours = [];
+        attendanceSheet.targetHours = {};
+        attendanceSheet.actualHours = {};
 
-        let sDate = startDate;
+        let sDate = new Date(startDate);
         let i = 0;
         const diffDays = (endDate - startDate) / (1000 * 3600 * 24);
         while (i <= diffDays) {
             if (r == 0) {
                 //get target hours
-                attendanceSheet.targetHours.push({
-                    date: dateAndMonth(sDate),
-                    hours: await getAttendanceTarget(employee_id, sDate),
-                });
-                attendanceSheet.actualHours.push({
-                    date: dateAndMonth(sDate),
-                    hours: getAttendanceActual(
-                        employee_id,
-                        sDate,
-                        empAttendancePayrollList
-                    ),
-                });
+                let temp = {};
+                temp[dateAndMonth(sDate)] = await getAttendanceTarget(
+                    employee_id,
+                    sDate
+                );
+                attendanceSheet.targetHours = {
+                    ...attendanceSheet.targetHours,
+                    ...temp,
+                };
+                let temp2 = {};
+                temp2[dateAndMonth(sDate)] = getAttendanceActual(
+                    employee_id,
+                    sDate,
+                    empAttendancePayrollList
+                );
+                attendanceSheet.actualHours = {
+                    ...attendanceSheet.actualHours,
+                    ...temp,
+                };
             }
-            totalWorkedHour = "";
-            attendancePayrollId = "";
+            totalWorkedHour = 0;
+            attendancePayrollId = 0;
             isApproved = false;
             isAbsence = false;
 
             if (attendanceSheet.AAType) {
-                var prevAttendance = empAttendancePayrollList.find(
+                const prevAttendance = empAttendancePayrollList.find(
                     ({ date, attendance_abscence_type_id }) => {
                         return (
-                            payrollDate.getFullYear() === date.getFullYear() &&
-                            payrollDate.getMonth() === date.getMonth() &&
-                            payrollDate.getDate() === date.getDate() &&
+                            sDate.getFullYear() === date.getFullYear() &&
+                            sDate.getMonth() === date.getMonth() &&
+                            sDate.getDate() === date.getDate() &&
                             attendance_abscence_type_id === aaTypeList[r]
                         );
                     }
@@ -181,8 +195,8 @@ const getCreate = async ({ startDate, endDate, employee_id }) => {
                     if (prevAttendance.attendance_abscence_type.aa_type == 2)
                         isAbsence = true;
 
-                    totalWorkedHour = `${prevAttendance.total_worked_hours}`;
-                    attendancePayrollId = `${prevAttendance.id}`;
+                    totalWorkedHour = prevAttendance.total_worked_hours;
+                    attendancePayrollId = prevAttendance.id;
                     isApproved =
                         prevAttendance.attendance_status == 3 ||
                         prevAttendance.attendance_status == 2 ||
@@ -199,7 +213,8 @@ const getCreate = async ({ startDate, endDate, employee_id }) => {
                 if (regularAAType) isApproved = true;
             }
             attendanceSheet.AADateHours.push({
-                date: sDate,
+                date: new Date(sDate),
+                dateKey: dateAndMonth(sDate),
                 isAbsence,
                 hours: totalWorkedHour,
                 attendance_payroll_id: attendancePayrollId,
@@ -211,7 +226,14 @@ const getCreate = async ({ startDate, endDate, employee_id }) => {
         }
         attendanceSheetList.push(attendanceSheet);
     }
-    return attendanceSheetList;
+    const targetHours = attendanceSheetList[0].targetHours;
+    const actualHours = attendanceSheetList[0].actualHours;
+    const AADateHours = attendanceSheetList.map(
+        ({ AADateHours: aaDateHours, AAType }) => {
+            return { days: aaDateHours, AAType };
+        }
+    );
+    return { AADateHours, targetHours, actualHours };
 };
 /**
  *
@@ -334,7 +356,7 @@ const getDistinctAAType = (
     empAttendancePayrollList
 ) => {
     const tempArray = empAttendancePayrollList.filter((element) => {
-        return element.date > startDate && element.date <= endDate;
+        return element.date >= startDate && element.date <= endDate;
     });
     const aaTypes = tempArray.map((elem) => elem.attendance_abscence_type_id);
     function onlyUnique(value, index, self) {
@@ -411,6 +433,7 @@ const postCreate = async (
                             revisedBy: String(creator),
                             employee_id,
                             date: dateHoursVal.date,
+                            total_worked_hours: dateHoursVal.hours,
                             attendance_status: 1,
                             attendance_abscence_type_id: attendance.id,
                             delegated_username,

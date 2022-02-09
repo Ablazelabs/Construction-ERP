@@ -1335,23 +1335,24 @@ model recurring_journal_occurrence {
 }
 
 model budget {
-  startDate          DateTime
-  endDate            DateTime
-  creationDate       DateTime         @default(now())
-  createdBy          String
-  revisionDate       DateTime         @updatedAt
-  revisedBy          String
-  status             Int              @default(0)
-  isProtectedForEdit Boolean          @default(false)
-  id                 Int              @id @default(autoincrement())
-  name               String?
-  fiscal_year        DateTime         @default(now())
-  budget_reason      Int
-  project_name       String?
-  cost_center_id     Int?
-  cost_center        cost_center?     @relation(fields: [cost_center_id], references: [id])
+  startDate             DateTime
+  endDate               DateTime
+  creationDate          DateTime                @default(now())
+  createdBy             String
+  revisionDate          DateTime                @updatedAt
+  revisedBy             String
+  status                Int                     @default(0)
+  isProtectedForEdit    Boolean                 @default(false)
+  id                    Int                     @id @default(autoincrement())
+  name                  String?
+  fiscal_year           DateTime                @default(now())
+  budget_reason         Int
+  project_name          String?
+  cost_center_id        Int?
+  cost_center           cost_center?            @relation(fields: [cost_center_id], references: [id])
   //needs cost center
-  budget_account     budget_account[]
+  budget_account        budget_account[]
+  budget_control_action budget_control_action[]
 }
 
 model budget_account {
@@ -1403,6 +1404,8 @@ model budget_control_action {
   id                                         Int      @id @default(autoincrement())
   type                                       Int
   action_accumulated_monthly_budget_exceeded Int
+  budget_id                                  Int?
+  budget                                     budget?  @relation(fields: [budget_id], references: [id])
   //needs no one
 }
 
