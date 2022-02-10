@@ -138,81 +138,51 @@ router.post("/budget", async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
-router.get(allRoutes, async (req, res, next) => {
-    const operationDataType = req.path.split("/").pop();
-    const filters = allFilters[operationDataType],
-        sorts = allSorts[operationDataType],
-        projections = allProjections[operationDataType];
-    const getData = returnGetData(
-        req.body,
-        { filters, sorts, projections },
-        next
-    );
-    if (!getData) {
-        return;
-    }
-    const { queryFilter, querySort, limit, skip, projection } = getData;
-    try {
-        res.json(
-            await get(
-                queryFilter,
-                querySort,
-                limit,
-                skip,
-                projection,
-                operationDataType
-            )
-        );
-    } catch (e) {
-        console.log(e);
-        error("database", "error", next, 500);
-    }
-});
-router.patch("/budget", async (req, res, next) => {
-    const operationDataType = req.path.split("/").pop();
+// router.patch("/budget", async (req, res, next) => {
+//     const operationDataType = req.path.split("/").pop();
 
-    const requiredInputFilter = allInputFilters[operationDataType],
-        optionalInputFilter = allOptionalInputFilters[operationDataType],
-        dateValue = dateValues[operationDataType],
-        myEnums = enums[operationDataType],
-        phoneValue = phoneValues[operationDataType],
-        emailValue = emailValues[operationDataType],
-        rangeValues = allRangeValues[operationDataType];
+//     const requiredInputFilter = allInputFilters[operationDataType],
+//         optionalInputFilter = allOptionalInputFilters[operationDataType],
+//         dateValue = dateValues[operationDataType],
+//         myEnums = enums[operationDataType],
+//         phoneValue = phoneValues[operationDataType],
+//         emailValue = emailValues[operationDataType],
+//         rangeValues = allRangeValues[operationDataType];
 
-    const data = returnPatchData(
-        req.body,
-        {
-            requiredInputFilter,
-            optionalInputFilter,
-            dateValue,
-            myEnums,
-            phoneValue,
-            emailValue,
-            rangeValues,
-        },
-        next
-    );
-    if (!data) {
-        return;
-    }
-    const { updateData, updateDataProjection } = data;
-    try {
-        const data = await patch(
-            updateDataProjection,
-            req.body,
-            updateData,
-            operationDataType,
-            res.locals.id,
-            next
-        );
-        if (data == false) {
-            return;
-        }
-        res.json(data);
-    } catch (e) {
-        console.log(e);
-        error("database", "error", next, 500);
-        return;
-    }
-});
+//     const data = returnPatchData(
+//         req.body,
+//         {
+//             requiredInputFilter,
+//             optionalInputFilter,
+//             dateValue,
+//             myEnums,
+//             phoneValue,
+//             emailValue,
+//             rangeValues,
+//         },
+//         next
+//     );
+//     if (!data) {
+//         return;
+//     }
+//     const { updateData, updateDataProjection } = data;
+//     try {
+//         const data = await patch(
+//             updateDataProjection,
+//             req.body,
+//             updateData,
+//             operationDataType,
+//             res.locals.id,
+//             next
+//         );
+//         if (data == false) {
+//             return;
+//         }
+//         res.json(data);
+//     } catch (e) {
+//         console.log(e);
+//         error("database", "error", next, 500);
+//         return;
+//     }
+// });
 module.exports = router;

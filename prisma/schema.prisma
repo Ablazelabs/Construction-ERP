@@ -1602,7 +1602,8 @@ model cash_payment_voucher {
   cpv_type_id         Int?
   request_payment_id  Int?
   cpv_bank            cpv_bank?             @relation(fields: [cpv_bank_id], references: [id])
-  checked_by          employee?             @relation(fields: [checked_by_id], references: [id])
+  prepared_by         employee?             @relation(fields: [prepared_by_id], references: [id], name: "prepared_by_cash")
+  checked_by          employee?             @relation(fields: [checked_by_id], references: [id], name: "checked_by_cash")
   project             project?              @relation(fields: [project_id], references: [id])
   cpv_type            cpv_type?             @relation(fields: [cpv_type_id], references: [id])
   //
@@ -2480,7 +2481,8 @@ model employee {
   leave_plan                       leave_plan[]
   punch                            punch[]
   punch_time                       punch_time[]
-  cash_payment_voucher             cash_payment_voucher[]
+  cash_payment_voucher_checked     cash_payment_voucher[]             @relation("checked_by_cash")
+  cash_payment_voucher_prepared    cash_payment_voucher[]             @relation("prepared_by_cash")
   payment_preparers                cpv_payment_request[]              @relation("prepared_by")
   payment_checkers                 cpv_payment_request[]              @relation("checked_by")
   payment_requests                 cpv_payment_request[]              @relation("approved_by")

@@ -19,6 +19,10 @@ const { chart_of_account, budget, cost_center } = allModels;
  * @param {*} next
  */
 const post = async (budgetInput, budgetControlAction, creator, next) => {
+    const defaultValues = {
+        createdBy: String(creator),
+        revisedBy: String(creator),
+    };
     let budgetControlActions = [];
     let budgetAccounts = [];
     if (budgetInput.is_applicable_material_request) {
@@ -95,13 +99,26 @@ const post = async (budgetInput, budgetControlAction, creator, next) => {
               ).cost_center_code
             : budgetInput.project_name;
     budgetInput.name += " is budgeted";
+    await budget.create({
+        data: {
+            budget_control_action: {
+                createMany: {
+                    skipDuplicates: true,
+                    data: budgetControlActions.map((action) => {
+                        return {
+                            ...action,
+                            ...defaultValues,
+                            startDate: budgetInput.startDate,
+                            endDate: budgetInput.endDate,
+                        };
+                    }),
+                },
+            },
+            ...budgetInput,
+            ...defaultValues,
+        },
+    });
     return { success: true };
-    //db is wrong so wait until migration and generation are done!
-    // await budget.create({
-    //     data: {
-    //         budget_control_actions
-    //     },
-    // });
 };
 const get = async (
     queryFilter,
