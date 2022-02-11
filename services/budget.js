@@ -85,7 +85,8 @@ const post = async (budgetInput, budgetControlAction, creator, next) => {
     if (count) {
         error(
             budgetInput.budget_reason == 1 ? "cost_center_id" : "project_name",
-            "budget already exists"
+            "budget already exists",
+            next
         );
         return false;
     }

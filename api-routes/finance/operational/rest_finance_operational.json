@@ -55,7 +55,7 @@
             "chart_of_account_id": "number"
         },
         "general_journal_header": {
-            "posting_reference":"string",
+            "posting_reference": "string",
             "journal_date": "string",
             "notes": "string",
             "currency_id": "number",

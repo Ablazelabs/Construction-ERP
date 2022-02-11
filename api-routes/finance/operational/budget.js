@@ -2,18 +2,12 @@ const express = require("express");
 const router = express.Router();
 const { error } = require("../../../config/config");
 const inputFilter = require("../../../validation/inputFilter");
-const { post, get, patch } = require("../../../services/budget");
+const { post } = require("../../../services/budget");
 
-const {
-    returnReqBody,
-    returnGetData,
-    returnPatchData,
-} = require("../../../validation/basicValidators");
+const { returnReqBody } = require("../../../validation/basicValidators");
 
 const allConfigs = require("./rest_finance_operational.json");
 const {
-    allRoutes,
-    allPostRoutes,
     allInputFilters,
     allOptionalInputFilters,
     dateValues,
@@ -21,9 +15,6 @@ const {
     phoneValues,
     emailValues,
     allRangeValues,
-    allProjections,
-    allSorts,
-    allFilters,
 } = allConfigs;
 
 router.post("/budget", async (req, res, next) => {
@@ -138,51 +129,4 @@ router.post("/budget", async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
-// router.patch("/budget", async (req, res, next) => {
-//     const operationDataType = req.path.split("/").pop();
-
-//     const requiredInputFilter = allInputFilters[operationDataType],
-//         optionalInputFilter = allOptionalInputFilters[operationDataType],
-//         dateValue = dateValues[operationDataType],
-//         myEnums = enums[operationDataType],
-//         phoneValue = phoneValues[operationDataType],
-//         emailValue = emailValues[operationDataType],
-//         rangeValues = allRangeValues[operationDataType];
-
-//     const data = returnPatchData(
-//         req.body,
-//         {
-//             requiredInputFilter,
-//             optionalInputFilter,
-//             dateValue,
-//             myEnums,
-//             phoneValue,
-//             emailValue,
-//             rangeValues,
-//         },
-//         next
-//     );
-//     if (!data) {
-//         return;
-//     }
-//     const { updateData, updateDataProjection } = data;
-//     try {
-//         const data = await patch(
-//             updateDataProjection,
-//             req.body,
-//             updateData,
-//             operationDataType,
-//             res.locals.id,
-//             next
-//         );
-//         if (data == false) {
-//             return;
-//         }
-//         res.json(data);
-//     } catch (e) {
-//         console.log(e);
-//         error("database", "error", next, 500);
-//         return;
-//     }
-// });
 module.exports = router;

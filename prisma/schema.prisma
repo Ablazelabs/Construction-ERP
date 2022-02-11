@@ -303,6 +303,7 @@ model project {
   cpv_payment_request          cpv_payment_request[]
   crv_payment                  crv_payment[]
   request_payment              request_payment[]
+  petty_cash                   petty_cash[]
 }
 
 model daily_work_log {
@@ -1778,6 +1779,8 @@ model petty_cash {
   issued_by_id            Int?
   cash_payment_voucher_id Int?
   cash_payment_voucher    cash_payment_voucher? @relation(fields: [cash_payment_voucher_id], references: [id])
+  issued_by               employee?             @relation(fields: [issued_by_id], references: [id])
+  project                 project?              @relation(fields: [project_id], references: [id])
 
   //needs cash_payment_voucher
   //needs project
@@ -2492,6 +2495,7 @@ model employee {
   request_payment_prepared_by      request_payment[]                  @relation("prepared_by_req_pay")
   request_payment_checked_by       request_payment[]                  @relation("checked_by_req_pay")
   request_payment_approved_by      request_payment[]                  @relation("approved_by_req_pay")
+  petty_cash                       petty_cash[]
 }
 
 model employee_action {
