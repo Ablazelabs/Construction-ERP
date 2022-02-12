@@ -1,6 +1,5 @@
 const { allModels } = require("../config/config");
 const xlsx = require("node-xlsx");
-const { writeFileSync } = require("fs");
 const { cash_payment_custom } = allModels;
 
 /**
@@ -8,7 +7,7 @@ const { cash_payment_custom } = allModels;
  * @param {Date} from
  * @param {Date} to
  */
-const getExportedPdf = async (from, to) => {
+const getExportedExcel = async (from, to) => {
     const customCashPayment = { from, to };
     const custom = await cash_payment_custom.findMany({
         where: {
@@ -41,25 +40,30 @@ const getExportedPdf = async (from, to) => {
     }
     mergeRanges.push({ s: { c: 3, r: 3 }, e: { c: 6, r: 3 } }); //D4:G4
     mergeRanges.push({ s: { c: 7, r: 3 }, e: { c: 8, r: 3 } });
-    let sheetOptions = { "!merges": mergeRanges, "!row": [{ hpt: 30 }] };
+    let sheetOptions = { "!merges": mergeRanges, "!row": [{ hpx: 30 }] };
     xlsx.build([{ data: [], options: {} }]);
     //setting data on a
-    dataSheet[0] = [
-        `ግብር ከፋይ መለያ ቁጥር - 0062451276`,
-        `የግብር ከፋይ ስም - El-Hadar Engineering & Trading P.L.C`,
-        `የስራው ዓይነት - Almunium & Metal & Electro Mechanical Work`,
+    dataSheet[0] = [`ግብር ከፋይ መለያ ቁጥር - 0062451276`];
+    dataSheet[1] = [`የግብር ከፋይ ስም - El-Hadar Engineering & Trading P.L.C`];
+    dataSheet[2] = [`የስራው ዓይነት - Almunium & Metal & Electro Mechanical Work`];
+    dataSheet[3] = [
         `ሪፖርት የተደረገበት ወር - ${customCashPayment.from.toDateString()} - Up To : ${customCashPayment.to.toDateString()}`,
+        "",
+        "",
+        "የተከፈለው ገንዘብ መጠን በብር",
+        "",
+        "",
+        "",
+        "ግዢው የተፈፀመበት ደረሰኝ",
     ];
-    dataSheet[3] = ["", "", "", "የተከፈለው ገንዘብ መጠን በብር"];
-    dataSheet[7] = ["", "", "", "ግዢው የተፈፀመበት ደረሰኝ"];
     dataSheet[4] = headerRow;
     let recordIndex = 5;
     for (let i in custom) {
         const item = custom[i];
-        sheetOptions["!row"][recordIndex] = { hpt: 11 };
+        sheetOptions["!row"][recordIndex] = { hpx: 11 };
         //only height works, no bolding or font style option
         dataSheet[recordIndex] = [
-            `${i}`,
+            parseInt(i) + 1,
             item.customer,
             item.tin_number,
             item.amount,
@@ -78,11 +82,6 @@ const getExportedPdf = async (from, to) => {
         }
         dataSheet[i] = [];
     }
-    console.log({
-        name: "sheet 1",
-        data: dataSheet,
-        options: sheetOptions,
-    });
     const buffer = xlsx.build([
         {
             name: "sheet 1",
@@ -90,6 +89,6 @@ const getExportedPdf = async (from, to) => {
             options: sheetOptions,
         },
     ]);
-    writeFileSync("./generated.xlsx", buffer);
+    return buffer;
 };
-module.exports = { getExportedPdf };
+module.exports = { getExportedExcel };

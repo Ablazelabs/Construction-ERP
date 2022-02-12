@@ -22,7 +22,7 @@ const auditLogSort = {
 /**
  *
  * @param {object} reqBody the object to be processed
- * @param {{phoneValue:Array<string>,email:Array<string>,emailValue:Array<string>,dateValue:Array<string>}} param1
+ * @param {{phoneValue:Array<string>,emailValue:Array<string>,dateValue:Array<string>,requiredInputFilter:any, optionalInputFilter:any,myEnums:any,rangeValues:any}} param1
  * @param {Function} next
  * @returns
  */

@@ -2,21 +2,33 @@
 <html>
     <head>
         <style>
+            @media print {
+                body {
+                    width: 21cm;
+                    height: 29.7cm;
+                    /* margin: 30mm 45mm 30mm 45mm; */
+                    font-size: small;
+                }
+            }
+            .title {
+                background-color: #f5f5f5;
+            }
             table {
                 font-family: arial, sans-serif;
                 /* border-collapse: collapse; */
                 width: 100%;
-                border: 1px solid #1261a0;
+                border: 2px solid #14213d;
                 margin: 0;
-                color: #1261a0;
+                color: #14213d;
                 font-family: sans-serif;
                 font-weight: bolder;
+                border-collapse: collapse;
             }
 
             td,
             th {
-                border-bottom: 1px solid #aaa;
-                border-right: 1px solid #aaa;
+                border-bottom: 1px solid silver;
+                border-right: 1px solid silver;
                 text-align: left;
                 padding: 8px;
                 margin: 0;
@@ -29,33 +41,42 @@
     </head>
     <body style="padding: 0 4ch">
         <div style="display: flex; margin-bottom: 3ch">
+            <div style="align-self: center; justify-content: center">
+                <img
+                    alt="El Hadar"
+                    src="./src/Assets/img/logo.svg"
+                    width="100px"
+                    height="100px"
+                />
+            </div>
             <div
                 style="
                     flex: 0.75;
                     display: flex;
                     text-align: center;
                     justify-content: center;
+                    align-items: center;
                 "
             >
-                <div style="text-align: start">
+                <div style="text-align: center">
                     <h1 style="margin-bottom: 1ch">Employee Payslip</h1>
                     Date: 06 May 2022
                 </div>
             </div>
             <!-- employee details table -->
-            <div style="float: right; flex: 0.25">
+            <div style="float: right; flex: 0.40">
                 <table>
                     <tr>
-                        <th colspan="3">Employee Details</th>
+                        <th class="title" colspan="3">Employee Details</th>
                     </tr>
                     <tr>
-                        <td>Name</td>
+                        <td class="title">Name</td>
                         <td colspan="2">Employee name</td>
                     </tr>
                     <tr>
-                        <td>address</td>
-                        <td colspan="2">
-                            <br /><br />Addis Ababa, Ethiopia<br /><br />.
+                        <td class="title">address</td>
+                        <td >
+                           Addis Ababa, Ethiopia.
                         </td>
                     </tr>
                 </table>
@@ -64,33 +85,33 @@
 
         <table>
             <tr>
-                <td colspan="2">Name of Employee</td>
-                <td colspan="3"><input type="text" /></td>
+                <td class="title" colspan="2">Name of Employee</td>
+                <td colspan="3">Abebe Kebede</td>
             </tr>
             <tr>
-                <td colspan="2">Id Number</td>
-                <td colspan="3"><input type="text" /></td>
+                <td class="title" colspan="2">Id Number</td>
+                <td colspan="3">00001</td>
             </tr>
             <tr>
-                <td colspan="2">Employee Number</td>
-                <td colspan="3"><input type="text" /></td>
+                <td class="title" colspan="2">Employee Number</td>
+                <td colspan="3">1</td>
             </tr>
             <tr>
-                <td colspan="2">Occupation/Grade</td>
+                <td class="title" colspan="2">Occupation/Grade</td>
                 <td colspan="3">stuff</td>
             </tr>
             <tr>
-                <td colspan="5">Pay Period</td>
+                <td class="title" colspan="5">Pay Period</td>
             </tr>
             <tr>
-                <td>From</td>
+                <td class="title">From</td>
                 <td>stuff</td>
-                <td>To</td>
+                <td class="title">To</td>
                 <td>stuff</td>
                 <td>Yoshi</td>
             </tr>
             <tr>
-                <td rowspan="2" colspan="2">Manner of Payment</td>
+                <td class="title" rowspan="2" colspan="2">Manner of Payment</td>
                 <td><input type="checkbox" /></td>
                 <td><input type="checkbox" /></td>
                 <td><input type="checkbox" /></td>
@@ -101,102 +122,102 @@
                 <td colspan="1"></td>
             </tr>
         </table>
-        <h1 style="text-indent: 1ch">Income</h1>
+        <h2 >Income</h1>
         <table>
-            <tr>
+            <tr class="title">
                 <th colspan="2">Item</th>
                 <th>Rate</th>
                 <th>No. of Hours</th>
                 <th>Rand Earned</th>
             </tr>
             <tr>
-                <td colspan="2">Ordinary Hours Worked</td>
-                <td><input type="text" /></td>
-                <td><input type="text" /></td>
-                <td><input type="text" /></td>
+                <td class="title" colspan="2">Ordinary Hours Worked</td>
+                <td></td>
+                <td></td>
+                <td></td>
             </tr>
             <tr>
-                <td colspan="2">Overtime Worked</td>
-                <td><input type="text" /></td>
-                <td><input type="text" /></td>
-                <td><input type="text" /></td>
+                <td class="title" colspan="2">Overtime Worked</td>
+                <td></td>
+                <td></td>
+                <td></td>
             </tr>
             <tr>
-                <td colspan="2">Sundays Worked</td>
-                <td><input type="text" /></td>
-                <td><input type="text" /></td>
-                <td><input type="text" /></td>
+                <td class="title" colspan="2">Sundays Worked</td>
+                <td></td>
+                <td></td>
+                <td></td>
             </tr>
             <tr>
-                <td colspan="2">Public holidays worked</td>
-                <td><input type="text" /></td>
-                <td><input type="text" /></td>
-                <td><input type="text" /></td>
+                <td class="title" colspan="2">Public holidays worked</td>
+                <td></td>
+                <td></td>
+                <td></td>
             </tr>
             <tr>
-                <td colspan="2">Payment in Kind</td>
-                <td><input type="text" /></td>
-                <td><input type="text" /></td>
-                <td><input type="text" /></td>
+                <td class="title" colspan="2">Payment in Kind</td>
+                <td></td>
+                <td></td>
+                <td></td>
             </tr>
-            <tr>
+            <tr class="title">
                 <td colspan="5">Allowances(specify)</td>
             </tr>
             <tr>
-                <td colspan="2">&nbsp;&nbsp;1.</td>
-                <td><input type="text" /></td>
-                <td><input type="text" /></td>
-                <td><input type="text" /></td>
+                <td class="title" colspan="2">&nbsp;&nbsp;1.</td>
+                <td></td>
+                <td></td>
+                <td></td>
             </tr>
             <tr>
-                <td colspan="2">&nbsp;&nbsp;2.</td>
-                <td><input type="text" /></td>
-                <td><input type="text" /></td>
-                <td><input type="text" /></td>
+                <td class="title" colspan="2">&nbsp;&nbsp;2.</td>
+                <td></td>
+                <td></td>
+                <td></td>
             </tr>
             <tr>
-                <td colspan="4">Total Income</td>
-                <td><input type="text" /></td>
+                <td class="title" colspan="4">Total Income</td>
+                <td></td>
             </tr>
         </table>
-        <h1 style="text-indent: 1ch">Deduction</h1>
+        <h2>Deduction</h1>
         <table>
-            <tr>
+            <tr class="title">
                 <th colspan="4">Item</th>
                 <th>Amount</th>
             </tr>
             <tr>
-                <td colspan="4">P.A.Y.E</td>
+                <td class="title" colspan="4">P.A.Y.E</td>
                 <td>somethin</td>
             </tr>
             <tr>
-                <td colspan="4">UIF</td>
+                <td class="title" colspan="4">UIF</td>
                 <td>something</td>
             </tr>
             <tr>
-                <td colspan="4">Union</td>
+                <td class="title" colspan="4">Union</td>
                 <td>something</td>
             </tr>
             <tr>
-                <td colspan="5">Other(specify)</td>
+                <td class="title" colspan="5">Other(specify)</td>
             </tr>
             <tr>
-                <td colspan="4">&nbsp;&nbsp;1.</td>
+                <td class="title" colspan="4">&nbsp;&nbsp;1.</td>
                 <td>something</td>
             </tr>
             <tr>
-                <td colspan="4">&nbsp;&nbsp;2</td>
+                <td class="title" colspan="4">&nbsp;&nbsp;2</td>
                 <td>something</td>
             </tr>
             <tr>
-                <td colspan="4">Total Deduction</td>
+                <td class="title" colspan="4">Total Deduction</td>
                 <td>something</td>
             </tr>
         </table>
-        <h1 style="text-indent: 1ch">Net Income</h1>
+        <h2 >Net Income</h1>
         <table>
             <tr>
-                <th colspan="4">Total Amount Due</th>
+                <th class="title" colspan="4">Total Amount Due</th>
                 <th>Amount</th>
             </tr>
         </table>
