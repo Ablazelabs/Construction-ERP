@@ -26,15 +26,19 @@ const {
 
 router.post("/create_recurring", async (req, res, next) => {
     let reqBody = {};
-    const generalJournalHeaderData = {
+    let generalJournalHeaderData = {
         requiredInputFilter: allInputFilters["general_journal_header"],
-        optionalInputFilter: allOptionalInputFilters["general_journal_header"],
+        optionalInputFilter: {
+            ...allOptionalInputFilters["general_journal_header"],
+            isCashBasedJournal: "boolean",
+        },
         dateValue: dateValues["general_journal_header"],
         myEnums: enums["general_journal_header"],
         phoneValue: phoneValues["general_journal_header"],
         emailValue: emailValues["general_journal_header"],
         rangeValues: allRangeValues["general_journal_header"],
     };
+    delete generalJournalHeaderData.requiredInputFilter.journal_date;
     const recurringJournalData = {
         requiredInputFilter: allInputFilters["recurring_general_journal"],
         optionalInputFilter:
@@ -45,8 +49,11 @@ router.post("/create_recurring", async (req, res, next) => {
         emailValue: emailValues["recurring_general_journal"],
         rangeValues: allRangeValues["recurring_general_journal"],
     };
-    const generalJournalDetailData = {
-        requiredInputFilter: allInputFilters["general_journal_detail"],
+    let generalJournalDetailData = {
+        requiredInputFilter: {
+            ...allInputFilters["general_journal_detail"],
+            tax_category: "number",
+        },
         optionalInputFilter: allOptionalInputFilters["general_journal_detail"],
         dateValue: dateValues["general_journal_detail"],
         myEnums: enums["general_journal_detail"],
@@ -54,28 +61,14 @@ router.post("/create_recurring", async (req, res, next) => {
         emailValue: emailValues["general_journal_detail"],
         rangeValues: allRangeValues["general_journal_detail"],
     };
-    const taxViewModelData = {
-        requiredInputFilter: {
-            seNum: "number",
-            id: "number",
-            taxName: "string",
-            taxCategory: "string",
-            taxPercentage: "number",
-        },
-        optionalInputFilter: {},
-        dateValue: [],
-        myEnums: {},
-        phoneValue: [],
-        emailValue: [],
-        rangeValues: {},
-    };
+    delete generalJournalDetailData.requiredInputFilter
+        .general_journal_header_id;
     try {
         reqBody = inputFilter(
             {
                 generalJournalHeader: "object",
                 recurringJournal: "object",
                 generalJournalDetail: "object",
-                taxViewModel: "object",
             },
             {},
             req.body
@@ -89,25 +82,12 @@ router.post("/create_recurring", async (req, res, next) => {
                 message: "array can't be empty",
             };
         }
-        if (!Array.isArray(reqBody.taxViewModel)) {
-            throw { key: "taxViewModel", message: "please send array" };
-        }
-        if (!reqBody.taxViewModel.length) {
-            throw {
-                key: "taxViewModel",
-                message: "array can't be empty",
-            };
-        }
     } catch (e) {
         error(e.key, e.message, next);
         return;
     }
-    let {
-        generalJournalHeader,
-        recurringJournal,
-        generalJournalDetail,
-        taxViewModel,
-    } = reqBody;
+    let { generalJournalHeader, recurringJournal, generalJournalDetail } =
+        reqBody;
 
     for (let i in generalJournalDetail) {
         generalJournalDetail[i] = returnReqBody(
@@ -116,16 +96,6 @@ router.post("/create_recurring", async (req, res, next) => {
             next
         );
         if (!generalJournalDetail[i]) {
-            return;
-        }
-    }
-    for (let i in taxViewModel) {
-        taxViewModel[i] = returnReqBody(
-            taxViewModel[i],
-            taxViewModelData,
-            next
-        );
-        if (!taxViewModel[i]) {
             return;
         }
     }
@@ -150,7 +120,6 @@ router.post("/create_recurring", async (req, res, next) => {
             generalJournalHeader,
             recurringJournal,
             generalJournalDetail,
-            taxViewModel,
             res.locals.id,
             next
         );

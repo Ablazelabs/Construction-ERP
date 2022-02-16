@@ -89,7 +89,11 @@
         "cpv_type": { "name": "string", "description": "string" },
         "petty_cash": { "date": "string" },
         "crv_payment": {},
-        "crv_type": { "name": "string" }
+        "crv_type": { "name": "string" },
+        "opening_balance_account": {
+            "debit_or_credit": "number",
+            "opening_balance_id": "number"
+        }
     },
     "enums": {
         "chart_of_account": {},
@@ -211,7 +215,8 @@
         },
         "petty_cash": {},
         "crv_payment": {},
-        "crv_type": { "crv_types": ["Cash", "Check"] }
+        "crv_type": { "crv_types": ["Cash", "Check"] },
+        "opening_balance_account": { "debit_or_credit": ["credit", "debit"] }
     },
     "allOptionalInputFilters": {
         "chart_of_account": {
@@ -373,7 +378,13 @@
             "project_id": "number",
             "crv_type_id": "number"
         },
-        "crv_type": { "description": "string", "crv_types": "number" }
+        "crv_type": { "description": "string", "crv_types": "number" },
+        "opening_balance_account": {
+            "amount_credit": "number",
+            "amount_debit": "number",
+            "currency_id": "number",
+            "chart_of_account_id": "number"
+        }
     },
     "allRangeValues": {},
     "phoneValues": {
@@ -737,6 +748,15 @@
             "name": true,
             "description": true,
             "crv_types": true
+        },
+        "opening_balance_account": {
+            "id": true,
+            "debit_or_credit": true,
+            "amount_credit": true,
+            "amount_debit": true,
+            "opening_balance": true,
+            "currency": true,
+            "chart_of_account": true
         }
     },
     "allFilters": {
@@ -1008,6 +1028,15 @@
             "name": "string",
             "description": "string",
             "crv_types": "number"
+        },
+        "opening_balance_account": {
+            "id": "number",
+            "debit_or_credit": "number",
+            "amount_credit": "number",
+            "amount_debit": "number",
+            "opening_balance_id": "number",
+            "currency_id": "number",
+            "chart_of_account_id": "number"
         }
     },
     "allSorts": {
@@ -1303,6 +1332,15 @@
             "name": "number",
             "description": "number",
             "crv_types": "number"
+        },
+        "opening_balance_account": {
+            "id": "number",
+            "debit_or_credit": "number",
+            "amount_credit": "number",
+            "amount_debit": "number",
+            "opening_balance_id": "number",
+            "currency_id": "number",
+            "chart_of_account_id": "number"
         }
     },
     "allRoutes": [
@@ -1335,7 +1373,8 @@
         "/cpv_type",
         "/petty_cash",
         "/crv_payment",
-        "/crv_type"
+        "/crv_type",
+        "/opening_balance_account"
     ],
     "allPostRoutes": [
         "/chart_of_account",
@@ -1365,6 +1404,7 @@
         "/cpv_type",
         "/petty_cash",
         "/crv_payment",
-        "/crv_type"
+        "/crv_type",
+        "/opening_balance_account"
     ]
 }

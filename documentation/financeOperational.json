@@ -6379,5 +6379,207 @@
                 }
             }
         }
+    },
+    "/finance/operational/opening_balance_account": {
+        "post": {
+            "summary": "creates a new opening_balance_account",
+            "tags": ["opening_balance_account"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "debit_or_credit": { "type": "Int" },
+                                "amount_credit": { "type": "Float?" },
+                                "amount_debit": { "type": "Float?" },
+                                "opening_balance_id": { "type": "Int" },
+                                "currency_id": { "type": "Int?" },
+                                "chart_of_account_id": { "type": "Int?" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected opening_balance_accounts",
+            "tags": ["opening_balance_account"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "debit_or_credit": { "type": "Int" },
+                                        "opening_balance_id": { "type": "Int" },
+                                        "currency_id": { "type": "Int?" },
+                                        "chart_of_account_id": {
+                                            "type": "Int?"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "debit_or_credit": { "type": "Int" },
+                                        "amount_credit": { "type": "Int" },
+                                        "amount_debit": { "type": "Int" },
+                                        "opening_balance_id": { "type": "Int" },
+                                        "currency_id": { "type": "Int" },
+                                        "chart_of_account_id": {
+                                            "type": "Int"
+                                        },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "debit_or_credit": { "type": "Int" },
+                                    "amount_credit": { "type": "Float?" },
+                                    "amount_debit": { "type": "Float?" },
+                                    "opening_balance_id": { "type": "Int" },
+                                    "currency_id": { "type": "Int?" },
+                                    "chart_of_account_id": { "type": "Int?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a opening_balance_account",
+            "tags": ["opening_balance_account"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "debit_or_credit": { "type": "Int" },
+                                        "amount_credit": { "type": "Float?" },
+                                        "amount_debit": { "type": "Float?" },
+                                        "opening_balance_id": { "type": "Int" },
+                                        "currency_id": { "type": "Int?" },
+                                        "chart_of_account_id": {
+                                            "type": "Int?"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a opening_balance_account",
+            "tags": ["opening_balance_account"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

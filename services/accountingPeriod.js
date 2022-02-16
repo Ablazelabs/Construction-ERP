@@ -1,6 +1,6 @@
 const { error, allModels } = require("../config/config");
 
-const { accounting_period, transaction_lock } = allModels;
+const { accounting_period, transaction_lock, exchange_rate } = allModels;
 const post = async (reqBody, creator, enums, next) => {
     const allowedAccountingPeriodStatus = [2, 3];
     if (
@@ -208,9 +208,87 @@ const deleter = async ({ id }) => {
     return { success: true };
 };
 
+/**
+ *
+ * @param {Array<import("@prisma/client").general_ledger & {general_journal_header:import("@prisma/client").general_journal_header}>} generalLedgerWithFCY
+ * @param {Function} getTotalCreditAmount
+ * @param {Function} getTotalDebitAmount
+ * @returns
+ */
+const convertGeneralLedgerToBaseCurrency = async (
+    generalLedgerWithFCY,
+    getTotalCreditAmount,
+    getTotalDebitAmount
+) => {
+    const minMaxDates = generalLedgerWithFCY.map(({ general_journal_header }) =>
+        general_journal_header.journal_date.getTime()
+    );
+    const startDate = new Date(Math.min(...minMaxDates));
+    const endDate = new Date(Math.max(...minMaxDates));
+
+    const exchangeRates = await exchange_rate.findMany({
+        where: {
+            status: 0,
+            date: {
+                gt: new Date(startDate.getFullYear(), startDate.getMonth(), 0),
+                lt: new Date(endDate.getFullYear(), endDate.getMonth() + 1, 0),
+            },
+        },
+    });
+    let amountInFCY = 0;
+    let amountInBCY = 0;
+    let totalAmountInBCY = 0;
+
+    for (let i in generalLedgerWithFCY) {
+        const journal = generalLedgerWithFCY[i];
+        amountInFCY = 0;
+        amountInBCY = 0;
+
+        const exchangeRate = exchangeRates.find(
+            (elem) =>
+                elem.date.getFullYear() ==
+                    journal.general_journal_header.journal_date.getFullYear() &&
+                elem.date.getMonth() ==
+                    journal.general_journal_header.journal_date.getMonth() &&
+                elem.currency_id == journal.general_journal_header.currency_id
+        );
+
+        if (exchangeRate) {
+            amountInFCY =
+                getTotalDebitAmount([journal], journal.chart_of_account) +
+                getTotalCreditAmount([journal], journal.chart_of_account);
+            amountInBCY = amountInFCY * exchangeRate.rate;
+        }
+        totalAmountInBCY += amountInBCY;
+    }
+
+    return totalAmountInBCY;
+};
+
+/**
+ *
+ * @param {Array<import("@prisma/client").general_ledger & {general_journal_header:import("@prisma/client").general_journal_header}>} journalsWithFCY
+ * @param {Function} getTotalCreditAmount
+ * @param {Function} getTotalDebitAmount
+ * @returns
+ */
+const convertJournalTransactionToBaseCurrency = async (
+    journalsWithFCY,
+    getTotalCreditAmount,
+    getTotalDebitAmount
+) => {
+    return await convertGeneralLedgerToBaseCurrency(
+        journalsWithFCY,
+        getTotalCreditAmount,
+        getTotalDebitAmount
+    );
+};
+
 module.exports = {
     post,
     get,
     patch,
     deleter,
+    convertGeneralLedgerToBaseCurrency,
+    convertJournalTransactionToBaseCurrency,
 };

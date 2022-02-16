@@ -2540,4 +2540,5 @@ module.exports = {
     getPost,
     postPost,
     getEmployeeDepartment,
+    groupByFn,
 };

@@ -30,6 +30,7 @@ const {
  *  recurring_general_journal_id: number,
  *  startDate:Date,
  *  endDate:Date,
+ *  isCashBasedJournal:boolean
  * }} generalJournalHeader
  * @param {{
  *  profile_name: string,
@@ -57,6 +58,7 @@ const {
  *  contact_id: number,
  *  startDate:Date,
  *  endDate:Date,
+ *  tax_category:1|2
  * }>} generalJournalDetail
  * @param {Array<{
  *  seNum: number,
@@ -72,7 +74,6 @@ const createRecurring = async (
     generalJournalHeader,
     recurringJournal,
     generalJournalDetail,
-    taxViewModel,
     creator,
     next
 ) => {
@@ -187,14 +188,33 @@ const createRecurring = async (
         const detail = generalJournalDetail[i];
         if (detail) {
             totalAmount += detail.amount_credit;
-            const tempTaxViewModel = taxViewModel.find((elem) => {
-                elem.seNum === detail.tax_id;
-            });
+            let percentage = 0;
+            if (detail.tax_category == 1) {
+                percentage = (
+                    await tax.findUnique({
+                        where: { id: detail.tax_id },
+                        select: { tax_percentage: true },
+                    })
+                )?.tax_percentage;
+            } else {
+                percentage = (
+                    await tax_group.findUnique({
+                        where: { id: detail.tax_id },
+                        select: { tax_group_percentage: true },
+                    })
+                )?.tax_group_percentage;
+            }
+            const tempTaxViewModel = {
+                id: detail.tax_id,
+                taxCategory: detail.tax_category,
+                taxPercentage: percentage,
+            };
+            delete generalJournalDetail[i].tax_category;
             //we feed this object to prisma so, add what needs to be added here except for revised by and created by and the header foreign key id
             generalJournalDetail[i].posting_reference =
                 generalJournalHeader.posting_reference + " - " + count;
             if (tempTaxViewModel) {
-                if (tempTaxViewModel.taxCategory == "Tax") {
+                if (tempTaxViewModel.taxCategory == 1) {
                     //id is aleady detail's id(talking about c#)
                     generalJournalDetail[i].tax_id = tempTaxViewModel.id;
                     generalJournalDetail[i].tax_group_id = undefined;
@@ -290,6 +310,12 @@ const createRecurring = async (
         commented_date: new Date(),
         application_user_id: creator,
     };
+    generalJournalHeader.journal_date = recurringJournal.start_on;
+    generalJournalHeader.report_basis = generalJournalHeader.isCashBasedJournal
+        ? 2
+        : 1;
+    generalJournalHeader.journal_posting_status = 2;
+
     await general_journal_header.create({
         data: {
             ...generalJournalHeader,

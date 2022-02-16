@@ -1243,6 +1243,7 @@ model chart_of_account {
   sales_stock_item                 stock_item[]                       @relation("sales_chart")
   purchase_stock_item              stock_item[]                       @relation("purchase_chart")
   inventory_stock_item             stock_item[]                       @relation("inventory_chart")
+  opening_balance_account          opening_balance_account[]
 }
 
 model account_type_financial_statement_section {
@@ -1544,19 +1545,44 @@ model transaction_lock {
 }
 
 model opening_balance {
-  startDate            DateTime
-  endDate              DateTime
-  creationDate         DateTime @default(now())
-  createdBy            String
-  revisionDate         DateTime @updatedAt
-  revisedBy            String
-  status               Int      @default(0)
-  isProtectedForEdit   Boolean  @default(false)
-  id                   Int      @id @default(autoincrement())
-  opening_balance_date DateTime
-  price_precision      Int?
-  amount               Float?
-  month                Int
+  startDate               DateTime
+  endDate                 DateTime
+  creationDate            DateTime                  @default(now())
+  createdBy               String
+  revisionDate            DateTime                  @updatedAt
+  revisedBy               String
+  status                  Int                       @default(0)
+  isProtectedForEdit      Boolean                   @default(false)
+  id                      Int                       @id @default(autoincrement())
+  opening_balance_date    DateTime
+  price_precision         Int?
+  amount                  Float?
+  month                   Int
+  opening_balance_account opening_balance_account[]
+}
+
+model opening_balance_account {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime          @default(now())
+  createdBy           String
+  revisionDate        DateTime          @updatedAt
+  revisedBy           String
+  status              Int               @default(0)
+  isProtectedForEdit  Boolean           @default(false)
+  id                  Int               @id @default(autoincrement())
+  debit_or_credit     Int
+  amount_credit       Float?
+  amount_debit        Float?
+  opening_balance_id  Int
+  currency_id         Int?
+  chart_of_account_id Int
+  opening_balance     opening_balance   @relation(fields: [opening_balance_id], references: [id])
+  currency            currency?         @relation(fields: [currency_id], references: [id])
+  chart_of_account    chart_of_account? @relation(fields: [chart_of_account_id], references: [id])
+  //"OpeningBalance OpeningBalance" : "virtual"
+  //"Currency Currency" : "virtual"
+  //"ChartOfAccount ChartOfAccount" : "virtual"
 }
 
 model cash_payment_custom {
@@ -1970,31 +1996,32 @@ model recurring_general_journal {
 }
 
 model currency {
-  startDate              DateTime
-  endDate                DateTime
-  creationDate           DateTime                 @default(now())
-  createdBy              String
-  revisionDate           DateTime                 @updatedAt
-  revisedBy              String
-  status                 Int                      @default(0)
-  isProtectedForEdit     Boolean                  @default(false)
-  id                     Int                      @id @default(autoincrement())
-  currency_code          String                   @unique
-  currency_description   String
-  name                   String
-  symbol                 String                   @unique
-  price_precision        Int?
-  currency_format        Int?
-  is_base_currency       Boolean
-  bank                   bank[]
-  exchange_rate          exchange_rate[]
-  financial_settings     financial_settings[]
-  chart_of_account       chart_of_account[]
-  contact                contact[]
-  general_journal_header general_journal_header[]
-  general_ledger         general_ledger[]
-  asset                  asset[]
-  company                company[]
+  startDate               DateTime
+  endDate                 DateTime
+  creationDate            DateTime                  @default(now())
+  createdBy               String
+  revisionDate            DateTime                  @updatedAt
+  revisedBy               String
+  status                  Int                       @default(0)
+  isProtectedForEdit      Boolean                   @default(false)
+  id                      Int                       @id @default(autoincrement())
+  currency_code           String                    @unique
+  currency_description    String
+  name                    String
+  symbol                  String                    @unique
+  price_precision         Int?
+  currency_format         Int?
+  is_base_currency        Boolean
+  bank                    bank[]
+  exchange_rate           exchange_rate[]
+  financial_settings      financial_settings[]
+  chart_of_account        chart_of_account[]
+  contact                 contact[]
+  general_journal_header  general_journal_header[]
+  general_ledger          general_ledger[]
+  asset                   asset[]
+  company                 company[]
+  opening_balance_account opening_balance_account[]
 }
 
 model country {
