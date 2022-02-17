@@ -48,4 +48,5 @@ module.exports = {
     randomConcurrencyStamp,
     allModels,
     COMPANY_NAME: "ElHadar-PLC",
+    REPORT_BASIS_TITLE: "Accounting Method: ",
 };

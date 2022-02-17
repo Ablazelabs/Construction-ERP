@@ -3,6 +3,8 @@ const router = express.Router();
 const { error } = require("../../../config/config");
 const {
     generalLedgerExport,
+    accountTransactionsExport,
+    journalExport,
 } = require("../../../services/financeExportController");
 
 const inputFilter = require("../../../validation/inputFilter");
@@ -54,7 +56,7 @@ router.post("/general_ledger", async (req, res, next) => {
             },
             next
         );
-        if (enumAndDate === false) return false;
+        if (!enumAndDate) return false;
         reqBody.reportBasis = enumAndDate.reportBasis;
         reqBody.dateRange[0] = enumAndDate.from;
         reqBody.dateRange[1] = enumAndDate.to;
@@ -73,7 +75,7 @@ router.post("/general_ledger", async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
-router.post("/account_transactions", async (req, res, next) => {
+router.post("/account_transaction", async (req, res, next) => {
     let reqBody = {};
     const inputFilterData = {
         accounts: "object", //Array<number>
@@ -104,8 +106,8 @@ router.post("/account_transactions", async (req, res, next) => {
             {
                 reportBasis: reqBody.reportBasis,
                 reportBy: reqBody.reportBy,
-                from: reqBody.dateRange[0],
-                to: reqBody.dateRange[1],
+                from: reqBody.fromDate,
+                to: reqBody.toDate,
             },
             {
                 requiredInputFilter: {
@@ -127,11 +129,11 @@ router.post("/account_transactions", async (req, res, next) => {
             },
             next
         );
-        if (enumAndDate === false) return false;
+        if (!enumAndDate) return;
         reqBody.reportBasis = enumAndDate.reportBasis;
         reqBody.reportBy = enumAndDate.reportBy;
-        reqBody.dateRange[0] = enumAndDate.from;
-        reqBody.dateRange[1] = enumAndDate.to;
+        reqBody.fromDate = enumAndDate.from;
+        reqBody.toDate = enumAndDate.to;
     } catch (e) {
         error(e.key, e.message, next);
         return;
@@ -142,6 +144,68 @@ router.post("/account_transactions", async (req, res, next) => {
             res.locals.id,
             next
         );
+        if (data == false) {
+            return;
+        }
+        res.json(data);
+    } catch (e) {
+        console.log(e);
+        error("database", "error", next, 500);
+    }
+});
+router.post("/journal", async (req, res, next) => {
+    let reqBody = {};
+    const inputFilterData = {
+        dateRange: "object",
+        reportBasis: "number",
+    };
+    const inputFilterOptionalData = {
+        dateFormat: "string",
+    };
+    try {
+        reqBody = inputFilter(
+            { ...inputFilterData, exportAs: "string" },
+            inputFilterOptionalData,
+            req.body
+        );
+        if (!Array.isArray(reqBody.dateRange)) {
+            throw { key: "dateRange", message: "please send array" };
+        }
+        if (reqBody.dateRange.length != 2) {
+            throw {
+                key: "dateRange",
+                message: "date range must contain two dates(from - to)",
+            };
+        }
+        let enumAndDate = returnReqBody(
+            {
+                reportBasis: reqBody.reportBasis,
+                from: reqBody.dateRange[0],
+                to: reqBody.dateRange[1],
+            },
+            {
+                requiredInputFilter: {
+                    reportBasis: "number",
+                    from: "string",
+                    to: "string",
+                },
+                myEnums: {
+                    reportBasis: enums.general_journal_header.report_basis,
+                },
+                dateValue: ["from", "to"],
+            },
+            next
+        );
+        if (!enumAndDate) return false;
+        reqBody.reportBasis = enumAndDate.reportBasis;
+        reqBody.dateRange[0] = enumAndDate.from;
+        reqBody.dateRange[1] = enumAndDate.to;
+    } catch (e) {
+        error(e.key, e.message, next);
+        return;
+    }
+    try {
+        const data = await journalExport(reqBody, res.locals.id, next);
         if (data == false) {
             return;
         }

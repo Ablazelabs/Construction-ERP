@@ -1,4 +1,8 @@
-const { allModels, error, COMPANY_NAME } = require("../config/config");
+const {
+    allModels,
+    COMPANY_NAME,
+    REPORT_BASIS_TITLE,
+} = require("../config/config");
 const {
     convertGeneralLedgerToBaseCurrency,
     convertJournalTransactionToBaseCurrency,
@@ -14,7 +18,11 @@ const {
 } = allModels;
 const xlsx = require("node-xlsx");
 const pdf = require("pdf-creator-node");
-
+const mainCss = `
+<style>
+    body{padding-top:50px;padding-bottom:20px}.body-content{padding-left:15px;padding-right:15px}.carousel-caption p{font-size:20px;line-height:1.4}.carousel-inner .item img[src$=".svg"]{width:100%}#qrCode{margin:15px}@media screen and (max-width:767px){.carousel-caption{display:none}}
+</style>
+`;
 //--------------------------------------------------------General Ledger Export------------------------------------------------------------------------
 /**
  *
@@ -33,15 +41,13 @@ const generalLedgerExport = async (
     creator,
     next
 ) => {
-    const generalLedgerFilterAttributes = {
+    const filters = {
         fromDate: dateRange[0],
         toDate: dateRange[1],
         dateFormat,
         reportBasis,
     };
-    const generalLedgers = await getGeneralLedgers(
-        generalLedgerFilterAttributes
-    );
+    const generalLedgers = await getGeneralLedgers(filters);
     if (exportAs === "xlsx") {
         return ledgerBuildExcel(generalLedgers);
     } else {
@@ -113,9 +119,7 @@ const getHtmlGeneralLedger = (model) => {
     <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
           asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
           asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-          <style>
-              body{padding-top:50px;padding-bottom:20px}.body-content{padding-left:15px;padding-right:15px}.carousel-caption p{font-size:20px;line-height:1.4}.carousel-inner .item img[src$=".svg"]{width:100%}#qrCode{margin:15px}@media screen and (max-width:767px){.carousel-caption{display:none}}
-          </style>
+          ${mainCss}
 
 
 <section class="content-header">
@@ -147,7 +151,7 @@ const getHtmlGeneralLedger = (model) => {
         </table>
         <div>
             <br />
-            @Html.DisplayName("**Amount is displayed in your base currency")
+            Amount is displayed in your base currency
             <span class="right badge badge-success">ETB</span>
         </div>
 
@@ -176,24 +180,24 @@ const getHtmlGeneralLedger = (model) => {
  */
 const ledgerBuildExcel = (generalLedgers) => {
     const sheetOptions = {
-        "!col": [
-            { wpx: 20 },
-            { wpx: 15 },
-            { wpx: 20 },
-            { wpx: 10 },
-            { wpx: 10 },
-            { wpx: 10 },
+        "!cols": [
+            { wch: 20 },
+            { wch: 15 },
+            { wch: 20 },
+            { wch: 10 },
+            { wch: 10 },
+            { wch: 10 },
         ],
     };
     let dataSheet = [
         [
             "name",
-            "account_code",
-            "account_id",
-            "credit_total",
-            "debit_total",
-            "balance",
-            "is_debit",
+            "Account Code",
+            "Account Id",
+            "Credit Total",
+            "Debit Total",
+            "Valance",
+            "Is Debit",
         ],
     ];
     for (let i in generalLedgers.generalLedgerList) {
@@ -210,7 +214,7 @@ const ledgerBuildExcel = (generalLedgers) => {
     }
     const buffer = xlsx.build([
         {
-            name: "sheet 1",
+            name: "General Ledger",
             data: dataSheet,
             options: sheetOptions,
         },
@@ -254,7 +258,7 @@ const getGeneralLedgers = async (filter) => {
             general_journal_header: true,
         },
     });
-    let openingBalance = await opening_balance.findFirst({
+    const openingBalance = await opening_balance.findFirst({
         where: {
             opening_balance_date: {
                 gte: new Date(
@@ -271,6 +275,12 @@ const getGeneralLedgers = async (filter) => {
         },
         include: {
             opening_balance_account: {
+                where: {
+                    OR: [
+                        { amount_credit: { gt: 0 } },
+                        { amount_debit: { gt: 0 } },
+                    ],
+                },
                 include: {
                     chart_of_account: {
                         include: {
@@ -284,14 +294,7 @@ const getGeneralLedgers = async (filter) => {
                 },
             },
         },
-    }); //TODO can not include what isnt in schema
-    if (openingBalance.opening_balance_account.length) {
-        openingBalance.opening_balance_account =
-            openingBalance.opening_balance_account.filter(
-                ({ amount_credit, amount_debit }) =>
-                    amount_credit > 0 || amount_debit > 0
-            );
-    }
+    });
     return await prepareGeneralLedgers(generalLedgers, openingBalance, filter);
 };
 /**
@@ -452,14 +455,14 @@ const prepareGeneralLedgers = async (
     //     public string ReportDateRange { get; set; }
     //     public List<GeneralLedgerViewModel> GeneralLedgerList { get; set; }
     // }
-    if (generalLedgerList.length) {
+    if (generalLedgerList) {
         generalLedgerList.sort((a, b) => a.accountName.localeCompare(b));
     }
     const returned = {
         generalLedgerList,
         companyName: COMPANY_NAME,
         reportTitle: "General Ledger",
-        reportType: `${"REPORT_BASIS_TITLE"} ${
+        reportType: `${REPORT_BASIS_TITLE} ${
             ["accrual", "cash", "both"][filter.reportBasis - 1]
         }`,
         reportDateRange: `From ${filter.fromDate.toDateString()} To ${filter.toDate.toDateString()}`,
@@ -562,7 +565,7 @@ const getTotalCreditAmount = (generalLedger, chartOfAccount) => {
     }
 };
 
-//--------------------------------------------------------General Ledger Export------------------------------------------------------------------------
+//--------------------------------------------------------Account Transaction Export------------------------------------------------------------------------
 
 /**
  *
@@ -579,12 +582,16 @@ const getTotalCreditAmount = (generalLedger, chartOfAccount) => {
  * @param {Function} next
  * @returns
  */
-const accountTransactionsExport = (
-    { accounts, fromDate, toDate, reportBasis, reportBy, dateFormat, exportAs },
-    creator,
-    next
-) => {
-    const accountTransactions = await getAccountTransaction({
+const accountTransactionsExport = async ({
+    accounts,
+    fromDate,
+    toDate,
+    reportBasis,
+    reportBy,
+    dateFormat,
+    exportAs,
+}) => {
+    const accountTransaction = await getAccountTransaction({
         accounts,
         fromDate,
         toDate,
@@ -593,7 +600,7 @@ const accountTransactionsExport = (
         dateFormat,
     });
     if (exportAs === "xlsx") {
-        return accountTransactionsBuildExcel(accountTransactions);
+        return accountTransactionsBuildExcel(accountTransaction);
     } else {
         const document = {
             data: {},
@@ -606,7 +613,7 @@ const accountTransactionsExport = (
             border: "10mm",
         };
         return await pdf.create(
-            { ...document, html: getHtmlAccountTypes(accountTransactions) },
+            { ...document, html: getHtmlAccountTypes(accountTransaction) },
             options
         );
     }
@@ -639,9 +646,9 @@ const getAccountTransaction = async ({
                     lte: toDate,
                 },
                 OR:
-                    filter.reportBasis == 3
+                    reportBasis == 3
                         ? [{ report_basis: 1 }, { report_basis: 2 }]
-                        : [{ report_basis: filter.reportBasis }],
+                        : [{ report_basis: reportBasis }],
                 journal_posting_status: 1,
                 status: 0,
             },
@@ -965,7 +972,7 @@ const getAccountTransaction = async ({
     return {
         companyName: COMPANY_NAME,
         reportTitle: "Account Transactions",
-        reportType: `${"REPORT_BASIS_TITLE"} ${
+        reportType: `${REPORT_BASIS_TITLE} ${
             ["accrual", "cash", "both"][reportBasis - 1]
         }`,
         reportDateRange: `From ${fromDate.toDateString()} To ${toDate.toDateString()}`,
@@ -985,8 +992,14 @@ const getAccountTransaction = async ({
 
 /**
  *
- * @param {
- * generalLedgerList: {
+ * @param {{
+ * companyName: string,
+ * reportTitle: string,
+ * reportType: string,
+ * reportDateRange: string,
+ * groupedBy: string,
+ * accountName: string,
+ * accountTransactions: {
  *   journalDate: string,
  *   transactionDetails: string,
  *   journalId: number,
@@ -1000,31 +1013,31 @@ const getAccountTransaction = async ({
  *   amountCredit: string,
  *   amountDebit: string,
  *   accountNumber: number,
- * }} accountTransactions
+ * }[]
+ * }} accountTransaction
  */
-//type fix tomorrow
-const accountTransactionsBuildExcel = (accountTransactions) => {
+const accountTransactionsBuildExcel = (accountTransaction) => {
     const sheetOptions = {
-        "!col": Array(12).fill({ wpx: 15 }),
+        "!cols": Array(12).fill({ wch: 15 }),
     };
     let dataSheet = [
         [
             "date",
-            "transaction_details",
-            "transaction_id",
-            "transaction_type",
-            "transaction_number",
-            "reference_number",
-            "debit",
-            "credit",
-            "account_group",
-            "account_type",
-            "account_name",
-            "account_id",
+            "Transaction Details",
+            "Transaction Id",
+            "Transaction Type",
+            "Transaction Number",
+            "Reference Number",
+            "Debit",
+            "Credit",
+            "Account Group",
+            "Account Type",
+            "Account Name",
+            "Account Id",
         ],
     ];
-    for (let i in accountTransactions.generalLedgerList) {
-        const row = accountTransactions.generalLedgerList[i];
+    for (let i in accountTransaction.accountTransactions) {
+        const row = accountTransaction.accountTransactions[i];
         dataSheet.push([
             row.journalDate,
             row.transactionDetails,
@@ -1036,7 +1049,7 @@ const accountTransactionsBuildExcel = (accountTransactions) => {
             row.amountCredit,
             row.accountGroup,
             row.accountType,
-            row.costCenter,
+            row.accountName,
             row.accountId,
         ]);
     }
@@ -1050,8 +1063,504 @@ const accountTransactionsBuildExcel = (accountTransactions) => {
     return buffer;
 };
 
+/**
+ *
+ * @param {{
+ * companyName: string,
+ * reportTitle: string,
+ * reportType: string,
+ * reportDateRange: string,
+ * groupedBy: string,
+ * accountName: string,
+ * accountTransactions: {
+ *   journalDate: string,
+ *   transactionDetails: string,
+ *   journalId: number,
+ *   referenceNumber: string,
+ *   transactionNumber: string,
+ *   transactionType: string,
+ *   accountId: number,
+ *   accountName: string,
+ *   accountType: string,
+ *   accountGroup: string,
+ *   amountCredit: string,
+ *   amountDebit: string,
+ *   accountNumber: number,
+ * }[]
+ * }} accountTransaction
+ */
+const getHtmlAccountTypes = (accountTransaction) => {
+    const addedRows = "";
+    {
+        for (let i in accountTransaction.accountTransactions) {
+            const item = accountTransaction.accountTransactions[i];
+            addedRows += `<tr>
+                <td>${item.journalDate}) </td>
+                <td>${item.accountType}) </td>
+                <td>${item.accountName}) </td>
+                <td>${item.transactionType}) </td>
+                <td>${item.transactionDetails})</td>
+                <td>${item.transactionNumber})</td>
+                <td>${item.referenceNumber})</td>
+                <td>
+                    ${
+                        !item.journalDate.match(/as on/i)
+                            ? `<span> ${item.amountDebit} </span>`
+                            : item.amountDebit
+                    }
+                </td>
+                <td>
+                    ${
+                        !item.journalDate.match(/as on/i)
+                            ? `<span> ${item.amountCredit} </span>`
+                            : item.amountCredit
+                    }
+                </td>
+            </tr>`;
+        }
+    }
+    return (
+        `
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        ${mainCss}  
+    <section class="content-header">
+        <div class="container-fluid text-center">
+            <h6>${accountTransaction?.companyName}</h6>
+            <h5>${accountTransaction?.reportTitle}</h5>
+            <small class="text-center">${accountTransaction?.reportType}</small><br />
+            <h5><strong>${accountTransaction?.accountName}</strong></h5>
+            <h6>${accountTransaction?.reportDateRange}</h6>
+        </div>
+    </section>
+    
+    <section class="content" style="background-color:white">
+        <div class="box-body table-responsive no-padding">
+    
+            <table id="tblAccountTransactions" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th> Date </th>
+                        <th> Account Type </th>
+                        <th> Account </th>
+                        <th> Type </th>
+                        <th> Transaction Details </th>
+                        <th> Transaction# </th>
+                        <th> Reference# </th>
+                        <th> Debit </th>
+                        <th> Credit </th>
+                    </tr>
+                </thead>
+    
+                <tbody>
+                    ` +
+        addedRows +
+        `
+                </tbody>
+            </table>
+    
+            <div>
+                <br />
+                Amount is displayed in your base currency
+                <span class="right badge badge-success">ETB</span>
+                <br />
+                <br />
+                <br />
+            </div>
+        </div>
+    </section>
+    `
+    );
+};
+
+//--------------------------------------------------------jounal Export------------------------------------------------------------------------
+
+/**
+ *
+ * @param {{
+ *  dateRange: Array<Date>,
+ *  reportBasis: number,
+ *  dateFormat: string,
+ *  exportAs: string
+ *}} reqBody
+ * @param {number} creator
+ * @param {Function} next
+ * @returns
+ */
+const journalExport = async ({
+    dateRange,
+    dateFormat,
+    exportAs,
+    reportBasis,
+}) => {
+    const filters = {
+        fromDate: dateRange[0],
+        toDate: dateRange[1],
+        dateFormat,
+        reportBasis,
+    };
+    const journals = await getJournals(filters);
+    if (exportAs === "xlsx") {
+        return journalBuildExcel(journals);
+    } else {
+        const document = {
+            data: {},
+            path: "./output.pdf",
+            type: "buffer",
+        };
+        const options = {
+            format: "A3",
+            orientation: "portrait",
+            border: "10mm",
+        };
+        return await pdf.create(
+            { ...document, html: getHtmlJournal(journals) },
+            options
+        );
+    }
+};
+/**
+ *
+ * @param {{fromDate:Date, toDate:Date, dateFormat:string, reportBasis:number}} param0
+ */
+const getJournals = async ({ fromDate, toDate, dateFormat, reportBasis }) => {
+    const journalDetails = await general_journal_detail.findMany({
+        where: {
+            general_journal_header: {
+                journal_date: {
+                    gte: fromDate,
+                    lte: toDate,
+                },
+                OR:
+                    reportBasis == 3
+                        ? [{ report_basis: 1 }, { report_basis: 2 }]
+                        : [{ report_basis: reportBasis }],
+                journal_posting_status: 1,
+                status: 0,
+            },
+        },
+        include: {
+            general_journal_header: true,
+            chart_of_account: {
+                include: {
+                    account_type: {
+                        include: {
+                            account_category: true,
+                        },
+                    },
+                },
+            },
+            contact: true,
+        },
+    });
+    let journalReportList;
+    if (journalDetails.length) {
+        let journal = [...journalDetails];
+        journal.sort(
+            (a, b) =>
+                a.general_journal_header.journal_date.getTime() -
+                b.general_journal_header.journal_date.getTime()
+        );
+        const otherKeys = Object.keys(journalDetails[0]).filter(
+            (elem) => elem != "chart_of_account_id"
+        );
+        const groupedJournalDetails = groupByFn(
+            ["chart_of_account_id"],
+            journal,
+            otherKeys,
+            false
+        );
+        const baseCurrency = await currency.findFirst({
+            where: {
+                is_base_currency: true,
+            },
+        });
+        let amount = 0,
+            totalDebitAmount = 0,
+            totalCreditAmount = 0;
+
+        let journalWithFCY = {};
+        for (let i in groupedJournalDetails) {
+            const groupJournal = groupedJournalDetails[i];
+            if (groupJournal.otherKeys.length) {
+                totalDebitAmount = 0;
+                totalCreditAmount = 0;
+                const pushedObj = groupJournal.otherKeys[0];
+                const pushed = {
+                    journalDate: `${pushedObj?.general_journal_header?.journal_date.toDateString()}`,
+                    accountCode: `${pushedObj?.chart_of_account?.account_code}`,
+                    journalHeader:
+                        `${pushedObj?.general_journal_header?.journal_date
+                            .toDateString()
+                            .toUpperCase()} - JOURNAL` +
+                        (pushedObj?.contact
+                            ? "(" + pushedObj.contact.contact_display_name + ")"
+                            : ""),
+                    account: `${pushedObj?.general_journal_header?.journal_date
+                        .toDateString()
+                        .toUpperCase()} - JOURNAL`,
+                    entryType: "JOURNAL",
+                    headerPostingReference: `${pushedObj?.posting_reference}`,
+                    amountCredit: "CREDIT",
+                    amountDebit: "DEBIT",
+                    journalId: parseInt(pushedObj.general_journal_header_id),
+                    isHeader: true,
+                };
+                if (journalReportList) {
+                    journalReportList.push(pushed);
+                } else {
+                    journalReportList = [pushed];
+                }
+                for (let i in groupJournal.otherKeys) {
+                    const journalDetail = groupJournal.otherKeys[i];
+                    if (journalDetail) {
+                        amount = 0;
+                        if (
+                            journalDetail.general_journal_header.currency_id !=
+                            baseCurrency.id
+                        )
+                            amount =
+                                await convertJournalTransactionToBaseCurrency(
+                                    [
+                                        {
+                                            ...journalDetail,
+                                            chart_of_account_id:
+                                                groupJournal.chart_of_account_id,
+                                        },
+                                    ],
+                                    getTotalDebitAmount,
+                                    getTotalCreditAmount
+                                );
+                        else {
+                            if (journalDetail.amount_credit > 0)
+                                amount = journalDetail.amount_credit;
+                            else amount = journalDetail.amount_debit;
+                        }
+
+                        if (journalDetail.amount_credit > 0)
+                            totalCreditAmount += amount;
+                        else totalDebitAmount += amount;
+                        const pushed = {
+                            journalId: journalDetail.id,
+                            journalDate:
+                                journalDetail.general_journal_header.journal_date.toDateString(),
+                            accountCode:
+                                journalDetail.chart_of_account.account_code,
+                            account:
+                                journalDetail.chart_of_account.account_name,
+                            entryType: "JOURNAL",
+                            headerPostingReference:
+                                pushedObj?.posting_reference,
+                            amountCredit:
+                                journalDetail.amount_credit > 0
+                                    ? `${Math.abs(amount)}`
+                                    : `${Math.abs(
+                                          journalDetail.amount_credit
+                                      )}`,
+                            amountDebit:
+                                journalDetail.amount_debit > 0
+                                    ? `${Math.abs(amount)}`
+                                    : `${Math.abs(journalDetail.amount_debit)}`,
+                        };
+                        if (journalReportList) {
+                            journalReportList.push(pushed);
+                        } else {
+                            journalReportList = [pushed];
+                        }
+                    }
+                }
+                const pushed2 = {
+                    journalId: pushedObj.general_journal_header_id,
+                    account: "",
+                    amountCredit: `${Math.abs(totalCreditAmount)}`,
+                    amountDebit: `${Math.abs(totalDebitAmount)}`,
+                    isTotal: true,
+                };
+                if (journalReportList) {
+                    journalReportList.push(pushed2);
+                } else {
+                    journalReportList = [pushed2];
+                }
+            }
+        }
+    }
+    return {
+        companyName: COMPANY_NAME,
+        reportTitle: "Journal Report",
+        reportType: `${REPORT_BASIS_TITLE} ${
+            ["accrual", "cash", "both"][reportBasis - 1]
+        }`,
+        reportDateRange: `From ${fromDate.toDateString()} to ${toDate.toDateString()}`,
+        journalReportList,
+    };
+};
+
+/**
+ *
+ * @param {{
+ *   companyName: string,
+ *   reportTitle: string,
+ *   reportType: string,
+ *   reportDateRange: string
+ *   journalReportList: {
+ *      journalDate: string,
+ *      accountCode: string,
+ *      journalHeader: string,
+ *      account: string,
+ *      entryType: string,
+ *      headerPostingReference: string,
+ *      amountCredit: string,
+ *      amountDebit: string,
+ *      journalId: number,
+ *      isHeader: boolean,
+ *      isTotal:boolean
+ *  }[]
+ * }
+ * } journal
+ */
+const journalBuildExcel = (journal) => {
+    let mergeRanges = [];
+    mergeRanges.push({ s: { c: 0, r: 0 }, e: { c: 2, r: 2 } }); //A1:C3
+
+    const sheetOptions = {
+        "!cols": Array(3).fill({ wch: 50 }),
+        "!merges": mergeRanges,
+    };
+    let dataSheet = [
+        [
+            `${journal.companyName} - ${journal.reportTitle} - ${journal.reportDateRange}`,
+        ],
+        [],
+        [],
+        [],
+    ];
+    for (let i in journal.journalReportList) {
+        const row = journal.journalReportList[i];
+        //header part
+        if (row.isHeader) {
+            dataSheet.push([]);
+            dataSheet.push([
+                row.account + " - " + row.headerPostingReference,
+                "Debit",
+                "Credit",
+            ]);
+            dataSheet.push([]);
+        }
+        if (row.isHeader && !row.isTotal) {
+            dataSheet.push([row.account, row.amountDebit, row.amountCredit]);
+        }
+        if (row.isTotal) {
+            dataSheet.push(["", row.amountDebit, row.amountCredit]);
+            dataSheet.push([]);
+        }
+    }
+    const buffer = xlsx.build([
+        {
+            name: "Journal Report",
+            data: dataSheet,
+            options: sheetOptions,
+        },
+    ]);
+    return buffer;
+};
+
+/**
+ *
+ * @param {{
+ *   companyName: string,
+ *   reportTitle: string,
+ *   reportType: string,
+ *   reportDateRange: string
+ *   journalReportList: {
+ *      journalDate: string,
+ *      accountCode: string,
+ *      journalHeader: string,
+ *      account: string,
+ *      entryType: string,
+ *      headerPostingReference: string,
+ *      amountCredit: string,
+ *      amountDebit: string,
+ *      journalId: number,
+ *      isHeader: boolean,
+ *      isTotal:boolean
+ *  }[]
+ * }
+ * } journal
+ */
+const getHtmlJournal = (journal) => {
+    let addedRows = "";
+    for (let i in journal.journalReportList) {
+        const item = journal.journalReportList[i];
+        if (item.isTotal) {
+            addedRows += `<tr style="background-color:cornsilk">
+                    <td>${item.account}</td>
+                    <td>
+                        <span> ${item.amountCredit} </span>
+                    </td>
+                    <td>
+                        <span> ${item.amountDebit} </span>
+                        <br />
+                    </td>
+                </tr>`;
+        } else {
+            addedRows += `<tr>`;
+            if (item.isHeader) {
+                addedRows += `<td>${item.account} - <strong>${item.headerPostingReference}</strong></td>`;
+            } else {
+                addedRows += `<td>${item.account}</td>`;
+            }
+            addedRows += `
+                <td>${item.amountCredit}</td>
+                <td>${item.amountDebit}</td>
+            </tr>`;
+        }
+    }
+    return (
+        `
+    <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+          asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+          asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+    ${mainCss}
+
+
+
+<section class="content-header">
+    <div class="container-fluid text-center">
+        <h6>${journal?.companyName}</h6>
+        <h5>${journal?.reportTitle}</h5>
+        <small class="text-center">${journal?.reportType}</small><br />
+        <h6>${journal?.reportDateRange}</h6>
+    </div>
+</section>
+
+<section class="content" style="background-color:white">
+    <div class="box-body table-responsive no-padding">
+
+        <table id="tblGeneralLedger" class="table table-hover">
+            <tbody>
+                ` +
+        addedRows +
+        `
+            </tbody>
+        </table>
+
+        <div>
+            <br />
+            Amount is displayed in your base currency
+            <span class="right badge badge-success">ETB</span>
+        </div>
+
+    </div>
+</section>
+
+`
+    );
+};
+
 module.exports = {
     accountTransactionsExport,
     generalLedgerExport,
+    journalExport,
 };
 // same as the others

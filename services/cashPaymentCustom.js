@@ -40,7 +40,7 @@ const getExportedExcel = async (from, to) => {
     }
     mergeRanges.push({ s: { c: 3, r: 3 }, e: { c: 6, r: 3 } }); //D4:G4
     mergeRanges.push({ s: { c: 7, r: 3 }, e: { c: 8, r: 3 } });
-    let sheetOptions = { "!merges": mergeRanges, "!row": [{ hpx: 30 }] };
+    let sheetOptions = { "!merges": mergeRanges, "!rows": [{ hpx: 30 }] };
     xlsx.build([{ data: [], options: {} }]);
     //setting data on a
     dataSheet[0] = [`ግብር ከፋይ መለያ ቁጥር - 0062451276`];
@@ -60,7 +60,7 @@ const getExportedExcel = async (from, to) => {
     let recordIndex = 5;
     for (let i in custom) {
         const item = custom[i];
-        sheetOptions["!row"][recordIndex] = { hpx: 11 };
+        sheetOptions["!rows"][recordIndex] = { hpx: 11 };
         //only height works, no bolding or font style option
         dataSheet[recordIndex] = [
             parseInt(i) + 1,

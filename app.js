@@ -27,7 +27,9 @@ const financeContact = require("./api-routes/finance/master/contact");
 const financemasters = require("./api-routes/finance/master/financemasters");
 const accountingPeriod = require("./api-routes/finance/master/accountingPeriod");
 
+const financeExports = require("./api-routes/finance/operational/exportController");
 const cashPaymentCustom = require("./api-routes/finance/operational/cashPaymentCustom");
+const crvPayment = require("./api-routes/finance/operational/crvPayment");
 const recurringGeneralJournal = require("./api-routes/finance/operational/recurringGeneralJournal");
 const budget = require("./api-routes/finance/operational/budget");
 const accountTypeFSSection = require("./api-routes/finance/operational/accountTypeFinancialStatementSection");
@@ -109,7 +111,9 @@ app.use("/finance/master", financeContact);
 app.use("/finance/master", financemasters);
 app.use("/finance/master", accountingPeriod);
 
+app.use("/finance/operational/export", financeExports);
 app.use("/finance/operational/cash_payment_custom", cashPaymentCustom);
+app.use("/finance/operational/crv_payment", cashPaymentCustom);
 app.use("/finance/operational", recurringGeneralJournal);
 app.use("/finance/operational", budget);
 app.use("/finance/operational", accountTypeFSSection);
