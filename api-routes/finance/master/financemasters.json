@@ -446,8 +446,10 @@
             "chart_of_account": true,
             "currency": true,
             "payment_term": true,
-            "contact_address": { "include": { "country": true } },
-            "contact_person": { "include": { "title": true } }
+            "contact_address": {
+                "include": { "country": true, "contact": true }
+            },
+            "contact_person": { "include": { "title": true, "contact": true } }
         },
         "contact_address": {
             "id": true,

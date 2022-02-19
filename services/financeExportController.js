@@ -15,6 +15,7 @@ const {
     general_journal_detail,
     financial_settings,
     chart_of_account,
+    tax,
 } = allModels;
 const xlsx = require("node-xlsx");
 const pdf = require("pdf-creator-node");
@@ -48,6 +49,7 @@ const generalLedgerExport = async (
         reportBasis,
     };
     const generalLedgers = await getGeneralLedgers(filters);
+    console.log({ exportAs });
     if (exportAs === "xlsx") {
         return ledgerBuildExcel(generalLedgers);
     } else {
@@ -687,8 +689,8 @@ const getAccountTransaction = async ({
         const openingBalance = await opening_balance.findFirst({
             where: {
                 opening_balance_date: {
-                    gte: new Date(a.getFullYear(), 0, 1),
-                    lt: new Date(a.getFullYear() + 1, 0, 1),
+                    gte: new Date(fromDate.getFullYear(), 0, 1),
+                    lt: new Date(fromDate.getFullYear() + 1, 0, 1),
                 },
             },
             include: {
@@ -1558,9 +1560,797 @@ const getHtmlJournal = (journal) => {
     );
 };
 
+//--------------------------------------------------------trail balance Export------------------------------------------------------------------------
+
+/**
+ *
+ * @param {{
+ *  dateRange: Array<Date>,
+ *  reportBasis: number,
+ *  dateFormat: string,
+ *  exportAs: string
+ *}} reqBody
+ * @param {number} creator
+ * @param {Function} next
+ * @returns
+ */
+const trailBalanceExport = async ({
+    dateRange,
+    dateFormat,
+    exportAs,
+    reportBasis,
+}) => {
+    const filters = {
+        fromDate: dateRange[0],
+        toDate: dateRange[1],
+        dateFormat,
+        reportBasis,
+    };
+    const trailBalances = await getTrailBalances(filters);
+    if (exportAs === "xlsx") {
+        return trailBalanceBuildExcel(trailBalances);
+    } else {
+        const document = {
+            data: {},
+            path: "./output.pdf",
+            type: "buffer",
+        };
+        const options = {
+            format: "A3",
+            orientation: "portrait",
+            border: "10mm",
+        };
+        return await pdf.create(
+            { ...document, html: getHtmlTrailBalance(trailBalances) },
+            options
+        );
+    }
+};
+/**
+ *
+ * @param {{fromDate:Date, toDate:Date, dateFormat:string, reportBasis:number}} param0
+ */
+const getTrailBalances = async ({
+    fromDate,
+    toDate,
+    dateFormat,
+    reportBasis,
+}) => {
+    const journalsAsOfToday = await general_journal_detail.findMany({
+        where: {
+            general_journal_header: {
+                journal_date: {
+                    gte: fromDate,
+                    lte: toDate,
+                },
+                OR:
+                    reportBasis == 3
+                        ? [{ report_basis: 1 }, { report_basis: 2 }]
+                        : [{ report_basis: reportBasis }],
+                journal_posting_status: 1,
+                status: 0,
+            },
+        },
+        include: {
+            general_journal_header: true,
+            chart_of_account: {
+                include: {
+                    account_type: {
+                        include: {
+                            account_category: true,
+                        },
+                    },
+                },
+            },
+        },
+    });
+
+    let balance = 0,
+        totalDebit = 0,
+        totalCredit = 0,
+        amountDueToExchangeRate = 0;
+    let isDebit;
+
+    // #region Get Opening Balance
+
+    const openingBalance = await opening_balance.findFirst({
+        where: {
+            opening_balance_date: {
+                gte: new Date(fromDate.getFullYear(), 0, 1),
+                lt: new Date(fromDate.getFullYear() + 1, 0, 1),
+            },
+        },
+        include: {
+            opening_balance_account: {
+                where: {
+                    OR: [
+                        { amount_credit: { gt: 0 } },
+                        { amount_debit: { gt: 0 } },
+                    ],
+                },
+                include: {
+                    chart_of_account: {
+                        include: {
+                            account_type: {
+                                include: {
+                                    account_category: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    });
+
+    // #endregion
+
+    // #region Take Journals from Opening Balance Date to Search Start Date
+    const openingBalanceStartDate = new Date(
+        fromDate.getFullYear(),
+        fromDate.getMonth(),
+        1
+    );
+
+    let journalsFromOpeningBalanceDateToSearchStartDate = [];
+
+    if (fromDate.getDate() > 1)
+        journalsFromOpeningBalanceDateToSearchStartDate =
+            await general_journal_detail.findMany({
+                where: {
+                    general_journal_header: {
+                        journal_date: {
+                            gte: openingBalanceStartDate,
+                            lt: fromDate,
+                        },
+                        OR:
+                            reportBasis == 3
+                                ? [{ report_basis: 1 }, { report_basis: 2 }]
+                                : [{ report_basis: reportBasis }],
+                        journal_posting_status: 1,
+                        status: 0,
+                    },
+                },
+            });
+    // #endregion
+
+    // #region Collect Chart of Account union of JOURNAL and OPENING BALANCE
+
+    const chartOfAccounts = await chart_of_account.findMany({
+        where: journalsAsOfToday.length
+            ? {
+                  OR: [
+                      {
+                          id: {
+                              in: journalsAsOfToday.map(
+                                  ({ chart_of_account_id }) =>
+                                      chart_of_account_id
+                              ),
+                          },
+                      },
+                      {
+                          id: {
+                              in: openingBalance?.opening_balance_account.map(
+                                  ({ chart_of_account_id }) =>
+                                      chart_of_account_id
+                              ),
+                          },
+                      },
+                  ],
+              }
+            : {},
+        orderBy: {
+            account_type: {
+                account_category_id: "asc",
+            },
+        },
+        include: {
+            account_type: {
+                include: {
+                    account_category: true,
+                },
+            },
+        },
+    });
+
+    // #endregion
+
+    let journalsWithFCY = [];
+
+    let trailBalanceReports;
+    const baseCurrency = await currency.findFirst({
+        where: {
+            is_base_currency: true,
+        },
+    });
+    for (let i in chartOfAccounts) {
+        const account = chartOfAccounts[i];
+        amountDueToExchangeRate = 0;
+        let journalsChartOfAccount = journalsAsOfToday.filter(
+            ({ chart_of_account_id }) => chart_of_account_id === account.id
+        );
+
+        // #region Calculate Foreign Currency
+
+        let journalsWithFCY = journalsChartOfAccount.filter(
+            ({ general_journal_header }) =>
+                general_journal_header.currency_id != baseCurrency.id
+        );
+        journalsWithFCY = journalsWithFCY.concat(
+            journalsFromOpeningBalanceDateToSearchStartDate.filter(
+                (elem) =>
+                    elem.chart_of_account_id == account.id &&
+                    elem.general_journal_header.currency_id != baseCurrency.id
+            )
+        );
+        if (journalsWithFCY.length) {
+            amountDueToExchangeRate =
+                await convertJournalTransactionToBaseCurrency(
+                    journalsWithFCY,
+                    baseCurrency
+                );
+        }
+        // #endregion
+        journalsChartOfAccount = journalsChartOfAccount.concat(
+            journalsFromOpeningBalanceDateToSearchStartDate.filter(
+                (elem) =>
+                    elem.chart_of_account_id == account.id &&
+                    elem.general_journal_header.currency_id == baseCurrency.id
+            )
+        );
+        //Calculate Total Income
+        const currencyJournals = journalsChartOfAccount.filter(
+            (elem) => elem.general_journal_header.currency_id == baseCurrency.id
+        );
+        balance =
+            getOpeningBalanceAmount(openingBalance, account.id) +
+            (getTotalDebitAmount(currencyJournals, account) +
+                getTotalCreditAmount(currencyJournals, account)) +
+            amountDueToExchangeRate;
+        if (balance != 0) {
+            // #region Identify DEBIT and CREDIT Value
+
+            if (account.account_type.account_category.is_debit) {
+                if (balance > 0) {
+                    totalDebit += Math.abs(balance);
+                    isDebit = true;
+                } else {
+                    totalCredit += Math.abs(balance);
+                    isDebit = false;
+                }
+            } else {
+                if (balance > 0) {
+                    totalCredit += Math.abs(balance);
+                    isDebit = false;
+                } else {
+                    totalDebit += Math.abs(balance);
+                    isDebit = true;
+                }
+            }
+            // #endregion
+
+            const pushed = {
+                accountId: account.id,
+                accountNumber: account.account_code,
+                accountName: account.account_name,
+                accountType: account.account_type?.type,
+                accountGroup:
+                    account.account_type?.account_category?.id +
+                    ". " +
+                    account.account_type?.account_category?.name,
+                amountCredit: isDebit ? "" : `${Math.abs(balance)}`,
+                amountDebit: isDebit ? `${Math.abs(balance)}` : "",
+            };
+            if (trailBalanceReports) trailBalanceReports.push(pushed);
+            else trailBalanceReports = [pushed];
+        }
+    }
+    if (trailBalanceReports) {
+        trailBalanceReports.push({
+            accountId: 0,
+            accountName: "Total",
+            accountType: "",
+            accountGroup: "Total",
+            amountCredit: Math.abs(totalCredit).toLocaleString(),
+            amountDebit: Math.abs(totalDebit).toLocaleString(),
+        });
+    }
+    return {
+        companyName: COMPANY_NAME,
+        reportTitle: "Trail Balance",
+        reportType: `${REPORT_BASIS_TITLE} ${
+            ["accrual", "cash", "both"][reportBasis - 1]
+        }`,
+        reportDateRange: `As of ${toDate.toDateString()}`,
+        trailBalanceReports,
+    };
+};
+
+/**
+ *
+ * @param {{
+ *  companyName: string,
+ *  reportTitle: string,
+ *  reportType: string,
+ *  reportDateRange: string,
+ *  trailBalanceReports: {
+ *     accountId: number,
+ *     accountNumber: string,
+ *     accountName: string,
+ *     accountType: string,
+ *     accountGroup: string,
+ *     amountCredit: string,
+ *     amountDebit: string,
+ *}[];
+ *  }} trailBalance
+ */
+const trailBalanceBuildExcel = (trailBalance) => {
+    let mergeRanges = [];
+    mergeRanges.push({ s: { c: 0, r: 0 }, e: { c: 3, r: 2 } }); //A1:D3
+
+    const sheetOptions = {
+        "!cols": Array(4).fill({ wch: 50 }),
+        "!merges": mergeRanges,
+    };
+    let dataSheet = [
+        [
+            `${trailBalance.companyName} - ${trailBalance.reportTitle} - ${trailBalance.reportDateRange}`,
+        ],
+        [],
+        [],
+        ["Account", "Account Code", "Debit", "Credit"],
+    ];
+    if (trailBalance.trailBalanceReports.length) {
+        const otherKeys = Object.keys(trailBalance.trailBalanceReports[0]);
+        trailBalance.trailBalanceReports.sort((a, b) =>
+            a.accountGroup.localeCompare(b.accountGroup)
+        );
+        const groupedTrailBalance = groupByFn(
+            ["accountGroup"],
+            trailBalance.trailBalanceReports,
+            otherKeys
+        );
+        let totalTrailReport;
+        for (let i in groupedTrailBalance) {
+            const trailReport = groupedTrailBalance[i];
+            if (trailReport.accountGroup === "Total") {
+                totalTrailReport = trailReport.otherKeys[0];
+                continue;
+            } else {
+                dataSheet.push([]);
+                dataSheet.push([trailReport.accountGroup]);
+                dataSheet.push([]);
+                for (let i in trailReport.otherKeys) {
+                    const trailBal = trailReport.otherKeys[i];
+                    dataSheet.push([
+                        `    ${trailBal.accountName}`,
+                        "",
+                        trailBal.amountDebit,
+                        trailBal.amountCredit,
+                    ]);
+                }
+            }
+        }
+        dataSheet.push([]);
+        dataSheet.push([
+            totalTrailReport.accountName,
+            "",
+            totalTrailReport.amountDebit,
+            totalTrailReport.amountCredit,
+        ]);
+    }
+    const buffer = xlsx.build([
+        {
+            name: "Trail Balance",
+            data: dataSheet,
+            options: sheetOptions,
+        },
+    ]);
+    return buffer;
+};
+
+/**
+ *
+ * @param {{
+ *  companyName: string,
+ *  reportTitle: string,
+ *  reportType: string,
+ *  reportDateRange: string,
+ *  trailBalanceReports: {
+ *     accountId: number,
+ *     accountNumber: string,
+ *     accountName: string,
+ *     accountType: string,
+ *     accountGroup: string,
+ *     amountCredit: string,
+ *     amountDebit: string,
+ *}[];
+ *  }} trailBalance
+ */
+const getHtmlTrailBalance = (trailBalance) => {
+    let addedRows = "";
+    if (trailBalance?.trailBalanceReports?.length > 0) {
+        const totalTrailBalance = trailBalance.trailBalanceReports.pop();
+        trailBalance.trailBalanceReports.sort((a, b) =>
+            a.accountGroup.localeCompare(b.accountGroup)
+        );
+        const trailBalanceReportGroup = groupByFn(
+            ["accountGroup"],
+            trailBalance.trailBalanceReports,
+            Object.keys(trailBalance.trailBalanceReports[0])
+        );
+        for (let i in trailBalanceReportGroup) {
+            const item = trailBalanceReportGroup[i];
+            addedRows += `
+            <tr>
+                <td> <strong> ${item.accountGroup} </strong> </td>
+            </tr>
+            `;
+            for (let k in item.otherKeys) {
+                const trailBalanceSingle = item.otherKeys[k];
+                addedRows += `
+                <tr>
+                    <td> &nbsp;&nbsp;&nbsp; ${trailBalanceSingle.accountName} </td>
+                    <td> &nbsp;&nbsp;&nbsp; ${trailBalanceSingle.amountDebit} </td>
+                    <td> &nbsp;&nbsp;&nbsp; ${trailBalanceSingle.amountCredit} </td>                                
+                </tr>
+                `;
+            }
+        }
+        addedRows += `
+            <tr>
+                <td> <strong> ${totalTrailBalance.accountGroup} </strong> </td>
+            </tr>
+            <tr>
+                <td> &nbsp;&nbsp;&nbsp; ${totalTrailBalance.accountName} </td>
+                <td> &nbsp;&nbsp;&nbsp; ${totalTrailBalance.amountDebit} </td>
+                <td> &nbsp;&nbsp;&nbsp; ${totalTrailBalance.amountCredit} </td>                                
+            </tr>
+                `;
+    }
+    return (
+        `
+    <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+          asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+          asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+    ${mainCss}
+    
+
+
+<section class="content-header">
+    <div class="container-fluid text-center">
+        <h6>${trailBalance?.companyName}</h6>
+        <h5>${trailBalance?.reportTitle}</h5>
+        <small class="text-center">${trailBalance?.reportType}</small><br />
+        <h6>${trailBalance?.reportDateRange}</h6>
+    </div>
+</section>
+
+<section class="content" style="background-color:white">
+    <div class="box-body table-responsive no-padding">
+
+        <table id="tblTrailBalance" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Account Name </th>
+                    <th>Debit</th>
+                    <th>Credit</th>
+                </tr>
+            </thead>
+            <tbody>
+                ` +
+        addedRows +
+        `
+
+            </tbody>
+        </table>
+        <div>
+            <br />
+            Amount is displayed in your base currencyp
+            <span class="right badge badge-success">ETB</span>
+        </div>
+
+    </div>
+</section>
+
+        `
+    );
+};
+
+//--------------------------------------------------------Tax Summary Export------------------------------------------------------------------------
+
+/**
+ *
+ * @param {{
+ *  dateRange: Array<Date>,
+ *  reportBasis: number,
+ *  dateFormat: string,
+ *  exportAs: string
+ *}} reqBody
+ * @param {number} creator
+ * @param {Function} next
+ * @returns
+ */
+const taxSummaryExport = async ({
+    dateRange,
+    dateFormat,
+    exportAs,
+    reportBasis,
+}) => {
+    const filters = {
+        fromDate: dateRange[0],
+        toDate: dateRange[1],
+        dateFormat,
+        reportBasis,
+    };
+    const taxSummary = await getTaxSummary(filters);
+    if (exportAs === "xlsx") {
+        return taxSummaryBuildExcel(taxSummary);
+    } else {
+        const document = {
+            data: {},
+            path: "./output.pdf",
+            type: "buffer",
+        };
+        const options = {
+            format: "A3",
+            orientation: "portrait",
+            border: "10mm",
+        };
+        return await pdf.create(
+            { ...document, html: getHtmlTaxSummary(taxSummary) },
+            options
+        );
+    }
+};
+/**
+ *
+ * @param {{fromDate:Date, toDate:Date, dateFormat:string, reportBasis:number}} param0
+ */
+const getTaxSummary = async ({ fromDate, toDate, dateFormat, reportBasis }) => {
+    const generalJournals = await general_journal_detail.findMany({
+        where: {
+            general_journal_header: {
+                journal_date: {
+                    gte: fromDate,
+                    lte: toDate,
+                },
+                OR:
+                    reportBasis == 3
+                        ? [{ report_basis: 1 }, { report_basis: 2 }]
+                        : [{ report_basis: reportBasis }],
+                journal_posting_status: 1,
+                status: 0,
+            },
+            chart_of_account: {
+                OR: [
+                    {
+                        tax_debits: { some: { id: { gt: 0 } } },
+                    },
+                    {
+                        tax_credits: { some: { id: { gt: 0 } } },
+                    },
+                ],
+            },
+        },
+        include: {
+            general_journal_header: true,
+            chart_of_account: {
+                include: {
+                    account_type: {
+                        include: {
+                            account_category: true,
+                        },
+                    },
+                },
+            },
+        },
+    });
+    const journalsGrouped = groupByFn(
+        ["chart_of_account_id"],
+        generalJournals,
+        Object.keys(generalJournals?.[0] || {})
+    );
+    let taxSummaryList = [];
+    for (let i in journalsGrouped) {
+        const group = journalsGrouped[i];
+        for (let k in group.otherKeys) {
+            const journal = group.otherKeys[k];
+            const myTax = await tax.findFirst({
+                where: {
+                    OR: [
+                        {
+                            chart_of_account_credit_id:
+                                journal.chart_of_account_id,
+                        },
+                        {
+                            chart_of_account_debit_id:
+                                journal.chart_of_account_id,
+                        },
+                    ],
+                },
+            });
+            if (!taxSummaryList.find((elem) => elem.taxId === myTax.id)) {
+                taxSummaryList.push({
+                    taxId: myTax.id,
+                    taxAmountCredit: journal.amount_credit,
+                    taxAmountDebit: journal.amount_debit,
+                    taxName: myTax.tax_name,
+                    taxPercentage: myTax.tax_percentage,
+                });
+            } else {
+                taxSummaryList.find(
+                    (elem) => elem.taxId === myTax.id
+                ).taxAmountCredit += journal.amount_credit;
+                taxSummaryList.find(
+                    (elem) => elem.taxId === myTax.id
+                ).taxAmountDebit += journal.amount_debit;
+            }
+        }
+    }
+    return {
+        companyName: COMPANY_NAME,
+        reportTitle: "Tax Summary",
+        reportType: `${REPORT_BASIS_TITLE} ${
+            ["accrual", "cash", "both"][reportBasis - 1]
+        }`,
+        reportDateRange: `From ${fromDate.toDateString()} To ${toDate.toDateString()}`,
+        taxSummaryList,
+    };
+};
+
+/**
+ *
+ * @param {{
+ *   companyName: string;
+ *   reportTitle: string;
+ *   reportType: string;
+ *   reportDateRange: string;
+ *   taxSummaryList: {
+ *       taxId: number;
+ *       taxAmountCredit: number;
+ *       taxAmountDebit: number;
+ *       taxName: string;
+ *       taxPercentage: number;
+ *   }[];
+ * }} taxSummary
+ */
+const taxSummaryBuildExcel = (taxSummary) => {
+    let mergeRanges = [];
+    mergeRanges.push({ s: { c: 0, r: 0 }, e: { c: 2, r: 2 } }); //A1:C3
+
+    const sheetOptions = {
+        "!cols": Array(4).fill({ wch: 50 }),
+        "!merges": mergeRanges,
+    };
+    let dataSheet = [
+        [
+            `${taxSummary.companyName} - ${taxSummary.reportTitle} - ${taxSummary.reportDateRange}`,
+        ],
+        [],
+        [],
+        [],
+        ["Tax Name", "Tax Percentage (%)", "Taxable Amount", "Tax Amount"],
+    ];
+    for (let i in taxSummary.taxSummaryList) {
+        const row = taxSummary.taxSummaryList[i];
+        dataSheet.push([row.taxName]);
+        dataSheet.push([
+            row.taxName,
+            row.taxPercentage,
+            row.taxableAmount || "",
+            row.taxAmountDebit,
+            row.taxAmountCredit,
+        ]);
+    }
+    const buffer = xlsx.build([
+        {
+            name: "Trail Balance",
+            data: dataSheet,
+            options: sheetOptions,
+        },
+    ]);
+    return buffer;
+};
+
+/**
+ *
+ * @param {{
+ *   companyName: string;
+ *   reportTitle: string;
+ *   reportType: string;
+ *   reportDateRange: string;
+ *   taxSummaryList: {
+ *       taxId: number;
+ *       taxAmountCredit: number;
+ *       taxAmountDebit: number;
+ *       taxName: string;
+ *       taxPercentage: number;
+ *   }[];
+ * }} taxSummary
+ */
+const getHtmlTaxSummary = (taxSummary) => {
+    let addedRows = "";
+
+    for (let i in taxSummary.taxSummaryList) {
+        const item = taxSummary.taxSummaryList[i];
+        if (item.IsTotal) {
+            addedRows += `
+                <tr>
+                    <td colspan="3">${item.taxName}</td>
+                    <td>${item.taxAmount}) </td>
+                </tr>
+                `;
+        } else {
+            addedRows += `
+                <tr>
+                    <td>${item.taxName}</td>
+                    <td>${item.taxPercentage}</td>
+                    <td><a href="#"> ${item.taxAmountDebit} </a> </td>
+                    <td><a href="#"> ${item.taxAmountCredit}  </a></td>
+                </tr>
+                `;
+        }
+    }
+    return (
+        `         
+            <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+                  asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+                  asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+            ${mainCss}
+        
+        
+        <section class="content-header">
+            <div class="container-fluid text-center">
+                <h6>${taxSummary?.companyName}</h6>
+                <h5>${taxSummary?.reportTitle}</h5>
+                <small class="text-center">${taxSummary?.reportType}</small><br />
+                <h6>${taxSummary?.reportDateRange}</h6>
+            </div>
+        </section>
+        
+        <section class="content" style="background-color:white">
+            <div class="box-body table-responsive no-padding">
+        
+                <table id="tblTaxSummary" class="table table-hover">
+        
+                    <thead>
+                        <tr>
+                            <th>TAX NAME</th>
+                            <th>TAX PERCENTAGE(%)</th>
+                            <th>TAXABLE AMOUNT</th>
+                            <th>TAX AMOUNT</th>
+                        </tr>
+                    </thead>
+        
+                    <tbody>
+                    ` +
+        addedRows +
+        `
+                    </tbody>
+        
+                </table>
+        
+                <div>
+                    <br />
+                    Amount is displayed in your base currency
+                    <span class="right badge badge-success">ETB</span>
+                </div>
+        
+            </div>
+        </section>`
+    );
+};
+
 module.exports = {
     accountTransactionsExport,
     generalLedgerExport,
     journalExport,
+    trailBalanceExport,
+    taxSummaryExport,
+    identifyAndReturnCreditOrDebitAmount,
+    getOpeningBalanceAmount,
+    getTotalDebitAmount,
+    getTotalCreditAmount,
 };
 // same as the others
