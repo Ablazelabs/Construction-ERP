@@ -8,7 +8,7 @@ router.post("/role", async (req, res, next) => {
         inputFilter({ name: "string" }, { privileges: "object" }, req.body, 4);
         inputFilter({}, { description: "string" }, req.body, 0, 300);
         if (req.body.privileges) {
-            if (!Array.isArray(updateData.privileges)) {
+            if (!Array.isArray(req.body.privileges)) {
                 throw { key: "privileges", message: "must be an array" };
             }
         }

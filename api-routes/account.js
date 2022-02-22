@@ -17,10 +17,9 @@ router.post("/account", async (req, res, next) => {
             {
                 phone_number: "string",
                 email: "string",
-                email: "string",
                 phone_number: "string",
                 two_factor_enabled: "boolean",
-                role: "number",
+                role_id: "number",
             },
             req.body
         );

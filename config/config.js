@@ -29,7 +29,7 @@ const randomConcurrencyStamp = () => {
 /**
  *
  * @param {string} key argument of the error
- * @param {string} message error message to send client
+ * @param {string|Array<string>} message error message to send client
  * @param {Function} next the next middleware function of express
  * @param {number} status status of the error(default 400)
  */

@@ -27,7 +27,9 @@
                                     "phone_number": {
                                         "type": "string",
                                         "description": "countrycode-actual number(251-933221144)"
-                                    }
+                                    },
+                                    "username": { "type": "string" },
+                                    "role_id": { "type": "number" }
                                 }
                             }
                         }

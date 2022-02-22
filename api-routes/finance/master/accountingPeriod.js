@@ -7,12 +7,15 @@ const {
     get,
     patch,
     deleter,
+    isValidToChangeStatus,
+    changeStatus,
 } = require("../../../services/accountingPeriod");
 const {
     returnReqBody,
     returnGetData,
     returnPatchData,
 } = require("../../../validation/basicValidators");
+//#region const data defs
 const enums = {
     months: [
         "january",
@@ -71,14 +74,21 @@ const data_input = {
     period_ending_date: "string",
 };
 const url = "/accounting_period";
+//#endregion
+
+const requiredInputFilter = data_input,
+    optionalInputFilter = {},
+    dateValue = data_dates,
+    myEnums = enums,
+    phoneValue = [],
+    emailValue = [],
+    rangeValues = {},
+    filters = data_filter,
+    sorts = data_sort,
+    projections = data_projection;
+
+//#region prev crud operations
 router.post(url, async (req, res, next) => {
-    const requiredInputFilter = data_input,
-        optionalInputFilter = {},
-        dateValue = data_dates,
-        myEnums = enums,
-        phoneValue = [],
-        emailValue = [],
-        rangeValues = {};
     const reqBody = returnReqBody(
         req.body,
         {
@@ -107,10 +117,6 @@ router.post(url, async (req, res, next) => {
     }
 });
 router.get(url, async (req, res, next) => {
-    const filters = data_filter,
-        sorts = data_sort,
-        projections = data_projection;
-
     const getData = returnGetData(
         req.body,
         { filters, sorts, projections },
@@ -129,13 +135,6 @@ router.get(url, async (req, res, next) => {
     }
 });
 router.patch(url, async (req, res, next) => {
-    const requiredInputFilter = data_input,
-        optionalInputFilter = {},
-        dateValue = data_dates,
-        myEnums = enums,
-        phoneValue = [],
-        emailValue = [],
-        rangeValues = {};
     const data = returnPatchData(
         req.body,
         {
@@ -191,6 +190,84 @@ router.delete(url, async (req, res, next) => {
         console.log(e);
         error("database", "error", next, 500);
         return;
+    }
+});
+//#endregion
+
+router.post("change_status", async (req, res, next) => {
+    const requiredFields = {
+        id: "number",
+        accounting_period_status: "number",
+    };
+    const enums = {
+        accounting_period_status: myEnums.accounting_period_status,
+    };
+    const reqBody = returnReqBody(req.body, {
+        requiredInputFilter: requiredFields,
+        myEnums: enums,
+    });
+    if (!reqBody) {
+        return;
+    }
+    try {
+        const data = await changeStatus(reqBody, res.locals.id, next);
+        if (data == false) {
+            return;
+        }
+        res.json(data);
+    } catch (e) {
+        console.log(e);
+        error("database", "error", next, 500);
+    }
+});
+router.get("is_valid_to_change_status", async (req, res, next) => {
+    const requiredFields = {
+        id: "number",
+        accounting_period_status: "number",
+    };
+    const enums = {
+        accounting_period_status: myEnums.accounting_period_status,
+    };
+    const reqBody = returnReqBody(req.body, {
+        requiredInputFilter: requiredFields,
+        myEnums: enums,
+    });
+    if (!reqBody) {
+        return;
+    }
+    try {
+        const data = await isValidToChangeStatus(reqBody, res.locals.id, next);
+        if (data == false) {
+            return;
+        }
+        res.json(data);
+    } catch (e) {
+        console.log(e);
+        error("database", "error", next, 500);
+    }
+});
+router.get("process_closing", async (req, res, next) => {
+    res.json(["no need for this get"]);
+});
+router.post("process_closing", async (req, res, next) => {
+    const requiredFields = {
+        id: "number",
+    };
+    const reqBody = returnReqBody(req.body, {
+        requiredInputFilter: requiredFields,
+    });
+    if (!reqBody) {
+        return;
+    }
+    try {
+        const data = await processClosing(reqBody, res.locals.id, next);
+        if (data == false) {
+            return;
+        }
+        res.json(data);
+    } catch (e) {
+        console.log(e);
+        error("database", "error", next, 500);
     }
 });
 module.exports = router;

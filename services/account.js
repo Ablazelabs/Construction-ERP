@@ -153,7 +153,7 @@ const patch = async (updateDataProjection, reqBody, updateData, next) => {
     } catch (e) {
         // console.log(e);
         if (e.meta.field_name == "roleId") {
-            error("role", "doesn't exist", next);
+            error("role", "role doesn't exist", next);
             return false;
         }
     }

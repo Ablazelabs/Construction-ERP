@@ -10,6 +10,9 @@ const authorization = {
     userHasPrivilegeOver: async (userId, secondUserId, previlage, next) => {
         return true;
     },
+    isUserSuper: async (id) => {
+        return true;
+    },
     authenticate: async (req, res, next) => {
         const requestRoute = req.path.split("/").pop();
         const pass =
