@@ -29,13 +29,13 @@ const auditLogSort = {
 const returnReqBody = (
     reqBody,
     {
-        requiredInputFilter: {},
-        optionalInputFilter: {},
-        phoneValue: [],
-        emailValue: [],
-        dateValue: [],
-        myEnums: {},
-        rangeValues: {},
+        requiredInputFilter,
+        optionalInputFilter,
+        phoneValue,
+        emailValue,
+        dateValue,
+        myEnums,
+        rangeValues,
     },
     next
 ) => {

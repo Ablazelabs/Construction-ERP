@@ -104,7 +104,6 @@ router.get("/payroll_slip", async (req, res, next) => {
             });
         }
         if (!sendOrGet) {
-            fs.writeFileSync("./output.pdf", buff);
             res.json(constructedPdf);
         } else {
             const data = await sendSlip(constructedPdf, fromDate, toDate);

@@ -3,10 +3,7 @@ const {
     COMPANY_NAME,
     REPORT_BASIS_TITLE,
 } = require("../config/config");
-const {
-    convertGeneralLedgerToBaseCurrency,
-    convertJournalTransactionToBaseCurrency,
-} = require("./accountingPeriod");
+const { getAccounts } = require("./accountingPeriod");
 const { groupByFn } = require("./payrollControl");
 const {
     general_ledger,
@@ -20,11 +17,7 @@ const {
 } = allModels;
 const xlsx = require("node-xlsx");
 const pdf = require("pdf-creator-node");
-const {
-    getOpeningBalanceAmount,
-    getTotalDebitAmount,
-    getTotalCreditAmount,
-} = require("./financeExportController");
+
 const mainCss = `
 <style>
     body{padding-top:50px;padding-bottom:20px}.body-content{padding-left:15px;padding-right:15px}.carousel-caption p{font-size:20px;line-height:1.4}.carousel-inner .item img[src$=".svg"]{width:100%}#qrCode{margin:15px}@media screen and (max-width:767px){.carousel-caption{display:none}}
@@ -451,118 +444,6 @@ const getHtmlProfitLoss = (profitLoss) => {
         </section>
         `
     );
-};
-/**
- *
- * @param {(import("@prisma/client").general_journal_detail & {
- *   general_journal_header: import("@prisma/client").general_journal_header;
- *   chart_of_account: import("@prisma/client").chart_of_account & {
- *       account_type:import("@prisma/client").account_type&{
- *          account_category:import("@prisma/client").account_category
- *       };
- *   };
- * })[]} journals
- * @param {import("@prisma/client").opening_balance & {
- *   opening_balance_account: (import("@prisma/client").opening_balance_account & {
- *       chart_of_account: import("@prisma/client").chart_of_account & {
- *          account_type:import("@prisma/client").account_type&{
- *              account_category:import("@prisma/client").account_category
- *       };
- *   };
- *   })[];
- * }} openingBalance
- */
-const getAccounts = async (journals, openingBalance) => {
-    // #region Local fields
-
-    let reportSectionTotalAmount = 0;
-
-    //Exchange rate fields
-
-    let reportAccounts = [];
-    const baseCurrency = await currency.findFirst({
-        where: {
-            is_base_currency: true,
-        },
-    });
-
-    let groupedJournalsUnderAccountTypes = [...journals];
-    for (let i in journals) {
-        const accountTypeJournals = groupedJournalsUnderAccountTypes.filter(
-            (elem) =>
-                elem.chart_of_account.account_type_id ===
-                journals[i].chart_of_account.account_type_id
-        );
-        if (accountTypeJournals.length) {
-            let accountTypeTotalAmount = 0;
-            groupedJournalsUnderAccountTypes =
-                groupedJournalsUnderAccountTypes.filter(
-                    (elem) =>
-                        elem.chart_of_account.account_type_id !==
-                        journals[i].chart_of_account.account_type_id
-                );
-            let reportItems = [];
-            let journalsGroupedByAccount = [...accountTypeJournals];
-            for (let i in accountTypeJournals) {
-                const accountJournals = journalsGroupedByAccount.filter(
-                    (elem) =>
-                        elem.chart_of_account_id ===
-                        accountTypeJournals[i].chart_of_account_id
-                );
-                if (accountJournals.length) {
-                    journalsGroupedByAccount = journalsGroupedByAccount.filter(
-                        (elem) =>
-                            elem.chart_of_account_id ===
-                            accountTypeJournals[i].chart_of_account_id
-                    );
-                    let amountDueToExchangeRate = 0;
-                    const account = accountJournals[0].chart_of_account;
-                    let journalsWithFCY = accountJournals.filter(
-                        (elem) =>
-                            elem.general_journal_header_id === baseCurrency.id
-                    );
-                    if (journalsWithFCY.length) {
-                        amountDueToExchangeRate =
-                            await convertJournalTransactionToBaseCurrency(
-                                journalsWithFCY,
-                                baseCurrency
-                            );
-                    }
-                    const currencyJournals = accountJournals.filter(
-                        (elem) =>
-                            elem.general_journal_header.currency_id ==
-                            baseCurrency.id
-                    );
-                    const accountBalance =
-                        getOpeningBalanceAmount(openingBalance, account.id) +
-                        (getTotalDebitAmount(currencyJournals, account) +
-                            getTotalCreditAmount(currencyJournals, account)) +
-                        amountDueToExchangeRate;
-                    if (accountBalance != 0) {
-                        accountTypeTotalAmount += accountBalance;
-
-                        reportItems.push({
-                            accountId: account.id,
-                            accountType: account.account_type.type,
-                            accountName:
-                                account.account_name +
-                                "(" +
-                                account.account_code +
-                                ")",
-                            amount: `${accountBalance}`,
-                        });
-                    }
-                }
-            }
-            reportSectionTotalAmount += accountTypeTotalAmount;
-            reportAccounts.push(...reportItems);
-        }
-    }
-    return { reportAccounts, reportSectionTotalAmount };
-
-    // #endregion
-
-    //Loop through all Account Type of a specific Report Section
 };
 
 //--------------------------------------------------------Cash Flow Export------------------------------------------------------------------------
@@ -1365,4 +1246,5 @@ module.exports = {
     profitLossExport,
     cashFlowExport,
     balanceSheetExport,
+    getAccounts,
 };

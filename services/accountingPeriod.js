@@ -1,12 +1,22 @@
 const { error, allModels } = require("../config/config");
+const { groupByFn } = require("./payrollControl");
 const authorization = require("../validation/auth");
-
+const {
+    getAccounts,
+    convertJournalTransactionToBaseCurrency,
+    getTotalDebitAmount,
+    getTotalCreditAmount,
+    getOpeningBalanceAmount,
+} = require("./generalLedgerDetailFunctions");
 const {
     accounting_period,
     transaction_lock,
     exchange_rate,
     general_journal_detail,
     currency,
+    opening_balance,
+    account_type_financial_statement_section,
+    chart_of_account,
 } = allModels;
 const post = async (reqBody, creator, enums, next) => {
     const allowedAccountingPeriodStatus = [2, 3];
@@ -215,82 +225,6 @@ const deleter = async ({ id }) => {
     return { success: true };
 };
 
-/**
- *
- * @param {Array<import("@prisma/client").general_ledger & {general_journal_header:import("@prisma/client").general_journal_header}>} generalLedgerWithFCY
- * @param {Function} getTotalCreditAmount
- * @param {Function} getTotalDebitAmount
- * @returns
- */
-const convertGeneralLedgerToBaseCurrency = async (
-    generalLedgerWithFCY,
-    getTotalCreditAmount,
-    getTotalDebitAmount
-) => {
-    const minMaxDates = generalLedgerWithFCY.map(({ general_journal_header }) =>
-        general_journal_header.journal_date.getTime()
-    );
-    const startDate = new Date(Math.min(...minMaxDates));
-    const endDate = new Date(Math.max(...minMaxDates));
-
-    const exchangeRates = await exchange_rate.findMany({
-        where: {
-            status: 0,
-            date: {
-                gt: new Date(startDate.getFullYear(), startDate.getMonth(), 0),
-                lt: new Date(endDate.getFullYear(), endDate.getMonth() + 1, 0),
-            },
-        },
-    });
-    let amountInFCY = 0;
-    let amountInBCY = 0;
-    let totalAmountInBCY = 0;
-
-    for (let i in generalLedgerWithFCY) {
-        const journal = generalLedgerWithFCY[i];
-        amountInFCY = 0;
-        amountInBCY = 0;
-
-        const exchangeRate = exchangeRates.find(
-            (elem) =>
-                elem.date.getFullYear() ==
-                    journal.general_journal_header.journal_date.getFullYear() &&
-                elem.date.getMonth() ==
-                    journal.general_journal_header.journal_date.getMonth() &&
-                elem.currency_id == journal.general_journal_header.currency_id
-        );
-
-        if (exchangeRate) {
-            amountInFCY =
-                getTotalDebitAmount([journal], journal.chart_of_account) +
-                getTotalCreditAmount([journal], journal.chart_of_account);
-            amountInBCY = amountInFCY * exchangeRate.rate;
-        }
-        totalAmountInBCY += amountInBCY;
-    }
-
-    return totalAmountInBCY;
-};
-
-/**
- *
- * @param {Array<import("@prisma/client").general_ledger & {general_journal_header:import("@prisma/client").general_journal_header}>} journalsWithFCY
- * @param {Function} getTotalCreditAmount
- * @param {Function} getTotalDebitAmount
- * @returns
- */
-const convertJournalTransactionToBaseCurrency = async (
-    journalsWithFCY,
-    getTotalCreditAmount,
-    getTotalDebitAmount
-) => {
-    return await convertGeneralLedgerToBaseCurrency(
-        journalsWithFCY,
-        getTotalCreditAmount,
-        getTotalDebitAmount
-    );
-};
-
 //#region Closing requests and more
 
 /**
@@ -385,15 +319,15 @@ const processClosing = async ({ id }, creator, next) => {
             closingTypeMessage = "Year-End Closing";
         else closingTypeMessage = "Month-End Closing";
 
-        var monthStartDate = accountingPeriod.period_starting_date;
+        let monthStartDate = accountingPeriod.period_starting_date;
         //last day of the month start date
-        var monthEndDate = new Date(
+        let monthEndDate = new Date(
             monthStartDate.getFullYear(),
             monthStartDate.getMonth() + 1,
             0
         );
 
-        var periodJournals = await general_journal_detail.findMany({
+        const periodJournals = await general_journal_detail.findMany({
             where: {
                 general_journal_header: {
                     journal_date: {
@@ -439,7 +373,6 @@ const processClosing = async ({ id }, creator, next) => {
             accountingPeriod,
             creator,
             baseCurrency,
-            periodJournals,
             closingTypeMessage
         );
     }
@@ -656,23 +589,12 @@ const isTransactionLocked = async (transactionRecordDate, creator) => {
  * @param {import("@prisma/client").accounting_period} accountingPeriod
  * @param {number} creator
  * @param {import("@prisma/client").currency} baseCurrency
- * @param {import("@prisma/client").general_journal_detail&{
- *         general_journal_header:import("@prisma/client").general_journal_header&{
- *              currency:import("@prisma/client").currency
- *         },
- *         chart_of_account:import("@prisma/client").chart_of_account_files&{
- *              account_type:import("@prisma/client").account_type&{
- *                  account_category: import("@prisma/client").account_category
- *              }
- *         }
- * }[]} periodJournals
  * @param {string} closingTypeMessage
  */
 const processMonthAndYearEndClosing = async (
     accountingPeriod,
     creator,
     baseCurrency,
-    periodJournals,
     closingTypeMessage
 ) => {
     let messageList = [];
@@ -686,7 +608,6 @@ const processMonthAndYearEndClosing = async (
         accountingPeriodForClosing = await getAccountingPeriodInvolveInClosing(
             accountingPeriod
         );
-    //jumped GetAccountingPeriodInvolveInClosing
     if (!accountingPeriodForClosing.length) {
         messageList.push("Accounting period not found");
         error(
@@ -698,7 +619,6 @@ const processMonthAndYearEndClosing = async (
     }
 
     let generalJournalDetail = {};
-    let openingBalance = {};
     let openingBalanceAccount = {};
 
     //1. GET all Posted Transaction of this Specific Month
@@ -720,7 +640,530 @@ const processMonthAndYearEndClosing = async (
     let accountOpeningBalanceOfThisPeriod;
 
     //Collect all Chart of Account
-    // List<ChartOfAccount> chartOfAccounts = applicationDbContext.ChartOfAccounts.Include("AccountType.AccountCategory").Where(a => a.Status == RecordStatus.Active).ToList();
+    const chartOfAccounts = await chart_of_account.findMany({
+        where: { status: 0 },
+        include: { account_type: { include: { account_category: true } } },
+    });
+    let netIncome = 0.0;
+    if (accountingPeriod.is_year_end_closing) {
+        netIncome = await getNetIncome(
+            accountingPeriod.period_starting_date,
+            period_ending_date
+        );
+        const periodJournals = await general_journal_detail.findMany({
+            where: {
+                general_journal_header: {
+                    journal_date: {
+                        gte: accountingPeriod.period_starting_date,
+                        lte: accountingPeriod.period_ending_date,
+                    },
+                    journal_posting_status: 1,
+                    status: 0,
+                },
+            },
+            include: {
+                general_journal_header: {
+                    include: {
+                        currency: true,
+                    },
+                },
+                chart_of_account: {
+                    include: {
+                        account_type: {
+                            include: {
+                                account_category: true,
+                            },
+                        },
+                    },
+                },
+            },
+        });
+
+        const periodOpeningBalance = await opening_balance.findFirst({
+            where: accountingPeriod.is_year_end_closing
+                ? {
+                      opening_balance_date: {
+                          gte: new Date(
+                              accountingPeriod.period_starting_date.getFullYear(),
+                              1,
+                              1
+                          ),
+                          lt: new Date(
+                              accountingPeriod.period_starting_date.getFullYear() +
+                                  1,
+                              1,
+                              1
+                          ),
+                      },
+                  }
+                : {
+                      opening_balance_date: {
+                          gte: new Date(
+                              accountingPeriod.period_starting_date.getFullYear(),
+                              accountingPeriod.period_starting_date.getMonth(),
+                              1
+                          ),
+                          lt: new Date(
+                              accountingPeriod.period_starting_date.getFullYear(),
+                              accountingPeriod.period_starting_date.getMonth() +
+                                  1,
+                              1
+                          ),
+                      },
+                  },
+            include: {
+                opening_balance_account: {
+                    include: {
+                        chart_of_account: {
+                            include: {
+                                account_type: {
+                                    include: {
+                                        account_category,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        });
+        let nextPeriodAccountOpeningBalance = {
+            opening_balance_date: new Date(
+                accountingPeriod.period_starting_date.getFullYear() + 1,
+                accountingPeriod.period_starting_date.getMonth(),
+                accountingPeriod.period_starting_date.getDate()
+            ),
+            month: accountingPeriod.period_starting_date.getMonth(),
+            price_precision: periodOpeningBalance
+                ? periodOpeningBalance.price_precision
+                : 2,
+            createdBy: `${creator}`,
+            revisedBy: `${creator}`,
+
+            isProtectedForEdit: true,
+            status: 0,
+            startDate: new Date(),
+            endDate: new Date("9999/12/31"),
+        };
+        let openingBalanceAccounts = [];
+        for (let i in chartOfAccounts) {
+            const account = chartOfAccounts[i];
+            transactionAccountAmountDuringThePeriodInBCY = 0.0;
+            transactionAccountAmountDuringThePeriodInFCY = 0.0;
+            nextPeriodOpeningBalanceAmount = 0.0;
+
+            journalsWithBCY = periodJournals.filter(
+                (j) =>
+                    j.chart_of_account_id == account.id &&
+                    j.general_journal_header.currency_id == baseCurrency.id
+            );
+            journalsWithFCY = periodJournals.filter(
+                (j) =>
+                    j.chart_of_account_id == account.id &&
+                    j.general_journal_header.currency_id != baseCurrency.id
+            );
+
+            //Amount in FOREIGN CURRENCY
+            if (journalsWithFCY.length > 0)
+                transactionAccountAmountDuringThePeriodInFCY =
+                    await convertJournalTransactionToBaseCurrency(
+                        journalsWithFCY,
+                        baseCurrency
+                    );
+
+            //Amount in BASE CURRENCY
+            transactionAccountAmountDuringThePeriodInBCY =
+                getTotalDebitAmount(journalsWithBCY, account) +
+                getTotalCreditAmount(journalsWithBCY, account);
+
+            const accountOpeningBalanceOfThisPeriod =
+                periodOpeningBalance?.opening_balance_account.find(
+                    (ob) => ob.chart_of_account_id == account.id
+                );
+
+            nextPeriodOpeningBalanceAmount =
+                transactionAccountAmountDuringThePeriodInBCY +
+                transactionAccountAmountDuringThePeriodInFCY;
+
+            if (accountOpeningBalanceOfThisPeriod)
+                nextPeriodOpeningBalanceAmount =
+                    nextPeriodOpeningBalanceAmount +
+                    getOpeningBalanceAmount(accountOpeningBalanceOfThisPeriod);
+
+            //Collect Next Period Opening Balance
+            openingBalanceAccounts.push(
+                constructOpeningBalanceAccountForNextPeriod(
+                    nextPeriodOpeningBalanceAmount,
+                    account,
+                    creator,
+                    baseCurrency.id
+                )
+            );
+        }
+        if (openingBalanceAccounts.length) {
+            if (!periodOpeningBalance)
+                await opening_balance.create({
+                    data: {
+                        ...nextPeriodAccountOpeningBalance,
+                        opening_balance_account: {
+                            createMany: {
+                                skipDuplicates: true,
+                                data: openingBalanceAccounts,
+                            },
+                        },
+                    },
+                });
+            else {
+                for (let i in openingBalanceAccounts) {
+                    const newOpeningBalanceAccount = openingBalanceAccounts[i];
+                    if (newOpeningBalanceAccount) {
+                        let existingOpeningBalanceAccount =
+                            periodOpeningBalance.opening_balance_account.find(
+                                (a) =>
+                                    a.chart_of_account_id ==
+                                    newOpeningBalanceAccount.chart_of_account_id
+                            );
+
+                        if (existingOpeningBalanceAccount) {
+                            //EDIT if exist
+                            if (
+                                existingOpeningBalanceAccount.chart_of_account
+                                    .account_type.account_category.name ==
+                                    "Income" ||
+                                existingOpeningBalanceAccount.chart_of_account
+                                    .account_type.account_category.name ==
+                                    "Expense"
+                            ) {
+                                // Make Temporary Account ZERO if Year-End Closing
+                                existingOpeningBalanceAccount.amount_debit = 0;
+                                existingOpeningBalanceAccount.amount_credit = 0;
+                            } else if (
+                                existingOpeningBalanceAccount.chart_of_account
+                                    .account_name == "RetainedEarnings"
+                            ) {
+                                var totalAmount =
+                                    netIncome +
+                                    getOpeningBalanceAmount(
+                                        existingOpeningBalanceAccount
+                                    );
+
+                                if (totalAmount > 0) {
+                                    existingOpeningBalanceAccount.amount_credit =
+                                        Math.abs(totalAmount);
+                                    existingOpeningBalanceAccount.debit_or_credit =
+                                        JournalEntryType.Credit;
+                                } else {
+                                    existingOpeningBalanceAccount.amount_credit =
+                                        Math.abs(totalAmount);
+                                    existingOpeningBalanceAccount.debit_or_credit = 2;
+                                }
+                            } else {
+                                var amount = await getOpeningBalanceAmount(
+                                    newOpeningBalanceAccount,
+                                    existingOpeningBalanceAccount.chart_of_account
+                                );
+                                //jumped here to make getOpeningBalanceAmount (accounting period version(accepts two arguments))
+                                //code stopped here
+                                var result =
+                                    await generalJournalDetail.IdentifyAndReturnCreditOrDebitAmount(
+                                        existingOpeningBalanceAccount.chart_of_account,
+                                        amount
+                                    );
+
+                                if (result.Item1 != 0) {
+                                    existingOpeningBalanceAccount.AmountDebit =
+                                        Math.Abs(result.Item1);
+                                    existingOpeningBalanceAccount.AmountCredit = 0;
+                                    existingOpeningBalanceAccount.DebitOrcredit =
+                                        JournalEntryType.Debit;
+                                } else {
+                                    existingOpeningBalanceAccount.AmountCredit =
+                                        Math.Abs(result.Item2);
+                                    existingOpeningBalanceAccount.AmountDebit = 0;
+                                    existingOpeningBalanceAccount.DebitOrcredit =
+                                        JournalEntryType.Credit;
+                                }
+                            }
+                        } //ADD if not exist
+                        else {
+                            if (
+                                existingOpeningBalanceAccount.ChartOfAccount
+                                    .AccountType.AccountCategory.Name ==
+                                    EnumeratorExtension.GetDescription(
+                                        ChartOfAccountCategory.Income
+                                    ) ||
+                                existingOpeningBalanceAccount.ChartOfAccount
+                                    .AccountType.AccountCategory.Name ==
+                                    EnumeratorExtension.GetDescription(
+                                        ChartOfAccountCategory.Expense
+                                    )
+                            ) {
+                                // Make Temporary Account ZERO if Year-End Closing
+                                newOpeningBalanceAccount.AmountDebit = 0;
+                                newOpeningBalanceAccount.AmountCredit = 0;
+                            }
+                            periodOpeningBalance.OpeningBalanceAccounts.Add(
+                                newOpeningBalanceAccount
+                            );
+                        }
+                    }
+                }
+            }
+
+            if (applicationDbContext.SaveChanges() > 0) {
+                // #region Close the Currect Period
+                if (
+                    !(await ChangePeriodStatus(
+                        accountingPeriod.PeriodStartingDate,
+                        AcountingPeriodStatus.Closed,
+                        userName,
+                        false
+                    ))
+                ) {
+                    messageList.Add(
+                        `Failed to change {accountingPeriod.PeriodMonth.GetDescription()} Period status to CLOSE and Transaction has been rollback.`
+                    );
+                    transaction.Rollback();
+                }
+                // #endregion
+
+                // #region Open the next Accounting Period
+
+                if (
+                    !(await ChangePeriodStatus(
+                        accountingPeriod.PeriodStartingDate.AddYears(1),
+                        AcountingPeriodStatus.Open,
+                        userName,
+                        true
+                    ))
+                ) {
+                    messageList.Add(
+                        `Failed to change {Enum.GetName(typeof(Months), nextPeriodAccountOpeningBalance.Month)} Period status to OPEN and Transaction has been rollback.`
+                    );
+                    transaction.Rollback();
+                }
+
+                // #endregion
+            } else {
+                messageList.Add(
+                    `Failed to Save Opening Balance for {Enum.GetName(typeof(Months), nextPeriodAccountOpeningBalance.Month)} Period and Transaction has been rollback. It seems that there is NO change to close in this period.`
+                );
+
+                transaction.Rollback();
+            }
+        }
+    }
+};
+/**
+ *
+ * @param {number} nextPeriodOpeningBalance
+ * @param {import("@prisma/client").chart_of_account & {
+ *   account_type: import("@prisma/client").account_type & {
+ *       account_category: import("@prisma/client").account_category;
+ *   };
+ *}} account
+ * @param {number} creator
+ * @param {number} baseCurrencyId
+ */
+const constructOpeningBalanceAccountForNextPeriod = (
+    nextPeriodOpeningBalance,
+    account,
+    creator,
+    baseCurrencyId
+) => {
+    let openingBalanceAccount = {
+        chart_of_account_id: account.id,
+        currency_id: baseCurrencyId,
+        status: 0,
+        createdBy: `${creator}`,
+        revisedBy: `${creator}`,
+        startDate: new Date(),
+        endDate: new Date("9999/12/31"),
+        isProtectedForEdit: false,
+    };
+    if (account.account_type.account_category.is_debit) {
+        if (nextPeriodOpeningBalance < 0) {
+            openingBalanceAccount.debit_or_credit = 1;
+            openingBalanceAccount.amount_credit = Math.abs(
+                nextPeriodOpeningBalance
+            );
+        } else if (nextPeriodOpeningBalance > 0) {
+            openingBalanceAccount.debit_or_credit = 2;
+            openingBalanceAccount.amount_debit = Math.abs(
+                nextPeriodOpeningBalance
+            );
+        }
+    } else {
+        if (nextPeriodOpeningBalance < 0) {
+            openingBalanceAccount.debit_or_credit = 2;
+            openingBalanceAccount.amount_debit = Math.abs(
+                nextPeriodOpeningBalance
+            );
+        } else if (nextPeriodOpeningBalance > 0) {
+            openingBalanceAccount.debit_or_credit = 1;
+            openingBalanceAccount.amount_credit = Math.abs(
+                nextPeriodOpeningBalance
+            );
+        }
+    }
+
+    return openingBalanceAccount;
+};
+/**
+ *
+ * @param {Date} startDate
+ * @param {Date} endDate
+ */
+const getNetIncome = async (startDate, endDate) => {
+    let operatingIncomeBalance = 0.0,
+        netProfitOrLoss = 0.0;
+
+    let grossProfit = 0.0;
+    let operatingProfit = 0.0;
+
+    const openingBalance = await opening_balance.findFirst({
+        where: {
+            opening_balance_date: {
+                gte: new Date(new Date().getFullYear(), 0, 1),
+                lt: new Date(new Date().getFullYear() + 1, 0, 1),
+            },
+        },
+        include: {
+            opening_balance_account: {
+                where: {
+                    OR: [
+                        { amount_credit: { gt: 0 } },
+                        { amount_debit: { gt: 0 } },
+                    ],
+                },
+                include: {
+                    chart_of_account: {
+                        include: {
+                            account_type: {
+                                include: {
+                                    account_category: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    });
+
+    const journals = await general_journal_detail.findMany({
+        where: {
+            general_journal_header: {
+                journal_date: {
+                    gte: startDate,
+                    lte: endDate,
+                },
+                OR: [{ report_basis: 1 }, { report_basis: 2 }],
+                journal_posting_status: 1,
+                status: 0,
+            },
+        },
+        include: {
+            general_journal_header: true,
+            chart_of_account: {
+                include: {
+                    account_type: {
+                        include: {
+                            account_category: true,
+                        },
+                    },
+                },
+            },
+        },
+    });
+    //Select Account Types configured under BALANCE SHEET report Sections
+    const accountTypesInsideBalanceSheetReportSections =
+        await account_type_financial_statement_section.findMany({
+            where: {
+                financial_statement_section: {
+                    financial_statement_type: 1,
+                },
+            },
+            include: {
+                financial_statement_section: true,
+                account_type: true,
+            },
+        });
+
+    //Group Account Type under it's section
+    const otherKeys = accountTypesInsideBalanceSheetReportSections.length
+        ? Object.keys(accountTypesInsideBalanceSheetReportSections[0])
+        : [];
+    const accountTypesGroupedUnderReportSectionsObj = groupByFn(
+        ["financial_statement_section_id"],
+        accountTypesInsideBalanceSheetReportSections,
+        otherKeys
+    );
+    let accountTypesGroupedUnderReportSections = [];
+    for (let i in accountTypesGroupedUnderReportSectionsObj) {
+        accountTypesGroupedUnderReportSections.push(
+            accountTypesGroupedUnderReportSectionsObj[i].otherKeys
+        );
+    }
+
+    //Sort Them by Sequence Number
+    accountTypesGroupedUnderReportSections.sort(
+        (a, b) =>
+            a[0].financial_statement_section.sequence_on_report -
+            b[0].financial_statement_section.sequence_on_report
+    );
+
+    let financialStatementSection = {};
+
+    let nonOperatingIncomeAmount = 0.0;
+
+    //Loop through the Report Sections
+    for (let i in accountTypesGroupedUnderReportSections) {
+        const accountTypeUnderReportSection =
+            accountTypesGroupedUnderReportSections[i];
+        financialStatementSection =
+            accountTypeUnderReportSection[0]?.financial_statement_section;
+
+        const journalsOfTheReportSectionAccounts = journals.filter(
+            (j) =>
+                accountTypeUnderReportSection.filter(
+                    (at) =>
+                        at.account_type_id == j.chart_of_account.account_type_id
+                ).length
+        );
+
+        const incomeStatementAccounts = await getAccounts(
+            journalsOfTheReportSectionAccounts,
+            openingBalance
+        );
+
+        if (financialStatementSection.sequence_on_report == 1)
+            operatingIncomeBalance =
+                incomeStatementAccounts.reportSectionTotalAmount;
+        else if (financialStatementSection.sequence_on_report == 2) {
+            //Substract Profit Tax (30 % of gross profit), APPLY THIS IN YEAR-END CLOSING
+            grossProfit =
+                operatingIncomeBalance -
+                incomeStatementAccounts.reportSectionTotalAmount; //Oprating Income - Cost of goods sold
+        } else if (financialStatementSection.sequence_on_report == 3)
+            operatingProfit =
+                grossProfit - incomeStatementAccounts.reportSectionTotalAmount;
+        //Gross profit - Operating Expense
+        else if (financialStatementSection.sequence_on_report == 4)
+            nonOperatingIncomeAmount =
+                incomeStatementAccounts.reportSectionTotalAmount;
+        else if (financialStatementSection.sequence_on_report == 5)
+            netProfitOrLoss =
+                operatingProfit -
+                (nonOperatingIncomeAmount +
+                    incomeStatementAccounts.reportSectionTotalAmount);
+    }
+
+    //netProfitOrLoss is Profit before Tax
+
+    //	Profit Tax(30 % of gross profit)  APPLY THIS IN YEAR-END CLOSING
+
+    return netProfitOrLoss;
 };
 /**
  *
@@ -769,8 +1212,6 @@ module.exports = {
     get,
     patch,
     deleter,
-    convertGeneralLedgerToBaseCurrency,
-    convertJournalTransactionToBaseCurrency,
     isValidToChangeStatus,
     changeStatus,
 };

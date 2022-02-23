@@ -4,9 +4,13 @@ const {
     REPORT_BASIS_TITLE,
 } = require("../config/config");
 const {
+    getAccounts,
     convertGeneralLedgerToBaseCurrency,
     convertJournalTransactionToBaseCurrency,
-} = require("./accountingPeriod");
+    getOpeningBalanceAmount,
+    getTotalCreditAmount,
+    getTotalDebitAmount,
+} = require("./generalLedgerDetailFunctions");
 const { groupByFn } = require("./payrollControl");
 const {
     general_ledger,
@@ -505,67 +509,6 @@ const identifyAndReturnCreditOrDebitAmount = (account, amount) => {
 
     return { creditAmount, debitAmount };
 };
-/**
- *
- * @param {import("@prisma/client").opening_balance & {
- *  opening_balance_account:Array<import("@prisma/client").opening_balance_account & {
- *      chart_of_account:import("@prisma/client").chart_of_account &{
- *          account_type:import("@prisma/client").account_type &{
- *              account_category: import("@prisma/client").account_category
- *          }
- *      }
- *  }>
- * }} openingBalance
- * @param {number} chartOfAccountId
- * @returns
- */
-const getOpeningBalanceAmount = (openingBalance, chartOfAccountId) => {
-    if (openingBalance?.opening_balance_account.length) {
-        const openingBalanceAccount =
-            openingBalance.opening_balance_account.find(
-                (ob) => ob.chart_of_account_id == chartOfAccountId
-            );
-
-        if (openingBalanceAccount) {
-            if (
-                openingBalanceAccount.chart_of_account.account_type
-                    .account_category.is_debit
-            )
-                return openingBalanceAccount.debit_or_credit == 2
-                    ? openingBalanceAccount.amount_debit
-                    : -openingBalanceAccount.amount_credit;
-            else
-                return openingBalanceAccount.debit_or_credit == 1
-                    ? openingBalanceAccount.amount_credit
-                    : -openingBalanceAccount.amount_debit;
-        }
-    }
-    return 0;
-};
-const getTotalDebitAmount = (generalLedger, chartOfAccount) => {
-    if (generalLedger.length) {
-        let sum = 0;
-        generalLedger.forEach((elem) => {
-            if (elem.chart_of_account_id === chartOfAccount.id)
-                sum += elem.amount_debit;
-        });
-        return chartOfAccount.account_type.account_category.is_debit
-            ? sum
-            : -sum;
-    }
-};
-const getTotalCreditAmount = (generalLedger, chartOfAccount) => {
-    if (generalLedger.length) {
-        let sum = 0;
-        generalLedger.forEach((elem) => {
-            if (elem.chart_of_account_id === chartOfAccount.id)
-                sum += elem.amount_credit;
-        });
-        return chartOfAccount.account_type.account_category.is_debit
-            ? -sum
-            : sum;
-    }
-};
 
 //--------------------------------------------------------Account Transaction Export------------------------------------------------------------------------
 
@@ -775,7 +718,6 @@ const getAccountTransaction = async ({
                     );
                 if (journalsWithFCY.length) {
                     amountDueToExchangeRate =
-                        //jumped convertJournalTransactionToBaseCurrency
                         await convertJournalTransactionToBaseCurrency(
                             journalsWithFCY.map((elem) => {
                                 return {
@@ -923,7 +865,7 @@ const getAccountTransaction = async ({
                 amountDueToExchangeRate = 0;
                 if (journalsWithFCY.length) {
                     amountDueToExchangeRate =
-                        convertJournalTransactionToBaseCurrency(
+                        await convertJournalTransactionToBaseCurrency(
                             journalsWithFCY,
                             baseCurrency
                         );
@@ -2349,8 +2291,5 @@ module.exports = {
     trailBalanceExport,
     taxSummaryExport,
     identifyAndReturnCreditOrDebitAmount,
-    getOpeningBalanceAmount,
-    getTotalDebitAmount,
-    getTotalCreditAmount,
 };
 // same as the others
