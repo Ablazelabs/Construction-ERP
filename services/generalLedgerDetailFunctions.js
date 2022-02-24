@@ -197,17 +197,41 @@ const convertJournalTransactionToBaseCurrency = async (
  *          }
  *      }
  *  }>
- * }} openingBalance
+ * } | import("@prisma/client").opening_balance_account & {
+ *      chart_of_account:import("@prisma/client").chart_of_account &{
+ *          account_type:import("@prisma/client").account_type &{
+ *              account_category: import("@prisma/client").account_category
+ *          }
+ *      }
+ *  }} openingBalance
  * @param {number} chartOfAccountId
- * @returns
+ * @returns {number}
  */
 const getOpeningBalanceAmount = (openingBalance, chartOfAccountId) => {
-    if (openingBalance?.opening_balance_account.length) {
-        const openingBalanceAccount =
-            openingBalance.opening_balance_account.find(
-                (ob) => ob.chart_of_account_id == chartOfAccountId
-            );
+    if (openingBalance.opening_balance_account) {
+        if (openingBalance?.opening_balance_account.length) {
+            const openingBalanceAccount =
+                openingBalance.opening_balance_account.find(
+                    (ob) => ob.chart_of_account_id == chartOfAccountId
+                );
 
+            if (openingBalanceAccount) {
+                if (
+                    openingBalanceAccount.chart_of_account.account_type
+                        .account_category.is_debit
+                )
+                    return openingBalanceAccount.debit_or_credit == 2
+                        ? openingBalanceAccount.amount_debit
+                        : -openingBalanceAccount.amount_credit;
+                else
+                    return openingBalanceAccount.debit_or_credit == 1
+                        ? openingBalanceAccount.amount_credit
+                        : -openingBalanceAccount.amount_debit;
+            }
+        }
+        return 0;
+    } else {
+        const openingBalanceAccount = openingBalance;
         if (openingBalanceAccount) {
             if (
                 openingBalanceAccount.chart_of_account.account_type
@@ -222,7 +246,6 @@ const getOpeningBalanceAmount = (openingBalance, chartOfAccountId) => {
                     : -openingBalanceAccount.amount_debit;
         }
     }
-    return 0;
 };
 const getTotalDebitAmount = (generalLedger, chartOfAccount) => {
     if (generalLedger.length) {
@@ -248,6 +271,41 @@ const getTotalCreditAmount = (generalLedger, chartOfAccount) => {
             : sum;
     }
 };
+/**
+ *
+ * @param { import("@prisma/client").chart_of_account&{
+ *     account_type:import("@prisma/client").account_type  &{
+ *     account_category: import("@prisma/client").account_category
+ *     }
+ * } } account
+ * @param {number} amount
+ * @returns
+ */
+const identifyAndReturnCreditOrDebitAmount = (account, amount) => {
+    let debitAmount = 0,
+        creditAmount = 0;
+
+    if (account.account_type.account_category.is_debit) {
+        if (amount < 0) {
+            creditAmount = amount;
+            debitAmount = 0;
+        } else {
+            debitAmount = amount;
+            creditAmount = 0;
+        }
+    } else {
+        if (amount < 0) {
+            creditAmount = 0;
+            debitAmount = amount;
+        } else {
+            debitAmount = 0;
+            creditAmount = amount;
+        }
+    }
+    //item1 is debit
+    //item1 is credit
+    return { creditAmount, debitAmount };
+};
 module.exports = {
     getAccounts,
     convertGeneralLedgerToBaseCurrency,
@@ -255,4 +313,5 @@ module.exports = {
     getOpeningBalanceAmount,
     getTotalCreditAmount,
     getTotalDebitAmount,
+    identifyAndReturnCreditOrDebitAmount,
 };

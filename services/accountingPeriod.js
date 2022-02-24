@@ -7,6 +7,7 @@ const {
     getTotalDebitAmount,
     getTotalCreditAmount,
     getOpeningBalanceAmount,
+    identifyAndReturnCreditOrDebitAmount,
 } = require("./generalLedgerDetailFunctions");
 const {
     accounting_period,
@@ -17,6 +18,7 @@ const {
     opening_balance,
     account_type_financial_statement_section,
     chart_of_account,
+    financial_settings,
 } = allModels;
 const post = async (reqBody, creator, enums, next) => {
     const allowedAccountingPeriodStatus = [2, 3];
@@ -373,7 +375,8 @@ const processClosing = async ({ id }, creator, next) => {
             accountingPeriod,
             creator,
             baseCurrency,
-            closingTypeMessage
+            closingTypeMessage,
+            periodJournals
         );
     }
 };
@@ -590,12 +593,23 @@ const isTransactionLocked = async (transactionRecordDate, creator) => {
  * @param {number} creator
  * @param {import("@prisma/client").currency} baseCurrency
  * @param {string} closingTypeMessage
+ * @param {import("@prisma/client").general_journal_detail&{
+ *         general_journal_header:import("@prisma/client").general_journal_header&{
+ *              currency:import("@prisma/client").currency
+ *         },
+ *         chart_of_account:import("@prisma/client").chart_of_account&{
+ *              account_type:import("@prisma/client").account_type&{
+ *                  account_category: import("@prisma/client").account_category
+ *              }
+ *         }
+ * }[]} periodJournalsDefault
  */
 const processMonthAndYearEndClosing = async (
     accountingPeriod,
     creator,
     baseCurrency,
-    closingTypeMessage
+    closingTypeMessage,
+    periodJournalsDefault
 ) => {
     let messageList = [];
     let accountingPeriodForClosing = [];
@@ -685,13 +699,13 @@ const processMonthAndYearEndClosing = async (
                       opening_balance_date: {
                           gte: new Date(
                               accountingPeriod.period_starting_date.getFullYear(),
-                              1,
+                              0,
                               1
                           ),
                           lt: new Date(
                               accountingPeriod.period_starting_date.getFullYear() +
                                   1,
-                              1,
+                              0,
                               1
                           ),
                       },
@@ -815,7 +829,7 @@ const processMonthAndYearEndClosing = async (
                 });
             else {
                 for (let i in openingBalanceAccounts) {
-                    const newOpeningBalanceAccount = openingBalanceAccounts[i];
+                    let newOpeningBalanceAccount = openingBalanceAccounts[i];
                     if (newOpeningBalanceAccount) {
                         let existingOpeningBalanceAccount =
                             periodOpeningBalance.opening_balance_account.find(
@@ -826,6 +840,7 @@ const processMonthAndYearEndClosing = async (
 
                         if (existingOpeningBalanceAccount) {
                             //EDIT if exist
+                            let updateData = {};
                             if (
                                 existingOpeningBalanceAccount.chart_of_account
                                     .account_type.account_category.name ==
@@ -835,123 +850,709 @@ const processMonthAndYearEndClosing = async (
                                     "Expense"
                             ) {
                                 // Make Temporary Account ZERO if Year-End Closing
-                                existingOpeningBalanceAccount.amount_debit = 0;
-                                existingOpeningBalanceAccount.amount_credit = 0;
+                                updateData.amount_debit = 0;
+                                updateData.amount_credit = 0;
                             } else if (
                                 existingOpeningBalanceAccount.chart_of_account
                                     .account_name == "RetainedEarnings"
                             ) {
-                                var totalAmount =
+                                const totalAmount =
                                     netIncome +
                                     getOpeningBalanceAmount(
                                         existingOpeningBalanceAccount
                                     );
 
                                 if (totalAmount > 0) {
-                                    existingOpeningBalanceAccount.amount_credit =
+                                    updateData.amount_credit =
                                         Math.abs(totalAmount);
-                                    existingOpeningBalanceAccount.debit_or_credit =
-                                        JournalEntryType.Credit;
+                                    updateData.debit_or_credit = 1;
                                 } else {
-                                    existingOpeningBalanceAccount.amount_credit =
+                                    updateData.amount_credit =
                                         Math.abs(totalAmount);
-                                    existingOpeningBalanceAccount.debit_or_credit = 2;
+                                    updateData.debit_or_credit = 2;
                                 }
                             } else {
-                                var amount = await getOpeningBalanceAmount(
+                                const amount = getOpeningBalanceAmount2(
                                     newOpeningBalanceAccount,
                                     existingOpeningBalanceAccount.chart_of_account
                                 );
-                                //jumped here to make getOpeningBalanceAmount (accounting period version(accepts two arguments))
-                                //code stopped here
-                                var result =
-                                    await generalJournalDetail.IdentifyAndReturnCreditOrDebitAmount(
+                                const result =
+                                    identifyAndReturnCreditOrDebitAmount(
                                         existingOpeningBalanceAccount.chart_of_account,
                                         amount
                                     );
 
-                                if (result.Item1 != 0) {
-                                    existingOpeningBalanceAccount.AmountDebit =
-                                        Math.Abs(result.Item1);
-                                    existingOpeningBalanceAccount.AmountCredit = 0;
-                                    existingOpeningBalanceAccount.DebitOrcredit =
-                                        JournalEntryType.Debit;
+                                if (result.debitAmount != 0) {
+                                    updateData.amount_debit = Math.abs(
+                                        result.debitAmount
+                                    );
+                                    updateData.amount_credit = 0;
+                                    updateData.debit_or_credit = 1;
                                 } else {
-                                    existingOpeningBalanceAccount.AmountCredit =
-                                        Math.Abs(result.Item2);
-                                    existingOpeningBalanceAccount.AmountDebit = 0;
-                                    existingOpeningBalanceAccount.DebitOrcredit =
-                                        JournalEntryType.Credit;
+                                    updateData.amount_credit = Math.abs(
+                                        result.creditAmount
+                                    );
+                                    updateData.amount_debit = 0;
+                                    updateData.debit_or_credit = 1;
                                 }
                             }
+                            await opening_balance.update({
+                                where: { id: periodOpeningBalance.id },
+                                data: {
+                                    opening_balance_account: {
+                                        update: {
+                                            where: {
+                                                id: existingOpeningBalanceAccount.id,
+                                            },
+                                            data: {
+                                                ...updateData,
+                                            },
+                                        },
+                                    },
+                                },
+                            });
                         } //ADD if not exist
                         else {
-                            if (
-                                existingOpeningBalanceAccount.ChartOfAccount
-                                    .AccountType.AccountCategory.Name ==
-                                    EnumeratorExtension.GetDescription(
-                                        ChartOfAccountCategory.Income
-                                    ) ||
-                                existingOpeningBalanceAccount.ChartOfAccount
-                                    .AccountType.AccountCategory.Name ==
-                                    EnumeratorExtension.GetDescription(
-                                        ChartOfAccountCategory.Expense
-                                    )
-                            ) {
-                                // Make Temporary Account ZERO if Year-End Closing
-                                newOpeningBalanceAccount.AmountDebit = 0;
-                                newOpeningBalanceAccount.AmountCredit = 0;
-                            }
-                            periodOpeningBalance.OpeningBalanceAccounts.Add(
-                                newOpeningBalanceAccount
-                            );
+                            // since the if will raise an error
+                            // if (
+                            //     existingOpeningBalanceAccount.ChartOfAccount
+                            //         .AccountType.AccountCategory.Name ==
+                            //         EnumeratorExtension.GetDescription(
+                            //             ChartOfAccountCategory.Income
+                            //         ) ||
+                            //     existingOpeningBalanceAccount.ChartOfAccount
+                            //         .AccountType.AccountCategory.Name ==
+                            //         EnumeratorExtension.GetDescription(
+                            //             ChartOfAccountCategory.Expense
+                            //         )
+                            // ) {
+                            //     // Make Temporary Account ZERO if Year-End Closing
+                            //     newOpeningBalanceAccount.AmountDebit = 0;
+                            //     newOpeningBalanceAccount.AmountCredit = 0;
+                            // }
+                            await opening_balance.update({
+                                where: { id: periodOpeningBalance.id },
+                                data: {
+                                    opening_balance_account: {
+                                        create: {
+                                            data: newOpeningBalanceAccount,
+                                        },
+                                    },
+                                },
+                            });
                         }
                     }
                 }
             }
-
-            if (applicationDbContext.SaveChanges() > 0) {
-                // #region Close the Currect Period
-                if (
-                    !(await ChangePeriodStatus(
-                        accountingPeriod.PeriodStartingDate,
-                        AcountingPeriodStatus.Closed,
-                        userName,
-                        false
-                    ))
-                ) {
-                    messageList.Add(
-                        `Failed to change {accountingPeriod.PeriodMonth.GetDescription()} Period status to CLOSE and Transaction has been rollback.`
+            const changed1 = await changePeriodStatus(
+                accountingPeriod.period_starting_date,
+                2,
+                creator,
+                false
+            );
+            if (!changed1) {
+                messageList.push(
+                    `Failed to change Period status to CLOSED and Transaction has been rollback.`
+                );
+            } else {
+                let nextYearPeriod = new Date(
+                    accountingPeriod.period_starting_date
+                );
+                nextYearPeriod.setFullYear(nextYearPeriod.getFullYear() + 1);
+                const changed2 = await changePeriodStatus(
+                    nextYearPeriod,
+                    1,
+                    creator,
+                    true
+                );
+                if (!changed2) {
+                    messageList.push(
+                        `Failed to change Period status to OPEN and Transaction has been rollback.`
                     );
-                    transaction.Rollback();
+                }
+            }
+        }
+        const financialSettings = await financial_settings.findFirst();
+        let nextYearPeriod = new Date(accountingPeriod.period_starting_date);
+        nextYearPeriod.setFullYear(nextYearPeriod.getFullYear() + 1);
+        const genereated = await generateAccountingPeriod(
+            financialSettings.fiscal_year,
+            "Seed",
+            nextYearPeriod
+        );
+        if (!genereated) {
+            messageList.push("couldn't generate accounting period");
+        }
+    } else {
+        // #region Get Income
+
+        if (accountingPeriod.period_number == 12) {
+            const firstAccountingPeriod = await accounting_period.findFirst({
+                where: { period_number: 1, status: 0 },
+            });
+            if (firstAccountingPeriod) {
+                monthStartDate = firstAccountingPeriod.period_starting_date;
+                monthEndDate = firstAccountingPeriod.period_ending_date;
+
+                netIncome = await getNetIncome(monthStartDate, monthEndDate);
+            } else {
+                messageList.Add("The first accounting period was not found");
+                error(
+                    `${closingTypeMessage} is not successfully processed, Please correct the error/s and try again.`,
+                    messageList,
+                    next
+                );
+                return false;
+            }
+        }
+        //#endregion
+        let index = 1;
+        for (let i in accountingPeriodForClosing) {
+            const period = accountingPeriodForClosing[i];
+            //Get Period Journal
+            let periodJournals = periodJournalsDefault;
+            if (index > 1) {
+                monthStartDate = period.period_starting_date;
+                monthEndDate = period.period_ending_date;
+                periodJournals = await general_journal_detail.findMany({
+                    where: {
+                        general_journal_header: {
+                            journal_date: {
+                                gte: monthStartDate,
+                                lte: monthEndDate,
+                            },
+                            journal_posting_status: 1,
+                            status: 0,
+                        },
+                    },
+                    include: {
+                        general_journal_header: {
+                            include: {
+                                currency: true,
+                            },
+                        },
+                        chart_of_account: {
+                            include: {
+                                account_type: {
+                                    include: {
+                                        account_category: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                });
+            }
+            index++;
+            //GET all accounts' Opening Balances of that Period
+            const periodOpeningBalance = await opening_balance.findFirst({
+                where: period.is_year_end_closing
+                    ? {
+                          opening_balance_date: {
+                              gte: new Date(
+                                  period.period_starting_date.getFullYear(),
+                                  0,
+                                  1
+                              ),
+                              lt: new Date(
+                                  period.period_starting_date.getFullYear(),
+                                  0,
+                                  1
+                              ),
+                          },
+                      }
+                    : {
+                          opening_balance_date: {
+                              gte: new Date(
+                                  period.period_starting_date.getFullYear(),
+                                  period.period_starting_date.getMonth(),
+                                  1
+                              ),
+                              lt: new Date(
+                                  period.period_starting_date.getFullYear(),
+                                  period.period_starting_date.getMonth() + 1,
+                                  1
+                              ),
+                          },
+                      },
+                include: {
+                    opening_balance_account: {
+                        include: {
+                            chart_of_account: {
+                                include: {
+                                    account_type: {
+                                        include: {
+                                            account_category: true,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            });
+
+            //enum of months in acc period
+            const month = period.period_starting_date.getMonth() + 2;
+
+            nextPeriodAccountOpeningBalance = {
+                opening_balance_date: new Date(
+                    period.period_starting_date.getFullYear(),
+                    period.period_starting_date.getMonth() + 1,
+                    period.period_starting_date.getDate()
+                ),
+                month: month,
+                price_precision: periodOpeningBalance?.price_precision || 2,
+                createdBy: String(creator),
+                revisedBy: String(creator),
+                isProtectedForEdit: true,
+                status: 0,
+                startDate: new Date(),
+                endDate: new Date("9999/12/31"),
+            };
+            let openingBalanceAccounts = [];
+
+            journalsWithBCY = [];
+            journalsWithFCY = [];
+            for (let i in chartOfAccounts) {
+                const account = chartOfAccounts[i];
+                transactionAccountAmountDuringThePeriodInBCY = 0.0;
+                transactionAccountAmountDuringThePeriodInFCY = 0.0;
+                nextPeriodOpeningBalanceAmount = 0.0;
+                journalsWithBCY = periodJournals.filter(
+                    (j) =>
+                        j.chart_of_account_id == account.id &&
+                        j.general_journal_header.currency_id == baseCurrency.id
+                );
+                journalsWithFCY = periodJournals.filter(
+                    (j) =>
+                        j.chart_of_account_id == account.id &&
+                        j.general_journal_header.currency_id != baseCurrency.id
+                );
+
+                //Amount in FOREIGN CURRENCY
+                if (journalsWithFCY.length)
+                    transactionAccountAmountDuringThePeriodInFCY =
+                        await convertJournalTransactionToBaseCurrency(
+                            journalsWithFCY,
+                            baseCurrency
+                        );
+
+                //Amount in BASE CURRENCY
+                transactionAccountAmountDuringThePeriodInBCY =
+                    getTotalDebitAmount(journalsWithBCY, account) +
+                    getTotalCreditAmount(journalsWithBCY, account);
+
+                accountOpeningBalanceOfThisPeriod =
+                    periodOpeningBalance?.opening_balance_account.find(
+                        (ob) => ob.chart_of_account_id == account.id
+                    );
+
+                nextPeriodOpeningBalanceAmount =
+                    transactionAccountAmountDuringThePeriodInBCY +
+                    transactionAccountAmountDuringThePeriodInFCY;
+
+                if (accountOpeningBalanceOfThisPeriod)
+                    nextPeriodOpeningBalanceAmount =
+                        nextPeriodOpeningBalanceAmount +
+                        getOpeningBalanceAmount(
+                            accountOpeningBalanceOfThisPeriod
+                        );
+
+                //Collect Next Period Opening Balance
+                openingBalanceAccounts.push(
+                    constructOpeningBalanceAccountForNextPeriod(
+                        nextPeriodOpeningBalanceAmount,
+                        account,
+                        creator,
+                        baseCurrency.id
+                    )
+                );
+            }
+            existingOpeningBalance = await opening_balance.findFirst({
+                where: {
+                    opening_balance_date: {
+                        gte: new Date(
+                            nextPeriodAccountOpeningBalance.opening_balance_date.getFullYear(),
+                            0,
+                            1
+                        ),
+                        lt: new Date(
+                            nextPeriodAccountOpeningBalance.opening_balance_date.getFullYear() +
+                                1,
+                            0,
+                            1
+                        ),
+                    },
+                    status: 0,
+                    month:
+                        nextPeriodAccountOpeningBalance.opening_balance_date.getMonth() +
+                        1, //since this is enum
+                },
+                include: {
+                    opening_balance_account: {
+                        include: {
+                            chart_of_account: {
+                                include: {
+                                    account_type: {
+                                        include: {
+                                            account_category: true,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            });
+            if (!openingBalanceAccounts.length) {
+                messageList.push(
+                    `Couldn't construct Opening Balance for ${
+                        new Date(1010, month - 1, 1)
+                            ?.toDateString()
+                            ?.split(" ")?.[1]
+                    } Period. Please check if there is any transaction on this period.`
+                );
+            } else {
+                const financialSettings = await financial_settings.findFirst({
+                    where: { status: 0 },
+                    include: {
+                        base_currency: true,
+                        time_format: true,
+                    },
+                });
+                if (financialSettings.closing_type != 3) {
+                    if (existingOpeningBalance == null)
+                        await opening_balance.create({
+                            data: {
+                                ...nextPeriodAccountOpeningBalance,
+                                opening_balance_account: {
+                                    createMany: {
+                                        skipDuplicates: true,
+                                        data: openingBalanceAccounts,
+                                    },
+                                },
+                            },
+                        });
+                    else {
+                        for (let i in openingBalanceAccounts) {
+                            const newOpeningBalanceAccount =
+                                openingBalanceAccounts[i];
+                            if (newOpeningBalanceAccount) {
+                                let existingOpeningBalanceAccount =
+                                    existingOpeningBalance.opening_balance_account.find(
+                                        (a) =>
+                                            a.chart_of_account_id ==
+                                            newOpeningBalanceAccount.chart_of_account_id
+                                    );
+                                let updateData = {};
+                                if (existingOpeningBalanceAccount) {
+                                    //EDIT if exist
+                                    if (
+                                        accountingPeriod.period_number == 12 &&
+                                        (existingOpeningBalanceAccount
+                                            .chart_of_account.account_type
+                                            .account_category.name ==
+                                            "Income" ||
+                                            existingOpeningBalanceAccount
+                                                .chart_of_account.account_type
+                                                .account_category.name ==
+                                                "Expense")
+                                    ) {
+                                        // Make Temporary Account ZERO if Year-End Closing
+                                        updateData.amount_debit = 0;
+                                        updateData.amount_credit = 0;
+                                    } else if (
+                                        accountingPeriod.period_number == 12 &&
+                                        existingOpeningBalanceAccount
+                                            .chart_of_account.account_name ==
+                                            "RetainedEarnings"
+                                    ) {
+                                        var totalAmount =
+                                            netIncome +
+                                            getOpeningBalanceAmount(
+                                                existingOpeningBalanceAccount
+                                            );
+
+                                        if (totalAmount > 0) {
+                                            updateData.amount_credit =
+                                                Math.abs(totalAmount);
+                                            updateData.debit_or_credit = 1;
+                                        } else {
+                                            updateData.amount_credit =
+                                                Math.abs(totalAmount);
+                                            updateData.debit_or_credit = 2;
+                                        }
+                                    } else {
+                                        var amount = getOpeningBalanceAmount2(
+                                            newOpeningBalanceAccount,
+                                            existingOpeningBalanceAccount.chart_of_account
+                                        );
+
+                                        var result =
+                                            identifyAndReturnCreditOrDebitAmount(
+                                                existingOpeningBalanceAccount.chart_of_account,
+                                                amount
+                                            );
+
+                                        if (result.debitAmount != 0) {
+                                            updateData.amount_debit = Math.abs(
+                                                result.debitAmount
+                                            );
+                                            updateData.amount_credit = 0;
+                                            updateData.debit_or_credit = 2;
+                                        } else {
+                                            updateData.amount_credit = Math.abs(
+                                                result.creditAmount
+                                            );
+                                            updateData.amount_debit = 0;
+                                            updateData.debit_or_credit = 1;
+                                        }
+                                    }
+                                } //ADD if not exist
+                                else {
+                                    // if (accountingPeriod.period_number == 12 && (existingOpeningBalanceAccount.chart_of_account.account_type.account_category.name == EnumeratorExtension.GetDescription(ChartOfAccountCategory.Income) || existingOpeningBalanceAccount.chart_of_account.account_type.account_category.name == EnumeratorExtension.GetDescription(ChartOfAccountCategory.Expense)))
+                                    // {// Make Temporary Account ZERO if Year-End Closing
+                                    //     newOpeningBalanceAccount.amount_debit = 0;
+                                    //     newOpeningBalanceAccount.amount_credit = 0;
+                                    // }
+                                    await opening_balance.update({
+                                        where: {
+                                            id: existingOpeningBalance.id,
+                                        },
+                                        data: {
+                                            opening_balance_account: {
+                                                create: {
+                                                    data: newOpeningBalanceAccount,
+                                                },
+                                            },
+                                        },
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+                // #region Close the Currect Period
+                const changed1 = await changePeriodStatus(
+                    period.period_starting_date,
+                    2,
+                    creator,
+                    false
+                );
+                if (!changed1) {
+                    messageList.push(
+                        `Failed to change Period status to CLOSED and Transaction has been rolled back.`
+                    );
+                    break;
                 }
                 // #endregion
 
                 // #region Open the next Accounting Period
-
-                if (
-                    !(await ChangePeriodStatus(
-                        accountingPeriod.PeriodStartingDate.AddYears(1),
-                        AcountingPeriodStatus.Open,
-                        userName,
-                        true
-                    ))
-                ) {
-                    messageList.Add(
-                        `Failed to change {Enum.GetName(typeof(Months), nextPeriodAccountOpeningBalance.Month)} Period status to OPEN and Transaction has been rollback.`
+                if (period.period_number < 12) {
+                    let nextMonthPeriod = new Date(
+                        accountingPeriod.period_starting_date
                     );
-                    transaction.Rollback();
+                    nextMonthPeriod.setMonth(nextMonthPeriod.getMonth() + 1);
+                    const changed2 = await changePeriodStatus(
+                        nextMonthPeriod,
+                        1,
+                        creator,
+                        true
+                    );
+                    if (!changed2) {
+                        messageList.push(
+                            `Failed to change Period status to OPEN and Transaction has been rolled back.`
+                        );
+                        break;
+                    }
                 }
-
                 // #endregion
-            } else {
-                messageList.Add(
-                    `Failed to Save Opening Balance for {Enum.GetName(typeof(Months), nextPeriodAccountOpeningBalance.Month)} Period and Transaction has been rollback. It seems that there is NO change to close in this period.`
-                );
-
-                transaction.Rollback();
             }
         }
+    }
+};
+/**
+ *
+ * @param {number} fiscalYearType
+ * @param {number|string} creator
+ * @param {Date} dateTime
+ * @returns
+ */
+const generateAccountingPeriod = async (fiscalYearType, creator, dateTime) => {
+    let accountingPeriods = [];
+    let fasicalYearStartMonth = 0;
+    const fiscalYearEnum = [
+        "january_december",
+        "february_january",
+        "march_february",
+        "april_march",
+        "may_april",
+        "june_may",
+        "july_june",
+        "august_july",
+        "september_august",
+        "october_september",
+        "november_october",
+        "december_november",
+    ];
+    const months = [
+        "january",
+        "february",
+        "march",
+        "april",
+        "may",
+        "june",
+        "july",
+        "august",
+        "september",
+        "october",
+        "november",
+        "december",
+    ];
+    const monthArray = fiscalYearEnum[fiscalYearType].split("_");
+
+    if (monthArray.length)
+        fasicalYearStartMonth = months.indexOf(monthArray[0]);
+
+    const startDate = new Date(
+        dateTime.getFullYear(),
+        fasicalYearStartMonth,
+        1
+    );
+    const endDate = new Date(
+        startDate.getFullYear(),
+        startDate.getMonth() + 11,
+        startDate.getDate()
+    );
+    let index = 1;
+    for (
+        let day = new Date(startDate);
+        day.getMonth() <= endDate.getMonth();
+        day.setMonth(day.getMonth() + 1)
+    ) {
+        const month = day.getMonth() + 1;
+        accountingPeriods.push({
+            months: month,
+            accounting_period_status: index == 1 ? 1 : 3,
+            period_number: index,
+            period_starting_date: new Date(day),
+            period_ending_date: new Date(
+                day.getFullYear(),
+                day.getMonth() + 1,
+                0,
+                23,
+                59,
+                59
+            ),
+            is_current_posting_period: index == 1,
+            isProtectedForEdit: true,
+            status: 0,
+            startDate: new Date(),
+            createdBy: String(creator),
+            revisedBy: String(creator),
+            endDate: new Date("9999/12/31"),
+        });
+
+        index++;
+    }
+
+    if (accountingPeriods.length > 0) {
+        await accounting_period.createMany({
+            skipDuplicates: true,
+            data: accountingPeriods,
+        });
+        await accounting_period.updateMany({
+            where: {
+                period_starting_date: {
+                    gte: new Date(startDate.getFullYear() - 1, 0, 1),
+                    lt: new Date(startDate.getFullYear(), 0, 1),
+                },
+            },
+            data: {
+                status: 1,
+            },
+        });
+        return true;
+    }
+
+    return false;
+};
+/**
+ *
+ * @param {Date} periodDate
+ * @param {number} accPeriodStatus
+ * @param {number} creator
+ * @param {boolean} isCurrentPostingPeriod
+ */
+const changePeriodStatus = async (
+    periodDate,
+    accPeriodStatus,
+    creator,
+    isCurrentPostingPeriod
+) => {
+    const period = await accounting_period.findFirst({
+        where: {
+            period_starting_date: {
+                gte: new Date(
+                    periodDate.getFullYear(),
+                    periodDate.getMonth(),
+                    1
+                ),
+                lts: new Date(
+                    periodDate.getFullYear(),
+                    periodDate.getMonth() + 1,
+                    1
+                ),
+            },
+        },
+    });
+    if (period) {
+        await accounting_period.update({
+            where: {
+                id: period.id,
+            },
+            data: {
+                accounting_period_status: accPeriodStatus,
+                is_current_posting_period: isCurrentPostingPeriod,
+                revisedBy: `${creator}`,
+            },
+        });
+        return true;
+    }
+
+    return false;
+};
+/**
+ *
+ * @param {{
+ *   chart_of_account_id: number;
+ *   currency_id: number;
+ *   amount_debit:number;
+ *   amount_credit:number;
+ *   status: number;
+ *   createdBy: string;
+ *   revisedBy: string;
+ *   startDate: Date;
+ *   endDate: Date;
+ *   isProtectedForEdit: boolean;
+ *   }} openingBalanceAccount
+ * @param {import("@prisma/client").chart_of_account & {
+ *   account_type: import("@prisma/client").account_type & {
+ *       account_category: import("@prisma/client").account_category;
+ *   };
+ * }} account
+ * @returns
+ */
+const getOpeningBalanceAmount2 = (openingBalanceAccount, account) => {
+    if (account.account_type.account_category.is_debit) {
+        if (openingBalanceAccount.amount_debit > 0)
+            return openingBalanceAccount.amount_debit;
+        else return -openingBalanceAccount.amount_credit;
+    } else {
+        if (openingBalanceAccount.amount_credit > 0)
+            return openingBalanceAccount.amount_credit;
+        else return -openingBalanceAccount.amount_debit;
     }
 };
 /**
@@ -1006,7 +1607,9 @@ const constructOpeningBalanceAccountForNextPeriod = (
             );
         }
     }
-
+    if (nextPeriodOpeningBalance === 0) {
+        openingBalanceAccount.debit_or_credit = 1;
+    }
     return openingBalanceAccount;
 };
 /**
@@ -1176,12 +1779,12 @@ const getAccountingPeriodInvolveInClosing = async (accountingPeriod) => {
             period_starting_date: {
                 gte: new Date(
                     accountingPeriod.period_starting_date.getFullYear(),
-                    1,
+                    0,
                     1
                 ),
                 lt: new Date(
                     accountingPeriod.period_starting_date.getFullYear() + 1,
-                    1,
+                    0,
                     1
                 ),
             },

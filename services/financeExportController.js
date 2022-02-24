@@ -4,12 +4,12 @@ const {
     REPORT_BASIS_TITLE,
 } = require("../config/config");
 const {
-    getAccounts,
     convertGeneralLedgerToBaseCurrency,
     convertJournalTransactionToBaseCurrency,
     getOpeningBalanceAmount,
     getTotalCreditAmount,
     getTotalDebitAmount,
+    identifyAndReturnCreditOrDebitAmount,
 } = require("./generalLedgerDetailFunctions");
 const { groupByFn } = require("./payrollControl");
 const {
@@ -474,40 +474,6 @@ const prepareGeneralLedgers = async (
         reportDateRange: `From ${filter.fromDate.toDateString()} To ${filter.toDate.toDateString()}`,
     };
     return returned;
-};
-/**
- *
- * @param { import("@prisma/client").chart_of_account&{
- *     account_type:import("@prisma/client").account_type  &{
- *     account_category: import("@prisma/client").account_category
- *     }
- * } } account
- * @param {number} amount
- * @returns
- */
-const identifyAndReturnCreditOrDebitAmount = (account, amount) => {
-    let debitAmount = 0,
-        creditAmount = 0;
-
-    if (account.account_type.account_category.is_debit) {
-        if (amount < 0) {
-            creditAmount = amount;
-            debitAmount = 0;
-        } else {
-            debitAmount = amount;
-            creditAmount = 0;
-        }
-    } else {
-        if (amount < 0) {
-            creditAmount = 0;
-            debitAmount = amount;
-        } else {
-            debitAmount = 0;
-            creditAmount = amount;
-        }
-    }
-
-    return { creditAmount, debitAmount };
 };
 
 //--------------------------------------------------------Account Transaction Export------------------------------------------------------------------------
