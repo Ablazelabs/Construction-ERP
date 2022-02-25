@@ -255,6 +255,10 @@ const isValidToChangeStatus = async (
             },
         },
     });
+    console.log(
+        thisYearPeriods.map((elem) => elem.is_current_posting_period),
+        accountingPeriod.is_current_posting_period
+    ); //there is an error here, it shoudln't display previous period closed true
     return {
         status: await isPreviousPeriodClosed(thisYearPeriods, accountingPeriod),
     };
@@ -272,19 +276,20 @@ const changeStatus = async (
     next
 ) => {
     if (!(await isValidToChangeStatus({ id }, creator, next)).status) {
-        error("status", "status isn't valid for cchange", next);
+        error("status", "status isn't valid for change", next);
         return false;
     }
     try {
         await accounting_period.update({
             where: { id },
             data: {
-                revisedBy: creator,
+                revisedBy: String(creator),
                 accounting_period_status,
             },
         });
         return { success: true };
-    } catch {
+    } catch (e) {
+        console.log(e);
         error("id", "no accounting period exists with this id", next);
         return false;
     }
@@ -376,7 +381,8 @@ const processClosing = async ({ id }, creator, next) => {
             creator,
             baseCurrency,
             closingTypeMessage,
-            periodJournals
+            periodJournals,
+            next
         );
     }
 };
@@ -393,9 +399,9 @@ const isPreviousPeriodClosed = async (thisYearPeriods, accountingPeriod) => {
     if (accountingPeriod.period_number == 1) return true;
 
     //Find the previous Month
-    const previousMonth = thisYearPeriods.filter(
+    const previousMonth = thisYearPeriods.find(
         (ap) => ap.period_number == accountingPeriod.period_number - 1
-    )[0];
+    );
 
     if (previousMonth) {
         if (previousMonth.accounting_period_status == 2) return true;
@@ -470,7 +476,7 @@ const isClosingValid = async (
             )
         )
             messages.push(
-                "All priovious accounting period are not closed. Please close all the periods before processing Year-End Closing."
+                "All priovious accounting periods are not closed. Please close all the periods before processing Year-End Closing."
             );
     }
     // #endregion
@@ -609,7 +615,8 @@ const processMonthAndYearEndClosing = async (
     creator,
     baseCurrency,
     closingTypeMessage,
-    periodJournalsDefault
+    periodJournalsDefault,
+    next
 ) => {
     let messageList = [];
     let accountingPeriodForClosing = [];
@@ -662,7 +669,7 @@ const processMonthAndYearEndClosing = async (
     if (accountingPeriod.is_year_end_closing) {
         netIncome = await getNetIncome(
             accountingPeriod.period_starting_date,
-            period_ending_date
+            accountingPeriod.period_ending_date
         );
         const periodJournals = await general_journal_detail.findMany({
             where: {
@@ -732,7 +739,7 @@ const processMonthAndYearEndClosing = async (
                             include: {
                                 account_type: {
                                     include: {
-                                        account_category,
+                                        account_category: true,
                                     },
                                 },
                             },
@@ -934,9 +941,7 @@ const processMonthAndYearEndClosing = async (
                                 where: { id: periodOpeningBalance.id },
                                 data: {
                                     opening_balance_account: {
-                                        create: {
-                                            data: newOpeningBalanceAccount,
-                                        },
+                                        create: newOpeningBalanceAccount,
                                     },
                                 },
                             });
@@ -955,21 +960,21 @@ const processMonthAndYearEndClosing = async (
                     `Failed to change Period status to CLOSED and Transaction has been rollback.`
                 );
             } else {
-                let nextYearPeriod = new Date(
-                    accountingPeriod.period_starting_date
-                );
-                nextYearPeriod.setFullYear(nextYearPeriod.getFullYear() + 1);
-                const changed2 = await changePeriodStatus(
-                    nextYearPeriod,
-                    1,
-                    creator,
-                    true
-                );
-                if (!changed2) {
-                    messageList.push(
-                        `Failed to change Period status to OPEN and Transaction has been rollback.`
-                    );
-                }
+                // let nextYearPeriod = new Date(
+                //     accountingPeriod.period_starting_date
+                // );
+                // nextYearPeriod.setFullYear(nextYearPeriod.getFullYear() + 1);
+                // const changed2 = await changePeriodStatus(
+                //     nextYearPeriod,
+                //     1,
+                //     creator,
+                //     true
+                // );
+                // if (!changed2) {
+                //     messageList.push(
+                //         `Failed to change Period status to OPEN and Transaction has been rollback.`
+                //     );
+                // }
             }
         }
         const financialSettings = await financial_settings.findFirst();
@@ -981,7 +986,7 @@ const processMonthAndYearEndClosing = async (
             nextYearPeriod
         );
         if (!genereated) {
-            messageList.push("couldn't generate accounting period");
+            messageList.push("Couldn't generate accounting period");
         }
     } else {
         // #region Get Income
@@ -1139,25 +1144,23 @@ const processMonthAndYearEndClosing = async (
                         );
 
                 //Amount in BASE CURRENCY
-                transactionAccountAmountDuringThePeriodInBCY =
-                    getTotalDebitAmount(journalsWithBCY, account) +
-                    getTotalCreditAmount(journalsWithBCY, account);
+                if (journalsWithBCY.length) {
+                    transactionAccountAmountDuringThePeriodInBCY =
+                        getTotalDebitAmount(journalsWithBCY, account) +
+                        getTotalCreditAmount(journalsWithBCY, account);
+                }
 
                 accountOpeningBalanceOfThisPeriod =
                     periodOpeningBalance?.opening_balance_account.find(
                         (ob) => ob.chart_of_account_id == account.id
                     );
-
                 nextPeriodOpeningBalanceAmount =
                     transactionAccountAmountDuringThePeriodInBCY +
                     transactionAccountAmountDuringThePeriodInFCY;
-
                 if (accountOpeningBalanceOfThisPeriod)
-                    nextPeriodOpeningBalanceAmount =
-                        nextPeriodOpeningBalanceAmount +
-                        getOpeningBalanceAmount(
-                            accountOpeningBalanceOfThisPeriod
-                        );
+                    nextPeriodOpeningBalanceAmount += getOpeningBalanceAmount(
+                        accountOpeningBalanceOfThisPeriod
+                    );
 
                 //Collect Next Period Opening Balance
                 openingBalanceAccounts.push(
@@ -1222,7 +1225,7 @@ const processMonthAndYearEndClosing = async (
                     },
                 });
                 if (financialSettings.closing_type != 3) {
-                    if (existingOpeningBalance == null)
+                    if (existingOpeningBalance == null) {
                         await opening_balance.create({
                             data: {
                                 ...nextPeriodAccountOpeningBalance,
@@ -1234,7 +1237,7 @@ const processMonthAndYearEndClosing = async (
                                 },
                             },
                         });
-                    else {
+                    } else {
                         for (let i in openingBalanceAccounts) {
                             const newOpeningBalanceAccount =
                                 openingBalanceAccounts[i];
@@ -1322,9 +1325,7 @@ const processMonthAndYearEndClosing = async (
                                         },
                                         data: {
                                             opening_balance_account: {
-                                                create: {
-                                                    data: newOpeningBalanceAccount,
-                                                },
+                                                create: newOpeningBalanceAccount,
                                             },
                                         },
                                     });
@@ -1370,7 +1371,35 @@ const processMonthAndYearEndClosing = async (
                 // #endregion
             }
         }
+        if (accountingPeriod.period_number == 12) {
+            //Generate Period for the coming FISICAL YEAR
+            const financialSettings = await financial_settings.findFirst();
+
+            let nextYearPeriod = new Date(
+                accountingPeriod.period_starting_date
+            );
+            nextYearPeriod.setFullYear(nextYearPeriod.getFullYear() + 1);
+
+            if (
+                !(await generateAccountingPeriod(
+                    financialSettings.fiscal_year,
+                    "Seed",
+                    nextYearPeriod
+                ))
+            ) {
+                messageList.push("Couldn't generate accounting period");
+            }
+        }
     }
+    if (messageList.length) {
+        error(
+            `${closingTypeMessage} is not successfully processed, Please correct the error/s and try again.`,
+            messageList,
+            next
+        );
+        return false;
+    }
+    return { success: true };
 };
 /**
  *
@@ -1381,7 +1410,7 @@ const processMonthAndYearEndClosing = async (
  */
 const generateAccountingPeriod = async (fiscalYearType, creator, dateTime) => {
     let accountingPeriods = [];
-    let fasicalYearStartMonth = 0;
+    let fiscalYearStartMonth = 0;
     const fiscalYearEnum = [
         "january_december",
         "february_january",
@@ -1410,25 +1439,18 @@ const generateAccountingPeriod = async (fiscalYearType, creator, dateTime) => {
         "november",
         "december",
     ];
-    const monthArray = fiscalYearEnum[fiscalYearType].split("_");
+    const monthArray = fiscalYearEnum[fiscalYearType - 1].split("_");
 
-    if (monthArray.length)
-        fasicalYearStartMonth = months.indexOf(monthArray[0]);
+    if (monthArray.length) fiscalYearStartMonth = months.indexOf(monthArray[0]);
 
-    const startDate = new Date(
-        dateTime.getFullYear(),
-        fasicalYearStartMonth,
-        1
-    );
-    const endDate = new Date(
-        startDate.getFullYear(),
-        startDate.getMonth() + 11,
-        startDate.getDate()
+    let startDate = new Date(dateTime.getFullYear(), fiscalYearStartMonth, 1);
+    startDate.setMinutes(
+        startDate.getMinutes() - startDate.getTimezoneOffset()
     );
     let index = 1;
     for (
         let day = new Date(startDate);
-        day.getMonth() <= endDate.getMonth();
+        index <= 12;
         day.setMonth(day.getMonth() + 1)
     ) {
         const month = day.getMonth() + 1;
@@ -1446,6 +1468,7 @@ const generateAccountingPeriod = async (fiscalYearType, creator, dateTime) => {
                 59
             ),
             is_current_posting_period: index == 1,
+            is_year_end_closing: index === 12,
             isProtectedForEdit: true,
             status: 0,
             startDate: new Date(),
@@ -1453,10 +1476,8 @@ const generateAccountingPeriod = async (fiscalYearType, creator, dateTime) => {
             revisedBy: String(creator),
             endDate: new Date("9999/12/31"),
         });
-
         index++;
     }
-
     if (accountingPeriods.length > 0) {
         await accounting_period.createMany({
             skipDuplicates: true,
@@ -1499,7 +1520,7 @@ const changePeriodStatus = async (
                     periodDate.getMonth(),
                     1
                 ),
-                lts: new Date(
+                lt: new Date(
                     periodDate.getFullYear(),
                     periodDate.getMonth() + 1,
                     1
@@ -1817,4 +1838,5 @@ module.exports = {
     deleter,
     isValidToChangeStatus,
     changeStatus,
+    processClosing,
 };

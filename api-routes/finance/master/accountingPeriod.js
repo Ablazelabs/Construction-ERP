@@ -9,6 +9,7 @@ const {
     deleter,
     isValidToChangeStatus,
     changeStatus,
+    processClosing,
 } = require("../../../services/accountingPeriod");
 const {
     returnReqBody,
@@ -194,7 +195,7 @@ router.delete(url, async (req, res, next) => {
 });
 //#endregion
 
-router.post("change_status", async (req, res, next) => {
+router.post(`${url}/change_status`, async (req, res, next) => {
     const requiredFields = {
         id: "number",
         accounting_period_status: "number",
@@ -220,7 +221,7 @@ router.post("change_status", async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
-router.get("is_valid_to_change_status", async (req, res, next) => {
+router.get(`${url}/is_valid_to_change_status`, async (req, res, next) => {
     const requiredFields = {
         id: "number",
         accounting_period_status: "number",
@@ -228,10 +229,14 @@ router.get("is_valid_to_change_status", async (req, res, next) => {
     const enums = {
         accounting_period_status: myEnums.accounting_period_status,
     };
-    const reqBody = returnReqBody(req.body, {
-        requiredInputFilter: requiredFields,
-        myEnums: enums,
-    });
+    const reqBody = returnReqBody(
+        req.body,
+        {
+            requiredInputFilter: requiredFields,
+            myEnums: enums,
+        },
+        next
+    );
     if (!reqBody) {
         return;
     }
@@ -246,10 +251,10 @@ router.get("is_valid_to_change_status", async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
-router.get("process_closing", async (req, res, next) => {
+router.get(`${url}/process_closing`, async (req, res, next) => {
     res.json(["no need for this get"]);
 });
-router.post("process_closing", async (req, res, next) => {
+router.post(`${url}/process_closing`, async (req, res, next) => {
     const requiredFields = {
         id: "number",
     };

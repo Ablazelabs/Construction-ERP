@@ -208,7 +208,7 @@ const convertJournalTransactionToBaseCurrency = async (
  * @returns {number}
  */
 const getOpeningBalanceAmount = (openingBalance, chartOfAccountId) => {
-    if (openingBalance.opening_balance_account) {
+    if (openingBalance?.opening_balance_account) {
         if (openingBalance?.opening_balance_account.length) {
             const openingBalanceAccount =
                 openingBalance.opening_balance_account.find(
@@ -246,6 +246,7 @@ const getOpeningBalanceAmount = (openingBalance, chartOfAccountId) => {
                     : -openingBalanceAccount.amount_debit;
         }
     }
+    return 0;
 };
 const getTotalDebitAmount = (generalLedger, chartOfAccount) => {
     if (generalLedger.length) {

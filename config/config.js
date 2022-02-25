@@ -35,6 +35,7 @@ const randomConcurrencyStamp = () => {
  */
 const error = (key, message, next, status = 400) => {
     const myError = { status };
+    if (key == "status") key = "Status";
     myError[key] = message;
     next(new Error(JSON.stringify(myError)));
 };
