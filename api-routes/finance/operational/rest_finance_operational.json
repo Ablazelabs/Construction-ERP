@@ -6,6 +6,12 @@
             "add_to_dashboard_watch_list": "boolean",
             "account_type_id": "number"
         },
+        "export_template": {
+            "template_name": "string",
+            "module_name": "number",
+            "export_template_fields": "object",
+            "excel_columns": "object"
+        },
         "account_type_financial_statement_section": {
             "account_type_id": "number",
             "financial_statement_section_id": "number"
@@ -97,6 +103,40 @@
     },
     "enums": {
         "chart_of_account": {},
+        "export_template": {
+            "module_name": [
+                "chart_of_account",
+                "account_type_financial_statement_section",
+                "bank_reconcilation",
+                "reconcilation_transaction",
+                "asset",
+                "estimated_total_production_unit",
+                "recurring_journal_occurrence",
+                "budget",
+                "budget_account",
+                "budget_account_period",
+                "budget_control_action",
+                "general_journal_detail",
+                "general_journal_header",
+                "general_ledger",
+                "journal_comment",
+                "number_tracker",
+                "recurring_general_journal",
+                "transaction_lock",
+                "opening_balance",
+                "cash_payment_custom",
+                "cash_payment_voucher",
+                "cpv_bank",
+                "cpv_payment_request",
+                "cpv_receipt",
+                "cpv_type",
+                "petty_cash",
+                "crv_payment",
+                "crv_type",
+                "opening_balance_account",
+                "exchange_rate"
+            ]
+        },
         "account_type_financial_statement_section": {},
         "bank_reconcilation": {},
         "reconcilation_transaction": {},
@@ -467,6 +507,13 @@
             "type": true,
             "chart_of_account": true
         },
+        "export_template": {
+            "id": true,
+            "template_name": true,
+            "module_name": true,
+            "export_template_fields": true,
+            "excel_columns": true
+        },
         "general_journal_files": {
             "id": true,
             "path": true,
@@ -774,6 +821,13 @@
             "type": "string",
             "general_journal_header_id": "number"
         },
+        "export_template": {
+            "id": "number",
+            "template_name": "string",
+            "module_name": "number",
+            "export_template_fields": "string",
+            "excel_columns": "string"
+        },
         "chart_of_account": {
             "id": "number",
             "account_name": "string",
@@ -1046,6 +1100,13 @@
             "name": "number",
             "type": "number",
             "chart_of_account_id": "number"
+        },
+        "export_template": {
+            "id": "number",
+            "template_name": "number",
+            "module_name": "number",
+            "export_template_fields": "number",
+            "excel_columns": "number"
         },
         "general_journal_files": {
             "id": "number",
@@ -1345,6 +1406,7 @@
     },
     "allRoutes": [
         "/chart_of_account",
+        "/export_template",
         "/account_type_financial_statement_section",
         "/bank_reconcilation",
         "/chart_of_account_files",

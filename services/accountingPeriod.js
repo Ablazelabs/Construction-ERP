@@ -247,20 +247,17 @@ const isValidToChangeStatus = async (
     if (!accountingPeriod) {
         return { status: false };
     }
-    const thisYearPeriods = await accounting_period.findMany({
+    const previousMonth = await accounting_period.findFirst({
         where: {
             period_starting_date: {
-                gte: new Date(new Date().getFullYear(), 0, 1),
-                lt: new Date(new Date().getFullYear() + 1, 0, 1),
+                lt: accountingPeriod.period_starting_date,
             },
+            period_number: accountingPeriod.period_number - 1 || 12,
         },
+        orderBy: { period_starting_date: "desc" },
     });
-    console.log(
-        thisYearPeriods.map((elem) => elem.is_current_posting_period),
-        accountingPeriod.is_current_posting_period
-    ); //there is an error here, it shoudln't display previous period closed true
     return {
-        status: await isPreviousPeriodClosed(thisYearPeriods, accountingPeriod),
+        status: await isPreviousPeriodClosed(previousMonth, accountingPeriod),
     };
 };
 /**
@@ -392,20 +389,13 @@ const processClosing = async ({ id }, creator, next) => {
 //#region helper functions(main are on the above region)
 /**
  *
- * @param {import("@prisma/client").accounting_period[]} thisYearPeriods
+ * @param {import("@prisma/client").accounting_period} previousMonth
  * @param {import("@prisma/client").accounting_period} accountingPeriod
  */
-const isPreviousPeriodClosed = async (thisYearPeriods, accountingPeriod) => {
+const isPreviousPeriodClosed = async (previousMonth, accountingPeriod) => {
     if (accountingPeriod.period_number == 1) return true;
-
-    //Find the previous Month
-    const previousMonth = thisYearPeriods.find(
-        (ap) => ap.period_number == accountingPeriod.period_number - 1
-    );
-
-    if (previousMonth) {
-        if (previousMonth.accounting_period_status == 2) return true;
-        else return false;
+    if (previousMonth && previousMonth.accounting_period_status == 2) {
+        return true;
     }
     return false;
 };
@@ -437,39 +427,37 @@ const isClosingValid = async (
     let messages = [];
 
     // #region 1st Validation (Is priovious period CLOSED?)
-    const thisYearPeriods = await accounting_period.findMany({
-        where: {
-            period_starting_date: {
-                gte: new Date(
-                    accountingPeriod.period_starting_date.getFullYear(),
-                    0,
-                    1
-                ),
-                lt: new Date(
-                    accountingPeriod.period_starting_date.getFullYear() + 1,
-                    0,
-                    1
-                ),
-            },
-        },
-    });
     if (closingType == 2) {
+        const previousMonth = await accounting_period.findFirst({
+            where: {
+                period_starting_date: {
+                    lt: accountingPeriod.period_starting_date,
+                },
+                period_number: accountingPeriod.period_number - 1 || 12,
+            },
+            orderBy: { period_starting_date: "desc" },
+        });
         if (accountingPeriod) {
+            if (!previousMonth && accountingPeriod.period_number !== 1)
+                messages.push("previous period is NOT found");
             if (
-                accountingPeriod.period_number > 1 &&
-                thisYearPeriods.length == 0
-            )
-                messages.push("Priovious period is NOT found");
-
-            if (
-                !(await isPreviousPeriodClosed(
-                    thisYearPeriods,
-                    accountingPeriod
-                ))
+                !(await isPreviousPeriodClosed(previousMonth, accountingPeriod))
             )
                 messages.push("The priovious period is NOT closed");
         } else messages.push("The priovious period NOT found.");
     } else {
+        const thisYearPeriods = await accounting_period.findMany({
+            where: {
+                period_starting_date: {
+                    gt: new Date(
+                        accountingPeriod.period_starting_date.getFullYear(),
+                        accountingPeriod.period_starting_date.getMonth() - 12,
+                        2
+                    ),
+                    lte: accountingPeriod.period_starting_date,
+                },
+            },
+        });
         if (
             !isAllPreviousPeriodClosed(
                 thisYearPeriods.filter((p) => p.id != accountingPeriod.id)
@@ -626,7 +614,7 @@ const processMonthAndYearEndClosing = async (
     if (accountingPeriod.is_current_posting_period)
         accountingPeriodForClosing.push(accountingPeriod);
     else
-        accountingPeriodForClosing = await getAccountingPeriodInvolveInClosing(
+        accountingPeriodForClosing = await getAccountingPeriodInvolvedInClosing(
             accountingPeriod
         );
     if (!accountingPeriodForClosing.length) {
@@ -1443,10 +1431,7 @@ const generateAccountingPeriod = async (fiscalYearType, creator, dateTime) => {
 
     if (monthArray.length) fiscalYearStartMonth = months.indexOf(monthArray[0]);
 
-    let startDate = new Date(dateTime.getFullYear(), fiscalYearStartMonth, 1);
-    startDate.setMinutes(
-        startDate.getMinutes() - startDate.getTimezoneOffset()
-    );
+    const startDate = new Date(dateTime.getFullYear(), fiscalYearStartMonth, 1);
     let index = 1;
     for (
         let day = new Date(startDate);
@@ -1793,7 +1778,7 @@ const getNetIncome = async (startDate, endDate) => {
  *
  * @param {import("@prisma/client").accounting_period} accountingPeriod
  */
-const getAccountingPeriodInvolveInClosing = async (accountingPeriod) => {
+const getAccountingPeriodInvolvedInClosing = async (accountingPeriod) => {
     // #region 2. Get all Accounting Periods including the period you are trying to close but except the Current Opened Period
     const accountingPeriods = await accounting_period.findMany({
         where: {

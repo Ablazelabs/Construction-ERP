@@ -20,130 +20,136 @@ const {
     allRangeValues,
 } = allConfigs;
 
-router.post("/configuration", async (req, res, next) => {
-    let reqBody = {};
-    const viewModelData = {
-        requiredInputFilter: {
-            financialStatementType: "number",
-            financialStatementSectionId: "number",
-            financialStatementSections: "object",
-        },
-        optionalInputFilter: {
-            accountTypeIds: "object",
-        },
-        dateValue: [],
-        myEnums: {},
-        phoneValue: [],
-        emailValue: [],
-        rangeValues: {},
-    };
-    const financialStatementSectionsData = {
-        requiredInputFilter: allInputFilters["financial_statement_section"],
-        optionalInputFilter:
-            allOptionalInputFilters["financial_statement_section"],
-        dateValue: dateValues["financial_statement_section"],
-        myEnums: enums["financial_statement_section"],
-        phoneValue: phoneValues["financial_statement_section"],
-        emailValue: emailValues["financial_statement_section"],
-        rangeValues: allRangeValues["financial_statement_section"],
-    };
-    try {
-        reqBody = inputFilter(
-            {
-                viewModel: "object",
+router.post(
+    "/account_type_financial_statement_section",
+    async (req, res, next) => {
+        let reqBody = {};
+        const viewModelData = {
+            requiredInputFilter: {
+                financialStatementType: "number",
+                financialStatementSectionId: "number",
+                financialStatementSections: "object",
             },
-            {},
-            req.body
-        );
-    } catch (e) {
-        error(e.key, e.message, next);
-        return;
-    }
-    let { viewModel } = reqBody;
-    viewModel = returnReqBody(viewModel, viewModelData, next);
-    if (!viewModel) {
-        return;
-    }
-    let { financialStatementSections, accountTypeIds } = viewModel;
+            optionalInputFilter: {
+                accountTypeIds: "object",
+            },
+            dateValue: [],
+            myEnums: {},
+            phoneValue: [],
+            emailValue: [],
+            rangeValues: {},
+        };
+        const financialStatementSectionsData = {
+            requiredInputFilter: allInputFilters["financial_statement_section"],
+            optionalInputFilter:
+                allOptionalInputFilters["financial_statement_section"],
+            dateValue: dateValues["financial_statement_section"],
+            myEnums: enums["financial_statement_section"],
+            phoneValue: phoneValues["financial_statement_section"],
+            emailValue: emailValues["financial_statement_section"],
+            rangeValues: allRangeValues["financial_statement_section"],
+        };
+        try {
+            reqBody = inputFilter(
+                {
+                    viewModel: "object",
+                },
+                {},
+                req.body
+            );
+        } catch (e) {
+            error(e.key, e.message, next);
+            return;
+        }
+        let { viewModel } = reqBody;
+        viewModel = returnReqBody(viewModel, viewModelData, next);
+        if (!viewModel) {
+            return;
+        }
+        let { financialStatementSections, accountTypeIds } = viewModel;
 
-    try {
-        if (!Array.isArray(financialStatementSections)) {
-            throw {
-                key: "financialStatementSections",
-                message: "please send array",
-            };
+        try {
+            if (!Array.isArray(financialStatementSections)) {
+                throw {
+                    key: "financialStatementSections",
+                    message: "please send array",
+                };
+            }
+            if (!financialStatementSections.length) {
+                throw {
+                    key: "financialStatementSections",
+                    message: "array can't be empty",
+                };
+            }
+        } catch (e) {
+            error(e.key, e.message, next);
+            return;
         }
-        if (!financialStatementSections.length) {
-            throw {
-                key: "financialStatementSections",
-                message: "array can't be empty",
-            };
-        }
-    } catch (e) {
-        error(e.key, e.message, next);
-        return;
-    }
-    if (accountTypeIds) {
-        if (!Array.isArray(accountTypeIds)) {
-            error("accountTypeIds", "please send array", next);
-            return false;
-        }
-        if (!accountTypeIds.length) {
-            error("accountTypeIds", "array can't be empty", next);
-            return false;
-        }
-    }
-    if (accountTypeIds) {
-        let listError = false;
-        for (let i in accountTypeIds) {
-            try {
-                if (typeof accountTypeIds[i] == "number") {
-                    accountTypeIds[i] = Math.floor(accountTypeIds[i]);
-                    continue;
-                }
-                throw "error in list";
-            } catch {
-                listError = true;
-                break;
+        if (accountTypeIds) {
+            if (!Array.isArray(accountTypeIds)) {
+                error("accountTypeIds", "please send array", next);
+                return false;
+            }
+            if (!accountTypeIds.length) {
+                error("accountTypeIds", "array can't be empty", next);
+                return false;
             }
         }
-        if (listError) {
-            error(
-                "accountTypeIds",
-                "all array inputs(accountTypeIds) must be int(account type ids)",
+        if (accountTypeIds) {
+            let listError = false;
+            for (let i in accountTypeIds) {
+                try {
+                    if (typeof accountTypeIds[i] == "number") {
+                        accountTypeIds[i] = Math.floor(accountTypeIds[i]);
+                        continue;
+                    }
+                    throw "error in list";
+                } catch {
+                    listError = true;
+                    break;
+                }
+            }
+            if (listError) {
+                error(
+                    "accountTypeIds",
+                    "all array inputs(accountTypeIds) must be int(account type ids)",
+                    next
+                );
+                return false;
+            }
+        }
+        for (let i in financialStatementSections) {
+            financialStatementSections[i] = returnReqBody(
+                financialStatementSections[i],
+                financialStatementSectionsData,
                 next
             );
-            return false;
+            if (!financialStatementSections[i]) {
+                return;
+            }
         }
-    }
-    for (let i in financialStatementSections) {
-        financialStatementSections[i] = returnReqBody(
-            financialStatementSections[i],
-            financialStatementSectionsData,
-            next
-        );
-        if (!financialStatementSections[i]) {
-            return;
-        }
-    }
 
-    try {
-        const data = await post(viewModel);
-        if (data == false) {
-            return;
+        try {
+            const data = await post(viewModel);
+            if (data == false) {
+                return;
+            }
+            res.json(data);
+        } catch (e) {
+            console.log(e);
+            error("database", "error", next, 500);
         }
-        res.json(data);
-    } catch (e) {
-        console.log(e);
-        error("database", "error", next, 500);
     }
-});
-router.get("/configuration", async (_req, res, next) => {
-    try {
-        res.json(await get());
-    } catch (e) {
-        console.log(e);
-        error("database", "error", next, 500);
+);
+router.get(
+    "/account_type_financial_statement_section",
+    async (_req, res, next) => {
+        try {
+            res.json(await get());
+        } catch (e) {
+            console.log(e);
+            error("database", "error", next, 500);
+        }
     }
-});
+);
 module.exports = router;

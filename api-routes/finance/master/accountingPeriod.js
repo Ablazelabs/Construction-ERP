@@ -203,10 +203,14 @@ router.post(`${url}/change_status`, async (req, res, next) => {
     const enums = {
         accounting_period_status: myEnums.accounting_period_status,
     };
-    const reqBody = returnReqBody(req.body, {
-        requiredInputFilter: requiredFields,
-        myEnums: enums,
-    });
+    const reqBody = returnReqBody(
+        req.body,
+        {
+            requiredInputFilter: requiredFields,
+            myEnums: enums,
+        },
+        next
+    );
     if (!reqBody) {
         return;
     }
@@ -258,9 +262,13 @@ router.post(`${url}/process_closing`, async (req, res, next) => {
     const requiredFields = {
         id: "number",
     };
-    const reqBody = returnReqBody(req.body, {
-        requiredInputFilter: requiredFields,
-    });
+    const reqBody = returnReqBody(
+        req.body,
+        {
+            requiredInputFilter: requiredFields,
+        },
+        next
+    );
     if (!reqBody) {
         return;
     }

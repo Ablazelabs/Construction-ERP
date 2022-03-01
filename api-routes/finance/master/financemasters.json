@@ -199,10 +199,10 @@
         },
         "financial_statement_section": {
             "financial_statement_type": [
-                "income_statement",
-                "balance_sheet",
-                "cash_flow_statement",
-                "owners_equity"
+                "Income Statement",
+                "Balance Sheet",
+                "Cash Flow Statement",
+                "Owners Equity"
             ]
         },
         "bank": { "account_type": ["bank", "credit_card"] },

@@ -1190,6 +1190,22 @@ model primary_contact {
   //needs financial_settings
 }
 
+model export_template {
+  startDate              DateTime
+  endDate                DateTime
+  creationDate           DateTime @default(now())
+  createdBy              String
+  revisionDate           DateTime @updatedAt
+  revisedBy              String
+  status                 Int      @default(0)
+  isProtectedForEdit     Boolean  @default(false)
+  id                     Int      @id @default(autoincrement())
+  template_name          String   @unique
+  module_name            Int
+  export_template_fields String //array of numbers(string separated)(enum Numbers)
+  excel_columns          String
+}
+
 model chart_of_account {
   startDate                        DateTime
   endDate                          DateTime

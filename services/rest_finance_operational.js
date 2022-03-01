@@ -32,6 +32,7 @@ const {
     petty_cash,
     crv_payment,
     crv_type,
+    export_template,
 } = models;
 
 const allModels = {
@@ -65,6 +66,7 @@ const allModels = {
     petty_cash,
     crv_payment,
     crv_type,
+    export_template,
 };
 const generatedStrings = {
     chart_of_account: {},
@@ -116,6 +118,7 @@ const uniqueValues = {
     asset: [],
     general_journal_detail: [],
     recurring_general_journal: [],
+    export_template: ["template_name"],
 };
 const checkAgainstAccPeriod = {
     chart_of_account: [],
