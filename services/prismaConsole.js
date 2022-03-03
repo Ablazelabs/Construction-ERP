@@ -1,6 +1,6 @@
 const { allModels } = require("../config/config");
 
-const { accounting_period } = allModels;
+const { accounting_period, user } = allModels;
 
 const test = async (fiscalYearType, creator, dateTime) => {
     let accountingPeriods = [];
@@ -100,4 +100,14 @@ const test = async (fiscalYearType, creator, dateTime) => {
 
     console.log(false);
 };
-test(1, "seed", new Date(2022, 01, 10));
+// test(1, "seed", new Date(2022, 01, 10));
+
+const prismaNullFilter = async () => {
+    const data = await user.findMany({
+        include: {
+            role: true,
+        },
+    });
+    console.log(data);
+};
+prismaNullFilter();

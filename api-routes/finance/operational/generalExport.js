@@ -6,7 +6,9 @@ const inputFilter = require("../../../validation/inputFilter");
 
 const { returnReqBody } = require("../../../validation/basicValidators");
 const { exporter, getName } = require("../../../services/financeGeneralExport");
-
+const allData = require("./rest_finance_operational.json");
+const allMasterData = require("../master/financemasters.json");
+const allModuleFields = require("./allModuleFields.json");
 router.post("/general_export", async (req, res, next) => {
     let reqBody = {};
     const inputFilterData = {
@@ -18,7 +20,7 @@ router.post("/general_export", async (req, res, next) => {
         journal_posting_status: "number",
         account_status: "number",
         account_category_name: "string",
-        period_filter: "string",
+        period_filter: "number",
     };
     try {
         reqBody = inputFilter(
@@ -26,20 +28,13 @@ router.post("/general_export", async (req, res, next) => {
             inputFilterOptionalData,
             req.body
         );
-        if (!Array.isArray(reqBody.dateRange)) {
-            throw { key: "dateRange", message: "please send array" };
-        }
-        if (reqBody.dateRange.length != 2) {
-            throw {
-                key: "dateRange",
-                message: "date range must contain two dates(from - to)",
-            };
-        }
         let enumAndDate = returnReqBody(
             {
                 period_filter: reqBody.period_filter,
                 from: reqBody.from,
                 to: reqBody.to,
+                account_status: reqBody.account_status,
+                journal_posting_status: reqBody.journal_posting_status,
             },
             {
                 requiredInputFilter: {
@@ -47,16 +42,22 @@ router.post("/general_export", async (req, res, next) => {
                     to: "string",
                 },
                 optionalInputFilter: {
-                    period_filter: reqBody.period_filter,
+                    period_filter: "number",
+                    account_status: "number",
+                    journal_posting_status: "number",
                 },
                 myEnums: {
                     period_filter: [
                         "TODAY",
-                        "THIS_WEEK",
-                        "THIS_MONTH",
-                        "THIS_QUARTER",
-                        "THIS_YEAR",
+                        "THIS WEEK",
+                        "THIS MONTH",
+                        "THIS QUARTER",
+                        "THIS YEAR",
                     ],
+                    account_status: ["Active", "Inactive"],
+                    journal_posting_status:
+                        allData.enums.general_journal_header
+                            .journal_posting_status,
                 },
                 dateValue: ["from", "to"],
             },
@@ -71,7 +72,16 @@ router.post("/general_export", async (req, res, next) => {
         return;
     }
     try {
-        const data = await exporter(reqBody, res.locals.id, next);
+        console.log(reqBody);
+        const data = await exporter(
+            reqBody,
+            allData.enums.export_template.module_name,
+            allModuleFields,
+            allData.enums,
+            allMasterData.enums,
+            res.locals.id,
+            next
+        );
         if (data == false) {
             return;
         }
@@ -81,7 +91,5 @@ router.post("/general_export", async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
-router.get("/general_export/account_category_name", async (req, res, next) => {
-    res.json(await getName());
-});
+
 module.exports = router;

@@ -27,6 +27,7 @@ const financeContact = require("./api-routes/finance/master/contact");
 const financemasters = require("./api-routes/finance/master/financemasters");
 const accountingPeriod = require("./api-routes/finance/master/accountingPeriod");
 
+const financeGeneralExport = require("./api-routes/finance/operational/generalExport");
 const financeExports = require("./api-routes/finance/operational/exportController");
 const businessOverviewExports = require("./api-routes/finance/businessOverviewExport");
 const exportTemplate = require("./api-routes/finance/operational/exportTemplate");
@@ -114,6 +115,7 @@ app.use("/finance/master", financemasters);
 app.use("/finance/master", accountingPeriod);
 
 app.use("/finance/business_export", businessOverviewExports);
+app.use("/finance/operational", financeGeneralExport);
 app.use("/finance/operational", exportTemplate);
 app.use("/finance/operational/export", financeExports);
 app.use("/finance/operational/cash_payment_custom", cashPaymentCustom);
