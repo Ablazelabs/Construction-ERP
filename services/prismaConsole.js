@@ -110,4 +110,10 @@ const prismaNullFilter = async () => {
     });
     console.log(data);
 };
-prismaNullFilter();
+// prismaNullFilter();
+const stringToBuffer = async () => {
+    const data = "this is the awesomest person ever";
+    const newData = Buffer.from(data, "ascii");
+    require("fs").writeFileSync("./abebe.txt", newData, "ascii");
+};
+stringToBuffer();

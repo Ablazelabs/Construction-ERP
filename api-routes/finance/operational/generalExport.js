@@ -5,7 +5,7 @@ const { error } = require("../../../config/config");
 const inputFilter = require("../../../validation/inputFilter");
 
 const { returnReqBody } = require("../../../validation/basicValidators");
-const { exporter, getName } = require("../../../services/financeGeneralExport");
+const { exporter } = require("../../../services/financeGeneralExport");
 const allData = require("./rest_finance_operational.json");
 const allMasterData = require("../master/financemasters.json");
 const allModuleFields = require("./allModuleFields.json");
@@ -72,12 +72,23 @@ router.post("/general_export", async (req, res, next) => {
         return;
     }
     try {
-        console.log(reqBody);
         const data = await exporter(
             reqBody,
             allData.enums.export_template.module_name,
             allModuleFields,
-            allData.enums,
+            {
+                ...allData.enums,
+                exportReadyJournal: {
+                    report_basis:
+                        allData.enums.general_journal_header.report_basis,
+                    journal_posting_status:
+                        allData.enums.general_journal_header
+                            .journal_posting_status,
+                    journal_type:
+                        allData.enums.general_journal_header.journal_source,
+                    tax_type: allMasterData.enums.tax.tax_type,
+                },
+            },
             allMasterData.enums,
             res.locals.id,
             next

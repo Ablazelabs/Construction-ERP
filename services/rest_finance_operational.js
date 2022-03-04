@@ -263,6 +263,7 @@ const post = async (reqBody, operationDataType, creator, next) => {
             );
             return false;
         }
+        throw "some error";
     }
 };
 const get = async (

@@ -134,7 +134,8 @@
                 "crv_payment",
                 "crv_type",
                 "opening_balance_account",
-                "exchange_rate"
+                "exchange_rate",
+                "exportReadyJournal"
             ]
         },
         "account_type_financial_statement_section": {},

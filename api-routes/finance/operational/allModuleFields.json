@@ -265,5 +265,24 @@
         "currency",
         "chart_of_account"
     ],
-    "exchange_rate": ["id", "rate", "date", "currency"]
+    "exchange_rate": ["id", "rate", "date", "currency"],
+    "exportReadyJournal": [
+        "posting_reference",
+        "report_basis",
+        "journal_posting_status",
+        "journal_type",
+        "reference_number",
+        "is_inclusive_tax",
+        "tax_name",
+        "tax_percentage",
+        "tax_type",
+        "amount_debit",
+        "amount_credit",
+        "account_name",
+        "currency_code",
+        "total",
+        "description",
+        "notes",
+        "journal_date"
+    ]
 }

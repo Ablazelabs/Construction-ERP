@@ -1203,7 +1203,7 @@ model export_template {
   template_name          String   @unique
   module_name            Int
   export_template_fields String //array of numbers(string separated)(enum Numbers)
-  excel_columns          String
+  excel_columns          String   @db.VarChar(1000)
 }
 
 model chart_of_account {

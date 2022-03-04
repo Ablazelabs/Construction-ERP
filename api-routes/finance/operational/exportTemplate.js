@@ -124,6 +124,7 @@ router.post("/export_template", async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
+//based on a given name (enum of modules) gives out the columns in snake case format!
 router.get("/export_template/column", async (req, res, next) => {
     res.json({
         columns:
