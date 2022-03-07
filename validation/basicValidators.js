@@ -40,6 +40,36 @@ const returnReqBody = (
     next
 ) => {
     try {
+        if (reqBody.list) {
+            if (!Array.isArray(reqBody.list)) {
+                throw { key: "list", message: "list error, please send array" };
+            }
+            if (!reqBody.list.length) {
+                throw {
+                    key: "list",
+                    message: "list error, list can't be empty",
+                };
+            }
+            for (let i in reqBody.list) {
+                reqBody.list[i] = returnReqBody(
+                    reqBody.list[i],
+                    {
+                        requiredInputFilter,
+                        optionalInputFilter,
+                        phoneValue,
+                        emailValue,
+                        dateValue,
+                        myEnums,
+                        rangeValues,
+                    },
+                    next
+                );
+                if (!reqBody.list[i]) {
+                    return false;
+                }
+            }
+            return reqBody;
+        }
         reqBody = inputFilter(
             {
                 ...requiredInputFilter,

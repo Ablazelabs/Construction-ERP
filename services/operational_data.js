@@ -19,7 +19,8 @@ const post = async (
         });
         if (before) {
             let toBeSet = `${parseInt(before.project_id) + 1}`;
-            for (let i = 0; i < 6 - toBeSet.length; i++) {
+            const len = toBeSet.length;
+            for (let i = 0; i < 6 - len; i++) {
                 toBeSet = "0" + toBeSet;
             }
             reqBody.project_id = toBeSet;

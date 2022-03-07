@@ -81,7 +81,9 @@ const exporter = async (
                 addedFilter = {
                     account_type: {
                         account_category: {
-                            name: account_category_name,
+                            name: {
+                                contains: account_category_name,
+                            },
                         },
                     },
                 };
@@ -96,7 +98,6 @@ const exporter = async (
             select[key] = true;
             if (moduleName === "chart_of_account") {
                 if (key == "parent_account") {
-                    //continue from here friday
                     select[key] = { select: { account_name: true } };
                 } else if (key == "account_type") {
                     select[key] = { select: { code: true } };
@@ -174,11 +175,11 @@ const exporter = async (
         moduleName,
         exportAs
     );
-    if (exportAs === "xlsx") {
-        require("fs").writeFileSync("./output.xlsx", data);
-    } else {
-        require("fs").writeFileSync("./output.csv", data);
-    }
+    // if (exportAs === "xlsx") {
+    //     require("fs").writeFileSync("./output.xlsx", data);
+    // } else {
+    //     require("fs").writeFileSync("./output.csv", data);
+    // }
     return data;
 };
 /**
@@ -445,7 +446,10 @@ const buildFile = (
     if (exportAs === "xlsx") {
         return xlsx.build([
             {
-                name: moduleName,
+                name:
+                    moduleName === "exportReadyJournal"
+                        ? "General Journal"
+                        : moduleName,
                 data: dataSheet,
                 options: sheetOptions,
             },
@@ -458,4 +462,4 @@ const buildFile = (
         return Buffer.from(c);
     }
 };
-module.exports = { exporter };
+module.exports = exporter;

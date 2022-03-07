@@ -5,7 +5,7 @@ const { error } = require("../../../config/config");
 const inputFilter = require("../../../validation/inputFilter");
 
 const { returnReqBody } = require("../../../validation/basicValidators");
-const { exporter } = require("../../../services/financeGeneralExport");
+const exporter = require("../../../services/financeGeneralExport");
 const allData = require("./rest_finance_operational.json");
 const allMasterData = require("../master/financemasters.json");
 const allModuleFields = require("./allModuleFields.json");

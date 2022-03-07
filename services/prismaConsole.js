@@ -1,6 +1,6 @@
 const { allModels } = require("../config/config");
 
-const { accounting_period, user } = allModels;
+const { accounting_period, user, project } = allModels;
 
 const test = async (fiscalYearType, creator, dateTime) => {
     let accountingPeriods = [];
@@ -116,4 +116,24 @@ const stringToBuffer = async () => {
     const newData = Buffer.from(data, "ascii");
     require("fs").writeFileSync("./abebe.txt", newData, "ascii");
 };
-stringToBuffer();
+// stringToBuffer();
+const projectIdSetter = async () => {
+    const projects = await project.findMany({ orderBy: { id: "asc" } });
+    for (let i in projects) {
+        const singlePro = projects[i];
+        let toBeSet = `${singlePro.id}`;
+        const len = toBeSet.length;
+        for (let i = 0; i < 6 - len; i++) {
+            toBeSet = "0" + toBeSet;
+        }
+        await project.update({
+            where: {
+                id: singlePro.id,
+            },
+            data: {
+                project_id: toBeSet,
+            },
+        });
+    }
+};
+projectIdSetter();

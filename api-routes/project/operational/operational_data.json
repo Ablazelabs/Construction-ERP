@@ -139,7 +139,8 @@
             "location": "string",
             "documentation_id": "number",
             "project_id": "number"
-        }
+        },
+        "request_payment": { "date": "string" }
     },
     "enums": {},
     "allOptionalInputFilters": {
@@ -179,7 +180,24 @@
             "date_responded": "string"
         },
         "invoice_tracking": { "detail": "string" },
-        "required_document": { "received": "string", "received_date": "string" }
+        "required_document": {
+            "received": "string",
+            "received_date": "string"
+        },
+        "request_payment": {
+            "amount": "number",
+            "request_type": "number",
+            "approval_status": "number",
+            "description": "string",
+            "check_number": "string",
+            "remaining_balance": "number",
+            "prepared_by_id": "number",
+            "checked_by_id": "number",
+            "approved_by_id": "number",
+            "project_id": "number",
+            "cash_payment_voucher_id": "number",
+            "from_id": "number"
+        }
     },
     "allRangeValues": {},
     "phoneValues": {
@@ -234,7 +252,8 @@
         "todos": ["date"],
         "request": ["date_requested", "date_required", "date_responded"],
         "invoice_tracking": ["date_received"],
-        "required_document": ["date_requested", "date_needed", "received_date"]
+        "required_document": ["date_requested", "date_needed", "received_date"],
+        "request_payment": ["date"]
     },
     "allProjections": {
         "project": {
@@ -421,6 +440,22 @@
             "location": true,
             "project": true,
             "documentation": true
+        },
+        "request_payment": {
+            "id": true,
+            "date": true,
+            "amount": true,
+            "request_type": true,
+            "approval_status": true,
+            "description": true,
+            "check_number": true,
+            "remaining_balance": true,
+            "prepared_by": true,
+            "checked_by": true,
+            "approved_by": true,
+            "project": true,
+            "cash_payment_voucher": true,
+            "from": true
         }
     },
     "allFilters": {
@@ -535,6 +570,21 @@
             "location": "string",
             "documentation_id": "number",
             "project_id": "number"
+        },
+        "request_payment": {
+            "id": "number",
+            "amount": "number",
+            "request_type": "number",
+            "approval_status": "number",
+            "description": "string",
+            "check_number": "string",
+            "remaining_balance": "number",
+            "prepared_by_id": "number",
+            "checked_by_id": "number",
+            "approved_by_id": "number",
+            "project_id": "number",
+            "cash_payment_voucher_id": "number",
+            "from_id": "number"
         }
     },
     "allSorts": {
@@ -719,6 +769,22 @@
             "location": "number",
             "project": "number",
             "documentation": "number"
+        },
+        "request_payment": {
+            "id": "number",
+            "date": "number",
+            "amount": "number",
+            "request_type": "number",
+            "approval_status": "number",
+            "description": "number",
+            "check_number": "number",
+            "remaining_balance": "number",
+            "prepared_by_id": "number",
+            "checked_by_id": "number",
+            "approved_by_id": "number",
+            "project_id": "number",
+            "cash_payment_voucher_id": "number",
+            "from_id": "number"
         }
     },
     "allRoutes": [
@@ -737,7 +803,8 @@
         "/todos",
         "/request",
         "/invoice_tracking",
-        "/required_document"
+        "/required_document",
+        "/request_payment"
     ],
     "uniqueValues": {
         "project": ["project_id"],

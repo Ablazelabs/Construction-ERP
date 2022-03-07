@@ -17,6 +17,23 @@ const post = async (
     next,
     sendId = false
 ) => {
+    if (reqBody.list && Array.isArray(reqBody.list)) {
+        let data;
+        for (let i in reqBody.list) {
+            data = post(
+                reqBody.list[i],
+                modelName,
+                creator,
+                uniqueValues,
+                next,
+                sendId
+            );
+            if (data == false) {
+                return false;
+            }
+        }
+        return data;
+    }
     for (let i in uniqueValues) {
         const uniqueKey = uniqueValues[i];
         if (

@@ -10,7 +10,8 @@ module.exports = async (refreshToken, id, next) => {
         error(
             "refreshToken",
             "you have been revoked access, please login again",
-            next
+            next,
+            403
         );
         return false;
     }

@@ -41,7 +41,7 @@ describe("operational data Test 1(project)", () => {
                     done();
                 });
         });
-        it("should return error 400, project already exists", (done) => {
+        it("should return error 400, project id not sent", (done) => {
             chai.request(server)
                 .post(url)
                 .set({ Authorization: `Bearer ${accessToken}` })
@@ -52,7 +52,6 @@ describe("operational data Test 1(project)", () => {
                     project_manager: "string",
                     project_start_date: "2020/12/21",
                     project_end_date: "2020/12/21",
-                    project_id: `${randomName}`,
                     contract_number: "string",
                     site_engineer: "string",
                     dupty_manager: "string",
