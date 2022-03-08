@@ -19,7 +19,7 @@ router.post("/account", async (req, res, next) => {
                 email: "string",
                 phone_number: "string",
                 two_factor_enabled: "boolean",
-                role_id: "number",
+                roleId: "number",
             },
             req.body
         );
@@ -166,7 +166,7 @@ router.patch("/account", async (req, res, next) => {
                 email: "string",
                 phone_number: "string",
                 two_factor_enabled: "boolean",
-                role_id: "number",
+                roleId: "number",
             },
             req.body.updateData
         );

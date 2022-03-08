@@ -140,8 +140,6 @@ const patch = async (updateDataProjection, reqBody, updateData, next) => {
             }
         }
     }
-    updateData.roleId = updateData.role_id;
-    updateData.role_id = undefined;
     try {
         await user.update({
             data: {
