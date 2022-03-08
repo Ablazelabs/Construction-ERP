@@ -142,7 +142,12 @@
         },
         "request_payment": { "date": "string" }
     },
-    "enums": {},
+    "enums": {
+        "request_payment": {
+            "request_type": ["Material", "Expense"],
+            "approval_status": ["Pending", "Approved", "Rejected"]
+        }
+    },
     "allOptionalInputFilters": {
         "project": { "project_description": "string" },
         "daily_work_log": {},

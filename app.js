@@ -90,73 +90,73 @@ app.use((req, _res, next) => {
     next();
 });
 
-app.use(login);
-app.use(logout);
-app.use(refresh);
-app.use(confirmAccount);
+app.use("/api/", login);
+app.use("/api/", logout);
+app.use("/api/", refresh);
+app.use("/api/", confirmAccount);
 
-app.use(account);
-app.use(forgotpassword);
-app.use(sendcode);
-app.use(changepassword);
-app.use(role);
-app.use(privilege);
+app.use("/api/", account);
+app.use("/api/", forgotpassword);
+app.use("/api/", sendcode);
+app.use("/api/", changepassword);
+app.use("/api/", role);
+app.use("/api/", privilege);
 
-app.use("/project/master", upload);
-app.use("/project/master", client);
-app.use("/project/master", material);
-app.use("/project/master", documentation);
-app.use("/project/master", restMasterData);
+app.use("/api/project/master", upload);
+app.use("/api/project/master", client);
+app.use("/api/project/master", material);
+app.use("/api/project/master", documentation);
+app.use("/api/project/master", restMasterData);
 
-app.use("/project/operational", operationalData);
+app.use("/api/project/operational", operationalData);
 
-app.use("/finance/master", financeContact);
-app.use("/finance/master", financemasters);
-app.use("/finance/master", accountingPeriod);
+app.use("/api/finance/master", financeContact);
+app.use("/api/finance/master", financemasters);
+app.use("/api/finance/master", accountingPeriod);
 
-app.use("/finance/business_export", businessOverviewExports);
-app.use("/finance/operational", financeGeneralExport);
-app.use("/finance/operational", exportTemplate);
-app.use("/finance/operational/export", financeExports);
-app.use("/finance/operational/cash_payment_custom", cashPaymentCustom);
-app.use("/finance/operational/crv_payment", crvPayment);
-app.use("/finance/operational", recurringGeneralJournal);
-app.use("/finance/operational", budget);
-app.use("/finance/operational", accountTypeFSSection);
-app.use("/finance/operational", restFinanceOperational);
-app.use("/finance/operational", financeUpload);
+app.use("/api/finance/business_export", businessOverviewExports);
+app.use("/api/finance/operational", financeGeneralExport);
+app.use("/api/finance/operational", exportTemplate);
+app.use("/api/finance/operational/export", financeExports);
+app.use("/api/finance/operational/cash_payment_custom", cashPaymentCustom);
+app.use("/api/finance/operational/crv_payment", crvPayment);
+app.use("/api/finance/operational", recurringGeneralJournal);
+app.use("/api/finance/operational", budget);
+app.use("/api/finance/operational", accountTypeFSSection);
+app.use("/api/finance/operational", restFinanceOperational);
+app.use("/api/finance/operational", financeUpload);
 
-app.use("/hcm/master", hcmMasters);
-app.use("/hcm/employee_master", disciplineAttachment);
-app.use("/hcm/employee_master", employeeAction);
-app.use("/hcm", hcmApprovals);
-app.use("/hcm/employee_master", employeeActionMeasure);
-app.use("/hcm/employee_master", fileEmployeeMasters);
-app.use("/hcm/employee_master", initialHiring);
-app.use("/hcm/employee_master", hcmEmployeeMasters);
+app.use("/api/hcm/master", hcmMasters);
+app.use("/api/hcm/employee_master", disciplineAttachment);
+app.use("/api/hcm/employee_master", employeeAction);
+app.use("/api/hcm", hcmApprovals);
+app.use("/api/hcm/employee_master", employeeActionMeasure);
+app.use("/api/hcm/employee_master", fileEmployeeMasters);
+app.use("/api/hcm/employee_master", initialHiring);
+app.use("/api/hcm/employee_master", hcmEmployeeMasters);
 
-app.use("/hcm/recruitment", hcmVacancyApplicant);
-app.use("/hcm/recruitment", hcmVacancyExaminer);
-app.use("/hcm/recruitment", hcmVacancyResult);
-app.use("/hcm/job_positions", hcmJobTitle);
+app.use("/api/hcm/recruitment", hcmVacancyApplicant);
+app.use("/api/hcm/recruitment", hcmVacancyExaminer);
+app.use("/api/hcm/recruitment", hcmVacancyResult);
+app.use("/api/hcm/job_positions", hcmJobTitle);
 
-app.use("/hcm", jobPosCompStrucRecru);
-app.use("/hcm", compStrucRecruFile);
+app.use("/api/hcm", jobPosCompStrucRecru);
+app.use("/api/hcm", compStrucRecruFile);
 
-app.use("/hcm/payroll", paygradeScale);
-app.use("/hcm/payroll", payrollControl);
-app.use("/hcm/payroll", accountMapping);
-app.use("/hcm/payroll", paygradeSalaryComponent);
-app.use("/hcm/payroll", hcmPayrollSlip);
-app.use("/hcm/payroll", hcmPayroll);
-app.use("/hcm/payroll", employeePayscaleUpload);
+app.use("/api/hcm/payroll", paygradeScale);
+app.use("/api/hcm/payroll", payrollControl);
+app.use("/api/hcm/payroll", accountMapping);
+app.use("/api/hcm/payroll", paygradeSalaryComponent);
+app.use("/api/hcm/payroll", hcmPayrollSlip);
+app.use("/api/hcm/payroll", hcmPayroll);
+app.use("/api/hcm/payroll", employeePayscaleUpload);
 
-app.use("/hcm/time_and_leave/attendance_payroll", attendanceSheet);
-app.use("/hcm/time_and_leave", hcmShiftSchedule);
-app.use("/hcm/time_and_leave", hcmTimeAndLeave);
+app.use("/api/hcm/time_and_leave/attendance_payroll", attendanceSheet);
+app.use("/api/hcm/time_and_leave", hcmShiftSchedule);
+app.use("/api/hcm/time_and_leave", hcmTimeAndLeave);
 
-app.use("/inventory", inventMasterAndStock);
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/api/inventory", inventMasterAndStock);
+app.use("/api/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use((err, _req, res, _next) => {
     let myError = JSON.parse(err.message);
@@ -169,7 +169,7 @@ const port = 3000;
 const basicAuth = require("express-basic-auth");
 
 app.use(
-    "/api-docs",
+    "/api/api-docs",
     basicAuth({
         users: { yourUser: "yourPassword" },
         challenge: true,

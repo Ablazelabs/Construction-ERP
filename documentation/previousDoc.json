@@ -5230,6 +5230,281 @@
                 }
             }
         },
+        "/project/operational/request_payment": {
+            "post": {
+                "summary": "creates a new request_payment",
+                "tags": ["request_payment"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "date": { "type": "DateTime" },
+                                    "amount": { "type": "Float?" },
+                                    "request_type": { "type": "Int?" },
+                                    "approval_status": { "type": "Int?" },
+                                    "description": { "type": "String?" },
+                                    "check_number": { "type": "String?" },
+                                    "remaining_balance": { "type": "Int?" },
+                                    "prepared_by_id": { "type": "Int?" },
+                                    "checked_by_id": { "type": "Int?" },
+                                    "approved_by_id": { "type": "Int?" },
+                                    "project_id": { "type": "Int?" },
+                                    "cash_payment_voucher_id": {
+                                        "type": "Int?"
+                                    },
+                                    "from_id": { "type": "Int?" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success message",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": { "type": "boolean" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "gets selected request_payments",
+                "tags": ["request_payment"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "limit": { "type": "Int" },
+                                    "skip": { "type": "Int" },
+                                    "filter": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": { "type": "Int" },
+                                            "request_type": { "type": "Int?" },
+                                            "approval_status": {
+                                                "type": "Int?"
+                                            },
+                                            "description": {
+                                                "type": "String?"
+                                            },
+                                            "check_number": {
+                                                "type": "String?"
+                                            },
+                                            "remaining_balance": {
+                                                "type": "Int?"
+                                            },
+                                            "prepared_by_id": {
+                                                "type": "Int?"
+                                            },
+                                            "checked_by_id": { "type": "Int?" },
+                                            "approved_by_id": {
+                                                "type": "Int?"
+                                            },
+                                            "project_id": { "type": "Int?" },
+                                            "cash_payment_voucher_id": {
+                                                "type": "Int?"
+                                            },
+                                            "from_id": { "type": "Int?" },
+                                            "isProtectedForEdit": {
+                                                "type": "boolean"
+                                            }
+                                        }
+                                    },
+                                    "sort": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": { "type": "Int" },
+                                            "date": { "type": "Int" },
+                                            "amount": { "type": "Int" },
+                                            "request_type": { "type": "Int" },
+                                            "approval_status": {
+                                                "type": "Int"
+                                            },
+                                            "description": { "type": "Int" },
+                                            "check_number": { "type": "Int" },
+                                            "remaining_balance": {
+                                                "type": "Int"
+                                            },
+                                            "prepared_by_id": { "type": "Int" },
+                                            "checked_by_id": { "type": "Int" },
+                                            "approved_by_id": { "type": "Int" },
+                                            "project_id": { "type": "Int" },
+                                            "cash_payment_voucher_id": {
+                                                "type": "Int"
+                                            },
+                                            "from_id": { "type": "Int" },
+                                            "startDate": { "type": "number" },
+                                            "endDate": { "type": "number" },
+                                            "creationDate": {
+                                                "type": "number"
+                                            },
+                                            "createdBy": { "type": "number" },
+                                            "revisionDate": {
+                                                "type": "number"
+                                            },
+                                            "revisedBy": { "type": "number" },
+                                            "isProtectedForEdit": {
+                                                "type": "number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "fetched data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "date": { "type": "DateTime" },
+                                        "amount": { "type": "Float?" },
+                                        "request_type": { "type": "Int?" },
+                                        "approval_status": { "type": "Int?" },
+                                        "description": { "type": "String?" },
+                                        "check_number": { "type": "String?" },
+                                        "remaining_balance": { "type": "Int?" },
+                                        "prepared_by_id": { "type": "Int?" },
+                                        "checked_by_id": { "type": "Int?" },
+                                        "approved_by_id": { "type": "Int?" },
+                                        "project_id": { "type": "Int?" },
+                                        "cash_payment_voucher_id": {
+                                            "type": "Int?"
+                                        },
+                                        "from_id": { "type": "Int?" },
+                                        "startDate": { "type": "string" },
+                                        "endDate": { "type": "string" },
+                                        "creationDate": { "type": "string" },
+                                        "createdBy": { "type": "string" },
+                                        "revisionDate": { "type": "string" },
+                                        "revisedBy": { "type": "string" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "updates a request_payment",
+                "tags": ["request_payment"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "updateData": {
+                                        "type": "object",
+                                        "properties": {
+                                            "date": { "type": "DateTime" },
+                                            "amount": { "type": "Float?" },
+                                            "request_type": { "type": "Int?" },
+                                            "approval_status": {
+                                                "type": "Int?"
+                                            },
+                                            "description": {
+                                                "type": "String?"
+                                            },
+                                            "check_number": {
+                                                "type": "String?"
+                                            },
+                                            "remaining_balance": {
+                                                "type": "Int?"
+                                            },
+                                            "prepared_by_id": {
+                                                "type": "Int?"
+                                            },
+                                            "checked_by_id": { "type": "Int?" },
+                                            "approved_by_id": {
+                                                "type": "Int?"
+                                            },
+                                            "project_id": { "type": "Int?" },
+                                            "cash_payment_voucher_id": {
+                                                "type": "Int?"
+                                            },
+                                            "from_id": { "type": "Int?" },
+                                            "isProtectedForEdit": {
+                                                "type": "boolean"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success message",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": { "type": "boolean" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "deletes a request_payment",
+                "tags": ["request_payment"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": { "id": { "type": "Int" } }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success message",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": { "type": "boolean" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/hcm/master/currency": {
             "post": {
                 "summary": "posts a new currency",
