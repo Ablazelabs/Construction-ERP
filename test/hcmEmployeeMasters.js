@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 const { readFileSync } = require("fs");
 let accessToken = readFileSync("./test/accessToken.txt", "utf-8");
 
-const url = "/hcm/employee_master/employee";
+const url = "/api/hcm/employee_master/employee";
 
 describe("hcm employee master Test 1(employee)", () => {
     /**
@@ -178,7 +178,7 @@ describe("hcm employee master Test 1(employee)", () => {
     });
 });
 
-const url2 = "/hcm/employee_master/experience";
+const url2 = "/api/hcm/employee_master/experience";
 
 describe("hcm employee master Test 2(experience)", () => {
     /**

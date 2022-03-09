@@ -4,7 +4,7 @@ const chaiHttp = require("chai-http");
 chai.should();
 
 chai.use(chaiHttp);
-const url = "/account";
+const url = "/api/account";
 const { readFileSync } = require("fs");
 let accessToken = readFileSync("./test/accessToken.txt", "utf-8");
 describe("Account Test", () => {

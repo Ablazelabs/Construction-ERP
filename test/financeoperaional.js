@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 const { readFileSync } = require("fs");
 let accessToken = readFileSync("./test/accessToken.txt", "utf-8");
 
-const url = "/finance/operational/bank_reconcilation";
+const url = "/api/finance/operational/bank_reconcilation";
 
 describe("finance operational data Test 1(account category)", () => {
     /**
@@ -218,7 +218,7 @@ describe("finance operational data Test 1(account category)", () => {
     });
 });
 
-const url2 = "/finance/operational/estimated_total_production_unit";
+const url2 = "/api/finance/operational/estimated_total_production_unit";
 
 describe("finance operational data Test 2(estimated_total_production_unit)", () => {
     /**

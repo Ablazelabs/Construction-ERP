@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 const { readFileSync } = require("fs");
 let accessToken = readFileSync("./test/accessToken.txt", "utf-8");
 
-const url = "/hcm/company_structure/business_unit";
+const url = "/api/hcm/company_structure/business_unit";
 
 describe("hcm employee master Test 1(business_unit)", () => {
     /**
@@ -176,9 +176,9 @@ describe("hcm employee master Test 1(business_unit)", () => {
     });
 });
 
-const url2 = "/hcm/job_positions/job_category";
+const url2 = "/api/hcm/job_positions/job_category";
 
-describe("hcm business_unit master Test 2(job_category)", () => {
+describe("hcm  master Test 2(job_category)", () => {
     /**
      * Test the post
      */
@@ -364,9 +364,9 @@ describe("hcm business_unit master Test 2(job_category)", () => {
     });
 });
 
-const url3 = "/hcm/recruitment/vacancy_request_reason";
+const url3 = "/api/hcm/recruitment/vacancy_request_reason";
 
-describe("hcm business_unit master Test 2(vacancy_request_reason)", () => {
+describe("hcm  master Test 2(vacancy_request_reason)", () => {
     /**
      * Test the post
      */

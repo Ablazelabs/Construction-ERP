@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 const { readFileSync } = require("fs");
 let accessToken = readFileSync("./test/accessToken.txt", "utf-8");
 
-const url = "/hcm/payroll/employee_penality_type";
+const url = "/api/hcm/payroll/employee_penality_type";
 
 describe("hcm payroll Test 1(employee_penality_type)", () => {
     /**
@@ -177,7 +177,7 @@ describe("hcm payroll Test 1(employee_penality_type)", () => {
     });
 });
 
-const url2 = "/hcm/payroll/employee_tax";
+const url2 = "/api/hcm/payroll/employee_tax";
 
 describe("hcm payroll master Test 2(employee_tax)", () => {
     /**

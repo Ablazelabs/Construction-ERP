@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 const { readFileSync } = require("fs");
 let accessToken = readFileSync("./test/accessToken.txt", "utf-8");
 
-const url = "/hcm/time_and_leave/attendance_abscence_type";
+const url = "/api/hcm/time_and_leave/attendance_abscence_type";
 
 describe("hcm time_and_leave Test 1(attendance_abscence_type)", () => {
     /**
@@ -198,7 +198,7 @@ describe("hcm time_and_leave Test 1(attendance_abscence_type)", () => {
     });
 });
 
-const url2 = "/hcm/time_and_leave/holiday";
+const url2 = "/api/hcm/time_and_leave/holiday";
 
 describe("hcm time_and_leave master Test 2(holiday)", () => {
     /**

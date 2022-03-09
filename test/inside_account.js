@@ -7,7 +7,7 @@ chai.use(chaiHttp);
 
 const { readFileSync, writeFileSync } = require("fs");
 let accessToken = readFileSync("./test/accessToken.txt", "utf-8");
-
+const baseUrl = "/api/account";
 describe("Inside Account Test", () => {
     /**
      * Test the Login
@@ -16,7 +16,7 @@ describe("Inside Account Test", () => {
     describe("Login Test", () => {
         it("should return wrong password", (done) => {
             chai.request(server)
-                .post("/account/login")
+                .post(baseUrl + "/login")
                 .send({
                     email: `yaredterefeg@gmail.com`,
                     password: "passwordd",
@@ -30,7 +30,7 @@ describe("Inside Account Test", () => {
         });
         it("Should login user(send access token)", (done) => {
             chai.request(server)
-                .post("/account/login")
+                .post(baseUrl + "/login")
                 .send({
                     email: `yaredterefeg@gmail.com`,
                     password: "password",
@@ -104,7 +104,7 @@ describe("Inside Account Test", () => {
         // });
         it("should return error 400, user isnt registered", (done) => {
             chai.request(server)
-                .post("/account/login")
+                .post(baseUrl + "/login")
                 .send({
                     phone_number: `random phone number`,
                     password: "password",
@@ -125,7 +125,7 @@ describe("Inside Account Test", () => {
     describe("forgot password Test", () => {
         it("should return success", (done) => {
             chai.request(server)
-                .post("/account/forgotpassword")
+                .post(baseUrl + "/forgotpassword")
                 .send({ email: `yaredterefeg@gmail.com` })
                 .end((err, response) => {
                     response.should.have.status(200);
@@ -135,7 +135,7 @@ describe("Inside Account Test", () => {
         });
         it("should return error 400", (done) => {
             chai.request(server)
-                .post("/account/forgotpassword")
+                .post(baseUrl + "/forgotpassword")
                 .end((err, response) => {
                     response.should.have.status(400);
                     response.body.should.have.property("error");
@@ -152,7 +152,7 @@ describe("Inside Account Test", () => {
     describe("send code Test", () => {
         it("should return success", (done) => {
             chai.request(server)
-                .post("/account/sendcode")
+                .post(baseUrl + "/sendcode")
                 .send({ email: `yaredterefeg@gmail.com`, code: 123434 })
                 .end((err, response) => {
                     response.should.have.status(200);
@@ -163,7 +163,7 @@ describe("Inside Account Test", () => {
         });
         it("should return error 400", (done) => {
             chai.request(server)
-                .post("/account/sendcode")
+                .post(baseUrl + "/sendcode")
                 .end((err, response) => {
                     response.should.have.status(400);
                     response.body.should.have.property("error");
@@ -173,7 +173,7 @@ describe("Inside Account Test", () => {
         });
         it("should return error 400", (done) => {
             chai.request(server)
-                .post("/account/sendcode")
+                .post(baseUrl + "/sendcode")
                 .send({ email: "yaredterefeg@gmail.com", code: 4 })
                 .end((err, response) => {
                     response.should.have.status(400);
@@ -191,7 +191,7 @@ describe("Inside Account Test", () => {
     describe("change password test", () => {
         it("should return success, temp change", (done) => {
             chai.request(server)
-                .post("/account/changepassword")
+                .post(baseUrl + "/changepassword")
                 .set({ Authorization: `Bearer ${tempAccessToken}` })
                 .send({ newPassword: "password" })
                 .end((err, response) => {
@@ -202,7 +202,7 @@ describe("Inside Account Test", () => {
         });
         it("should return success, admin change", (done) => {
             chai.request(server)
-                .post("/account/changepassword")
+                .post(baseUrl + "/changepassword")
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
                     id: 1,
@@ -216,7 +216,7 @@ describe("Inside Account Test", () => {
         });
         it("should return success, self change", (done) => {
             chai.request(server)
-                .post("/account/changepassword")
+                .post(baseUrl + "/changepassword")
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
                     newPassword: "password",
@@ -230,7 +230,7 @@ describe("Inside Account Test", () => {
         });
         it("should return error 400", (done) => {
             chai.request(server)
-                .post("/account/changepassword")
+                .post(baseUrl + "/changepassword")
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .end((err, response) => {
                     response.should.have.status(400);
@@ -241,7 +241,7 @@ describe("Inside Account Test", () => {
         });
         it("should return error 400", (done) => {
             chai.request(server)
-                .post("/account/changepassword")
+                .post(baseUrl + "/changepassword")
                 .set({ Authorization: `Bearer ${accessToken}` })
                 .end((err, response) => {
                     response.should.have.status(400);
