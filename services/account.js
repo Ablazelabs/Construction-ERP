@@ -77,7 +77,7 @@ const post = async (identifier, identifierKey, reqBody, otherData, next) => {
     return { success: true };
 };
 const get = async (queryFilter, querySort, role, limit, skip, projection) => {
-    const data = await user.findMany({
+    let data = await user.findMany({
         where: {
             ...queryFilter,
             ...role,
@@ -88,8 +88,24 @@ const get = async (queryFilter, querySort, role, limit, skip, projection) => {
         skip,
         select: {
             ...projection,
+            id: true,
         },
     });
+    if (data.length === 1) {
+        const priv = await user.findUnique({
+            where: {
+                id: data[0].id,
+            },
+            select: {
+                role: {
+                    select: {
+                        privileges: true,
+                    },
+                },
+            },
+        });
+        data[0].actions = priv?.role?.privileges.map((elem) => elem.action);
+    }
     return data;
 };
 const patch = async (updateDataProjection, reqBody, updateData, next) => {
@@ -118,7 +134,7 @@ const patch = async (updateDataProjection, reqBody, updateData, next) => {
                 where: { email: updateData.email },
             });
             if (data) {
-                error("email", "already exists", next);
+                error("email", "email already exists", next);
                 return false;
             }
         }
@@ -135,7 +151,7 @@ const patch = async (updateDataProjection, reqBody, updateData, next) => {
                 where: { phone_number: updateData.phone_number },
             });
             if (data) {
-                error("phone_number", "already exists", next);
+                error("phone_number", "phone number already exists", next);
                 return false;
             }
         }
