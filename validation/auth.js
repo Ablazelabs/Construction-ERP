@@ -89,7 +89,7 @@ const authorization = {
     isUserSuper: async (id) => {},
     authenticate: async (req, res, next) => {
         const requestRoute = req.path.split("/").pop();
-        const requestPath = req.path.split("/");
+        const requestPath = req.path;
         const pass =
             req.path.search(/\/api-docs\/|\/uploads\//) == -1 ? false : true;
         const method = req.method;
@@ -139,9 +139,9 @@ const authorization = {
             ? "project"
             : requestPath.match(/role|privilege/)
             ? "admin"
-            : requestPath.match("account") && method === "POST"
+            : requestRoute == "account" && method === "POST"
             ? "admin"
-            : "no privilege";
+            : "*";
         if (
             requestRoute == "account" &&
             (method == "PATCH" || method == "DELETE")
@@ -159,6 +159,10 @@ const authorization = {
                 return;
             }
         } else {
+            if (requestRoute === "account") {
+                next();
+                return;
+            }
             if (
                 !(await authorization.userHasPrivilege(
                     payLoad.id,

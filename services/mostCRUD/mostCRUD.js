@@ -83,7 +83,6 @@ const post = async (
         //   console.log(data);
         return { success: true, id: sendId ? data.id : undefined };
     } catch (e) {
-        console.log(e);
         if (e.meta.field_name) {
             const fieldModel = e.meta.field_name
                 .replace("_id", "")
