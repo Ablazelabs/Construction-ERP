@@ -108,6 +108,7 @@ const patch = async (updateDataProjection, reqBody, updateData, next) => {
             where: { id: reqBody.id },
         });
     } catch (e) {
+        console.log(e);
         if (
             e.meta.cause.match(
                 /Expected [0-9]* records to be connected, found only [0-9]*/i

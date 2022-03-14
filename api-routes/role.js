@@ -11,6 +11,20 @@ router.post("/role", async (req, res, next) => {
             if (!Array.isArray(req.body.privileges)) {
                 throw { key: "privileges", message: "must be an array" };
             }
+            if (!req.body.privileges.length) {
+                throw {
+                    key: "privileges",
+                    message: "privileges must be more than 1",
+                };
+            }
+            for (let i in req.body.privileges) {
+                if (typeof req.body.privileges[i] !== "number") {
+                    throw {
+                        key: "privileges",
+                        message: "privileges must be an array of numbers",
+                    };
+                }
+            }
         }
     } catch (e) {
         error(e.key, e.message, next, 400);
@@ -21,6 +35,7 @@ router.post("/role", async (req, res, next) => {
               return { id: element };
           })
         : [];
+
     try {
         const data = await post(req.body, privileges, next);
         if (data == false) {
@@ -118,6 +133,20 @@ router.patch("/role", async (req, res, next) => {
         if (updateData.privileges) {
             if (!Array.isArray(updateData.privileges)) {
                 throw { key: "privileges", message: "must be an array" };
+            }
+            if (!req.body.privileges.length) {
+                throw {
+                    key: "privileges",
+                    message: "privileges must be more than 1",
+                };
+            }
+            for (let i in req.body.privileges) {
+                if (typeof req.body.privileges[i] !== "number") {
+                    throw {
+                        key: "privileges",
+                        message: "privileges must be an array of numbers",
+                    };
+                }
             }
         }
     } catch (e) {

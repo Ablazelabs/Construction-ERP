@@ -7,6 +7,7 @@ const {
 const { privilege } = allModels;
 
 const post = async (reqBody, next) => {
+    reqBody.action = reqBody.action.toLowerCase();
     const queryResult = await privilege.findUnique({
         where: {
             action: reqBody.action,
@@ -61,6 +62,7 @@ const patch = async (updateDataProjection, reqBody, updateData, next) => {
         return false;
     }
     if (updateData.action) {
+        updateData.action = updateData.action.toLowerCase();
         if (updateData.action === myPrivilege.action) {
             updateData.action = undefined;
         } else {
