@@ -5,7 +5,7 @@ const inputFilter = require("../validation/inputFilter");
 const { post, get, patch, deleter } = require("../services/privilege");
 router.post("/privilege", async (req, res, next) => {
     try {
-        inputFilter({ action: "string" }, {}, req.body, 4);
+        inputFilter({ action: "string" }, {}, req.body);
         inputFilter({}, { description: "string" }, req.body, 0, 300);
     } catch (e) {
         error(e.key, e.message, next, 400);

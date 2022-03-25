@@ -12,22 +12,6 @@ const post = async (
     uniqueValues,
     next
 ) => {
-    if (operationDataType === "project") {
-        const before = await project.findFirst({
-            orderBy: { project_id: "desc" },
-            select: { project_id: true },
-        });
-        if (before) {
-            let toBeSet = `${parseInt(before.project_id) + 1}`;
-            const len = toBeSet.length;
-            for (let i = 0; i < 6 - len; i++) {
-                toBeSet = "0" + toBeSet;
-            }
-            reqBody.project_id = toBeSet;
-        } else {
-            reqBody.project_id = "000001";
-        }
-    }
     return mPost(reqBody, operationDataType, creator, uniqueValues, next);
 };
 const get = async (
@@ -46,6 +30,22 @@ const get = async (
         projection,
         operationDataType
     );
+};
+const getProjectId = async () => {
+    const before = await project.findFirst({
+        orderBy: { project_id: "desc" },
+        select: { project_id: true },
+    });
+    if (before) {
+        let toBeSet = `${parseInt(before.project_id) + 1}`;
+        const len = toBeSet.length;
+        for (let i = 0; i < 6 - len; i++) {
+            toBeSet = "0" + toBeSet;
+        }
+        return toBeSet;
+    } else {
+        return "000001";
+    }
 };
 const patch = async (
     updateDataProjection,
@@ -70,5 +70,6 @@ module.exports = {
     post,
     get,
     patch,
+    getProjectId,
 };
 // same as the others

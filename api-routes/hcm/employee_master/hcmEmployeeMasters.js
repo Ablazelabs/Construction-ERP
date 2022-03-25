@@ -25,6 +25,7 @@ const {
     allSorts,
     allFilters,
     uniqueValues,
+    defaultValues,
 } = allConfigs;
 
 router.post(allPostRoutes, async (req, res, next) => {
@@ -36,8 +37,7 @@ router.post(allPostRoutes, async (req, res, next) => {
         phoneValue = phoneValues[operationDataType],
         emailValue = emailValues[operationDataType],
         rangeValues = allRangeValues[operationDataType];
-
-    const reqBody = returnReqBody(
+    let reqBody = returnReqBody(
         req.body,
         {
             requiredInputFilter,
@@ -52,6 +52,12 @@ router.post(allPostRoutes, async (req, res, next) => {
     );
     if (!reqBody) {
         return;
+    }
+    for (let i in defaultValues) {
+        if (i === operationDataType) {
+            reqBody = { ...reqBody, ...defaultValues[i] };
+            break;
+        }
     }
 
     try {

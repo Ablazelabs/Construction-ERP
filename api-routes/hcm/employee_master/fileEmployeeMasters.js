@@ -290,12 +290,12 @@ router.patch(allRoutes, upload.single("file"), async (req, res, next) => {
             }
         }
         // if date values sent in update data, transform them into a date value, if wrong format detected throw an error
-
         for (let i in dateValues[operationDataType]) {
             const key = dateValues[operationDataType][i];
+            console.log(updateData[key]);
             if (updateData[key]) {
                 updateData[key] = new Date(updateData[key]);
-                if (!updateData[key].getTime()) {
+                if (!(updateData[key].getTime() + 1)) {
                     throw {
                         key: key,
                         message: "please send date in yyyy/mm/dd format",

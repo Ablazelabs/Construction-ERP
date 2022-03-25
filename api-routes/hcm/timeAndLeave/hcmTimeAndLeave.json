@@ -114,7 +114,6 @@
         },
         "attendance_payroll": {
             "total_worked_hours": "number",
-            "attendance_status": "number",
             "action_date": "string",
             "delegated_username": "string",
             "attendance_abscence_type_id": "number"
@@ -124,7 +123,6 @@
         "holiday_calendar": { "is_half_day": "boolean" },
         "leave_period": {},
         "leave_plan": {
-            "leave_request_status": "number",
             "action_date": "string",
             "delegated_username": "string"
         },
@@ -154,6 +152,14 @@
         },
         "shift_schedule_hdr": {},
         "sub_shift_group": { "tolerance_minutes": "number" }
+    },
+    "defaultValues": {
+        "attendance_payroll": {
+            "attendance_status": 1
+        },
+        "leave_plan": {
+            "leave_request_status": 1
+        }
     },
     "enums": {
         "attendance_abscence_type": {

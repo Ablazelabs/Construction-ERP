@@ -41,7 +41,7 @@ router.post(allPostRoutes, async (req, res, next) => {
         emailValue = emailValues[operationDataType],
         rangeValues = allRangeValues[operationDataType];
 
-    const reqBody = returnReqBody(
+    let reqBody = returnReqBody(
         req.body,
         {
             requiredInputFilter,
@@ -57,7 +57,9 @@ router.post(allPostRoutes, async (req, res, next) => {
     if (!reqBody) {
         return;
     }
-
+    if (operationDataType === "journal_comment") {
+        reqBody.application_user_id = res.locals.id;
+    }
     try {
         const data = await post(
             reqBody,

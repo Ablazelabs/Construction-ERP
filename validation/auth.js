@@ -86,7 +86,26 @@ const authorization = {
             return true;
         }
     },
-    isUserSuper: async (id) => {},
+    isUserSuper: async (id) => {
+        const myUser = await user.findFirst({
+            where: {
+                id,
+                role: {
+                    privileges: { some: { action: "super" } },
+                },
+            },
+            select: {
+                role: {
+                    select: {
+                        privileges: {
+                            select: { action: true },
+                        },
+                    },
+                },
+            },
+        });
+        return Boolean(myUser);
+    },
     authenticate: async (req, res, next) => {
         const requestRoute = req.path.split("/").pop();
         const requestPath = req.path;

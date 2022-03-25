@@ -136,4 +136,23 @@ const projectIdSetter = async () => {
         });
     }
 };
-projectIdSetter();
+// projectIdSetter();
+
+const prismaIntegratedFn = async () => {
+    const a = new Date();
+    await user.findFirst({
+        where: { roleId: { not: null } },
+        include: { role: true },
+    });
+    console.log("taken time - ", 1, " - ", new Date() - a);
+};
+
+const promiseAll = async () => {
+    const data = await Promise.all([
+        user.update({ where: { id: 1 }, data: { username: "yolo" } }),
+        user.update({ where: { id: 1 }, data: { normalized_username: 4 } }),
+    ]);
+    console.table(data);
+};
+
+promiseAll();

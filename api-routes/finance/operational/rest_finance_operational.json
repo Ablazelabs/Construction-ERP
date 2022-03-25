@@ -74,8 +74,7 @@
             "chart_of_account_id": "number"
         },
         "journal_comment": {
-            "comment": "string",
-            "application_user_id": "number"
+            "comment": "string"
         },
         "number_tracker": {
             "starting_number": "number",

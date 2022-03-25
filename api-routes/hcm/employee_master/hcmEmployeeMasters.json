@@ -185,7 +185,6 @@
         "leave_assignment": {
             "is_half_day": "boolean",
             "leave_assignment_type": "number",
-            "leave_request_status": "number",
             "action_date": "string",
             "delegated_user_name": "string",
             "attendance_abscence_type_id": "number"
@@ -195,7 +194,6 @@
             "from_year": "number",
             "to_year": "number",
             "number_of_days": "number",
-            "leave_request_status": "number",
             "action_date": "string",
             "delegated_user_name": "string"
         },
@@ -212,6 +210,14 @@
         },
         "service_allowance_pay": { "employee_id": "number" },
         "shift_assignment": {}
+    },
+    "defaultValues": {
+        "leave_assignment": {
+            "leave_request_status": 1
+        },
+        "leave_transfer": {
+            "leave_request_status": 1
+        }
     },
     "allRangeValues": {
         "employee_id_range": {

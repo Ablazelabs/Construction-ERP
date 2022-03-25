@@ -1,7 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const { error } = require("../../../config/config");
-const { post, get, patch } = require("../../../services/operational_data");
+const {
+    post,
+    get,
+    patch,
+    getProjectId,
+} = require("../../../services/operational_data");
 
 const {
     returnReqBody,
@@ -100,6 +105,9 @@ router.get(allRoutes, async (req, res, next) => {
         console.log(e);
         error("database", "error", next, 500);
     }
+});
+router.get("/project/project_id", async (req, res, next) => {
+    res.json({ project_id: await getProjectId() });
 });
 router.patch(allRoutes, async (req, res, next) => {
     const operationDataType = req.path.split("/").pop();

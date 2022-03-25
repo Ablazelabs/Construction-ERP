@@ -84,7 +84,7 @@ router.get("/payroll_slip", async (req, res, next) => {
         const document = {
             data: {},
             path: "./output.pdf",
-            type: "buffer",
+            // type: "buffer",
         };
         let constructedPdf = [];
         let buff;
