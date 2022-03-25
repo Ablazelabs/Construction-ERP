@@ -1,0 +1,541 @@
+{
+    "allInputFilters": {
+        "job_category": { "category_description": "string" },
+        "job_safety_equipment": {
+            "safety_equipment_id": "number",
+            "job_title_id": "number"
+        },
+        "job_title": { "title_name": "string" },
+        "safety_equipment": { "name": "string" },
+        "business_unit": { "name": "string" },
+        "company": { "code": "string", "name": "string" },
+        "location": { "location_name": "string", "address_1": "string" },
+        "company_primary_contact": {
+            "name": "string",
+            "phone": "string"
+        },
+        "external_applicant": {
+            "applicant_name": "string",
+            "father_name": "string",
+            "gender": "number",
+            "training_type_id": "number"
+        },
+        "vacancy": {
+            "number_of_position": "number",
+            "vacancy_status": "number",
+            "vacancy_type": "number",
+            "job_title_id": "number"
+        },
+        "vacancy_applicant": {
+            "name": "string",
+            "application_date": "string",
+            "application_status": "number",
+            "is_employee": "number",
+            "vacancy_id": "number"
+        },
+        "vacancy_examiner": { "vacancy_id": "number", "employee_id": "number" },
+        "vacancy_internal_applicant": {
+            "employee_id": "number",
+            "vacancy_id": "number"
+        },
+        "vacancy_request_reason": { "reason": "string" }
+    },
+    "enums": {
+        "business_unit": {},
+        "location": {},
+        "job_title": {},
+        "job_category": {},
+        "job_safety_equipment": {},
+        "safety_equipment": {},
+        "company": {},
+        "company_primary_contact": {},
+        "external_applicant": {
+            "gender": ["male", "female"],
+            "marital_status": ["Single", "Married", "Widowed", "Divorced"]
+        },
+        "vacancy": {
+            "vacancy_type": ["Internal", "External", "Both"],
+            "vacancy_status": [
+                "Draft",
+                "Approved",
+                "Rejected",
+                "Published",
+                "Closed",
+                "Locked"
+            ]
+        },
+        "vacancy_applicant": {
+            "application_status": ["Pending", "Selected", "Hired", "Accepted"],
+            "is_employee": ["Employee", "ExternalApplicant"]
+        },
+        "vacancy_examiner": {},
+        "vacancy_internal_applicant": {},
+        "vacancy_request_reason": {}
+    },
+    "allOptionalInputFilters": {
+        "job_category": {},
+        "job_safety_equipment": {},
+        "job_title": {
+            "job_specification": "string",
+            "min_experience": "number",
+            "paygrade_id": "number",
+            "training_type_id": "number",
+            "job_category_id": "number"
+        },
+        "safety_equipment": {},
+        "business_unit": {
+            "parent_id": "number",
+            "is_root": "boolean",
+            "cost_center_id": "number",
+            "employee_id": "number"
+        },
+        "company": {
+            "country_id": "number",
+            "currency_id": "number",
+            "logo": "string"
+        },
+        "location": {
+            "address_2": "string",
+            "city": "string",
+            "state_or_province": "string",
+            "zip_or_portal_code": "string",
+            "phone": "string",
+            "fax": "string",
+            "website": "string",
+            "email": "string"
+        },
+        "company_primary_contact": {
+            "email": "string",
+            "location_id": "number"
+        },
+        "external_applicant": {
+            "grand_father_name": "string",
+            "mobile_number": "string",
+            "email": "string",
+            "experience_year": "number",
+            "marital_status": "number",
+            "file": "string",
+            "name": "string",
+            "type": "string"
+        },
+        "vacancy": {
+            "opening_date": "string",
+            "closing_date": "string",
+            "action_date": "string",
+            "requested_by": "string",
+            "approved_by": "string",
+            "remark": "string",
+            "vacancy_request_reason_id": "number"
+        },
+        "vacancy_applicant": {
+            "remark": "string",
+            "scale": "number",
+            "result": "number",
+            "external_applicant_id": "number",
+            "employee_id": "number"
+        },
+        "vacancy_examiner": {},
+        "vacancy_internal_applicant": {},
+        "vacancy_request_reason": {}
+    },
+    "allRangeValues": {
+        "job_title": { "min_experience": [0, 40] },
+        "external_applicant": { "experience_year": [0, 1000000000] },
+        "vacancy": { "number_of_position": [1, 1000000000] }
+    },
+    "phoneValues": {
+        "business_unit": [],
+        "location": ["phone"],
+        "job_title": [],
+        "job_category": [],
+        "job_safety_equipment": [],
+        "safety_equipment": [],
+        "company": [],
+        "company_primary_contact": ["phone"],
+        "external_applicant": ["mobile_number"],
+        "vacancy_examiner": [],
+        "vacancy_internal_applicant": [],
+        "vacancy_request_reason": []
+    },
+    "emailValues": {
+        "business_unit": [],
+        "location": ["email"],
+        "job_title": [],
+        "job_category": [],
+        "job_safety_equipment": [],
+        "safety_equipment": [],
+        "company": [],
+        "company_primary_contact": ["email"],
+        "external_applicant": ["email"]
+    },
+    "dateValues": {
+        "business_unit": [],
+        "location": [],
+        "job_title": [],
+        "job_category": [],
+        "job_safety_equipment": [],
+        "safety_equipment": [],
+        "company": [],
+        "company_primary_contact": [],
+        "vacancy": ["opening_date", "closing_date", "action_date"],
+        "vacancy_applicant": ["application_date"]
+    },
+    "allProjections": {
+        "job_category": { "id": true, "category_description": true },
+        "job_safety_equipment": {
+            "id": true,
+            "safety_equipment": true,
+            "job_title": true
+        },
+        "job_title": {
+            "id": true,
+            "title_name": true,
+            "job_specification": true,
+            "min_experience": true,
+            "paygrade": true,
+            "training_type": true,
+            "job_category": true
+        },
+        "safety_equipment": { "id": true, "name": true },
+        "business_unit": {
+            "id": true,
+            "name": true,
+            "parent_id": true,
+            "is_root": true,
+            "cost_center": true,
+            "employee": true
+        },
+        "company": {
+            "id": true,
+            "code": true,
+            "name": true,
+            "logo": true,
+            "country": true,
+            "currency": true
+        },
+        "location": {
+            "id": true,
+            "location_name": true,
+            "address_1": true,
+            "address_2": true,
+            "city": true,
+            "state_or_province": true,
+            "zip_or_portal_code": true,
+            "phone": true,
+            "fax": true,
+            "website": true,
+            "email": true
+        },
+        "company_primary_contact": {
+            "id": true,
+            "name": true,
+            "phone": true,
+            "email": true,
+            "location": true
+        },
+        "external_applicant": {
+            "id": true,
+            "applicant_name": true,
+            "father_name": true,
+            "grand_father_name": true,
+            "mobile_number": true,
+            "email": true,
+            "experience_year": true,
+            "gender": true,
+            "marital_status": true,
+            "file": true,
+            "name": true,
+            "type": true,
+            "training_type": true
+        },
+        "vacancy": {
+            "id": true,
+            "number_of_position": true,
+            "vacancy_status": true,
+            "opening_date": true,
+            "closing_date": true,
+            "action_date": true,
+            "vacancy_type": true,
+            "requested_by": true,
+            "approved_by": true,
+            "remark": true,
+            "job_title": true,
+            "vacancy_request_reason": true
+        },
+        "vacancy_applicant": {
+            "id": true,
+            "name": true,
+            "application_date": true,
+            "remark": true,
+            "scale": true,
+            "result": true,
+            "application_status": true,
+            "is_employee": true,
+            "external_applicant": true,
+            "employee": true,
+            "vacancy": true
+        },
+        "vacancy_examiner": { "id": true, "vacancy": true, "employee": true },
+        "vacancy_internal_applicant": {
+            "id": true,
+            "employee": true,
+            "vacancy": true
+        },
+        "vacancy_request_reason": { "id": true, "reason": true }
+    },
+    "allFilters": {
+        "job_category": { "id": "number", "category_description": "string" },
+        "job_safety_equipment": {
+            "id": "number",
+            "safety_equipment_id": "number",
+            "job_title_id": "number"
+        },
+        "job_title": {
+            "id": "number",
+            "title_name": "string",
+            "job_specification": "string",
+            "min_experience": "number",
+            "paygrade_id": "number",
+            "training_type_id": "number",
+            "job_category_id": "number"
+        },
+        "safety_equipment": { "id": "number", "name": "string" },
+        "business_unit": {
+            "id": "number",
+            "name": "string",
+            "parent_id": "number",
+            "is_root": "boolean",
+            "cost_center_id": "number",
+            "employee_id": "number"
+        },
+        "company": {
+            "id": "number",
+            "code": "string",
+            "name": "string",
+            "country_id": "number",
+            "currency_id": "number"
+        },
+        "location": {
+            "id": "number",
+            "location_name": "string",
+            "address_1": "string",
+            "address_2": "string",
+            "city": "string",
+            "state_or_province": "string",
+            "zip_or_portal_code": "string",
+            "phone": "string",
+            "fax": "string",
+            "website": "string",
+            "email": "string"
+        },
+        "company_primary_contact": {
+            "id": "number",
+            "name": "string",
+            "phone": "string",
+            "email": "string",
+            "location_id": "number"
+        },
+        "external_applicant": {
+            "id": "number",
+            "applicant_name": "string",
+            "father_name": "string",
+            "grand_father_name": "string",
+            "mobile_number": "string",
+            "email": "string",
+            "experience_year": "number",
+            "gender": "number",
+            "marital_status": "number",
+            "file": "string",
+            "name": "string",
+            "type": "string",
+            "training_type_id": "number"
+        },
+        "vacancy": {
+            "id": "number",
+            "number_of_position": "number",
+            "vacancy_status": "number",
+            "vacancy_type": "number",
+            "requested_by": "string",
+            "approved_by": "string",
+            "remark": "string",
+            "job_title_id": "number",
+            "vacancy_request_reason_id": "number"
+        },
+        "vacancy_applicant": {
+            "id": "number",
+            "name": "string",
+            "remark": "string",
+            "scale": "number",
+            "result": "number",
+            "application_status": "number",
+            "is_employee": "number",
+            "external_applicant_id": "number",
+            "employee_id": "number",
+            "vacancy_id": "number"
+        },
+        "vacancy_examiner": {
+            "id": "number",
+            "vacancy_id": "number",
+            "employee_id": "number"
+        },
+        "vacancy_internal_applicant": {
+            "id": "number",
+            "employee_id": "number",
+            "vacancy_id": "number"
+        },
+        "vacancy_request_reason": { "id": "number", "reason": "string" }
+    },
+    "allSorts": {
+        "job_category": { "id": "number", "category_description": "number" },
+        "job_safety_equipment": {
+            "id": "number",
+            "safety_equipment_id": "number",
+            "job_title_id": "number"
+        },
+        "job_title": {
+            "id": "number",
+            "title_name": "number",
+            "job_specification": "number",
+            "min_experience": "number",
+            "paygrade_id": "number",
+            "training_type_id": "number",
+            "job_category_id": "number"
+        },
+        "safety_equipment": { "id": "number", "name": "number" },
+        "business_unit": {
+            "id": "number",
+            "name": "number",
+            "parent_id": "number",
+            "is_root": "number",
+            "cost_center_id": "number",
+            "employee_id": "number"
+        },
+        "company": {
+            "id": "number",
+            "code": "number",
+            "name": "number",
+            "country_id": "number",
+            "currency_id": "number",
+            "logo": "number"
+        },
+        "location": {
+            "id": "number",
+            "location_name": "number",
+            "address_1": "number",
+            "address_2": "number",
+            "city": "number",
+            "state_or_province": "number",
+            "zip_or_portal_code": "number",
+            "phone": "number",
+            "fax": "number",
+            "website": "number",
+            "email": "number"
+        },
+        "company_primary_contact": {
+            "id": "number",
+            "name": "number",
+            "phone": "number",
+            "email": "number",
+            "location_id": "number"
+        },
+        "external_applicant": {
+            "id": "number",
+            "applicant_name": "number",
+            "father_name": "number",
+            "grand_father_name": "number",
+            "mobile_number": "number",
+            "email": "number",
+            "experience_year": "number",
+            "gender": "number",
+            "marital_status": "number",
+            "file": "number",
+            "name": "number",
+            "type": "number",
+            "training_type_id": "number"
+        },
+        "vacancy": {
+            "id": "number",
+            "number_of_position": "number",
+            "vacancy_status": "number",
+            "opening_date": "number",
+            "closing_date": "number",
+            "action_date": "number",
+            "vacancy_type": "number",
+            "requested_by": "number",
+            "approved_by": "number",
+            "remark": "number",
+            "job_title_id": "number",
+            "vacancy_request_reason_id": "number"
+        },
+        "vacancy_applicant": {
+            "id": "number",
+            "name": "number",
+            "application_date": "number",
+            "remark": "number",
+            "scale": "number",
+            "result": "number",
+            "application_status": "number",
+            "is_employee": "number",
+            "external_applicant_id": "number",
+            "employee_id": "number",
+            "vacancy_id": "number"
+        },
+        "vacancy_examiner": {
+            "id": "number",
+            "vacancy_id": "number",
+            "employee_id": "number"
+        },
+        "vacancy_internal_applicant": {
+            "id": "number",
+            "employee_id": "number",
+            "vacancy_id": "number"
+        },
+        "vacancy_request_reason": { "id": "number", "reason": "number" }
+    },
+    "allRoutes": [
+        "/job_positions/job_category",
+        "/job_positions/job_safety_equipment",
+        "/job_positions/job_title",
+        "/job_positions/safety_equipment",
+        "/company_structure/business_unit",
+        "/company_structure/company",
+        "/company_structure/location",
+        "/company_structure/company_primary_contact",
+        "/recruitment/external_applicant",
+        "/recruitment/vacancy",
+        "/recruitment/vacancy_applicant",
+        "/recruitment/vacancy_examiner",
+        "/recruitment/vacancy_internal_applicant",
+        "/recruitment/vacancy_request_reason"
+    ],
+    "allPostRoutes": [
+        "/job_positions/job_category",
+        "/job_positions/job_safety_equipment",
+        "/job_positions/job_title",
+        "/job_positions/safety_equipment",
+        "/company_structure/business_unit",
+        "/company_structure/location",
+        "/company_structure/company_primary_contact",
+        "/recruitment/vacancy",
+        "/recruitment/vacancy_applicant",
+        "/recruitment/vacancy_examiner",
+        "/recruitment/vacancy_internal_applicant",
+        "/recruitment/vacancy_request_reason"
+    ],
+    "uniqueValues": {
+        "job_category": [],
+        "job_safety_equipment": [],
+        "job_title": [],
+        "safety_equipment": [],
+        "business_unit": [],
+        "company": [],
+        "location": [],
+        "company_primary_contact": [],
+        "external_applicant": [],
+        "vacancy": [],
+        "vacancy_applicant": [],
+        "vacancy_examiner": [],
+        "vacancy_internal_applicant": [],
+        "vacancy_request_reason": []
+    }
+}

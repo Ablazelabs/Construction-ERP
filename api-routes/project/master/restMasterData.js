@@ -1,13 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const { error } = require("../../../config/config");
-const inputFilter = require("../../../validation/inputFilter");
+const { post, get, patch } = require("../../../services/restMasterData");
 const {
-    post,
-    get,
-    patch,
-    deleter,
-} = require("../../../services/restMasterData");
+    returnReqBody,
+    returnGetData,
+    returnPatchData,
+} = require("../../../validation/basicValidators");
+
+const defaultDeleter = require("../../defaultDeleter");
+
 const allRoutes = [
     "/equipment",
     "/evaluation",
@@ -19,44 +21,42 @@ const allRoutes = [
     "/work_category",
     "/document_category",
 ];
+const requiredInputFilter = {
+    name: "string",
+};
 router.post(allRoutes, async (req, res, next) => {
     const masterDataType = req.path.split("/").pop();
     const color = masterDataType == "priority" ? { color: "string" } : {};
+    const optionalInputFilter = {
+        ...color,
+        description: "string",
+    };
+    const dateValue = {},
+        myEnums = {},
+        phoneValue = [],
+        emailValue = [],
+        rangeValues = {};
+    const reqBody = returnReqBody(
+        req.body,
+        {
+            requiredInputFilter,
+            optionalInputFilter,
+            dateValue,
+            myEnums,
+            phoneValue,
+            emailValue,
+            rangeValues,
+        },
+        next
+    );
     try {
-        inputFilter(
-            {
-                name: "string",
-                startDate: "string",
-                endDate: "string",
-            },
-            {
-                isProtectedForEdit: "boolean",
-                ...color,
-            },
-            req.body,
-            4
+        const data = await post(
+            reqBody,
+            masterDataType,
+            res.locals.id,
+            ["name"],
+            next
         );
-        inputFilter({}, { description: "string" }, req.body, 0, 300);
-        req.body.startDate = new Date(req.body.startDate);
-        req.body.endDate = new Date(req.body.endDate);
-        if (!req.body.startDate.getTime()) {
-            throw {
-                key: "startDate",
-                message: "please send date in yyyy/mm/dd format",
-            };
-        }
-        if (!req.body.endDate.getTime()) {
-            throw {
-                key: "endDate",
-                message: "please send date in yyyy/mm/dd format",
-            };
-        }
-    } catch (e) {
-        error(e.key, e.message, next, 400);
-        return;
-    }
-    try {
-        const data = await post(req.body, res.locals.id, masterDataType, next);
         if (data == false) {
             return;
         }
@@ -67,78 +67,37 @@ router.post(allRoutes, async (req, res, next) => {
     }
 });
 router.get(allRoutes, async (req, res, next) => {
-    let filter = {};
-    let sort = {};
-    let skip = 0;
-    let limit = 0;
     const masterDataType = req.path.split("/").pop();
     const color =
         masterDataType == "priority"
             ? [{ color: "string" }, { color: "number" }, { color: true }]
             : [{}, {}, {}];
-    try {
-        inputFilter(
-            { limit: "number" },
-            { skip: "number", filter: "object", sort: "object" },
-            req.body
-        );
-        limit = req.body.limit;
-        skip = req.body.skip || 0;
-        if (req.body.filter) {
-            filter = inputFilter(
-                {},
-                {
-                    name: "string",
-                    description: "string",
-                    ...color[0],
-                },
-                req.body.filter
-            );
-        }
-        if (req.body.sort) {
-            //send 0 for decending
-            //send 1 for ascending
-            sort = inputFilter(
-                {},
-                {
-                    name: "number",
-                    id: "number",
-                    description: "number",
-                    startDate: "number",
-                    endDate: "number",
-                    creationDate: "number",
-                    revisionDate: "number",
-                    isProtectedForEdit: "number",
-                    ...color[1],
-                },
-                req.body.sort
-            );
-        }
-    } catch (e) {
-        error(e.key, e.message, next);
-        return;
-    }
-    const projection = {
+    const filters = {
+        name: "string",
+        description: "string",
+        ...color[0],
+    };
+    const sorts = {
+        name: "number",
+        id: "number",
+        description: "number",
+        ...color[1],
+    };
+    const projections = {
         name: true,
         description: true,
         id: true,
-        startDate: true,
-        endDate: true,
-        creationDate: true,
-        createdBy: true,
-        revisionDate: true,
-        revisedBy: true,
-        isProtectedForEdit: true,
         ...color[2],
     };
-    let queryFilter = {};
-    for (let i in filter) {
-        queryFilter[i] = { contains: filter[i] };
+    const getData = returnGetData(
+        req.body,
+        { filters, sorts, projections },
+        next
+    );
+    if (!getData) {
+        return;
     }
-    let querySort = {};
-    for (let i in sort) {
-        querySort[i] = sort[i] ? "asc" : "desc";
-    }
+    const { queryFilter, querySort, limit, skip, projection } = getData;
     try {
         res.json(
             await get(
@@ -156,56 +115,34 @@ router.get(allRoutes, async (req, res, next) => {
     }
 });
 router.patch(allRoutes, async (req, res, next) => {
-    let updateData = {};
     const masterDataType = req.path.split("/").pop();
     const color = masterDataType == "priority" ? { color: "string" } : {};
-    try {
-        inputFilter({ id: "number", updateData: "object" }, {}, req.body);
-
-        updateData = inputFilter(
-            {},
-            {
-                name: "string",
-                description: "string",
-                startDate: "string",
-                endDate: "string",
-                isProtectedForEdit: "boolean",
-                ...color,
-            },
-            req.body.updateData
-        );
-        if (updateData.startDate) {
-            updateData.startDate = new Date(updateData.startDate);
-            if (!updateData.startDate.getTime()) {
-                throw {
-                    key: "startDate",
-                    message: "please send date in yyyy/mm/dd format",
-                };
-            }
-        }
-        if (updateData.endDate) {
-            updateData.endDate = new Date(updateData.endDate);
-            if (!updateData.endDate.getTime()) {
-                throw {
-                    key: "endDate",
-                    message: "please send date in yyyy/mm/dd format",
-                };
-            }
-        }
-    } catch (e) {
-        error(e.key, e.message, next);
+    const optionalInputFilter = {
+        ...color,
+        description: "string",
+    };
+    const dateValue = {},
+        myEnums = {},
+        phoneValue = [],
+        emailValue = [],
+        rangeValues = {};
+    const data = returnPatchData(
+        req.body,
+        {
+            requiredInputFilter,
+            optionalInputFilter,
+            dateValue,
+            myEnums,
+            phoneValue,
+            emailValue,
+            rangeValues,
+        },
+        next
+    );
+    if (!data) {
         return;
     }
-    if (Object.keys(updateData).length == 0) {
-        error("updateData", "no data has been sent for update", next);
-        return;
-    }
-    let updateDataProjection = {};
-    for (let i in updateData) {
-        if (updateData[i]) {
-            updateDataProjection[i] = true;
-        }
-    }
+    const { updateData, updateDataProjection } = data;
     try {
         const data = await patch(
             updateDataProjection,
@@ -213,6 +150,7 @@ router.patch(allRoutes, async (req, res, next) => {
             updateData,
             masterDataType,
             res.locals.id,
+            ["name"],
             next
         );
         if (data == false) {
@@ -225,20 +163,5 @@ router.patch(allRoutes, async (req, res, next) => {
         return;
     }
 });
-router.delete(allRoutes, async (req, res, next) => {
-    const masterDataType = req.path.split("/").pop();
-    try {
-        inputFilter({ id: "number" }, {}, req.body);
-    } catch (e) {
-        error(e.key, e.message, next);
-        return;
-    }
-    try {
-        res.json(await deleter(req.body, masterDataType));
-    } catch (e) {
-        console.log(e);
-        error("database", "error", next, 500);
-        return;
-    }
-});
+router.delete(allRoutes, defaultDeleter);
 module.exports = router;

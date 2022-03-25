@@ -1,0 +1,3170 @@
+{
+    "/hcm/time_and_leave/attendance_abscence_type": {
+        "post": {
+            "summary": "creates a new attendance_abscence_type",
+            "tags": ["attendance_abscence_type"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "aa_description": { "type": "String @unique" },
+                                "aa_type": { "type": "Int" },
+                                "is_with_quota": { "type": "Boolean?" },
+                                "is_with_pay": { "type": "Boolean?" },
+                                "is_annual_leave": { "type": "Boolean?" },
+                                "is_with_entitlement": { "type": "Boolean?" },
+                                "is_regular_attendance": { "type": "Boolean?" },
+                                "number_of_days": { "type": "Int?" },
+                                "isProtectedForEdit": { "type": "boolean" },
+                                "number_of_increment_each_year": {
+                                    "type": "Float?"
+                                },
+                                "is_absence_includes_day_off": {
+                                    "type": "Boolean?"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected attendance_abscence_types",
+            "tags": ["attendance_abscence_type"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "aa_description": {
+                                            "type": "String @unique"
+                                        },
+                                        "aa_type": { "type": "Int" },
+                                        "is_with_quota": { "type": "Boolean?" },
+                                        "is_with_pay": { "type": "Boolean?" },
+                                        "is_annual_leave": {
+                                            "type": "Boolean?"
+                                        },
+                                        "is_with_entitlement": {
+                                            "type": "Boolean?"
+                                        },
+                                        "is_regular_attendance": {
+                                            "type": "Boolean?"
+                                        },
+                                        "number_of_days": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        },
+                                        "number_of_increment_each_year": {
+                                            "type": "Float?"
+                                        },
+                                        "is_absence_includes_day_off": {
+                                            "type": "Boolean?"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "aa_description": { "type": "Int" },
+                                        "is_with_quota": { "type": "Int" },
+                                        "is_with_pay": { "type": "Int" },
+                                        "is_annual_leave": { "type": "Int" },
+                                        "is_with_entitlement": {
+                                            "type": "Int"
+                                        },
+                                        "is_regular_attendance": {
+                                            "type": "Int"
+                                        },
+                                        "number_of_days": { "type": "Int" },
+                                        "number_of_increment_each_year": {
+                                            "type": "number"
+                                        },
+                                        "is_absence_includes_day_off": {
+                                            "type": "number"
+                                        },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "aa_description": {
+                                        "type": "String @unique"
+                                    },
+                                    "aa_type": { "type": "Int" },
+                                    "is_with_quota": { "type": "Boolean?" },
+                                    "is_with_pay": { "type": "Boolean?" },
+                                    "is_annual_leave": { "type": "Boolean?" },
+                                    "is_with_entitlement": {
+                                        "type": "Boolean?"
+                                    },
+                                    "is_regular_attendance": {
+                                        "type": "Boolean?"
+                                    },
+                                    "number_of_days": { "type": "Int?" },
+                                    "number_of_increment_each_year": {
+                                        "type": "Float?"
+                                    },
+                                    "is_absence_includes_day_off": {
+                                        "type": "Boolean?"
+                                    },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a attendance_abscence_type",
+            "tags": ["attendance_abscence_type"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "aa_description": {
+                                            "type": "String @unique"
+                                        },
+                                        "aa_type": { "type": "Int" },
+                                        "is_with_quota": { "type": "Boolean?" },
+                                        "is_with_pay": { "type": "Boolean?" },
+                                        "is_annual_leave": {
+                                            "type": "Boolean?"
+                                        },
+                                        "is_with_entitlement": {
+                                            "type": "Boolean?"
+                                        },
+                                        "is_regular_attendance": {
+                                            "type": "Boolean?"
+                                        },
+                                        "number_of_days": { "type": "Int?" },
+                                        "number_of_increment_each_year": {
+                                            "type": "Float?"
+                                        },
+                                        "is_absence_includes_day_off": {
+                                            "type": "Boolean?"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a attendance_abscence_type",
+            "tags": ["attendance_abscence_type"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/hcm/time_and_leave/attendance_captured": {
+        "post": {
+            "summary": "creates a new attendance_captured",
+            "tags": ["attendance_captured"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "date": { "type": "DateTime" },
+                                "in_out_mode": { "type": "Int" },
+                                "punch_device_id": { "type": "Int?" },
+                                "employee_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected attendance_captureds",
+            "tags": ["attendance_captured"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "in_out_mode": { "type": "Int" },
+                                        "punch_device_id": { "type": "Int?" },
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "date": { "type": "Int" },
+                                        "in_out_mode": { "type": "Int" },
+                                        "punch_device_id": { "type": "Int" },
+                                        "employee_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "date": { "type": "DateTime" },
+                                    "in_out_mode": { "type": "Int" },
+                                    "punch_device_id": { "type": "Int?" },
+                                    "employee_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a attendance_captured",
+            "tags": ["attendance_captured"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "date": { "type": "DateTime" },
+                                        "in_out_mode": { "type": "Int" },
+                                        "punch_device_id": { "type": "Int?" },
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a attendance_captured",
+            "tags": ["attendance_captured"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/hcm/time_and_leave/attendance_payroll": {
+        "post": {
+            "summary": "creates a new attendance_payroll",
+            "tags": ["attendance_payroll"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "date": { "type": "DateTime" },
+                                "total_worked_hours": { "type": "Float?" },
+                                "attendance_status": { "type": "Int" },
+                                "action_date": { "type": "DateTime?" },
+                                "delegated_username": { "type": "String?" },
+                                "attendance_abscence_type_id": {
+                                    "type": "Int?"
+                                },
+                                "employee_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected attendance_payrolls",
+            "tags": ["attendance_payroll"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "attendance_status": { "type": "Int" },
+                                        "delegated_username": {
+                                            "type": "String?"
+                                        },
+                                        "attendance_abscence_type_id": {
+                                            "type": "Int?"
+                                        },
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "date": { "type": "Int" },
+                                        "total_worked_hours": { "type": "Int" },
+                                        "attendance_status": { "type": "Int" },
+                                        "action_date": { "type": "Int" },
+                                        "delegated_username": { "type": "Int" },
+                                        "attendance_abscence_type_id": {
+                                            "type": "Int"
+                                        },
+                                        "employee_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "date": { "type": "DateTime" },
+                                    "total_worked_hours": { "type": "Float?" },
+                                    "attendance_status": { "type": "Int" },
+                                    "action_date": { "type": "DateTime?" },
+                                    "delegated_username": { "type": "String?" },
+                                    "attendance_abscence_type_id": {
+                                        "type": "Int?"
+                                    },
+                                    "employee_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a attendance_payroll",
+            "tags": ["attendance_payroll"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "date": { "type": "DateTime" },
+                                        "total_worked_hours": {
+                                            "type": "Float?"
+                                        },
+                                        "attendance_status": { "type": "Int" },
+                                        "action_date": { "type": "DateTime?" },
+                                        "delegated_username": {
+                                            "type": "String?"
+                                        },
+                                        "attendance_abscence_type_id": {
+                                            "type": "Int?"
+                                        },
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a attendance_payroll",
+            "tags": ["attendance_payroll"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/hcm/time_and_leave/device_id_mapping": {
+        "post": {
+            "summary": "creates a new device_id_mapping",
+            "tags": ["device_id_mapping"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "finger_print_id": { "type": "String @unique" },
+                                "employee_id": { "type": "Int @unique" },
+                                "punch_device_id": { "type": "Int?" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected device_id_mappings",
+            "tags": ["device_id_mapping"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "finger_print_id": {
+                                            "type": "String @unique"
+                                        },
+                                        "employee_id": {
+                                            "type": "Int @unique"
+                                        },
+                                        "punch_device_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "finger_print_id": { "type": "Int" },
+                                        "employee_id": { "type": "Int" },
+                                        "punch_device_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "finger_print_id": {
+                                        "type": "String @unique"
+                                    },
+                                    "employee_id": { "type": "Int @unique" },
+                                    "punch_device_id": { "type": "Int?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a device_id_mapping",
+            "tags": ["device_id_mapping"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "finger_print_id": {
+                                            "type": "String @unique"
+                                        },
+                                        "employee_id": {
+                                            "type": "Int @unique"
+                                        },
+                                        "punch_device_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a device_id_mapping",
+            "tags": ["device_id_mapping"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/hcm/time_and_leave/holiday": {
+        "post": {
+            "summary": "creates a new holiday",
+            "tags": ["holiday"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "holiday_name": { "type": "String @unique" },
+                                "is_recurring": { "type": "Boolean?" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected holidays",
+            "tags": ["holiday"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "holiday_name": {
+                                            "type": "String @unique"
+                                        },
+                                        "is_recurring": { "type": "Boolean?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "holiday_name": { "type": "Int" },
+                                        "is_recurring": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "holiday_name": {
+                                        "type": "String @unique"
+                                    },
+                                    "is_recurring": { "type": "Boolean?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a holiday",
+            "tags": ["holiday"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "holiday_name": {
+                                            "type": "String @unique"
+                                        },
+                                        "is_recurring": { "type": "Boolean?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a holiday",
+            "tags": ["holiday"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/hcm/time_and_leave/holiday_calendar": {
+        "post": {
+            "summary": "creates a new holiday_calendar",
+            "tags": ["holiday_calendar"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "date": { "type": "DateTime @unique" },
+                                "is_half_day": { "type": "Boolean?" },
+                                "holiday_id": { "type": "Int @unique" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected holiday_calendars",
+            "tags": ["holiday_calendar"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "is_half_day": { "type": "Boolean?" },
+                                        "holiday_id": { "type": "Int @unique" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "date": { "type": "Int" },
+                                        "is_half_day": { "type": "Int" },
+                                        "holiday_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "date": { "type": "DateTime @unique" },
+                                    "is_half_day": { "type": "Boolean?" },
+                                    "holiday_id": { "type": "Int @unique" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a holiday_calendar",
+            "tags": ["holiday_calendar"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "date": { "type": "DateTime @unique" },
+                                        "is_half_day": { "type": "Boolean?" },
+                                        "holiday_id": { "type": "Int @unique" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a holiday_calendar",
+            "tags": ["holiday_calendar"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/hcm/time_and_leave/leave_period": {
+        "post": {
+            "summary": "creates a new leave_period",
+            "tags": ["leave_period"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "date": { "type": "DateTime" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected leave_periods",
+            "tags": ["leave_period"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "date": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "date": { "type": "DateTime" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a leave_period",
+            "tags": ["leave_period"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "date": { "type": "DateTime" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a leave_period",
+            "tags": ["leave_period"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/hcm/time_and_leave/leave_plan": {
+        "post": {
+            "summary": "creates a new leave_plan",
+            "tags": ["leave_plan"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "is_half_day": { "type": "Boolean" },
+                                "leave_request_status": { "type": "Int" },
+                                "startDate": { "type": "DateTime?" },
+                                "endDate": { "type": "DateTime?" },
+                                "action_date": { "type": "DateTime?" },
+                                "delegated_username": { "type": "String?" },
+                                "employee_id": { "type": "Int @unique" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected leave_plans",
+            "tags": ["leave_plan"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "is_half_day": { "type": "Boolean" },
+                                        "leave_request_status": {
+                                            "type": "Int"
+                                        },
+                                        "delegated_username": {
+                                            "type": "String?"
+                                        },
+                                        "employee_id": {
+                                            "type": "Int @unique"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "is_half_day": { "type": "Int" },
+                                        "leave_request_status": {
+                                            "type": "Int"
+                                        },
+                                        "action_date": { "type": "Int" },
+                                        "delegated_username": { "type": "Int" },
+                                        "employee_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "is_half_day": { "type": "Boolean" },
+                                    "leave_request_status": { "type": "Int" },
+                                    "action_date": { "type": "DateTime?" },
+                                    "delegated_username": { "type": "String?" },
+                                    "employee_id": { "type": "Int @unique" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a leave_plan",
+            "tags": ["leave_plan"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "is_half_day": { "type": "Boolean" },
+                                        "leave_request_status": {
+                                            "type": "Int"
+                                        },
+                                        "startDate": { "type": "DateTime?" },
+                                        "endDate": { "type": "DateTime?" },
+                                        "action_date": { "type": "DateTime?" },
+                                        "delegated_username": {
+                                            "type": "String?"
+                                        },
+                                        "employee_id": {
+                                            "type": "Int @unique"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a leave_plan",
+            "tags": ["leave_plan"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/hcm/time_and_leave/punch": {
+        "post": {
+            "summary": "creates a new punch",
+            "tags": ["punch"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "punch_date": { "type": "DateTime" },
+                                "in_out_mode": { "type": "Int?" },
+                                "is_manual": { "type": "Boolean?" },
+                                "imported_by": { "type": "String?" },
+                                "approved_by": { "type": "String?" },
+                                "verify_mode": { "type": "Int?" },
+                                "imported_date": { "type": "DateTime?" },
+                                "remark": { "type": "String?" },
+                                "punch_device_id": { "type": "Int" },
+                                "employee_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected punchs",
+            "tags": ["punch"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "in_out_mode": { "type": "Int?" },
+                                        "is_manual": { "type": "Boolean?" },
+                                        "imported_by": { "type": "String?" },
+                                        "approved_by": { "type": "String?" },
+                                        "verify_mode": { "type": "Int?" },
+                                        "remark": { "type": "String?" },
+                                        "punch_device_id": { "type": "Int" },
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "punch_date": { "type": "Int" },
+                                        "in_out_mode": { "type": "Int" },
+                                        "is_manual": { "type": "Int" },
+                                        "imported_by": { "type": "Int" },
+                                        "approved_by": { "type": "Int" },
+                                        "verify_mode": { "type": "Int" },
+                                        "imported_date": { "type": "Int" },
+                                        "remark": { "type": "Int" },
+                                        "punch_device_id": { "type": "Int" },
+                                        "employee_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "punch_date": { "type": "DateTime" },
+                                    "in_out_mode": { "type": "Int?" },
+                                    "is_manual": { "type": "Boolean?" },
+                                    "imported_by": { "type": "String?" },
+                                    "approved_by": { "type": "String?" },
+                                    "verify_mode": { "type": "Int?" },
+                                    "imported_date": { "type": "DateTime?" },
+                                    "remark": { "type": "String?" },
+                                    "punch_device_id": { "type": "Int" },
+                                    "employee_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a punch",
+            "tags": ["punch"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "punch_date": { "type": "DateTime" },
+                                        "in_out_mode": { "type": "Int?" },
+                                        "is_manual": { "type": "Boolean?" },
+                                        "imported_by": { "type": "String?" },
+                                        "approved_by": { "type": "String?" },
+                                        "verify_mode": { "type": "Int?" },
+                                        "imported_date": {
+                                            "type": "DateTime?"
+                                        },
+                                        "remark": { "type": "String?" },
+                                        "punch_device_id": { "type": "Int" },
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a punch",
+            "tags": ["punch"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/hcm/time_and_leave/punch_device": {
+        "post": {
+            "summary": "creates a new punch_device",
+            "tags": ["punch_device"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "device_name": { "type": "String @unique" },
+                                "ip_address": { "type": "String" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected punch_devices",
+            "tags": ["punch_device"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "device_name": {
+                                            "type": "String @unique"
+                                        },
+                                        "ip_address": { "type": "String" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "device_name": { "type": "Int" },
+                                        "ip_address": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "device_name": { "type": "String @unique" },
+                                    "ip_address": { "type": "String" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a punch_device",
+            "tags": ["punch_device"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "device_name": {
+                                            "type": "String @unique"
+                                        },
+                                        "ip_address": { "type": "String" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a punch_device",
+            "tags": ["punch_device"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/hcm/time_and_leave/punch_log": {
+        "post": {
+            "summary": "creates a new punch_log",
+            "tags": ["punch_log"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "imported_date": { "type": "DateTime?" },
+                                "log_remark": { "type": "String?" },
+                                "punch_device_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected punch_logs",
+            "tags": ["punch_log"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "log_remark": { "type": "String?" },
+                                        "punch_device_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "imported_date": { "type": "Int" },
+                                        "log_remark": { "type": "Int" },
+                                        "punch_device_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "imported_date": { "type": "DateTime?" },
+                                    "log_remark": { "type": "String?" },
+                                    "punch_device_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a punch_log",
+            "tags": ["punch_log"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "imported_date": {
+                                            "type": "DateTime?"
+                                        },
+                                        "log_remark": { "type": "String?" },
+                                        "punch_device_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a punch_log",
+            "tags": ["punch_log"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/hcm/time_and_leave/punch_manual_import": {
+        "post": {
+            "summary": "creates a new punch_manual_import",
+            "tags": ["punch_manual_import"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "is_processed": { "type": "Boolean?" },
+                                "remark": { "type": "String?" },
+                                "processing_date": { "type": "DateTime?" },
+                                "is_processing_started": { "type": "Boolean?" },
+                                "punch_device_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected punch_manual_imports",
+            "tags": ["punch_manual_import"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "is_processed": { "type": "Boolean?" },
+                                        "remark": { "type": "String?" },
+                                        "is_processing_started": {
+                                            "type": "Boolean?"
+                                        },
+                                        "punch_device_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "is_processed": { "type": "Int" },
+                                        "remark": { "type": "Int" },
+                                        "processing_date": { "type": "Int" },
+                                        "is_processing_started": {
+                                            "type": "Int"
+                                        },
+                                        "punch_device_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "is_processed": { "type": "Boolean?" },
+                                    "remark": { "type": "String?" },
+                                    "processing_date": { "type": "DateTime?" },
+                                    "is_processing_started": {
+                                        "type": "Boolean?"
+                                    },
+                                    "punch_device_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a punch_manual_import",
+            "tags": ["punch_manual_import"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "is_processed": { "type": "Boolean?" },
+                                        "remark": { "type": "String?" },
+                                        "processing_date": {
+                                            "type": "DateTime?"
+                                        },
+                                        "is_processing_started": {
+                                            "type": "Boolean?"
+                                        },
+                                        "punch_device_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a punch_manual_import",
+            "tags": ["punch_manual_import"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/hcm/time_and_leave/punch_time": {
+        "post": {
+            "summary": "creates a new punch_time",
+            "tags": ["punch_time"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "date": { "type": "DateTime" },
+                                "total_worked_hours": { "type": "Float?" },
+                                "employee_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected punch_times",
+            "tags": ["punch_time"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "date": { "type": "Int" },
+                                        "total_worked_hours": { "type": "Int" },
+                                        "employee_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "date": { "type": "DateTime" },
+                                    "total_worked_hours": { "type": "Float?" },
+                                    "employee_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a punch_time",
+            "tags": ["punch_time"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "date": { "type": "DateTime" },
+                                        "total_worked_hours": {
+                                            "type": "Float?"
+                                        },
+                                        "employee_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a punch_time",
+            "tags": ["punch_time"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/hcm/time_and_leave/shift_schedule_dtl": {
+        "post": {
+            "summary": "creates a new shift_schedule_dtl",
+            "tags": ["shift_schedule_dtl"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "clock_in": { "type": "Float" },
+                                "clock_out": { "type": "Float" },
+                                "min_working_hours": { "type": "Float" },
+                                "working_day": { "type": "Int" },
+                                "is_shift_span_next_day": {
+                                    "type": "Boolean?"
+                                },
+                                "is_half_day": { "type": "Boolean?" },
+                                "shift_schedule_hdr_id": { "type": "Int?" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected shift_schedule_dtls",
+            "tags": ["shift_schedule_dtl"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "working_day": { "type": "Int" },
+                                        "is_shift_span_next_day": {
+                                            "type": "Boolean?"
+                                        },
+                                        "is_half_day": { "type": "Boolean?" },
+                                        "shift_schedule_hdr_id": {
+                                            "type": "Int?"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "clock_in": { "type": "Int" },
+                                        "clock_out": { "type": "Int" },
+                                        "min_working_hours": { "type": "Int" },
+                                        "working_day": { "type": "Int" },
+                                        "is_shift_span_next_day": {
+                                            "type": "Int"
+                                        },
+                                        "is_half_day": { "type": "Int" },
+                                        "shift_schedule_hdr_id": {
+                                            "type": "Int"
+                                        },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "clock_in": { "type": "Float" },
+                                    "clock_out": { "type": "Float" },
+                                    "min_working_hours": { "type": "Float" },
+                                    "working_day": { "type": "Int" },
+                                    "is_shift_span_next_day": {
+                                        "type": "Boolean?"
+                                    },
+                                    "is_half_day": { "type": "Boolean?" },
+                                    "shift_schedule_hdr_id": { "type": "Int?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a shift_schedule_dtl",
+            "tags": ["shift_schedule_dtl"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "clock_in": { "type": "Float" },
+                                        "clock_out": { "type": "Float" },
+                                        "min_working_hours": {
+                                            "type": "Float"
+                                        },
+                                        "working_day": { "type": "Int" },
+                                        "is_shift_span_next_day": {
+                                            "type": "Boolean?"
+                                        },
+                                        "is_half_day": { "type": "Boolean?" },
+                                        "shift_schedule_hdr_id": {
+                                            "type": "Int?"
+                                        },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a shift_schedule_dtl",
+            "tags": ["shift_schedule_dtl"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/hcm/time_and_leave/shift_schedule_hdr": {
+        "post": {
+            "summary": "creates a new shift_schedule_hdr",
+            "tags": ["shift_schedule_hdr"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "shift_name": { "type": "String @unique" },
+                                "sub_shift_group_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected shift_schedule_hdrs",
+            "tags": ["shift_schedule_hdr"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "shift_name": {
+                                            "type": "String @unique"
+                                        },
+                                        "sub_shift_group_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "shift_name": { "type": "Int" },
+                                        "sub_shift_group_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "shift_name": { "type": "String @unique" },
+                                    "sub_shift_group_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a shift_schedule_hdr",
+            "tags": ["shift_schedule_hdr"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "shift_name": {
+                                            "type": "String @unique"
+                                        },
+                                        "sub_shift_group_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a shift_schedule_hdr",
+            "tags": ["shift_schedule_hdr"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/hcm/time_and_leave/sub_shift_group": {
+        "post": {
+            "summary": "creates a new sub_shift_group",
+            "tags": ["sub_shift_group"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "sub_shift_name": { "type": "String @unique" },
+                                "morning_out": { "type": "Float" },
+                                "afternoon_in": { "type": "Float" },
+                                "tolerance_minutes": { "type": "Int?" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected sub_shift_groups",
+            "tags": ["sub_shift_group"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "sub_shift_name": {
+                                            "type": "String @unique"
+                                        },
+                                        "tolerance_minutes": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "sub_shift_name": { "type": "Int" },
+                                        "morning_out": { "type": "Int" },
+                                        "afternoon_in": { "type": "Int" },
+                                        "tolerance_minutes": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "sub_shift_name": {
+                                        "type": "String @unique"
+                                    },
+                                    "morning_out": { "type": "Float" },
+                                    "afternoon_in": { "type": "Float" },
+                                    "tolerance_minutes": { "type": "Int?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a sub_shift_group",
+            "tags": ["sub_shift_group"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "sub_shift_name": {
+                                            "type": "String @unique"
+                                        },
+                                        "morning_out": { "type": "Float" },
+                                        "afternoon_in": { "type": "Float" },
+                                        "tolerance_minutes": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a sub_shift_group",
+            "tags": ["sub_shift_group"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

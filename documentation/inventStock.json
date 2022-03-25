@@ -1,0 +1,986 @@
+{
+    "/inventory/stock/stock_batch": {
+        "post": {
+            "summary": "creates a new stock_batch",
+            "tags": ["stock_batch"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "batch_ref": { "type": "String" },
+                                "manufacturer": { "type": "String?" },
+                                "manufactured_date": { "type": "DateTime?" },
+                                "date_of_expiry": { "type": "DateTime?" },
+                                "remark": { "type": "String?" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected stock_batchs",
+            "tags": ["stock_batch"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "batch_ref": { "type": "String" },
+                                        "manufacturer": { "type": "String?" },
+                                        "remark": { "type": "String?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "batch_ref": { "type": "Int" },
+                                        "manufacturer": { "type": "Int" },
+                                        "manufactured_date": { "type": "Int" },
+                                        "date_of_expiry": { "type": "Int" },
+                                        "remark": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "batch_ref": { "type": "String" },
+                                    "manufacturer": { "type": "String?" },
+                                    "manufactured_date": {
+                                        "type": "DateTime?"
+                                    },
+                                    "date_of_expiry": { "type": "DateTime?" },
+                                    "remark": { "type": "String?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a stock_batch",
+            "tags": ["stock_batch"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "batch_ref": { "type": "String" },
+                                        "manufacturer": { "type": "String?" },
+                                        "manufactured_date": {
+                                            "type": "DateTime?"
+                                        },
+                                        "date_of_expiry": {
+                                            "type": "DateTime?"
+                                        },
+                                        "remark": { "type": "String?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a stock_batch",
+            "tags": ["stock_batch"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/inventory/stock/stock_item": {
+        "post": {
+            "summary": "creates a new stock_item",
+            "tags": ["stock_item"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "item_name": { "type": "String" },
+                                "SKU": { "type": "String" },
+                                "item_type": { "type": "Int" },
+                                "reorder_level": { "type": "Int" },
+                                "stock_item_tracking": { "type": "Int" },
+                                "item_can_be": { "type": "Int" },
+                                "is_item_returnable": { "type": "Boolean?" },
+                                "UPC": { "type": "String?" },
+                                "EAN": { "type": "String?" },
+                                "MPN": { "type": "String?" },
+                                "ISBN": { "type": "String?" },
+                                "selling_price": { "type": "Float?" },
+                                "additional_sales_info": { "type": "String?" },
+                                "purchasing_price": { "type": "Float?" },
+                                "addtional_purchase_info": {
+                                    "type": "String?"
+                                },
+                                "item_group_id": { "type": "Int?" },
+                                "dimensions": { "type": "String?" },
+                                "manufacturer": { "type": "String?" },
+                                "inventory_tracking_chart_of_account_id": {
+                                    "type": "Int?"
+                                },
+                                "purchase_chart_of_account_id": {
+                                    "type": "Int?"
+                                },
+                                "sales_chart_of_account_id": { "type": "Int?" },
+                                "unit_of_measure_id": { "type": "Int?" },
+                                "tax_id": { "type": "Int?" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected stock_items",
+            "tags": ["stock_item"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "item_name": { "type": "String" },
+                                        "SKU": { "type": "String" },
+                                        "item_type": { "type": "Int" },
+                                        "reorder_level": { "type": "Int" },
+                                        "stock_item_tracking": {
+                                            "type": "Int"
+                                        },
+                                        "item_can_be": { "type": "Int" },
+                                        "is_item_returnable": {
+                                            "type": "Boolean?"
+                                        },
+                                        "UPC": { "type": "String?" },
+                                        "EAN": { "type": "String?" },
+                                        "MPN": { "type": "String?" },
+                                        "ISBN": { "type": "String?" },
+                                        "additional_sales_info": {
+                                            "type": "String?"
+                                        },
+                                        "addtional_purchase_info": {
+                                            "type": "String?"
+                                        },
+                                        "item_group_id": { "type": "Int?" },
+                                        "dimensions": { "type": "String?" },
+                                        "manufacturer": { "type": "String?" },
+                                        "inventory_tracking_chart_of_account_id": {
+                                            "type": "Int?"
+                                        },
+                                        "purchase_chart_of_account_id": {
+                                            "type": "Int?"
+                                        },
+                                        "sales_chart_of_account_id": {
+                                            "type": "Int?"
+                                        },
+                                        "unit_of_measure_id": {
+                                            "type": "Int?"
+                                        },
+                                        "tax_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "item_name": { "type": "Int" },
+                                        "SKU": { "type": "Int" },
+                                        "item_type": { "type": "Int" },
+                                        "reorder_level": { "type": "Int" },
+                                        "stock_item_tracking": {
+                                            "type": "Int"
+                                        },
+                                        "item_can_be": { "type": "Int" },
+                                        "is_item_returnable": { "type": "Int" },
+                                        "UPC": { "type": "Int" },
+                                        "EAN": { "type": "Int" },
+                                        "MPN": { "type": "Int" },
+                                        "ISBN": { "type": "Int" },
+                                        "selling_price": { "type": "Int" },
+                                        "additional_sales_info": {
+                                            "type": "Int"
+                                        },
+                                        "purchasing_price": { "type": "Int" },
+                                        "addtional_purchase_info": {
+                                            "type": "Int"
+                                        },
+                                        "item_group_id": { "type": "Int" },
+                                        "dimensions": { "type": "Int" },
+                                        "manufacturer": { "type": "Int" },
+                                        "inventory_tracking_chart_of_account_id": {
+                                            "type": "Int"
+                                        },
+                                        "purchase_chart_of_account_id": {
+                                            "type": "Int"
+                                        },
+                                        "sales_chart_of_account_id": {
+                                            "type": "Int"
+                                        },
+                                        "unit_of_measure_id": { "type": "Int" },
+                                        "tax_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "item_name": { "type": "String" },
+                                    "SKU": { "type": "String" },
+                                    "item_type": { "type": "Int" },
+                                    "reorder_level": { "type": "Int" },
+                                    "stock_item_tracking": { "type": "Int" },
+                                    "item_can_be": { "type": "Int" },
+                                    "is_item_returnable": {
+                                        "type": "Boolean?"
+                                    },
+                                    "UPC": { "type": "String?" },
+                                    "EAN": { "type": "String?" },
+                                    "MPN": { "type": "String?" },
+                                    "ISBN": { "type": "String?" },
+                                    "selling_price": { "type": "Float?" },
+                                    "additional_sales_info": {
+                                        "type": "String?"
+                                    },
+                                    "purchasing_price": { "type": "Float?" },
+                                    "addtional_purchase_info": {
+                                        "type": "String?"
+                                    },
+                                    "item_group_id": { "type": "Int?" },
+                                    "dimensions": { "type": "String?" },
+                                    "manufacturer": { "type": "String?" },
+                                    "inventory_tracking_chart_of_account_id": {
+                                        "type": "Int?"
+                                    },
+                                    "purchase_chart_of_account_id": {
+                                        "type": "Int?"
+                                    },
+                                    "sales_chart_of_account_id": {
+                                        "type": "Int?"
+                                    },
+                                    "unit_of_measure_id": { "type": "Int?" },
+                                    "tax_id": { "type": "Int?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a stock_item",
+            "tags": ["stock_item"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "item_name": { "type": "String" },
+                                        "SKU": { "type": "String" },
+                                        "item_type": { "type": "Int" },
+                                        "reorder_level": { "type": "Int" },
+                                        "stock_item_tracking": {
+                                            "type": "Int"
+                                        },
+                                        "item_can_be": { "type": "Int" },
+                                        "is_item_returnable": {
+                                            "type": "Boolean?"
+                                        },
+                                        "UPC": { "type": "String?" },
+                                        "EAN": { "type": "String?" },
+                                        "MPN": { "type": "String?" },
+                                        "ISBN": { "type": "String?" },
+                                        "selling_price": { "type": "Float?" },
+                                        "additional_sales_info": {
+                                            "type": "String?"
+                                        },
+                                        "purchasing_price": {
+                                            "type": "Float?"
+                                        },
+                                        "addtional_purchase_info": {
+                                            "type": "String?"
+                                        },
+                                        "item_group_id": { "type": "Int?" },
+                                        "dimensions": { "type": "String?" },
+                                        "manufacturer": { "type": "String?" },
+                                        "inventory_tracking_chart_of_account_id": {
+                                            "type": "Int?"
+                                        },
+                                        "purchase_chart_of_account_id": {
+                                            "type": "Int?"
+                                        },
+                                        "sales_chart_of_account_id": {
+                                            "type": "Int?"
+                                        },
+                                        "unit_of_measure_id": {
+                                            "type": "Int?"
+                                        },
+                                        "tax_id": { "type": "Int?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a stock_item",
+            "tags": ["stock_item"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/inventory/stock/stock_transaction_detail": {
+        "post": {
+            "summary": "creates a new stock_transaction_detail",
+            "tags": ["stock_transaction_detail"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "stock_transaction_header_id": {
+                                    "type": "Int"
+                                },
+                                "transaction_date": { "type": "DateTime?" },
+                                "note": { "type": "String?" },
+                                "price": { "type": "Float?" },
+                                "quantity": { "type": "Float?" },
+                                "order_no": { "type": "String?" },
+                                "transaction_ref": { "type": "String?" },
+                                "is_opening_value": { "type": "String?" },
+                                "stock_transaction_type": { "type": "Int" },
+                                "stock_transaction_source": { "type": "Int" },
+                                "remark": { "type": "String?" },
+                                "stock_batch_id": { "type": "Int?" },
+                                "serial_number": { "type": "String?" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected stock_transaction_details",
+            "tags": ["stock_transaction_detail"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "stock_transaction_header_id": {
+                                            "type": "Int"
+                                        },
+                                        "note": { "type": "String?" },
+                                        "order_no": { "type": "String?" },
+                                        "transaction_ref": {
+                                            "type": "String?"
+                                        },
+                                        "is_opening_value": {
+                                            "type": "String?"
+                                        },
+                                        "stock_transaction_type": {
+                                            "type": "Int"
+                                        },
+                                        "stock_transaction_source": {
+                                            "type": "Int"
+                                        },
+                                        "remark": { "type": "String?" },
+                                        "stock_batch_id": { "type": "Int?" },
+                                        "serial_number": { "type": "String?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "stock_transaction_header_id": {
+                                            "type": "Int"
+                                        },
+                                        "transaction_date": { "type": "Int" },
+                                        "note": { "type": "Int" },
+                                        "price": { "type": "Int" },
+                                        "quantity": { "type": "Int" },
+                                        "order_no": { "type": "Int" },
+                                        "transaction_ref": { "type": "Int" },
+                                        "is_opening_value": { "type": "Int" },
+                                        "stock_transaction_type": {
+                                            "type": "Int"
+                                        },
+                                        "stock_transaction_source": {
+                                            "type": "Int"
+                                        },
+                                        "remark": { "type": "Int" },
+                                        "stock_batch_id": { "type": "Int" },
+                                        "serial_number": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "stock_transaction_header_id": {
+                                        "type": "Int"
+                                    },
+                                    "transaction_date": { "type": "DateTime?" },
+                                    "note": { "type": "String?" },
+                                    "price": { "type": "Float?" },
+                                    "quantity": { "type": "Float?" },
+                                    "order_no": { "type": "String?" },
+                                    "transaction_ref": { "type": "String?" },
+                                    "is_opening_value": { "type": "String?" },
+                                    "stock_transaction_type": { "type": "Int" },
+                                    "stock_transaction_source": {
+                                        "type": "Int"
+                                    },
+                                    "remark": { "type": "String?" },
+                                    "stock_batch_id": { "type": "Int?" },
+                                    "serial_number": { "type": "String?" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a stock_transaction_detail",
+            "tags": ["stock_transaction_detail"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "stock_transaction_header_id": {
+                                            "type": "Int"
+                                        },
+                                        "transaction_date": {
+                                            "type": "DateTime?"
+                                        },
+                                        "note": { "type": "String?" },
+                                        "price": { "type": "Float?" },
+                                        "quantity": { "type": "Float?" },
+                                        "order_no": { "type": "String?" },
+                                        "transaction_ref": {
+                                            "type": "String?"
+                                        },
+                                        "is_opening_value": {
+                                            "type": "String?"
+                                        },
+                                        "stock_transaction_type": {
+                                            "type": "Int"
+                                        },
+                                        "stock_transaction_source": {
+                                            "type": "Int"
+                                        },
+                                        "remark": { "type": "String?" },
+                                        "stock_batch_id": { "type": "Int?" },
+                                        "serial_number": { "type": "String?" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a stock_transaction_detail",
+            "tags": ["stock_transaction_detail"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/inventory/stock/stock_transaction_header": {
+        "post": {
+            "summary": "creates a new stock_transaction_header",
+            "tags": ["stock_transaction_header"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "stock_item_id": { "type": "Int" },
+                                "warehouse_id": { "type": "Int" },
+                                "isProtectedForEdit": { "type": "boolean" }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get": {
+            "summary": "gets selected stock_transaction_headers",
+            "tags": ["stock_transaction_header"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "limit": { "type": "Int" },
+                                "skip": { "type": "Int" },
+                                "filter": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "stock_item_id": { "type": "Int" },
+                                        "warehouse_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "sort": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "Int" },
+                                        "stock_item_id": { "type": "Int" },
+                                        "warehouse_id": { "type": "Int" },
+                                        "startDate": { "type": "number" },
+                                        "endDate": { "type": "number" },
+                                        "creationDate": { "type": "number" },
+                                        "createdBy": { "type": "number" },
+                                        "revisionDate": { "type": "number" },
+                                        "revisedBy": { "type": "number" },
+                                        "isProtectedForEdit": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "fetched data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "Int" },
+                                    "stock_item_id": { "type": "Int" },
+                                    "warehouse_id": { "type": "Int" },
+                                    "startDate": { "type": "string" },
+                                    "endDate": { "type": "string" },
+                                    "creationDate": { "type": "string" },
+                                    "createdBy": { "type": "string" },
+                                    "revisionDate": { "type": "string" },
+                                    "revisedBy": { "type": "string" },
+                                    "isProtectedForEdit": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "patch": {
+            "summary": "updates a stock_transaction_header",
+            "tags": ["stock_transaction_header"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "Int" },
+                                "updateData": {
+                                    "type": "object",
+                                    "properties": {
+                                        "stock_item_id": { "type": "Int" },
+                                        "warehouse_id": { "type": "Int" },
+                                        "isProtectedForEdit": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "delete": {
+            "summary": "deletes a stock_transaction_header",
+            "tags": ["stock_transaction_header"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": { "id": { "type": "Int" } }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success message",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": { "type": "boolean" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

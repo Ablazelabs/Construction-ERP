@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 const { readFileSync } = require("fs");
 let accessToken = readFileSync("./test/accessToken.txt", "utf-8");
 
-const url2 = "/project/master/equipment";
+const url2 = "/api/project/master/equipment";
 
 describe("restMasterData Test", () => {
     /**
@@ -88,7 +88,7 @@ describe("restMasterData Test", () => {
      * Test the delete
      */
 
-    describe("/material delete", () => {
+    describe("/equipment delete", () => {
         it("Should delete an equipment", (done) => {
             chai.request(server)
                 .delete(url2)
@@ -122,7 +122,7 @@ describe("restMasterData Test", () => {
      * Test the patch
      */
 
-    describe("/material patch", () => {
+    describe("/equipment patch", () => {
         it("Should update a equipment", (done) => {
             chai.request(server)
                 .patch(url2)

@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 const { readFileSync } = require("fs");
 let accessToken = readFileSync("./test/accessToken.txt", "utf-8");
 
-const url = "/project/operational/project";
+const url = "/api/project/operational/project";
 
 describe("operational data Test 1(project)", () => {
     /**
@@ -41,7 +41,7 @@ describe("operational data Test 1(project)", () => {
                     done();
                 });
         });
-        it("should return error 400, project already exists", (done) => {
+        it("should return error 400, project id not sent", (done) => {
             chai.request(server)
                 .post(url)
                 .set({ Authorization: `Bearer ${accessToken}` })
@@ -52,7 +52,6 @@ describe("operational data Test 1(project)", () => {
                     project_manager: "string",
                     project_start_date: "2020/12/21",
                     project_end_date: "2020/12/21",
-                    project_id: `${randomName}`,
                     contract_number: "string",
                     site_engineer: "string",
                     dupty_manager: "string",
@@ -206,7 +205,7 @@ describe("operational data Test 1(project)", () => {
     });
 });
 
-const url2 = "/project/operational/daily_work_log";
+const url2 = "/api/project/operational/daily_work_log";
 
 describe("operational data Test 2(daily work log)", () => {
     /**

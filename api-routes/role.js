@@ -8,8 +8,22 @@ router.post("/role", async (req, res, next) => {
         inputFilter({ name: "string" }, { privileges: "object" }, req.body, 4);
         inputFilter({}, { description: "string" }, req.body, 0, 300);
         if (req.body.privileges) {
-            if (!Array.isArray(updateData.privileges)) {
+            if (!Array.isArray(req.body.privileges)) {
                 throw { key: "privileges", message: "must be an array" };
+            }
+            if (!req.body.privileges.length) {
+                throw {
+                    key: "privileges",
+                    message: "privileges must be more than 1",
+                };
+            }
+            for (let i in req.body.privileges) {
+                if (typeof req.body.privileges[i] !== "number") {
+                    throw {
+                        key: "privileges",
+                        message: "privileges must be an array of numbers",
+                    };
+                }
             }
         }
     } catch (e) {
@@ -21,6 +35,7 @@ router.post("/role", async (req, res, next) => {
               return { id: element };
           })
         : [];
+
     try {
         const data = await post(req.body, privileges, next);
         if (data == false) {
@@ -47,7 +62,7 @@ router.get("/role", async (req, res, next) => {
         if (req.body.filter) {
             filter = inputFilter(
                 {},
-                { name: "string", description: "string" },
+                { name: "string", description: "string", id: "number" },
                 req.body.filter
             );
         }
@@ -77,11 +92,15 @@ router.get("/role", async (req, res, next) => {
     };
     let queryFilter = {};
     for (let i in filter) {
-        queryFilter[i] = { contains: filter[i] };
+        if (typeof filter[i] !== "string")
+            queryFilter[i] = { equals: filter[i] };
+        else queryFilter[i] = { contains: filter[i] };
     }
-    let querySort = {};
+    let querySort = [];
     for (let i in sort) {
-        querySort[i] = sort[i] ? "asc" : "desc";
+        let pushedObj = {};
+        pushedObj[i] = sort[i] ? "asc" : "desc";
+        querySort.push(pushedObj);
     }
     try {
         res.json(await get(queryFilter, querySort, limit, skip, projection));
@@ -114,6 +133,20 @@ router.patch("/role", async (req, res, next) => {
         if (updateData.privileges) {
             if (!Array.isArray(updateData.privileges)) {
                 throw { key: "privileges", message: "must be an array" };
+            }
+            if (!req.body.privileges.length) {
+                throw {
+                    key: "privileges",
+                    message: "privileges must be more than 1",
+                };
+            }
+            for (let i in req.body.privileges) {
+                if (typeof req.body.privileges[i] !== "number") {
+                    throw {
+                        key: "privileges",
+                        message: "privileges must be an array of numbers",
+                    };
+                }
             }
         }
     } catch (e) {

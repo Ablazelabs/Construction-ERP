@@ -1,5 +1,4 @@
-const { PrismaClient } = require("@prisma/client");
-const { error } = require("../config/config");
+const { error, allModels: models } = require("../config/config");
 const inputFilter = require("../validation/inputFilter");
 const validation = require("../validation/validation");
 const {
@@ -15,7 +14,7 @@ const {
     work_category,
     document_category,
     documentation,
-} = new PrismaClient();
+} = models;
 const hasDuplicates = (array) => {
     return new Set(array).size !== array.length;
 };

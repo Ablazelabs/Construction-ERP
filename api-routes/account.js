@@ -8,9 +8,21 @@ const { post, get, patch, deleter } = require("../services/account");
 
 router.post("/account", async (req, res, next) => {
     //error messages clearly define what the code fragment is trying to achieve
-
+    let otherData = {};
     try {
-        inputFilter({}, { phone_number: "string", email: "string" }, req.body);
+        otherData = inputFilter(
+            {
+                username: "string",
+            },
+            {
+                phone_number: "string",
+                email: "string",
+                phone_number: "string",
+                two_factor_enabled: "boolean",
+                roleId: "number",
+            },
+            req.body
+        );
         inputFilter({ password: "string" }, {}, req.body, 8);
     } catch (e) {
         error(e.key, e.message, next, 400);
@@ -28,14 +40,20 @@ router.post("/account", async (req, res, next) => {
     } else {
         if (!validation.checkEmail(identifier["value"], next)) return;
     }
-
     if (!validation.checkPassword(req.body.password, next)) {
         return;
     }
+    otherData[identifier.key] = undefined;
     try {
         let identifier2 = {};
         identifier2[identifier.key] = identifier.value;
-        const data = await post(identifier2, identifier.key, req.body, next);
+        const data = await post(
+            identifier2,
+            identifier.key,
+            req.body,
+            otherData,
+            next
+        );
         if (data == false) {
             return;
         }
@@ -66,6 +84,7 @@ router.get("/account", async (req, res, next) => {
                     email: "string",
                     phone_number: "string",
                     role: "number",
+                    id: "number",
                 },
                 req.body.filter
             );
@@ -108,11 +127,15 @@ router.get("/account", async (req, res, next) => {
     }
     let queryFilter = {};
     for (let i in filter) {
-        queryFilter[i] = { contains: filter[i] };
+        if (typeof filter[i] == "number")
+            queryFilter[i] = { equals: filter[i] };
+        else queryFilter[i] = { contains: filter[i] };
     }
-    let querySort = {};
+    let querySort = [];
     for (let i in sort) {
-        querySort[i] = sort[i] ? "asc" : "desc";
+        let pushedObj = {};
+        pushedObj[i] = sort[i] ? "asc" : "desc";
+        querySort.push(pushedObj);
     }
     try {
         res.json(
@@ -143,7 +166,7 @@ router.patch("/account", async (req, res, next) => {
                 email: "string",
                 phone_number: "string",
                 two_factor_enabled: "boolean",
-                role: "number",
+                roleId: "number",
             },
             req.body.updateData
         );

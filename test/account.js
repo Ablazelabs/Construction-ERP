@@ -4,7 +4,7 @@ const chaiHttp = require("chai-http");
 chai.should();
 
 chai.use(chaiHttp);
-const url = "/account";
+const url = "/api/account";
 const { readFileSync } = require("fs");
 let accessToken = readFileSync("./test/accessToken.txt", "utf-8");
 describe("Account Test", () => {
@@ -16,9 +16,11 @@ describe("Account Test", () => {
         it("Should post a new user", (done) => {
             chai.request(server)
                 .post(url)
+                .set({ Authorization: `Bearer ${accessToken}` })
                 .send({
                     email: `${randomEmailNum}@gmail.com`,
                     password: "password",
+                    username: `name ${Math.floor(randomEmailNum / 1000)}`,
                 })
                 .end((err, response) => {
                     response.should.have.status(200);
@@ -30,7 +32,12 @@ describe("Account Test", () => {
         it("should return error 400, user already exists", (done) => {
             chai.request(server)
                 .post(url)
-                .send({ email: `yaredterefeg@gmail.com`, password: "password" })
+                .set({ Authorization: `Bearer ${accessToken}` })
+                .send({
+                    email: `${randomEmailNum}@gmail.com`,
+                    password: "password",
+                    username: `name ${Math.floor(randomEmailNum / 1000)}`,
+                })
                 .end((err, response) => {
                     response.should.have.status(400);
                     response.body.should.have.property("error");
@@ -41,7 +48,12 @@ describe("Account Test", () => {
         it("should return error 400, user already exists", (done) => {
             chai.request(server)
                 .post(url)
-                .send({ phone_number: `251-934175272`, password: "password" })
+                .set({ Authorization: `Bearer ${accessToken}` })
+                .send({
+                    phone_number: `251-934175272`,
+                    password: "password",
+                    username: `name ${Math.floor(randomEmailNum / 1000)}`,
+                })
                 .end((err, response) => {
                     response.should.have.status(400);
                     response.body.should.have.property("error");
@@ -52,7 +64,12 @@ describe("Account Test", () => {
         it("should return error 400, phone number validation", (done) => {
             chai.request(server)
                 .post(url)
-                .send({ phone_number: `251-93417527`, password: "password" })
+                .set({ Authorization: `Bearer ${accessToken}` })
+                .send({
+                    phone_number: `251-93417527`,
+                    password: "password",
+                    username: `name ${Math.floor(randomEmailNum / 1000)}`,
+                })
                 .end((err, response) => {
                     response.should.have.status(400);
                     response.body.should.have.property("error");

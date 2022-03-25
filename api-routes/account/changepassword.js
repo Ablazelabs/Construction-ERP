@@ -22,7 +22,7 @@ router.post("/account/changepassword", async (req, res, next) => {
         error(e.key, e.message, next);
         return;
     }
-    if (!validation.checkPassword(req.body.newPassword, next)) {
+    if (!validation.checkPassword(req.body.newPassword, next, "newPassword")) {
         return;
     }
     let id;
@@ -35,7 +35,11 @@ router.post("/account/changepassword", async (req, res, next) => {
                 selfUpdate = true;
                 id = res.locals.id;
             } else {
-                error("id", "must be given with access token", next);
+                error(
+                    "id",
+                    "must be given with access token,(password if self update)",
+                    next
+                );
                 return;
             }
         } else {

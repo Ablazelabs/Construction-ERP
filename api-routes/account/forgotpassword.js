@@ -29,8 +29,18 @@ router.post("/account/forgotpassword", async (req, res, next) => {
     try {
         let identifier2 = {};
         identifier2[identifier.key] = identifier["value"];
-        res.json(await forgotpassword(identifier2, identifier.value, code));
+        const data = await forgotpassword(
+            identifier2,
+            identifier.value,
+            code,
+            next
+        );
+        if (!data) {
+            return;
+        }
+        res.json(data);
     } catch (e) {
+        console.log(e);
         error("database", "error", next, 500);
     }
 });

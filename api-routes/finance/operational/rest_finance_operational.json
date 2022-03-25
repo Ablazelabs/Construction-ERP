@@ -1,0 +1,1473 @@
+{
+    "allInputFilters": {
+        "chart_of_account": {
+            "account_name": "string",
+            "account_code": "string",
+            "add_to_dashboard_watch_list": "boolean",
+            "account_type_id": "number"
+        },
+        "export_template": {
+            "template_name": "string",
+            "module_name": "number",
+            "export_template_fields": "object",
+            "excel_columns": "object"
+        },
+        "account_type_financial_statement_section": {
+            "account_type_id": "number",
+            "financial_statement_section_id": "number"
+        },
+        "bank_reconcilation": { "chart_of_account_id": "number" },
+        "reconcilation_transaction": {
+            "bank_reconcilation_id": "number",
+            "general_ledger_id": "number"
+        },
+        "asset": {
+            "name": "string",
+            "tag_number": "string",
+            "description": "string",
+            "economic_value": "number",
+            "depreciation_methods": "number",
+            "useful_life": "string",
+            "current_value": "number",
+            "asset_type": "number",
+            "scrap_value": "number",
+            "currency_id": "number",
+            "asset_account_id": "number",
+            "depreciation_account_id": "number"
+        },
+        "estimated_total_production_unit": {
+            "unit_name": "string",
+            "unit_symbol": "string"
+        },
+        "recurring_journal_occurrence": {
+            "repeat_every_label": "number",
+            "name": "string"
+        },
+        "budget": { "budget_reason": "number" },
+        "budget_account": { "budget_total_amount": "number" },
+        "budget_account_period": {
+            "budget_amount": "number",
+            "period_month": "number"
+        },
+        "budget_control_action": {
+            "type": "number",
+            "action_accumulated_monthly_budget_exceeded": "number"
+        },
+        "general_journal_detail": {
+            "debit_or_credit": "number",
+            "reference_code": "string",
+            "general_journal_header_id": "number",
+            "cost_center_id": "number",
+            "chart_of_account_id": "number"
+        },
+        "general_journal_header": {
+            "posting_reference": "string",
+            "journal_date": "string",
+            "notes": "string",
+            "currency_id": "number",
+            "posting_responsible_user_id": "number"
+        },
+        "general_ledger": {
+            "ledger_status": "number",
+            "journal_date": "string",
+            "currency_id": "number",
+            "chart_of_account_id": "number"
+        },
+        "journal_comment": {
+            "comment": "string",
+            "application_user_id": "number"
+        },
+        "number_tracker": {
+            "starting_number": "number",
+            "next_number": "number"
+        },
+        "recurring_general_journal": { "profile_name": "string" },
+        "transaction_lock": { "lock_date": "string", "reason": "string" },
+        "opening_balance": {
+            "opening_balance_date": "string",
+            "month": "number"
+        },
+        "cash_payment_custom": { "date": "string" },
+        "cash_payment_voucher": { "date": "string" },
+        "cpv_bank": { "name": "string" },
+        "cpv_payment_request": { "date": "string" },
+        "cpv_receipt": { "date": "string" },
+        "cpv_type": { "name": "string", "description": "string" },
+        "petty_cash": { "date": "string" },
+        "crv_payment": {},
+        "crv_type": { "name": "string" },
+        "opening_balance_account": {
+            "debit_or_credit": "number",
+            "opening_balance_id": "number"
+        }
+    },
+    "enums": {
+        "chart_of_account": {},
+        "export_template": {
+            "module_name": [
+                "chart_of_account",
+                "account_type_financial_statement_section",
+                "bank_reconcilation",
+                "reconcilation_transaction",
+                "asset",
+                "estimated_total_production_unit",
+                "recurring_journal_occurrence",
+                "budget",
+                "budget_account",
+                "budget_account_period",
+                "budget_control_action",
+                "general_journal_detail",
+                "general_journal_header",
+                "general_ledger",
+                "journal_comment",
+                "number_tracker",
+                "recurring_general_journal",
+                "transaction_lock",
+                "opening_balance",
+                "cash_payment_custom",
+                "cash_payment_voucher",
+                "cpv_bank",
+                "cpv_payment_request",
+                "cpv_receipt",
+                "cpv_type",
+                "petty_cash",
+                "crv_payment",
+                "crv_type",
+                "opening_balance_account",
+                "exchange_rate",
+                "exportReadyJournal"
+            ]
+        },
+        "account_type_financial_statement_section": {},
+        "bank_reconcilation": {},
+        "reconcilation_transaction": {},
+        "asset": {
+            "depreciation_methods": [
+                "StraightLineDepreciation",
+                "UnitsOfProductionDepreciation",
+                "Null"
+            ],
+            "asset_type": ["online", "offline"],
+            "asset_status": ["received?", "work_order_created?"]
+        },
+        "estimated_total_production_unit": {},
+        "recurring_journal_occurrence": {
+            "repeat_every_label": ["days", "weeks", "months", "years"]
+        },
+        "budget": { "budget_reason": ["cost_center", "project"] },
+        "budget_account": {},
+        "budget_account_period": {
+            "period_month": [
+                "january",
+                "february",
+                "march",
+                "april",
+                "may",
+                "june",
+                "july",
+                "august",
+                "september",
+                "october",
+                "november",
+                "december",
+                "other"
+            ]
+        },
+        "budget_control_action": {
+            "type": [
+                "material_request",
+                "purchase_request",
+                "booking_actual_expense"
+            ],
+            "action_accumulated_monthly_budget_exceeded": [
+                "stop",
+                "warning",
+                "ignore"
+            ]
+        },
+        "general_journal_detail": { "debit_or_credit": ["credit", "debit"] },
+        "general_journal_header": {
+            "journal_status": ["active", "reversed", "deleted", "void"],
+            "report_basis": ["accrual", "cash", "both"],
+            "journal_source": [
+                "manual_journal",
+                "interfaced_journal",
+                "uploaded",
+                "auto"
+            ],
+            "journal_posting_status": ["POSTED", "DRAFT", "SCHEDULED", "VOID"]
+        },
+        "general_ledger": {
+            "ledger_status": ["active", "reversed", "deleted", "void"]
+        },
+        "journal_comment": {},
+        "number_tracker": {
+            "reason": [
+                "GeneralJournalHeader",
+                "GeneralJournalDetail",
+                "CashReceiptsJournal",
+                "CashPaymentsJournal",
+                "SalesJournal",
+                "SalesReturnsJournal",
+                "PurchasesJournal",
+                "PurchasesReturnsJournal",
+                "GeneralJournal",
+                "SalesInvoice"
+            ]
+        },
+        "recurring_general_journal": {
+            "recurring_general_journal_status": ["active", "stopped", "expired"]
+        },
+        "transaction_lock": {},
+        "opening_balance": {
+            "month": [
+                "january",
+                "february",
+                "march",
+                "april",
+                "may",
+                "june",
+                "july",
+                "august",
+                "september",
+                "october",
+                "november",
+                "december",
+                "other"
+            ]
+        },
+        "cash_payment_custom": {},
+        "cash_payment_voucher": {},
+        "cpv_bank": {},
+        "cpv_payment_request": {},
+        "cpv_receipt": {},
+        "cpv_type": {
+            "cpv_types": [
+                "PettyCash",
+                "Receipt",
+                "Transportation",
+                "House_Rent",
+                "Per_Diem",
+                "Allownace",
+                "Food_Expenses",
+                "Sponsorship",
+                "Other"
+            ]
+        },
+        "petty_cash": {},
+        "crv_payment": {},
+        "crv_type": { "crv_types": ["Cash", "Check"] },
+        "opening_balance_account": { "debit_or_credit": ["credit", "debit"] }
+    },
+    "allOptionalInputFilters": {
+        "chart_of_account": {
+            "account_number": "string",
+            "is_active": "boolean",
+            "description": "string",
+            "attachment_path": "number",
+            "is_sub_account": "boolean",
+            "is_default": "boolean",
+            "is_employee_account": "boolean",
+            "has_opening_balance": "boolean",
+            "is_bank_account": "boolean",
+            "parent_account_id": "number",
+            "head_account_id": "number",
+            "currency_id": "number"
+        },
+        "account_type_financial_statement_section": {},
+        "bank_reconcilation": {
+            "from_date": "string",
+            "to_date": "string",
+            "closing_amount": "number"
+        },
+        "reconcilation_transaction": {},
+        "asset": {
+            "acquisition_date": "string",
+            "asset_status": "number",
+            "estimated_total_production": "number",
+            "estimated_total_production_unit_id": "number",
+            "recurring_journal_occurrence_id": "number"
+        },
+        "estimated_total_production_unit": {},
+        "recurring_journal_occurrence": { "repeat_every_number": "number" },
+        "budget": {
+            "name": "string",
+            "project_name": "string",
+            "cost_center_id": "number",
+            "fiscal_year": "string"
+        },
+        "budget_account": {
+            "budget_id": "number",
+            "chart_of_account_id": "number"
+        },
+        "budget_account_period": { "budget_account_id": "number" },
+        "budget_control_action": {},
+        "general_journal_detail": {
+            "description": "string",
+            "tax_group_id": "number",
+            "amount_credit": "number",
+            "amount_debit": "number",
+            "tax_id": "number",
+            "contact_id": "number"
+        },
+        "general_journal_header": {
+            "reference_number": "string",
+            "journal_status": "number",
+            "report_basis": "number",
+            "journal_source": "number",
+            "journal_posting_status": "number",
+            "journal_type_reference": "string",
+            "total_amount": "number",
+            "journal_type_id": "number",
+            "recurring_general_journal_id": "number"
+        },
+        "general_ledger": {
+            "amount_credit": "number",
+            "amount_debit": "number",
+            "description": "string",
+            "tax_id": "number",
+            "tax_group_id": "number",
+            "general_journal_header_id": "number"
+        },
+        "journal_comment": {
+            "contact_id": "number",
+            "general_journal_header_id": "number",
+            "recurring_general_journal_id": "number"
+        },
+        "number_tracker": { "prefix": "string", "reason": "number" },
+        "recurring_general_journal": {
+            "start_on": "string",
+            "end_on": "string",
+            "never_expires": "boolean",
+            "depreciable_value": "number",
+            "recurring_general_journal_status": "number",
+            "asset_id": "number",
+            "recurring_journal_occurrence_id": "number"
+        },
+        "transaction_lock": { "enable_transaction_locking": "boolean" },
+        "opening_balance": { "price_precision": "number", "amount": "number" },
+        "cash_payment_custom": {
+            "customer": "string",
+            "amount": "number",
+            "tin_number": "string",
+            "tax": "number",
+            "withholding": "number",
+            "merchant_record_card_code": "string",
+            "number": "string"
+        },
+        "cash_payment_voucher": {
+            "paid_to": "string",
+            "amount": "number",
+            "description": "string",
+            "check_number": "string",
+            "pv_number": "number",
+            "remaining_balance": "number",
+            "cpv_bank_id": "number",
+            "prepared_by_id": "number",
+            "checked_by_id": "number",
+            "project_id": "number",
+            "cpv_type_id": "number",
+            "request_payment_id": "number"
+        },
+        "cpv_bank": { "description": "string" },
+        "cpv_payment_request": {
+            "amount": "number",
+            "description": "string",
+            "check_number": "string",
+            "remaining_balance": "number",
+            "from_id": "number",
+            "project_id": "number",
+            "prepared_by_id": "number",
+            "checked_by_id": "number",
+            "approved_by_id": "number",
+            "cash_payment_voucher_id": "number"
+        },
+        "cpv_receipt": {
+            "company_name": "string",
+            "tin_number": "string",
+            "amount": "number",
+            "vat": "number",
+            "withholding": "number",
+            "machine_code": "string",
+            "receipt_number": "string",
+            "cash_payment_voucher_id": "number"
+        },
+        "cpv_type": { "cpv_types": "number" },
+        "petty_cash": {
+            "pcpv": "string",
+            "remark": "string",
+            "description": "string",
+            "debit": "number",
+            "credit": "number",
+            "balance": "number",
+            "project_id": "number",
+            "issued_by_id": "number",
+            "cash_payment_voucher_id": "number"
+        },
+        "crv_payment": {
+            "date": "string",
+            "name": "string",
+            "customer_name": "string",
+            "description": "string",
+            "amount_before_vat": "number",
+            "vat": "number",
+            "amount_with_vat": "number",
+            "payment_description": "string",
+            "withholding": "number",
+            "check_amount": "number",
+            "cash_amount": "number",
+            "project_id": "number",
+            "crv_type_id": "number"
+        },
+        "crv_type": { "description": "string", "crv_types": "number" },
+        "opening_balance_account": {
+            "amount_credit": "number",
+            "amount_debit": "number",
+            "currency_id": "number",
+            "chart_of_account_id": "number"
+        }
+    },
+    "allRangeValues": {},
+    "phoneValues": {
+        "chart_of_account": [],
+        "account_type_financial_statement_section": [],
+        "bank_reconcilation": [],
+        "reconcilation_transaction": [],
+        "asset": [],
+        "estimated_total_production_unit": [],
+        "recurring_journal_occurrence": [],
+        "budget": [],
+        "budget_account": [],
+        "budget_account_period": [],
+        "budget_control_action": [],
+        "general_journal_detail": [],
+        "general_journal_header": [],
+        "general_ledger": [],
+        "journal_comment": [],
+        "number_tracker": [],
+        "recurring_general_journal": [],
+        "transaction_lock": [],
+        "opening_balance": []
+    },
+    "emailValues": {
+        "chart_of_account": [],
+        "account_type_financial_statement_section": [],
+        "bank_reconcilation": [],
+        "reconcilation_transaction": [],
+        "asset": [],
+        "estimated_total_production_unit": [],
+        "recurring_journal_occurrence": [],
+        "budget": [],
+        "budget_account": [],
+        "budget_account_period": [],
+        "budget_control_action": [],
+        "general_journal_detail": [],
+        "general_journal_header": [],
+        "general_ledger": [],
+        "journal_comment": [],
+        "number_tracker": [],
+        "recurring_general_journal": [],
+        "transaction_lock": [],
+        "opening_balance": []
+    },
+    "dateValues": {
+        "chart_of_account": [],
+        "account_type_financial_statement_section": [],
+        "bank_reconcilation": ["from_date", "to_date"],
+        "reconcilation_transaction": [],
+        "asset": ["useful_life", "acquisition_date"],
+        "estimated_total_production_unit": [],
+        "recurring_journal_occurrence": [],
+        "budget": ["fiscal_year"],
+        "budget_account": [],
+        "budget_account_period": [],
+        "budget_control_action": [],
+        "general_journal_detail": [],
+        "general_journal_header": ["journal_date"],
+        "general_ledger": ["journal_date"],
+        "journal_comment": [],
+        "number_tracker": [],
+        "recurring_general_journal": ["start_on", "end_on"],
+        "transaction_lock": ["lock_date"],
+        "opening_balance": ["opening_balance_date"],
+        "cash_payment_custom": ["date"],
+        "cash_payment_voucher": ["date"],
+        "cpv_bank": [],
+        "cpv_payment_request": ["date"],
+        "cpv_receipt": ["date"],
+        "cpv_type": [],
+        "petty_cash": ["date"],
+        "crv_payment": ["date"],
+        "crv_type": []
+    },
+    "allProjections": {
+        "chart_of_account_files": {
+            "id": true,
+            "path": true,
+            "name": true,
+            "type": true,
+            "chart_of_account": true
+        },
+        "export_template": {
+            "id": true,
+            "template_name": true,
+            "module_name": true,
+            "export_template_fields": true,
+            "excel_columns": true
+        },
+        "general_journal_files": {
+            "id": true,
+            "path": true,
+            "name": true,
+            "type": true,
+            "general_journal_header": true
+        },
+        "chart_of_account": {
+            "id": true,
+            "account_name": true,
+            "account_code": true,
+            "account_number": true,
+            "is_active": true,
+            "description": true,
+            "add_to_dashboard_watch_list": true,
+            "attachment_path": true,
+            "is_sub_account": true,
+            "is_default": true,
+            "is_employee_account": true,
+            "has_opening_balance": true,
+            "is_bank_account": true,
+            "parent_account": true,
+            "head_account": true,
+            "currency": true,
+            "account_type": true
+        },
+        "account_type_financial_statement_section": {
+            "id": true,
+            "account_type": true,
+            "financial_statement_section": true
+        },
+        "bank_reconcilation": {
+            "id": true,
+            "from_date": true,
+            "to_date": true,
+            "closing_amount": true,
+            "chart_of_account": true
+        },
+        "reconcilation_transaction": {
+            "id": true,
+            "bank_reconcilation": true,
+            "general_ledger": true
+        },
+        "asset": {
+            "id": true,
+            "name": true,
+            "tag_number": true,
+            "acquisition_date": true,
+            "description": true,
+            "economic_value": true,
+            "depreciation_methods": true,
+            "useful_life": true,
+            "current_value": true,
+            "asset_type": true,
+            "asset_status": true,
+            "estimated_total_production": true,
+            "scrap_value": true,
+            "currency": true,
+            "estimated_total_production_unit": true,
+            "asset_account": true,
+            "depreciation_account": true,
+            "recurring_journal_occurrence": true
+        },
+        "estimated_total_production_unit": {
+            "id": true,
+            "unit_name": true,
+            "unit_symbol": true
+        },
+        "recurring_journal_occurrence": {
+            "id": true,
+            "repeat_every_number": true,
+            "repeat_every_label": true,
+            "name": true
+        },
+        "budget": {
+            "id": true,
+            "name": true,
+            "fiscal_year": true,
+            "budget_reason": true,
+            "project_name": true,
+            "cost_center": true
+        },
+        "budget_account": {
+            "id": true,
+            "budget_total_amount": true,
+            "budget": true,
+            "chart_of_account": true
+        },
+        "budget_account_period": {
+            "id": true,
+            "budget_amount": true,
+            "period_month": true,
+            "budget_account": true
+        },
+        "budget_control_action": {
+            "id": true,
+            "type": true,
+            "action_accumulated_monthly_budget_exceeded": true
+        },
+        "general_journal_detail": {
+            "id": true,
+            "description": true,
+            "debit_or_credit": true,
+            "amount_credit": true,
+            "posting_reference": true,
+            "reference_code": true,
+            "amount_debit": true,
+            "tax_group": true,
+            "tax": true,
+            "contact": true,
+            "general_journal_header": true,
+            "cost_center": true,
+            "chart_of_account": true
+        },
+        "general_journal_header": {
+            "id": true,
+            "journal_date": true,
+            "posting_reference": true,
+            "reference_number": true,
+            "journal_status": true,
+            "notes": true,
+            "report_basis": true,
+            "journal_source": true,
+            "journal_posting_status": true,
+            "journal_type_reference": true,
+            "total_amount": true,
+            "journal_type": true,
+            "recurring_general_journal": true,
+            "currency": true,
+            "posting_responsible_user": true
+        },
+        "general_ledger": {
+            "id": true,
+            "amount_credit": true,
+            "amount_debit": true,
+            "ledger_status": true,
+            "posting_reference": true,
+            "group_posting_reference": true,
+            "description": true,
+            "journal_date": true,
+            "posting_date": true,
+            "currency": true,
+            "tax": true,
+            "tax_group": true,
+            "general_journal_header": true,
+            "chart_of_account": true
+        },
+        "journal_comment": {
+            "id": true,
+            "commented_date": true,
+            "comment": true,
+            "application_user": true,
+            "contact": true,
+            "general_journal_header": true,
+            "recurring_general_journal": true
+        },
+        "number_tracker": {
+            "id": true,
+            "prefix": true,
+            "starting_number": true,
+            "next_number": true,
+            "reason": true
+        },
+        "recurring_general_journal": {
+            "id": true,
+            "profile_name": true,
+            "start_on": true,
+            "end_on": true,
+            "never_expires": true,
+            "depreciable_value": true,
+            "recurring_general_journal_status": true,
+            "asset": true,
+            "recurring_journal_occurrence": true
+        },
+        "transaction_lock": {
+            "id": true,
+            "lock_date": true,
+            "reason": true,
+            "enable_transaction_locking": true
+        },
+        "opening_balance": {
+            "id": true,
+            "opening_balance_date": true,
+            "price_precision": true,
+            "amount": true,
+            "month": true
+        },
+        "cash_payment_custom": {
+            "id": true,
+            "date": true,
+            "customer": true,
+            "amount": true,
+            "tin_number": true,
+            "tax": true,
+            "withholding": true,
+            "merchant_record_card_code": true,
+            "number": true
+        },
+        "cash_payment_voucher": {
+            "id": true,
+            "date": true,
+            "paid_to": true,
+            "amount": true,
+            "description": true,
+            "check_number": true,
+            "pv_number": true,
+            "remaining_balance": true,
+            "cpv_bank": true,
+            "prepared_by": true,
+            "checked_by": true,
+            "project": true,
+            "cpv_type": true,
+            "request_payment": true
+        },
+        "cpv_bank": { "id": true, "name": true, "description": true },
+        "cpv_payment_request": {
+            "id": true,
+            "date": true,
+            "amount": true,
+            "description": true,
+            "check_number": true,
+            "remaining_balance": true,
+            "from": true,
+            "project": true,
+            "prepared_by": true,
+            "checked_by": true,
+            "approved_by": true,
+            "cash_payment_voucher": true
+        },
+        "cpv_receipt": {
+            "id": true,
+            "date": true,
+            "company_name": true,
+            "tin_number": true,
+            "amount": true,
+            "vat": true,
+            "withholding": true,
+            "machine_code": true,
+            "receipt_number": true,
+            "cash_payment_voucher": true
+        },
+        "cpv_type": {
+            "id": true,
+            "name": true,
+            "description": true,
+            "cpv_types": true
+        },
+        "petty_cash": {
+            "id": true,
+            "date": true,
+            "pcpv": true,
+            "remark": true,
+            "description": true,
+            "debit": true,
+            "credit": true,
+            "balance": true,
+            "project": true,
+            "issued_by": true,
+            "cash_payment_voucher": true
+        },
+        "crv_payment": {
+            "id": true,
+            "date": true,
+            "name": true,
+            "customer_name": true,
+            "description": true,
+            "amount_before_vat": true,
+            "vat": true,
+            "amount_with_vat": true,
+            "payment_description": true,
+            "withholding": true,
+            "check_amount": true,
+            "cash_amount": true,
+            "project": true,
+            "crv_type": true
+        },
+        "crv_type": {
+            "id": true,
+            "name": true,
+            "description": true,
+            "crv_types": true
+        },
+        "opening_balance_account": {
+            "id": true,
+            "debit_or_credit": true,
+            "amount_credit": true,
+            "amount_debit": true,
+            "opening_balance": true,
+            "currency": true,
+            "chart_of_account": true
+        }
+    },
+    "allFilters": {
+        "chart_of_account_files": {
+            "id": "number",
+            "path": "string",
+            "name": "string",
+            "type": "string",
+            "chart_of_account_id": "number"
+        },
+        "general_journal_files": {
+            "id": "number",
+            "path": "string",
+            "name": "string",
+            "type": "string",
+            "general_journal_header_id": "number"
+        },
+        "export_template": {
+            "id": "number",
+            "template_name": "string",
+            "module_name": "number",
+            "export_template_fields": "string",
+            "excel_columns": "string"
+        },
+        "chart_of_account": {
+            "id": "number",
+            "account_name": "string",
+            "account_code": "string",
+            "account_number": "string",
+            "is_active": "boolean",
+            "description": "string",
+            "add_to_dashboard_watch_list": "boolean",
+            "attachment_path": "number",
+            "is_sub_account": "boolean",
+            "is_default": "boolean",
+            "is_employee_account": "boolean",
+            "has_opening_balance": "boolean",
+            "is_bank_account": "boolean",
+            "parent_account_id": "number",
+            "head_account_id": "number",
+            "currency_id": "number",
+            "account_type_id": "number"
+        },
+        "account_type_financial_statement_section": {
+            "id": "number",
+            "account_type_id": "number",
+            "financial_statement_section_id": "number"
+        },
+        "bank_reconcilation": {
+            "id": "number",
+            "closing_amount": "number",
+            "chart_of_account_id": "number"
+        },
+        "reconcilation_transaction": {
+            "id": "number",
+            "bank_reconcilation_id": "number",
+            "general_ledger_id": "number"
+        },
+        "asset": {
+            "id": "number",
+            "name": "string",
+            "tag_number": "string",
+            "description": "string",
+            "economic_value": "number",
+            "depreciation_methods": "number",
+            "asset_type": "number",
+            "asset_status": "number",
+            "estimated_total_production": "number",
+            "scrap_value": "number",
+            "currency_id": "number",
+            "estimated_total_production_unit_id": "number",
+            "asset_account_id": "number",
+            "depreciation_account_id": "number",
+            "recurring_journal_occurrence_id": "number"
+        },
+        "estimated_total_production_unit": {
+            "id": "number",
+            "unit_name": "string",
+            "unit_symbol": "string"
+        },
+        "recurring_journal_occurrence": {
+            "id": "number",
+            "repeat_every_number": "number",
+            "repeat_every_label": "number",
+            "name": "string"
+        },
+        "budget": {
+            "id": "number",
+            "name": "string",
+            "budget_reason": "number",
+            "project_name": "string",
+            "cost_center_id": "number"
+        },
+        "budget_account": {
+            "id": "number",
+            "budget_total_amount": "number",
+            "budget_id": "number",
+            "chart_of_account_id": "number"
+        },
+        "budget_account_period": {
+            "id": "number",
+            "budget_amount": "number",
+            "period_month": "number",
+            "budget_account_id": "number"
+        },
+        "budget_control_action": {
+            "id": "number",
+            "type": "number",
+            "action_accumulated_monthly_budget_exceeded": "number"
+        },
+        "general_journal_detail": {
+            "id": "number",
+            "description": "string",
+            "debit_or_credit": "number",
+            "tax_group_id": "number",
+            "amount_credit": "number",
+            "posting_reference": "string",
+            "reference_code": "string",
+            "amount_debit": "number",
+            "tax_id": "number",
+            "contact_id": "number",
+            "general_journal_header_id": "number",
+            "cost_center_id": "number",
+            "chart_of_account_id": "number"
+        },
+        "general_journal_header": {
+            "id": "number",
+            "posting_reference": "string",
+            "reference_number": "string",
+            "journal_status": "number",
+            "notes": "string",
+            "report_basis": "number",
+            "journal_source": "number",
+            "journal_posting_status": "number",
+            "journal_type_reference": "string",
+            "total_amount": "number",
+            "journal_type_id": "number",
+            "recurring_general_journal_id": "number",
+            "currency_id": "number",
+            "posting_responsible_user_id": "number"
+        },
+        "general_ledger": {
+            "id": "number",
+            "amount_credit": "number",
+            "amount_debit": "number",
+            "ledger_status": "number",
+            "posting_reference": "string",
+            "group_posting_reference": "string",
+            "description": "string",
+            "currency_id": "number",
+            "tax_id": "number",
+            "tax_group_id": "number",
+            "general_journal_header_id": "number",
+            "chart_of_account_id": "number"
+        },
+        "journal_comment": {
+            "id": "number",
+            "comment": "string",
+            "application_user_id": "number",
+            "contact_id": "number",
+            "general_journal_header_id": "number",
+            "recurring_general_journal_id": "number"
+        },
+        "number_tracker": {
+            "Id": "number",
+            "prefix": "string",
+            "starting_number": "number",
+            "next_number": "number",
+            "reason": "number"
+        },
+        "recurring_general_journal": {
+            "id": "number",
+            "profile_name": "string",
+            "never_expires": "boolean",
+            "depreciable_value": "number",
+            "recurring_general_journal_status": "number",
+            "asset_id": "number",
+            "recurring_journal_occurrence_id": "number"
+        },
+        "transaction_lock": { "id": "number", "reason": "string" },
+        "opening_balance": {
+            "id": "number",
+            "price_precision": "number",
+            "amount": "number",
+            "month": "number"
+        },
+        "cash_payment_custom": {
+            "id": "number",
+            "customer": "string",
+            "amount": "number",
+            "tin_number": "string",
+            "tax": "number",
+            "withholding": "number",
+            "merchant_record_card_code": "string",
+            "number": "string"
+        },
+        "cash_payment_voucher": {
+            "id": "number",
+            "paid_to": "string",
+            "amount": "number",
+            "description": "string",
+            "check_number": "string",
+            "pv_number": "number",
+            "remaining_balance": "number",
+            "cpv_bank_id": "number",
+            "prepared_by_id": "number",
+            "checked_by_id": "number",
+            "project_id": "number",
+            "cpv_type_id": "number",
+            "request_payment_id": "number"
+        },
+        "cpv_bank": {
+            "id": "number",
+            "name": "string",
+            "description": "string"
+        },
+        "cpv_payment_request": {
+            "id": "number",
+            "amount": "number",
+            "description": "string",
+            "check_number": "string",
+            "remaining_balance": "number",
+            "from_id": "number",
+            "project_id": "number",
+            "prepared_by_id": "number",
+            "checked_by_id": "number",
+            "approved_by_id": "number",
+            "cash_payment_voucher_id": "number"
+        },
+        "cpv_receipt": {
+            "id": "number",
+            "company_name": "string",
+            "tin_number": "string",
+            "amount": "number",
+            "vat": "number",
+            "withholding": "number",
+            "machine_code": "string",
+            "receipt_number": "string",
+            "cash_payment_voucher_id": "number"
+        },
+        "cpv_type": {
+            "id": "number",
+            "name": "string",
+            "description": "string",
+            "cpv_types": "number"
+        },
+        "petty_cash": {
+            "id": "number",
+            "pcpv": "string",
+            "remark": "string",
+            "description": "string",
+            "debit": "number",
+            "credit": "number",
+            "balance": "number",
+            "project_id": "number",
+            "issued_by_id": "number",
+            "cash_payment_voucher_id": "number"
+        },
+        "crv_payment": {
+            "id": "number",
+            "name": "string",
+            "customer_name": "string",
+            "description": "string",
+            "amount_before_vat": "number",
+            "vat": "number",
+            "amount_with_vat": "number",
+            "payment_description": "string",
+            "withholding": "number",
+            "check_amount": "number",
+            "cash_amount": "number",
+            "project_id": "number",
+            "crv_type_id": "number"
+        },
+        "crv_type": {
+            "id": "number",
+            "name": "string",
+            "description": "string",
+            "crv_types": "number"
+        },
+        "opening_balance_account": {
+            "id": "number",
+            "debit_or_credit": "number",
+            "amount_credit": "number",
+            "amount_debit": "number",
+            "opening_balance_id": "number",
+            "currency_id": "number",
+            "chart_of_account_id": "number"
+        }
+    },
+    "allSorts": {
+        "chart_of_account_files": {
+            "id": "number",
+            "path": "number",
+            "name": "number",
+            "type": "number",
+            "chart_of_account_id": "number"
+        },
+        "export_template": {
+            "id": "number",
+            "template_name": "number",
+            "module_name": "number",
+            "export_template_fields": "number",
+            "excel_columns": "number"
+        },
+        "general_journal_files": {
+            "id": "number",
+            "path": "number",
+            "name": "number",
+            "type": "number",
+            "general_journal_header_id": "number"
+        },
+        "chart_of_account": {
+            "id": "number",
+            "account_name": "number",
+            "account_code": "number",
+            "account_number": "number",
+            "is_active": "number",
+            "description": "number",
+            "add_to_dashboard_watch_list": "number",
+            "attachment_path": "number",
+            "is_sub_account": "number",
+            "is_default": "number",
+            "is_employee_account": "number",
+            "has_opening_balance": "number",
+            "is_bank_account": "number",
+            "parent_account_id": "number",
+            "head_account_id": "number",
+            "currency_id": "number",
+            "account_type_id": "number"
+        },
+        "account_type_financial_statement_section": {
+            "id": "number",
+            "account_type_id": "number",
+            "financial_statement_section_id": "number"
+        },
+        "bank_reconcilation": {
+            "id": "number",
+            "from_date": "number",
+            "to_date": "number",
+            "closing_amount": "number",
+            "chart_of_account_id": "number"
+        },
+        "reconcilation_transaction": {
+            "id": "number",
+            "bank_reconcilation_id": "number",
+            "general_ledger_id": "number"
+        },
+        "asset": {
+            "id": "number",
+            "name": "number",
+            "tag_number": "number",
+            "acquisition_date": "number",
+            "description": "number",
+            "economic_value": "number",
+            "depreciation_methods": "number",
+            "useful_life": "number",
+            "current_value": "number",
+            "asset_type": "number",
+            "asset_status": "number",
+            "estimated_total_production": "number",
+            "scrap_value": "number",
+            "currency_id": "number",
+            "estimated_total_production_unit_id": "number",
+            "asset_account_id": "number",
+            "depreciation_account_id": "number",
+            "recurring_journal_occurrence_id": "number"
+        },
+        "estimated_total_production_unit": {
+            "id": "number",
+            "unit_name": "number",
+            "unit_symbol": "number"
+        },
+        "recurring_journal_occurrence": {
+            "id": "number",
+            "repeat_every_number": "number",
+            "repeat_every_label": "number",
+            "name": "number"
+        },
+        "budget": {
+            "id": "number",
+            "name": "number",
+            "fiscal_year": "number",
+            "budget_reason": "number",
+            "project_name": "number",
+            "cost_center_id": "number"
+        },
+        "budget_account": {
+            "id": "number",
+            "budget_total_amount": "number",
+            "budget_id": "number",
+            "chart_of_account_id": "number"
+        },
+        "budget_account_period": {
+            "id": "number",
+            "budget_amount": "number",
+            "period_month": "number",
+            "budget_account_id": "number"
+        },
+        "budget_control_action": {
+            "id": "number",
+            "type": "number",
+            "action_accumulated_monthly_budget_exceeded": "number"
+        },
+        "general_journal_detail": {
+            "id": "number",
+            "description": "number",
+            "debit_or_credit": "number",
+            "tax_group_id": "number",
+            "amount_credit": "number",
+            "posting_reference": "number",
+            "reference_code": "number",
+            "amount_debit": "number",
+            "tax_id": "number",
+            "contact_id": "number",
+            "general_journal_header_id": "number",
+            "cost_center_id": "number",
+            "chart_of_account_id": "number"
+        },
+        "general_journal_header": {
+            "id": "number",
+            "journal_date": "number",
+            "posting_reference": "number",
+            "reference_number": "number",
+            "journal_status": "number",
+            "notes": "number",
+            "report_basis": "number",
+            "journal_source": "number",
+            "journal_posting_status": "number",
+            "journal_type_reference": "number",
+            "total_amount": "number",
+            "journal_type_id": "number",
+            "recurring_general_journal_id": "number",
+            "currency_id": "number",
+            "posting_responsible_user_id": "number"
+        },
+        "general_ledger": {
+            "id": "number",
+            "amount_credit": "number",
+            "amount_debit": "number",
+            "ledger_status": "number",
+            "posting_reference": "number",
+            "group_posting_reference": "number",
+            "description": "number",
+            "journal_date": "number",
+            "posting_date": "number",
+            "currency_id": "number",
+            "tax_id": "number",
+            "tax_group_id": "number",
+            "general_journal_header_id": "number",
+            "chart_of_account_id": "number"
+        },
+        "journal_comment": {
+            "id": "number",
+            "commented_date": "number",
+            "comment": "number",
+            "application_user_id": "number",
+            "contact_id": "number",
+            "general_journal_header_id": "number",
+            "recurring_general_journal_id": "number"
+        },
+        "number_tracker": {
+            "Id": "number",
+            "prefix": "number",
+            "starting_number": "number",
+            "next_number": "number",
+            "reason": "number"
+        },
+        "recurring_general_journal": {
+            "id": "number",
+            "profile_name": "number",
+            "start_on": "number",
+            "end_on": "number",
+            "never_expires": "number",
+            "depreciable_value": "number",
+            "recurring_general_journal_status": "number",
+            "asset_id": "number",
+            "recurring_journal_occurrence_id": "number"
+        },
+        "transaction_lock": {
+            "id": "number",
+            "lock_date": "number",
+            "reason": "number",
+            "enable_transaction_locking": "number"
+        },
+        "opening_balance": {
+            "id": "number",
+            "opening_balance_date": "number",
+            "price_precision": "number",
+            "amount": "number",
+            "month": "number"
+        },
+        "cash_payment_custom": {
+            "id": "number",
+            "date": "number",
+            "customer": "number",
+            "amount": "number",
+            "tin_number": "number",
+            "tax": "number",
+            "withholding": "number",
+            "merchant_record_card_code": "number",
+            "number": "number"
+        },
+        "cash_payment_voucher": {
+            "id": "number",
+            "date": "number",
+            "paid_to": "number",
+            "amount": "number",
+            "description": "number",
+            "check_number": "number",
+            "pv_number": "number",
+            "remaining_balance": "number",
+            "cpv_bank_id": "number",
+            "prepared_by_id": "number",
+            "checked_by_id": "number",
+            "project_id": "number",
+            "cpv_type_id": "number",
+            "request_payment_id": "number"
+        },
+        "cpv_bank": {
+            "id": "number",
+            "name": "number",
+            "description": "number"
+        },
+        "cpv_payment_request": {
+            "id": "number",
+            "date": "number",
+            "amount": "number",
+            "description": "number",
+            "check_number": "number",
+            "remaining_balance": "number",
+            "from_id": "number",
+            "project_id": "number",
+            "prepared_by_id": "number",
+            "checked_by_id": "number",
+            "approved_by_id": "number",
+            "cash_payment_voucher_id": "number"
+        },
+        "cpv_receipt": {
+            "id": "number",
+            "date": "number",
+            "company_name": "number",
+            "tin_number": "number",
+            "amount": "number",
+            "vat": "number",
+            "withholding": "number",
+            "machine_code": "number",
+            "receipt_number": "number",
+            "cash_payment_voucher_id": "number"
+        },
+        "cpv_type": {
+            "id": "number",
+            "name": "number",
+            "description": "number",
+            "cpv_types": "number"
+        },
+        "petty_cash": {
+            "id": "number",
+            "date": "number",
+            "pcpv": "number",
+            "remark": "number",
+            "description": "number",
+            "debit": "number",
+            "credit": "number",
+            "balance": "number",
+            "project_id": "number",
+            "issued_by_id": "number",
+            "cash_payment_voucher_id": "number"
+        },
+        "crv_payment": {
+            "id": "number",
+            "date": "number",
+            "name": "number",
+            "customer_name": "number",
+            "description": "number",
+            "amount_before_vat": "number",
+            "vat": "number",
+            "amount_with_vat": "number",
+            "payment_description": "number",
+            "withholding": "number",
+            "check_amount": "number",
+            "cash_amount": "number",
+            "project_id": "number",
+            "crv_type_id": "number"
+        },
+        "crv_type": {
+            "id": "number",
+            "name": "number",
+            "description": "number",
+            "crv_types": "number"
+        },
+        "opening_balance_account": {
+            "id": "number",
+            "debit_or_credit": "number",
+            "amount_credit": "number",
+            "amount_debit": "number",
+            "opening_balance_id": "number",
+            "currency_id": "number",
+            "chart_of_account_id": "number"
+        }
+    },
+    "allRoutes": [
+        "/chart_of_account",
+        "/export_template",
+        "/account_type_financial_statement_section",
+        "/bank_reconcilation",
+        "/chart_of_account_files",
+        "/estimated_total_production_unit",
+        "/recurring_journal_occurrence",
+        "/budget",
+        "/budget_account",
+        "/budget_account_period",
+        "/budget_control_action",
+        "/general_journal_header",
+        "/general_ledger",
+        "/journal_comment",
+        "/number_tracker",
+        "/transaction_lock",
+        "/opening_balance",
+        "/reconcilation_transaction",
+        "/asset",
+        "/general_journal_detail",
+        "/general_journal_files",
+        "/recurring_general_journal",
+        "/cash_payment_custom",
+        "/cash_payment_voucher",
+        "/cpv_bank",
+        "/cpv_payment_request",
+        "/cpv_receipt",
+        "/cpv_type",
+        "/petty_cash",
+        "/crv_payment",
+        "/crv_type",
+        "/opening_balance_account"
+    ],
+    "allPostRoutes": [
+        "/chart_of_account",
+        "/account_type_financial_statement_section",
+        "/bank_reconcilation",
+        "/estimated_total_production_unit",
+        "/recurring_journal_occurrence",
+        "/budget",
+        "/budget_account",
+        "/budget_account_period",
+        "/budget_control_action",
+        "/general_journal_header",
+        "/general_ledger",
+        "/journal_comment",
+        "/number_tracker",
+        "/transaction_lock",
+        "/opening_balance",
+        "/reconcilation_transaction",
+        "/asset",
+        "/general_journal_detail",
+        "/recurring_general_journal",
+        "/cash_payment_custom",
+        "/cash_payment_voucher",
+        "/cpv_bank",
+        "/cpv_payment_request",
+        "/cpv_receipt",
+        "/cpv_type",
+        "/petty_cash",
+        "/crv_payment",
+        "/crv_type",
+        "/opening_balance_account"
+    ]
+}

@@ -1,7 +1,6 @@
-const { PrismaClient } = require("@prisma/client");
-const { refresh_tokens } = new PrismaClient();
+const { error, allModels } = require("../config/config");
+const { refresh_tokens } = allModels;
 const { sign } = require("jsonwebtoken");
-const { error } = require("../config/config");
 module.exports = async (refreshToken, id, next) => {
     const queryResult = await refresh_tokens.findFirst({
         where: { refresh_token: refreshToken, user_id: id },
@@ -11,7 +10,8 @@ module.exports = async (refreshToken, id, next) => {
         error(
             "refreshToken",
             "you have been revoked access, please login again",
-            next
+            next,
+            403
         );
         return false;
     }

@@ -18,27 +18,29 @@ model refresh_tokens {
 }
 
 model user {
-  id                     Int              @id @default(autoincrement())
+  id                     Int                      @id @default(autoincrement())
   username               String?
   normalized_username    String?
-  email                  String?          @unique
+  email                  String?                  @unique
   password               String
-  email_confirmed        Boolean?         @default(false)
+  email_confirmed        Boolean?                 @default(false)
   security_stamp         String?
   concurrency_stamp      String
-  phone_number           String?          @unique
+  phone_number           String?                  @unique
   phone_number_confirmed Boolean?
   lockout_end            DateTime?
-  two_factor_enabled     Boolean?         @default(false)
+  two_factor_enabled     Boolean?                 @default(false)
   lockout_enabled        Boolean?
-  access_failed_count    Int              @default(0)
+  access_failed_count    Int                      @default(0)
   first_login            Boolean?
   code                   Int
-  role                   role?            @relation(fields: [roleId], references: [id])
+  role                   role?                    @relation(fields: [roleId], references: [id])
   roleId                 Int?
-  deleted_status         Int              @default(0)
+  deleted_status         Int                      @default(0)
   refresh_tokens         refresh_tokens[]
   journal_users          journal_users[]
+  general_journal_header general_journal_header[]
+  journal_comment        journal_comment[]
 }
 
 model privilege {
@@ -146,6 +148,8 @@ model manpower {
   isProtectedForEdit    Boolean                @default(false)
   manpower_requirements manpower_requirement[]
   weather_data          weather_data[]
+  cpv_payment_request   cpv_payment_request[]
+  request_payment       request_payment[]
 }
 
 model material_category {
@@ -295,6 +299,11 @@ model project {
   todos                        todos[]
   request                      request[]
   required_document            required_document[]
+  cash_payment_voucher         cash_payment_voucher[]
+  cpv_payment_request          cpv_payment_request[]
+  crv_payment                  crv_payment[]
+  request_payment              request_payment[]
+  petty_cash                   petty_cash[]
 }
 
 model daily_work_log {
@@ -630,62 +639,99 @@ model required_document {
   isProtectedForEdit Boolean       @default(false)
 }
 
-model currency {
-  id                   Int                  @id @default(autoincrement())
-  currency_code        String
-  currency_description String
-  name                 String
-  symbol               String
-  price_precision      Int
-  currency_format      Int
-  is_base_currency     Boolean
-  bank                 bank[]
-  exchange_rate        exchange_rate[]
-  financial_settings   financial_settings[]
-  chart_of_account     chart_of_account[]
-  contact              contact[]
-}
-
 model account_category {
-  id           Int            @id @default(autoincrement())
-  code         String
-  description  String?
-  is_debit     String?
-  account_type account_type[]
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime       @default(now())
+  createdBy          String
+  revisionDate       DateTime       @updatedAt
+  revisedBy          String
+  status             Int            @default(0)
+  isProtectedForEdit Boolean        @default(false)
+  id                 Int            @id @default(autoincrement())
+  code               String
+  name               String         @unique @default("random")
+  description        String?
+  is_debit           Boolean?
+  account_type       account_type[]
 }
 
 model closing_note {
-  id            Int     @id @default(autoincrement())
-  closing_type  Int //[both,month_end,year_end]
-  title         String
-  note          String?
-  consideration Int //[closing_note,closing_effect]
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  closing_type       Int? //[both,month_end,year_end]
+  title              String?
+  note               String
+  consideration      Int? //[closing_note,closing_effect]
 }
 
 model financial_statement_section {
-  id                       Int     @id @default(autoincrement())
-  name                     String
-  description              String?
-  sequence_on_report       Int
-  financial_statement_type Int //[income_statement,balance_sheet,cash_flow_statement,owners_equity]
+  startDate                                DateTime
+  endDate                                  DateTime
+  creationDate                             DateTime                                   @default(now())
+  createdBy                                String
+  revisionDate                             DateTime                                   @updatedAt
+  revisedBy                                String
+  status                                   Int                                        @default(0)
+  isProtectedForEdit                       Boolean                                    @default(false)
+  id                                       Int                                        @id @default(autoincrement())
+  name                                     String                                     @unique
+  description                              String?
+  sequence_on_report                       Int
+  financial_statement_type                 Int //[income_statement,balance_sheet,cash_flow_statement,owners_equity]
+  account_type_financial_statement_section account_type_financial_statement_section[]
 }
 
 model cost_center {
-  id                   Int                    @id @default(autoincrement())
-  cost_center_code     String
-  section_name         String?
-  remark               String?
-  cost_center_accounts cost_center_accounts[]
+  startDate              DateTime
+  endDate                DateTime
+  creationDate           DateTime                 @default(now())
+  createdBy              String
+  revisionDate           DateTime                 @updatedAt
+  revisedBy              String
+  status                 Int                      @default(0)
+  isProtectedForEdit     Boolean                  @default(false)
+  id                     Int                      @id @default(autoincrement())
+  cost_center_code       String
+  section_name           String?
+  remark                 String?
+  cost_center_accounts   cost_center_accounts[]
+  budget                 budget[]
+  general_journal_detail general_journal_detail[]
+  business_unit          business_unit[]
 }
 
 model payment_term {
-  id             Int       @id @default(autoincrement())
-  show_it_as     String
-  number_of_days Int
-  contact        contact[]
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime  @default(now())
+  createdBy          String
+  revisionDate       DateTime  @updatedAt
+  revisedBy          String
+  status             Int       @default(0)
+  isProtectedForEdit Boolean   @default(false)
+  id                 Int       @id @default(autoincrement())
+  show_it_as         String
+  number_of_days     Int
+  contact            contact[]
 }
 
 model date_format_type {
+  startDate                 DateTime
+  endDate                   DateTime
+  creationDate              DateTime             @default(now())
+  createdBy                 String
+  revisionDate              DateTime             @updatedAt
+  revisedBy                 String
+  status                    Int                  @default(0)
+  isProtectedForEdit        Boolean              @default(false)
   id                        Int                  @id @default(autoincrement())
   date_format               String
   date_format_type_category Int //[short,medium,long]
@@ -693,51 +739,101 @@ model date_format_type {
 }
 
 model industry {
-  id          Int     @id @default(autoincrement())
-  name        String
-  description String?
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  name               String
+  description        String?
 }
 
 model foot_note {
-  id                       Int     @id @default(autoincrement())
+  startDate                DateTime
+  endDate                  DateTime
+  creationDate             DateTime @default(now())
+  createdBy                String
+  revisionDate             DateTime @updatedAt
+  revisedBy                String
+  status                   Int      @default(0)
+  isProtectedForEdit       Boolean  @default(false)
+  id                       Int      @id @default(autoincrement())
   title                    String
   description              String?
-  financial_statement_type Int //[income_statement,balance_sheet,cash_flow_statement,owners_equity]
+  financial_statement_type Int? //[income_statement,balance_sheet,cash_flow_statement,owners_equity]
 }
 
 model tax_authority {
-  id          Int     @id @default(autoincrement())
-  name        String
-  description String?
-  tax         tax[]
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  name               String   @unique
+  description        String?
+  tax                tax[]
 }
 
 model tax_exemption {
-  id                   Int     @id @default(autoincrement())
-  tax_exemption_reason String?
+  startDate            DateTime
+  endDate              DateTime
+  creationDate         DateTime @default(now())
+  createdBy            String
+  revisionDate         DateTime @updatedAt
+  revisedBy            String
+  status               Int      @default(0)
+  isProtectedForEdit   Boolean  @default(false)
+  id                   Int      @id @default(autoincrement())
+  tax_exemption_reason String   @unique
   code                 String
   description          String?
   tax_exemption_type   Int //[customer,item]
 }
 
 model tax_group {
-  id                   Int                    @id @default(autoincrement())
-  tax_group_name       String
-  tax_group_percentage Float
-  associated_tax_group associated_tax_group[]
+  startDate              DateTime
+  endDate                DateTime
+  creationDate           DateTime                 @default(now())
+  createdBy              String
+  revisionDate           DateTime                 @updatedAt
+  revisedBy              String
+  status                 Int                      @default(0)
+  isProtectedForEdit     Boolean                  @default(false)
+  id                     Int                      @id @default(autoincrement())
+  tax_group_name         String                   @unique
+  tax_group_percentage   Float
+  associated_tax_group   associated_tax_group[]
+  general_ledger         general_ledger[]
+  general_journal_detail general_journal_detail[]
 }
 
-model transaction_type {
-  id          Int     @id @default(autoincrement())
-  type        Int //[Matched,Manually_Added,Categorized,Reconciled,Unreconciled]
-  description String?
-}
+// model transaction_type {
+//   id          Int     @id @default(autoincrement())
+//   type        Int //[Matched,Manually_Added,Categorized,Reconciled,Unreconciled]
+//   description String?
+// }
 
 model accounting_period {
+  startDate                 DateTime
+  endDate                   DateTime
+  creationDate              DateTime @default(now())
+  createdBy                 String
+  revisionDate              DateTime @updatedAt
+  revisedBy                 String
+  status                    Int      @default(0)
+  isProtectedForEdit        Boolean  @default(false)
   id                        Int      @id @default(autoincrement())
   months                    Int //[january,february,march,april,may,june,july,augest,september,october,november,december,other]
   period_number             Int
-  status                    Int //[open,closed,future,access_locked]
+  accounting_period_status  Int //[open,closed,future,access_locked]
   is_current_posting_period Boolean
   is_year_end_closing       Boolean
   period_starting_date      DateTime
@@ -745,163 +841,182 @@ model accounting_period {
 }
 
 model journal_type {
-  id          Int     @id @default(autoincrement())
-  type        String
-  description String?
-}
-
-model country {
-  id           Int    @id @default(autoincrement())
-  country_code String
-  country_name String
-}
-
-model title {
-  id         Int    @id @default(autoincrement())
-  short_code String
-  name       String
-}
-
-model language {
-  id                 Int                  @id @default(autoincrement())
-  code               String
-  name               String
-  financial_settings financial_settings[]
+  startDate              DateTime
+  endDate                DateTime
+  creationDate           DateTime                 @default(now())
+  createdBy              String
+  revisionDate           DateTime                 @updatedAt
+  revisedBy              String
+  status                 Int                      @default(0)
+  isProtectedForEdit     Boolean                  @default(false)
+  id                     Int                      @id @default(autoincrement())
+  type                   String
+  description            String?
+  general_journal_header general_journal_header[]
 }
 
 model account_type {
-  id                                      Int                @id @default(autoincrement())
-  code                                    String
-  type                                    String
-  description                             String?
-  can_be_sub_account                      Boolean?
-  contain_account_number                  Boolean?
-  contain_currency                        Boolean?
-  tool_tip_description                    String?
-  can_have_more_than_one_chart_of_account Boolean?
-  account_category_id                     Int
-  account_category                        account_category   @relation(fields: [account_category_id], references: [id])
+  startDate                                DateTime
+  endDate                                  DateTime
+  creationDate                             DateTime                                   @default(now())
+  createdBy                                String
+  revisionDate                             DateTime                                   @updatedAt
+  revisedBy                                String
+  status                                   Int                                        @default(0)
+  isProtectedForEdit                       Boolean                                    @default(false)
+  id                                       Int                                        @id @default(autoincrement())
+  code                                     String                                     @unique
+  type                                     String
+  description                              String?
+  can_be_sub_account                       Boolean?
+  contain_account_number                   Boolean?
+  contain_currency                         Boolean?
+  tool_tip_description                     String?
+  can_have_more_than_one_chart_of_account  Boolean?
+  account_category_id                      Int
+  account_category                         account_category                           @relation(fields: [account_category_id], references: [id])
   //needs account_category
   //inside schema
-  chart_of_account                        chart_of_account[]
+  chart_of_account                         chart_of_account[]
+  account_type_financial_statement_section account_type_financial_statement_section[]
 }
 
 model bank {
-  id             Int      @id @default(autoincrement())
-  account_type   Int //[bank,credit_card]
-  account_name   String
-  account_number String
-  account_code   String
-  IBAN           String
-  bank_name      String
-  description    String
-  is_primary     Boolean
-  currency_id    Int
-  currency       currency @relation(fields: [currency_id], references: [id])
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  account_type       Int //[bank,credit_card]
+  account_name       String   @unique
+  account_number     String?
+  account_code       String?
+  IBAN               String?
+  bank_name          String?
+  description        String?
+  is_primary         Boolean?
+  currency_id        Int
+  currency           currency @relation(fields: [currency_id], references: [id])
   //needs currency
   //inside schema
 }
 
 model exchange_rate {
-  id          Int      @id @default(autoincrement())
-  rate        Float
-  date        DateTime
-  currency_id Int
-  currency    currency @relation(fields: [currency_id], references: [id])
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  rate               Float
+  date               DateTime
+  currency_id        Int
+  currency           currency @relation(fields: [currency_id], references: [id])
   //needs currency
   //inside schema
 }
 
 model financial_settings {
+  startDate                        DateTime
+  endDate                          DateTime
+  creationDate                     DateTime          @default(now())
+  createdBy                        String
+  revisionDate                     DateTime          @updatedAt
+  revisedBy                        String
+  status                           Int               @default(0)
+  isProtectedForEdit               Boolean           @default(false)
   id                               Int               @id @default(autoincrement())
   report_basis                     Int //[accrual,cash,both]
   fiscal_year                      Int //[january_december,february_january,march_february,april_march,may_april,june_may,july_june,august_july,september_august,october_september,november_october,december_november]
   closing_type                     Int //[both,month_end,year_end]
-  timezone                         String
-  company_id                       Int //[ACN,BN,CN,CPR,CVR,DIW,KT,ORG,SEC,company_id]
-  tax_id                           Int //[ABN,BN,CST,ORG,TAX,VST,tax_id]
-  auto_generate_journal_preference Boolean
-  is_acc_code_mandatory            Boolean
-  enter_unique_acc_code            Boolean
-  is_profile_tax_applied           Boolean
-  is_legal_reserve_applied         Boolean
-  profit_tax                       Float
-  legal_reserve                    Float
-  company_id_number                String
-  time_format_id                   Int
-  language_id                      Int
+  timezone                         String?
+  company_id                       Int? //[ACN,BN,CN,CPR,CVR,DIW,KT,ORG,SEC,company_id]
+  tax_id                           Int? //[ABN,BN,CST,ORG,TAX,VST,tax_id]
+  tax_id_number                    String?
+  auto_generate_journal_preference Boolean?
+  is_acc_code_mandatory            Boolean?
+  enter_unique_acc_code            Boolean?
+  is_profile_tax_applied           Boolean?
+  is_legal_reserve_applied         Boolean?
+  profit_tax                       Float?
+  legal_reserve                    Float?
+  company_id_number                String?
+  time_format_id                   Int?
+  language_id                      Int?
   base_currency_id                 Int
-  currency                         currency          @relation(fields: [base_currency_id], references: [id])
-  time_format                      date_format_type  @relation(fields: [time_format_id], references: [id])
-  language                         language          @relation(fields: [language_id], references: [id])
+  base_currency                    currency          @relation(fields: [base_currency_id], references: [id])
+  time_format                      date_format_type? @relation(fields: [time_format_id], references: [id])
+  language                         language?         @relation(fields: [language_id], references: [id])
   //needs currency
   //needs date_format_type
   //needs language
   //inside schema
   company_address                  company_address[]
+  primary_contact                  primary_contact[]
 }
 
 model journal_users {
-  id          Int  @id @default(autoincrement())
-  access_name Int //[manual_journal,recurring_journal]
-  user_id     Int
-  user        user @relation(fields: [user_id], references: [id])
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  access_name        Int //[manual_journal,recurring_journal]
+  user_id            Int
+  user               user     @relation(fields: [user_id], references: [id])
   //needs user
   //inside schema
 }
 
-model chart_of_account {
-  id                          Int                    @id @default(autoincrement())
-  account_name                String?
-  account_code                String?
-  account_number              String?
-  is_active                   Boolean?
-  description                 String?
-  add_to_dashboard_watch_list Boolean?
-  attachment_path             Int?
-  is_sub_account              Boolean?
-  is_default                  Boolean?
-  is_employee_account         Boolean?
-  has_opening_balance         Boolean?
-  is_bank_account             Boolean?
-  parent_account_id           Int?
-  head_account_id             Int?
-  currency_id                 Int
-  account_type_id             Int
-  account_type                account_type           @relation(fields: [account_type_id], references: [id])
-  currency                    currency               @relation(fields: [currency_id], references: [id])
-  parent_account              chart_of_account?      @relation(name: "parent_account", fields: [parent_account_id], references: [id])
-  head_account                chart_of_account?      @relation(name: "head_account", fields: [head_account_id], references: [id])
-  //needs account_type
-  //needs currency
-  //needs chart_of_account
-  parent_accounts             chart_of_account[]     @relation("parent_account")
-  head_accounts               chart_of_account[]     @relation("head_account")
-  contact                     contact[]
-  cost_center_accounts        cost_center_accounts[]
-  tax_debits                  tax[]                  @relation("chart_of_account_debit")
-  tax_credits                 tax[]                  @relation("chart_of_account_credit")
-  tax_chart_of_account        tax_chart_of_account[]
-}
-
 model contact {
-  id                   Int              @id @default(autoincrement())
-  contact_type         Int //[customer,vendor]
-  company_name         String
-  contact_display_name String
-  remark               String
-  chart_of_account_id  Int
-  currency_id          Int
-  payment_term_id      Int
-  chart_of_account     chart_of_account @relation(fields: [chart_of_account_id], references: [id])
-  currency             currency         @relation(fields: [currency_id], references: [id])
-  payment_term         payment_term     @relation(fields: [payment_term_id], references: [id])
+  startDate              DateTime
+  endDate                DateTime
+  creationDate           DateTime                 @default(now())
+  createdBy              String
+  revisionDate           DateTime                 @updatedAt
+  revisedBy              String
+  status                 Int                      @default(0)
+  isProtectedForEdit     Boolean                  @default(false)
+  id                     Int                      @id @default(autoincrement())
+  contact_type           Int //[customer,vendor]
+  company_name           String
+  contact_display_name   String
+  remark                 String?
+  chart_of_account_id    Int?
+  currency_id            Int?
+  payment_term_id        Int?
+  chart_of_account       chart_of_account?        @relation(fields: [chart_of_account_id], references: [id])
+  currency               currency?                @relation(fields: [currency_id], references: [id])
+  payment_term           payment_term?            @relation(fields: [payment_term_id], references: [id])
   //needs chart_of_account
   //needs currency
   //needs payment_term
+  contact_address        contact_address[]
+  contact_person         contact_person[]
+  journal_comment        journal_comment[]
+  general_journal_detail general_journal_detail[]
 }
 
 model cost_center_accounts {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime         @default(now())
+  createdBy           String
+  revisionDate        DateTime         @updatedAt
+  revisedBy           String
+  status              Int              @default(0)
+  isProtectedForEdit  Boolean          @default(false)
   id                  Int              @id @default(autoincrement())
   remark              String
   chart_of_account_id Int
@@ -913,6 +1028,14 @@ model cost_center_accounts {
 }
 
 model company_address {
+  startDate               DateTime
+  endDate                 DateTime
+  creationDate            DateTime           @default(now())
+  createdBy               String
+  revisionDate            DateTime           @updatedAt
+  revisedBy               String
+  status                  Int                @default(0)
+  isProtectedForEdit      Boolean            @default(false)
   id                      Int                @id @default(autoincrement())
   address1                String //only this required(from address data)
   address2                String?
@@ -928,53 +1051,3083 @@ model company_address {
 }
 
 model associated_tax_group {
-  id           Int       @id @default(autoincrement())
-  tax_id       Int
-  tax_group_id Int
-  tax          tax       @relation(fields: [tax_id], references: [id])
-  tax_group    tax_group @relation(fields: [tax_group_id], references: [id])
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime  @default(now())
+  createdBy          String
+  revisionDate       DateTime  @updatedAt
+  revisedBy          String
+  status             Int       @default(0)
+  isProtectedForEdit Boolean   @default(false)
+  id                 Int       @id @default(autoincrement())
+  tax_id             Int
+  tax_group_id       Int
+  tax                tax       @relation(fields: [tax_id], references: [id])
+  tax_group          tax_group @relation(fields: [tax_group_id], references: [id])
 }
 
 model tax {
-  id                         Int              @id @default(autoincrement())
+  startDate                  DateTime
+  endDate                    DateTime
+  creationDate               DateTime          @default(now())
+  createdBy                  String
+  revisionDate               DateTime          @updatedAt
+  revisedBy                  String
+  status                     Int               @default(0)
+  isProtectedForEdit         Boolean           @default(false)
+  id                         Int               @id @default(autoincrement())
   tax_name                   String
   tax_percentage             Float
-  is_value_added             Boolean
-  is_editable                Boolean
-  is_default_tax             Boolean
-  tax_type                   Int //[tax,compound_tax]
-  chart_of_account_debit_id  Int
-  chart_of_account_credit_id Int
+  is_value_added             Boolean?
+  is_editable                Boolean?
+  is_default_tax             Boolean?
+  tax_type                   Int? //[tax,compound_tax]
+  chart_of_account_debit_id  Int?
+  chart_of_account_credit_id Int?
   tax_authority_id           Int
-  tax_authority              tax_authority    @relation(fields: [tax_authority_id], references: [id])
-  chart_of_account_debit     chart_of_account @relation(name: "chart_of_account_debit", fields: [chart_of_account_debit_id], references: [id])
-  chart_of_account_credit    chart_of_account @relation(name: "chart_of_account_credit", fields: [chart_of_account_credit_id], references: [id])
+  tax_authority              tax_authority     @relation(fields: [tax_authority_id], references: [id])
+  chart_of_account_debit     chart_of_account? @relation(name: "chart_of_account_debit", fields: [chart_of_account_debit_id], references: [id])
+  chart_of_account_credit    chart_of_account? @relation(name: "chart_of_account_credit", fields: [chart_of_account_credit_id], references: [id])
 
   //needs tax_authority
   //needs chart_of_account
-  associated_tax_group associated_tax_group[]
-  tax_chart_of_account tax_chart_of_account[]
-  tax_rule             tax_rule[]
-}
-
-model tax_chart_of_account {
-  id                  Int              @id @default(autoincrement())
-  tax_id              Int
-  chart_of_account_id Int
-  tax                 tax              @relation(fields: [tax_id], references: [id])
-  chart_of_account    chart_of_account @relation(fields: [chart_of_account_id], references: [id])
-  //needs tax
-  //needs chart_of_account
+  associated_tax_group   associated_tax_group[]
+  // tax_chart_of_account tax_chart_of_account[]
+  tax_rule               tax_rule[]
+  general_ledger         general_ledger[]
+  general_journal_detail general_journal_detail[]
+  stock_item             stock_item[]
 }
 
 model tax_rule {
-  id         Int    @id @default(autoincrement())
-  operator   Int //[greater_than,less_than,equals_to,greater_than_or_equals_to,less_than_equals_to]
-  amount     Float
-  remark     String
-  sales_type Int //[product,service]
-  tax_id     Int
-  tax        tax    @relation(fields: [tax_id], references: [id])
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  operator           Int //[greater_than,less_than,equals_to,greater_than_or_equals_to,less_than_equals_to]
+  amount             Float
+  remark             String?
+  sales_type         Int? //[product,service]
+  tax_id             Int
+  tax                tax      @relation(fields: [tax_id], references: [id])
 
   //needs tax
+}
+
+model contact_address {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  address_type       Int //[billing_address,shipping_address]
+  attention          String?
+  street1            String?
+  street2            String?
+  city               String
+  state              String?
+  phone              String?
+  fax                String?
+  zip_code           String?
+  contact_id         Int?
+  country_id         Int?
+  contact            contact? @relation(fields: [contact_id], references: [id])
+  country            country? @relation(fields: [country_id], references: [id])
+  //needs contact
+  //needs country
+}
+
+model contact_person {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  first_name         String
+  last_name          String?
+  work_phone         String?
+  mobile             String?
+  email              String?
+  designation        String?
+  department         String?
+  is_primary_contact Boolean?
+  contact_id         Int?
+  title_id           Int?
+  contact            contact? @relation(fields: [contact_id], references: [id])
+  title              title?   @relation(fields: [title_id], references: [id])
+
+  //needs contact
+  //needs title
+}
+
+model primary_contact {
+  startDate               DateTime
+  endDate                 DateTime
+  creationDate            DateTime            @default(now())
+  createdBy               String
+  revisionDate            DateTime            @updatedAt
+  revisedBy               String
+  status                  Int                 @default(0)
+  isProtectedForEdit      Boolean             @default(false)
+  id                      Int                 @id @default(autoincrement())
+  name                    String
+  email                   String
+  organization_profile_id Int?
+  organization_profile    financial_settings? @relation(fields: [organization_profile_id], references: [id])
+  //needs financial_settings
+}
+
+model export_template {
+  startDate              DateTime
+  endDate                DateTime
+  creationDate           DateTime @default(now())
+  createdBy              String
+  revisionDate           DateTime @updatedAt
+  revisedBy              String
+  status                 Int      @default(0)
+  isProtectedForEdit     Boolean  @default(false)
+  id                     Int      @id @default(autoincrement())
+  template_name          String   @unique
+  module_name            Int
+  export_template_fields String //array of numbers(string separated)(enum Numbers)
+  excel_columns          String   @db.VarChar(1000)
+}
+
+model chart_of_account {
+  startDate                        DateTime
+  endDate                          DateTime
+  creationDate                     DateTime                           @default(now())
+  createdBy                        String
+  revisionDate                     DateTime                           @updatedAt
+  revisedBy                        String
+  status                           Int                                @default(0)
+  isProtectedForEdit               Boolean                            @default(false)
+  id                               Int                                @id @default(autoincrement())
+  account_name                     String
+  account_code                     String                             @unique
+  account_number                   String?
+  is_active                        Boolean?
+  description                      String?
+  add_to_dashboard_watch_list      Boolean?
+  attachment_path                  Int?
+  is_sub_account                   Boolean?
+  is_default                       Boolean?
+  is_employee_account              Boolean?
+  has_opening_balance              Boolean?
+  is_bank_account                  Boolean?
+  parent_account_id                Int?
+  head_account_id                  Int?
+  currency_id                      Int?
+  account_type_id                  Int
+  account_type                     account_type                       @relation(fields: [account_type_id], references: [id])
+  currency                         currency?                          @relation(fields: [currency_id], references: [id])
+  parent_account                   chart_of_account?                  @relation(name: "parent_account", fields: [parent_account_id], references: [id])
+  head_account                     chart_of_account?                  @relation(name: "head_account", fields: [head_account_id], references: [id])
+  //needs account_type
+  //needs currency
+  //needs chart_of_account
+  parent_accounts                  chart_of_account[]                 @relation("parent_account")
+  head_accounts                    chart_of_account[]                 @relation("head_account")
+  contact                          contact[]
+  cost_center_accounts             cost_center_accounts[]
+  tax_debits                       tax[]                              @relation("chart_of_account_debit")
+  tax_credits                      tax[]                              @relation("chart_of_account_credit")
+  // tax_chart_of_account        tax_chart_of_account[]
+  bank_reconcilation               bank_reconcilation[]
+  chart_of_account_files           chart_of_account_files[]
+  budget_account                   budget_account[]
+  general_ledger                   general_ledger[]
+  asset_depreciation               asset[]                            @relation("depreciation_account")
+  asset_accounts                   asset[]                            @relation("asset_account")
+  general_journal_detail           general_journal_detail[]
+  salary_component                 salary_component[]
+  global_payroll_account_mapping   global_payroll_account_mapping[]
+  salary_component_account_mapping salary_component_account_mapping[]
+  sales_stock_item                 stock_item[]                       @relation("sales_chart")
+  purchase_stock_item              stock_item[]                       @relation("purchase_chart")
+  inventory_stock_item             stock_item[]                       @relation("inventory_chart")
+  opening_balance_account          opening_balance_account[]
+}
+
+model account_type_financial_statement_section {
+  startDate                      DateTime
+  endDate                        DateTime
+  creationDate                   DateTime                    @default(now())
+  createdBy                      String
+  revisionDate                   DateTime                    @updatedAt
+  revisedBy                      String
+  status                         Int                         @default(0)
+  isProtectedForEdit             Boolean                     @default(false)
+  id                             Int                         @id @default(autoincrement())
+  account_type_id                Int
+  financial_statement_section_id Int
+  account_type                   account_type                @relation(fields: [account_type_id], references: [id])
+  financial_statement_section    financial_statement_section @relation(fields: [financial_statement_section_id], references: [id])
+  //needs account_type
+  //needs financial_statement_section
+}
+
+model bank_reconcilation {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime         @default(now())
+  createdBy           String
+  revisionDate        DateTime         @updatedAt
+  revisedBy           String
+  status              Int              @default(0)
+  isProtectedForEdit  Boolean          @default(false)
+  id                  Int              @id @default(autoincrement())
+  from_date           DateTime?
+  to_date             DateTime?
+  closing_amount      Float?
+  chart_of_account_id Int
+  chart_of_account    chart_of_account @relation(fields: [chart_of_account_id], references: [id])
+
+  //needs chart_of_account
+  reconcilation_transaction reconcilation_transaction[]
+}
+
+model chart_of_account_files {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime         @default(now())
+  createdBy           String
+  revisionDate        DateTime         @updatedAt
+  revisedBy           String
+  status              Int              @default(0)
+  isProtectedForEdit  Boolean          @default(false)
+  id                  Int              @id @default(autoincrement())
+  path                String //needs file care
+  name                String?
+  type                String?
+  chart_of_account_id Int
+  chart_of_account    chart_of_account @relation(fields: [chart_of_account_id], references: [id])
+  //needs chart_of_account
+}
+
+model estimated_total_production_unit {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  unit_name          String
+  unit_symbol        String
+  //needs no one
+  asset              asset[]
+}
+
+model recurring_journal_occurrence {
+  startDate                 DateTime
+  endDate                   DateTime
+  creationDate              DateTime                    @default(now())
+  createdBy                 String
+  revisionDate              DateTime                    @updatedAt
+  revisedBy                 String
+  status                    Int                         @default(0)
+  isProtectedForEdit        Boolean                     @default(false)
+  id                        Int                         @id @default(autoincrement())
+  repeat_every_number       Int?
+  repeat_every_label        Int
+  name                      String
+  //needs no one
+  asset                     asset[]
+  recurring_general_journal recurring_general_journal[]
+}
+
+model budget {
+  startDate             DateTime
+  endDate               DateTime
+  creationDate          DateTime                @default(now())
+  createdBy             String
+  revisionDate          DateTime                @updatedAt
+  revisedBy             String
+  status                Int                     @default(0)
+  isProtectedForEdit    Boolean                 @default(false)
+  id                    Int                     @id @default(autoincrement())
+  name                  String?
+  fiscal_year           DateTime                @default(now())
+  budget_reason         Int
+  project_name          String?
+  cost_center_id        Int?
+  cost_center           cost_center?            @relation(fields: [cost_center_id], references: [id])
+  //needs cost center
+  budget_account        budget_account[]
+  budget_control_action budget_control_action[]
+}
+
+model budget_account {
+  startDate             DateTime
+  endDate               DateTime
+  creationDate          DateTime                @default(now())
+  createdBy             String
+  revisionDate          DateTime                @updatedAt
+  revisedBy             String
+  status                Int                     @default(0)
+  isProtectedForEdit    Boolean                 @default(false)
+  id                    Int                     @id @default(autoincrement())
+  budget_total_amount   Float
+  budget_id             Int?
+  chart_of_account_id   Int?
+  budget                budget?                 @relation(fields: [budget_id], references: [id])
+  chart_of_account      chart_of_account?       @relation(fields: [chart_of_account_id], references: [id])
+  //needs budget
+  //needs cost_center
+  budget_account_period budget_account_period[]
+}
+
+model budget_account_period {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime        @default(now())
+  createdBy          String
+  revisionDate       DateTime        @updatedAt
+  revisedBy          String
+  status             Int             @default(0)
+  isProtectedForEdit Boolean         @default(false)
+  id                 Int             @id @default(autoincrement())
+  budget_amount      Float
+  period_month       Int
+  budget_account_id  Int?
+  budget_account     budget_account? @relation(fields: [budget_account_id], references: [id])
+  //needs budget_account
+}
+
+model budget_control_action {
+  startDate                                  DateTime
+  endDate                                    DateTime
+  creationDate                               DateTime @default(now())
+  createdBy                                  String
+  revisionDate                               DateTime @updatedAt
+  revisedBy                                  String
+  status                                     Int      @default(0)
+  isProtectedForEdit                         Boolean  @default(false)
+  id                                         Int      @id @default(autoincrement())
+  type                                       Int
+  action_accumulated_monthly_budget_exceeded Int
+  budget_id                                  Int?
+  budget                                     budget?  @relation(fields: [budget_id], references: [id])
+  //needs no one
+}
+
+model general_journal_header {
+  startDate                    DateTime
+  endDate                      DateTime
+  creationDate                 DateTime                   @default(now())
+  createdBy                    String
+  revisionDate                 DateTime                   @updatedAt
+  revisedBy                    String
+  status                       Int                        @default(0)
+  isProtectedForEdit           Boolean                    @default(false)
+  id                           Int                        @id @default(autoincrement())
+  journal_date                 DateTime
+  posting_reference            String                     @unique //needs its own implementation  ( sequential string
+  reference_number             String?
+  journal_status               Int?
+  notes                        String
+  report_basis                 Int?
+  journal_source               Int?
+  journal_posting_status       Int?
+  journal_type_reference       String?
+  total_amount                 Float?
+  journal_type_id              Int?
+  recurring_general_journal_id Int?
+  currency_id                  Int
+  posting_responsible_user_id  Int
+  journal_type                 journal_type?              @relation(fields: [journal_type_id], references: [id])
+  recurring_general_journal    recurring_general_journal? @relation(fields: [recurring_general_journal_id], references: [id])
+  currency                     currency                   @relation(fields: [currency_id], references: [id])
+  posting_responsible_user     user                       @relation(fields: [posting_responsible_user_id], references: [id])
+
+  //needs journal_type
+  //needs recurring_general_journal
+  //needs currency
+  //needs user
+  general_ledger         general_ledger[]
+  journal_comment        journal_comment[]
+  general_journal_detail general_journal_detail[]
+  general_journal_files  general_journal_files[]
+}
+
+model general_ledger {
+  startDate                 DateTime
+  endDate                   DateTime
+  creationDate              DateTime                    @default(now())
+  createdBy                 String
+  revisionDate              DateTime                    @updatedAt
+  revisedBy                 String
+  status                    Int                         @default(0)
+  isProtectedForEdit        Boolean                     @default(false)
+  id                        Int                         @id @default(autoincrement())
+  amount_credit             Float?
+  amount_debit              Float?
+  ledger_status             Int?
+  posting_reference         String                      @unique //needs its own implementation  ( sequential string
+  group_posting_reference   String                      @unique //needs its own implementation  ( sequential string
+  description               String?
+  journal_date              DateTime //this is in the allowed unlocked transaction
+  posting_date              DateTime                    @default(now())
+  currency_id               Int
+  tax_id                    Int?
+  tax_group_id              Int?
+  general_journal_header_id Int?
+  chart_of_account_id       Int
+  currency                  currency                    @relation(fields: [currency_id], references: [id])
+  tax                       tax?                        @relation(fields: [tax_id], references: [id])
+  tax_group                 tax_group?                  @relation(fields: [tax_group_id], references: [id])
+  general_journal_header    general_journal_header?     @relation(fields: [general_journal_header_id], references: [id])
+  chart_of_account          chart_of_account            @relation(fields: [chart_of_account_id], references: [id])
+  //needs currency
+  //needs tax
+  //needs group_tax
+  //needs general_journal_header
+  //needs chart_of_account
+  reconcilation_transaction reconcilation_transaction[]
+}
+
+model journal_comment {
+  startDate                    DateTime
+  endDate                      DateTime
+  creationDate                 DateTime                   @default(now())
+  createdBy                    String
+  revisionDate                 DateTime                   @updatedAt
+  revisedBy                    String
+  status                       Int                        @default(0)
+  isProtectedForEdit           Boolean                    @default(false)
+  id                           Int                        @id @default(autoincrement())
+  commented_date               DateTime                   @default(now())
+  comment                      String
+  application_user_id          Int
+  contact_id                   Int?
+  general_journal_header_id    Int?
+  recurring_general_journal_id Int?
+  application_user             user                       @relation(fields: [application_user_id], references: [id])
+  contact                      contact?                   @relation(fields: [contact_id], references: [id])
+  general_journal_header       general_journal_header?    @relation(fields: [general_journal_header_id], references: [id])
+  recurring_general_journal    recurring_general_journal? @relation(fields: [recurring_general_journal_id], references: [id])
+
+  //needs user
+  //needs contact
+  //needs general_journal_header
+  //needs recurring_journal
+}
+
+model number_tracker {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  prefix             String?
+  starting_number    Int
+  next_number        Int
+  reason             Int?
+}
+
+model transaction_lock {
+  startDate                  DateTime
+  endDate                    DateTime
+  creationDate               DateTime @default(now())
+  createdBy                  String
+  revisionDate               DateTime @updatedAt
+  revisedBy                  String
+  status                     Int      @default(0)
+  isProtectedForEdit         Boolean  @default(false)
+  id                         Int      @id @default(autoincrement())
+  lock_date                  DateTime
+  reason                     String
+  enable_transaction_locking Boolean?
+}
+
+model opening_balance {
+  startDate               DateTime
+  endDate                 DateTime
+  creationDate            DateTime                  @default(now())
+  createdBy               String
+  revisionDate            DateTime                  @updatedAt
+  revisedBy               String
+  status                  Int                       @default(0)
+  isProtectedForEdit      Boolean                   @default(false)
+  id                      Int                       @id @default(autoincrement())
+  opening_balance_date    DateTime
+  price_precision         Int?
+  amount                  Float?
+  month                   Int
+  opening_balance_account opening_balance_account[]
+}
+
+model opening_balance_account {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime          @default(now())
+  createdBy           String
+  revisionDate        DateTime          @updatedAt
+  revisedBy           String
+  status              Int               @default(0)
+  isProtectedForEdit  Boolean           @default(false)
+  id                  Int               @id @default(autoincrement())
+  debit_or_credit     Int
+  amount_credit       Float?
+  amount_debit        Float?
+  opening_balance_id  Int
+  currency_id         Int?
+  chart_of_account_id Int
+  opening_balance     opening_balance   @relation(fields: [opening_balance_id], references: [id])
+  currency            currency?         @relation(fields: [currency_id], references: [id])
+  chart_of_account    chart_of_account? @relation(fields: [chart_of_account_id], references: [id])
+  //"OpeningBalance OpeningBalance" : "virtual"
+  //"Currency Currency" : "virtual"
+  //"ChartOfAccount ChartOfAccount" : "virtual"
+}
+
+model cash_payment_custom {
+  startDate                 DateTime
+  endDate                   DateTime
+  creationDate              DateTime @default(now())
+  createdBy                 String
+  revisionDate              DateTime @updatedAt
+  revisedBy                 String
+  status                    Int      @default(0)
+  isProtectedForEdit        Boolean  @default(false)
+  id                        Int      @id @default(autoincrement())
+  date                      DateTime
+  customer                  String?
+  amount                    Float?
+  tin_number                String?
+  tax                       Float?
+  withholding               Float?
+  merchant_record_card_code String?
+  number                    String?
+}
+
+model cash_payment_voucher {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime              @default(now())
+  createdBy           String
+  revisionDate        DateTime              @updatedAt
+  revisedBy           String
+  status              Int                   @default(0)
+  isProtectedForEdit  Boolean               @default(false)
+  id                  Int                   @id @default(autoincrement())
+  date                DateTime
+  paid_to             String?
+  amount              Float?
+  description         String?
+  check_number        String?
+  pv_number           Int?
+  remaining_balance   Int?
+  cpv_bank_id         Int?
+  prepared_by_id      Int?
+  checked_by_id       Int?
+  project_id          Int?
+  cpv_type_id         Int?
+  request_payment_id  Int?
+  cpv_bank            cpv_bank?             @relation(fields: [cpv_bank_id], references: [id])
+  prepared_by         employee?             @relation(fields: [prepared_by_id], references: [id], name: "prepared_by_cash")
+  checked_by          employee?             @relation(fields: [checked_by_id], references: [id], name: "checked_by_cash")
+  project             project?              @relation(fields: [project_id], references: [id])
+  cpv_type            cpv_type?             @relation(fields: [cpv_type_id], references: [id])
+  //
+  //
+  //
+  //
+  // request_payment            request_payment?             @relation(fields: [request_payment_id], references: [id])
+  //
+  //
+  //
+  //
+  //huge error here(tables reference eachother)
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //needs	cpv_bank
+  //needs	employee(preparedBy checkedBy)
+  //needs	project
+  //needs	cpv_type
+  //needs	request_payment
+  //create this model it isn't in project operational
+  cpv_payment_request cpv_payment_request[]
+  cpv_receipt         cpv_receipt[]
+  petty_cash          petty_cash[]
+  request_payment     request_payment[]
+}
+
+model request_payment {
+  startDate               DateTime
+  endDate                 DateTime
+  creationDate            DateTime              @default(now())
+  createdBy               String
+  revisionDate            DateTime              @updatedAt
+  revisedBy               String
+  status                  Int                   @default(0)
+  isProtectedForEdit      Boolean               @default(false)
+  id                      Int                   @id @default(autoincrement())
+  date                    DateTime
+  amount                  Float?
+  request_type            Int?
+  approval_status         Int?
+  description             String?
+  check_number            String?
+  remaining_balance       Int?
+  prepared_by_id          Int?
+  checked_by_id           Int?
+  approved_by_id          Int?
+  project_id              Int?
+  cash_payment_voucher_id Int?
+  from_id                 Int?
+  from                    manpower?             @relation(fields: [from_id], references: [id])
+  project                 project?              @relation(fields: [project_id], references: [id])
+  prepared_by             employee?             @relation(fields: [prepared_by_id], references: [id], name: "prepared_by_req_pay")
+  checked_by              employee?             @relation(fields: [checked_by_id], references: [id], name: "checked_by_req_pay")
+  approved_by             employee?             @relation(fields: [approved_by_id], references: [id], name: "approved_by_req_pay")
+  cash_payment_voucher    cash_payment_voucher? @relation(fields: [cash_payment_voucher_id], references: [id])
+  //needs project
+  //needs employee(prepared_by, approved_by, checked_by)
+  //needs cash_payment_voucher
+  //needs manpower(from)
+}
+
+model cpv_bank {
+  startDate            DateTime
+  endDate              DateTime
+  creationDate         DateTime               @default(now())
+  createdBy            String
+  revisionDate         DateTime               @updatedAt
+  revisedBy            String
+  status               Int                    @default(0)
+  isProtectedForEdit   Boolean                @default(false)
+  id                   Int                    @id @default(autoincrement())
+  name                 String
+  description          String?
+  cash_payment_voucher cash_payment_voucher[]
+}
+
+model cpv_payment_request {
+  startDate               DateTime
+  endDate                 DateTime
+  creationDate            DateTime              @default(now())
+  createdBy               String
+  revisionDate            DateTime              @updatedAt
+  revisedBy               String
+  status                  Int                   @default(0)
+  isProtectedForEdit      Boolean               @default(false)
+  id                      Int                   @id @default(autoincrement())
+  date                    DateTime
+  amount                  Float?
+  description             String?
+  check_number            String?
+  remaining_balance       Int?
+  from_id                 Int?
+  project_id              Int?
+  prepared_by_id          Int?
+  checked_by_id           Int?
+  approved_by_id          Int?
+  cash_payment_voucher_id Int?
+  from                    manpower?             @relation(fields: [from_id], references: [id])
+  project                 project?              @relation(fields: [project_id], references: [id])
+  prepared_by             employee?             @relation(fields: [prepared_by_id], references: [id], name: "prepared_by")
+  checked_by              employee?             @relation(fields: [checked_by_id], references: [id], name: "checked_by")
+  approved_by             employee?             @relation(fields: [approved_by_id], references: [id], name: "approved_by")
+  cash_payment_voucher    cash_payment_voucher? @relation(fields: [cash_payment_voucher_id], references: [id])
+}
+
+model cpv_receipt {
+  startDate               DateTime
+  endDate                 DateTime
+  creationDate            DateTime              @default(now())
+  createdBy               String
+  revisionDate            DateTime              @updatedAt
+  revisedBy               String
+  status                  Int                   @default(0)
+  isProtectedForEdit      Boolean               @default(false)
+  id                      Int                   @id @default(autoincrement())
+  date                    DateTime
+  company_name            String?
+  tin_number              String?
+  amount                  Float?
+  vat                     Float?
+  withholding             Float?
+  machine_code            String?
+  receipt_number          String?
+  cash_payment_voucher_id Int?
+  cash_payment_voucher    cash_payment_voucher? @relation(fields: [cash_payment_voucher_id], references: [id])
+  //needs cash_payment_voucher
+}
+
+model cpv_type {
+  startDate            DateTime
+  endDate              DateTime
+  creationDate         DateTime               @default(now())
+  createdBy            String
+  revisionDate         DateTime               @updatedAt
+  revisedBy            String
+  status               Int                    @default(0)
+  isProtectedForEdit   Boolean                @default(false)
+  id                   Int                    @id @default(autoincrement())
+  name                 String
+  description          String
+  cpv_types            Int?
+  cash_payment_voucher cash_payment_voucher[]
+}
+
+model petty_cash {
+  startDate               DateTime
+  endDate                 DateTime
+  creationDate            DateTime              @default(now())
+  createdBy               String
+  revisionDate            DateTime              @updatedAt
+  revisedBy               String
+  status                  Int                   @default(0)
+  isProtectedForEdit      Boolean               @default(false)
+  id                      Int                   @id @default(autoincrement())
+  date                    DateTime
+  pcpv                    String?
+  remark                  String?
+  description             String?
+  debit                   Float?
+  credit                  Float?
+  balance                 Float?
+  project_id              Int?
+  issued_by_id            Int?
+  cash_payment_voucher_id Int?
+  cash_payment_voucher    cash_payment_voucher? @relation(fields: [cash_payment_voucher_id], references: [id])
+  issued_by               employee?             @relation(fields: [issued_by_id], references: [id])
+  project                 project?              @relation(fields: [project_id], references: [id])
+
+  //needs cash_payment_voucher
+  //needs project
+  //needs employee(issued_by)
+}
+
+model crv_payment {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime  @default(now())
+  createdBy           String
+  revisionDate        DateTime  @updatedAt
+  revisedBy           String
+  status              Int       @default(0)
+  isProtectedForEdit  Boolean   @default(false)
+  id                  Int       @id @default(autoincrement())
+  date                DateTime?
+  name                String?
+  customer_name       String?
+  description         String?
+  amount_before_vat   Float?
+  vat                 Float?
+  amount_with_vat     Float?
+  payment_description String?
+  withholding         Float?
+  check_amount        Float?
+  cash_amount         Float?
+  project_id          Int?
+  crv_type_id         Int?
+  project             project?  @relation(fields: [project_id], references: [id])
+  crv_type            crv_type? @relation(fields: [crv_type_id], references: [id])
+
+  //needs project
+  //needs crv_type
+}
+
+model crv_type {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime      @default(now())
+  createdBy          String
+  revisionDate       DateTime      @updatedAt
+  revisedBy          String
+  status             Int           @default(0)
+  isProtectedForEdit Boolean       @default(false)
+  id                 Int           @id @default(autoincrement())
+  name               String
+  description        String?
+  crv_types          Int?
+  crv_payment        crv_payment[]
+}
+
+model reconcilation_transaction {
+  startDate             DateTime
+  endDate               DateTime
+  creationDate          DateTime           @default(now())
+  createdBy             String
+  revisionDate          DateTime           @updatedAt
+  revisedBy             String
+  status                Int                @default(0)
+  isProtectedForEdit    Boolean            @default(false)
+  id                    Int                @id @default(autoincrement())
+  bank_reconcilation_id Int
+  general_ledger_id     Int
+  general_ledger        general_ledger     @relation(fields: [general_ledger_id], references: [id])
+  bank_reconcilation    bank_reconcilation @relation(fields: [bank_reconcilation_id], references: [id])
+  //needs general_ledger
+  //needs bank_reconcilation
+}
+
+model asset {
+  startDate                          DateTime
+  endDate                            DateTime
+  creationDate                       DateTime                         @default(now())
+  createdBy                          String
+  revisionDate                       DateTime                         @updatedAt
+  revisedBy                          String
+  status                             Int                              @default(0)
+  isProtectedForEdit                 Boolean                          @default(false)
+  id                                 Int                              @id @default(autoincrement())
+  name                               String
+  tag_number                         String
+  acquisition_date                   DateTime?
+  description                        String
+  economic_value                     Float
+  depreciation_methods               Int
+  useful_life                        DateTime
+  current_value                      Float
+  asset_type                         Int
+  asset_status                       Int?
+  estimated_total_production         Float?
+  scrap_value                        Float
+  estimated_total_production_unit_id Int?
+  currency_id                        Int
+  asset_account_id                   Int
+  depreciation_account_id            Int
+  recurring_journal_occurrence_id    Int?
+  estimated_total_production_unit    estimated_total_production_unit? @relation(fields: [estimated_total_production_unit_id], references: [id])
+  currency                           currency                         @relation(fields: [currency_id], references: [id])
+  depreciation_account               chart_of_account                 @relation(name: "depreciation_account", fields: [depreciation_account_id], references: [id])
+  asset_account                      chart_of_account                 @relation(name: "asset_account", fields: [asset_account_id], references: [id])
+  recurring_journal_occurrence       recurring_journal_occurrence?    @relation(fields: [recurring_journal_occurrence_id], references: [id])
+  //needs estimated_total_production_unit
+  //needs currency
+  //needs chart_of_account
+  //needs recurring_journal_occurrence
+  recurring_general_journal          recurring_general_journal[]
+}
+
+model general_journal_detail {
+  startDate                 DateTime
+  endDate                   DateTime
+  creationDate              DateTime               @default(now())
+  createdBy                 String
+  revisionDate              DateTime               @updatedAt
+  revisedBy                 String
+  status                    Int                    @default(0)
+  isProtectedForEdit        Boolean                @default(false)
+  id                        Int                    @id @default(autoincrement())
+  description               String?
+  debit_or_credit           Int
+  amount_credit             Float?
+  posting_reference         String                 @unique //needs its own implementation  ( sequential string
+  reference_code            String?
+  amount_debit              Float?
+  tax_id                    Int?
+  contact_id                Int?
+  general_journal_header_id Int
+  cost_center_id            Int?
+  chart_of_account_id       Int
+  tax_group_id              Int?
+  tax_group                 tax_group?             @relation(fields: [tax_group_id], references: [id])
+  tax                       tax?                   @relation(fields: [tax_id], references: [id])
+  contact                   contact?               @relation(fields: [contact_id], references: [id])
+  general_journal_header    general_journal_header @relation(fields: [general_journal_header_id], references: [id])
+  cost_center               cost_center?           @relation(fields: [cost_center_id], references: [id])
+  chart_of_account          chart_of_account       @relation(fields: [chart_of_account_id], references: [id])
+  //needs tax
+  //needs contact
+  //needs general_journal_header
+  //needs cost_center
+  //needs chart_of_account
+}
+
+model general_journal_files {
+  startDate                 DateTime
+  endDate                   DateTime
+  creationDate              DateTime               @default(now())
+  createdBy                 String
+  revisionDate              DateTime               @updatedAt
+  revisedBy                 String
+  status                    Int                    @default(0)
+  isProtectedForEdit        Boolean                @default(false)
+  id                        Int                    @id @default(autoincrement())
+  path                      String //needs file care
+  name                      String?
+  type                      String?
+  general_journal_header_id Int
+  general_journal_header    general_journal_header @relation(fields: [general_journal_header_id], references: [id])
+  //needs general_journal_header
+}
+
+model recurring_general_journal {
+  startDate                        DateTime
+  endDate                          DateTime
+  creationDate                     DateTime                      @default(now())
+  createdBy                        String
+  revisionDate                     DateTime                      @updatedAt
+  revisedBy                        String
+  status                           Int                           @default(0)
+  isProtectedForEdit               Boolean                       @default(false)
+  id                               Int                           @id @default(autoincrement())
+  profile_name                     String
+  start_on                         DateTime?
+  end_on                           DateTime?
+  never_expires                    Boolean?
+  depreciable_value                Float?
+  recurring_general_journal_status Int?
+  asset_id                         Int?
+  recurring_journal_occurrence_id  Int?
+  asset                            asset?                        @relation(fields: [asset_id], references: [id])
+  recurring_journal_occurrence     recurring_journal_occurrence? @relation(fields: [recurring_journal_occurrence_id], references: [id])
+  //needs asset
+  //needs recurring_journal_occurrence
+  general_journal_header           general_journal_header[]
+  journal_comment                  journal_comment[]
+}
+
+model currency {
+  startDate               DateTime
+  endDate                 DateTime
+  creationDate            DateTime                  @default(now())
+  createdBy               String
+  revisionDate            DateTime                  @updatedAt
+  revisedBy               String
+  status                  Int                       @default(0)
+  isProtectedForEdit      Boolean                   @default(false)
+  id                      Int                       @id @default(autoincrement())
+  currency_code           String                    @unique
+  currency_description    String
+  name                    String
+  symbol                  String                    @unique
+  price_precision         Int?
+  currency_format         Int?
+  is_base_currency        Boolean
+  bank                    bank[]
+  exchange_rate           exchange_rate[]
+  financial_settings      financial_settings[]
+  chart_of_account        chart_of_account[]
+  contact                 contact[]
+  general_journal_header  general_journal_header[]
+  general_ledger          general_ledger[]
+  asset                   asset[]
+  company                 company[]
+  opening_balance_account opening_balance_account[]
+}
+
+model country {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime          @default(now())
+  createdBy          String
+  revisionDate       DateTime          @updatedAt
+  revisedBy          String
+  status             Int               @default(0)
+  isProtectedForEdit Boolean           @default(false)
+  id                 Int               @id @default(autoincrement())
+  country_code       String            @unique
+  country_name       String
+  contact_address    contact_address[]
+  employee           employee[]
+  company            company[]
+  warehouse          warehouse[]
+}
+
+model title {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime         @default(now())
+  createdBy          String
+  revisionDate       DateTime         @updatedAt
+  revisedBy          String
+  status             Int              @default(0)
+  isProtectedForEdit Boolean          @default(false)
+  id                 Int              @id @default(autoincrement())
+  short_code         String
+  name               String           @unique
+  contact_person     contact_person[]
+  employee           employee[]
+}
+
+model language {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime             @default(now())
+  createdBy          String
+  revisionDate       DateTime             @updatedAt
+  revisedBy          String
+  status             Int                  @default(0)
+  isProtectedForEdit Boolean              @default(false)
+  id                 Int                  @id @default(autoincrement())
+  code               String
+  name               String               @unique
+  financial_settings financial_settings[]
+  employee           employee[]
+}
+
+model action_reason {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime          @default(now())
+  createdBy          String
+  revisionDate       DateTime          @updatedAt
+  revisedBy          String
+  status             Int               @default(0)
+  isProtectedForEdit Boolean           @default(false)
+  id                 Int               @id @default(autoincrement())
+  reason_description String            @unique
+  action_type_code   String
+  action_type_id     Int?
+  action_type        action_type?      @relation(fields: [action_type_id], references: [id])
+  //needs action_type
+  employee_action    employee_action[]
+}
+
+model action_type {
+  startDate                DateTime
+  endDate                  DateTime
+  creationDate             DateTime        @default(now())
+  createdBy                String
+  revisionDate             DateTime        @updatedAt
+  revisedBy                String
+  status                   Int             @default(0)
+  isProtectedForEdit       Boolean         @default(false)
+  id                       Int             @id @default(autoincrement())
+  action_type_description  String?         @unique
+  is_initial_hiring        Boolean?
+  is_with_org_assignment   Boolean?
+  default_action_type_code String?
+  is_promotion             Boolean?
+  employee_status          Int //[active Inactive Retired Withdraw]//optional
+  //needs no one
+  action_reason            action_reason[]
+}
+
+model address_type {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime  @default(now())
+  createdBy          String
+  revisionDate       DateTime  @updatedAt
+  revisedBy          String
+  status             Int       @default(0)
+  isProtectedForEdit Boolean   @default(false)
+  id                 Int       @id @default(autoincrement())
+  type_name          String    @unique
+  //needs no one
+  address            address[]
+}
+
+model commitment {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime              @default(now())
+  createdBy           String
+  revisionDate        DateTime              @updatedAt
+  revisedBy           String
+  status              Int                   @default(0)
+  isProtectedForEdit  Boolean               @default(false)
+  id                  Int                   @id @default(autoincrement())
+  type_name           String                @unique
+  //needs no one
+  employee_commitment employee_commitment[]
+}
+
+model custom_report {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  query_name         String
+  query              String   @unique
+  //needs no one
+}
+
+model discipline_case_type {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime     @default(now())
+  createdBy          String
+  revisionDate       DateTime     @updatedAt
+  revisedBy          String
+  status             Int          @default(0)
+  isProtectedForEdit Boolean      @default(false)
+  id                 Int          @id @default(autoincrement())
+  case_description   String       @unique
+  //needs no one
+  discipline         discipline[]
+}
+
+model duration_measure {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime    @default(now())
+  createdBy          String
+  revisionDate       DateTime    @updatedAt
+  revisedBy          String
+  status             Int         @default(0)
+  isProtectedForEdit Boolean     @default(false)
+  id                 Int         @id @default(autoincrement())
+  measure            String      @unique
+  education          education[]
+}
+
+model employee_group {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime         @default(now())
+  createdBy          String
+  revisionDate       DateTime         @updatedAt
+  revisedBy          String
+  status             Int              @default(0)
+  isProtectedForEdit Boolean          @default(false)
+  id                 Int              @id @default(autoincrement())
+  group_description  String           @unique
+  org_assignment     org_assignment[]
+}
+
+model employee_type {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime            @default(now())
+  createdBy          String
+  revisionDate       DateTime            @updatedAt
+  revisedBy          String
+  status             Int                 @default(0)
+  isProtectedForEdit Boolean             @default(false)
+  id                 Int                 @id @default(autoincrement())
+  description        String              @unique
+  employee           employee[]
+  employee_id_range  employee_id_range[]
+}
+
+model field_of_study {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime    @default(now())
+  createdBy           String
+  revisionDate        DateTime    @updatedAt
+  revisedBy           String
+  status              Int         @default(0)
+  isProtectedForEdit  Boolean     @default(false)
+  id                  Int         @id @default(autoincrement())
+  field_of_study_name String      @unique
+  education           education[]
+}
+
+model hcm_configuration {
+  startDate                   DateTime
+  endDate                     DateTime
+  creationDate                DateTime @default(now())
+  createdBy                   String
+  revisionDate                DateTime @updatedAt
+  revisedBy                   String
+  status                      Int      @default(0)
+  isProtectedForEdit          Boolean  @default(false)
+  id                          Int      @id @default(autoincrement())
+  income_tax_payable_id       Int?
+  employer_tax_id             Int?
+  employer_tax_control_id     Int?
+  employer_pension_account_id Int?
+  employer_pension            Float? //[120]
+  employee_pension            Float? //[120]
+  employee_retirement_age     Int? //[40100]
+}
+
+model employee_transaction_lock {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  payroll_lock       Boolean
+}
+
+model license_type {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime  @default(now())
+  createdBy          String
+  revisionDate       DateTime  @updatedAt
+  revisedBy          String
+  status             Int       @default(0)
+  isProtectedForEdit Boolean   @default(false)
+  id                 Int       @id @default(autoincrement())
+  license_type_name  String    @unique
+  license            license[]
+}
+
+model nationality {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime   @default(now())
+  createdBy          String
+  revisionDate       DateTime   @updatedAt
+  revisedBy          String
+  status             Int        @default(0)
+  isProtectedForEdit Boolean    @default(false)
+  id                 Int        @id @default(autoincrement())
+  nationality_code   String
+  nationality_name   String     @unique
+  employee           employee[]
+}
+
+model religion {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime   @default(now())
+  createdBy          String
+  revisionDate       DateTime   @updatedAt
+  revisedBy          String
+  status             Int        @default(0)
+  isProtectedForEdit Boolean    @default(false)
+  id                 Int        @id @default(autoincrement())
+  name               String     @unique
+  employee           employee[]
+}
+
+model training_type {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime             @default(now())
+  createdBy          String
+  revisionDate       DateTime             @updatedAt
+  revisedBy          String
+  status             Int                  @default(0)
+  isProtectedForEdit Boolean              @default(false)
+  id                 Int                  @id @default(autoincrement())
+  training_type_name String               @unique
+  job_title          job_title[]
+  education          education[]
+  external_applicant external_applicant[]
+}
+
+model address {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime      @default(now())
+  createdBy          String
+  revisionDate       DateTime      @updatedAt
+  revisedBy          String
+  status             Int           @default(0)
+  isProtectedForEdit Boolean       @default(false)
+  id                 Int           @id @default(autoincrement())
+  address_line_1     String
+  address_line_2     String?
+  region             String?
+  city               String?
+  mobile_number      String?
+  house_number       String?
+  postal_box         String?
+  email              String?
+  employee_id        Int
+  address_type_id    Int?
+  employee           employee      @relation(fields: [employee_id], references: [id])
+  address_type       address_type? @relation(fields: [address_type_id], references: [id])
+}
+
+model attachment {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime          @default(now())
+  createdBy          String
+  revisionDate       DateTime          @updatedAt
+  revisedBy          String
+  status             Int               @default(0)
+  isProtectedForEdit Boolean           @default(false)
+  id                 Int               @id @default(autoincrement())
+  description        String?
+  type               String?
+  name               String?
+  size               Int?
+  path               String
+  employee_id        Int?
+  employee           employee?         @relation(fields: [employee_id], references: [id])
+  discipline         discipline[]
+  employee_action    employee_action[]
+}
+
+model dependent {
+  startDate               DateTime
+  endDate                 DateTime
+  creationDate            DateTime  @default(now())
+  createdBy               String
+  revisionDate            DateTime  @updatedAt
+  revisedBy               String
+  status                  Int       @default(0)
+  isProtectedForEdit      Boolean   @default(false)
+  id                      Int       @id @default(autoincrement())
+  fullname                String
+  relationship            Int?
+  dependent_date_of_birth DateTime?
+  employee_id             Int
+  employee                employee  @relation(fields: [employee_id], references: [id])
+
+  //needs employee
+}
+
+model discipline {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime              @default(now())
+  createdBy          String
+  revisionDate       DateTime              @updatedAt
+  revisedBy          String
+  status             Int                   @default(0)
+  isProtectedForEdit Boolean               @default(false)
+  id                 Int                   @id @default(autoincrement())
+  case_description   String
+  attachment_id      Int?
+  case_type_id       Int?
+  employee_id        Int
+  employee           employee              @relation(fields: [employee_id], references: [id])
+  case_type          discipline_case_type? @relation(fields: [case_type_id], references: [id])
+  attachment         attachment?           @relation(fields: [attachment_id], references: [id])
+}
+
+model education {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime         @default(now())
+  createdBy           String
+  revisionDate        DateTime         @updatedAt
+  revisedBy           String
+  status              Int              @default(0)
+  isProtectedForEdit  Boolean          @default(false)
+  id                  Int              @id @default(autoincrement())
+  duration            Int
+  score               String?
+  field_of_study_id   Int
+  duration_measure_id Int
+  training_type_id    Int
+  employee_id         Int
+  training_type       training_type    @relation(fields: [training_type_id], references: [id])
+  employee            employee         @relation(fields: [employee_id], references: [id])
+  duration_measure    duration_measure @relation(fields: [duration_measure_id], references: [id])
+  field_of_study      field_of_study   @relation(fields: [field_of_study_id], references: [id])
+
+  //needs training_type
+  //needs employee
+  //needs duration_measure
+  //needs field_of_study
+}
+
+model employee {
+  startDate                  DateTime
+  endDate                    DateTime
+  creationDate               DateTime  @default(now())
+  createdBy                  String
+  revisionDate               DateTime  @updatedAt
+  revisedBy                  String
+  status                     Int       @default(0)
+  isProtectedForEdit         Boolean   @default(false)
+  id                         Int       @id @default(autoincrement())
+  id_number                  String
+  first_name                 String
+  middle_name                String
+  last_name                  String?
+  gender                     Int
+  date_of_birth              DateTime?
+  employment_start_date      DateTime?
+  date_of_joining            DateTime?
+  marital_status             Int?
+  marital_since              DateTime?
+  place_of_birth             String?
+  photo                      String?
+  is_employee_active         Boolean?
+  type                       String?
+  prev_employment_leave_days Float?
+  bank_account_number        String?
+  document_ref               String?
+  pension_ref                String?
+  nationality_id             Int?
+  country_id                 Int?
+  language_id                Int?
+  title_id                   Int?
+  religion_id                Int?
+  employee_type_id           Int?
+
+  employee_type employee_type? @relation(fields: [employee_type_id], references: [id])
+  nationality   nationality?   @relation(fields: [nationality_id], references: [id])
+  country       country?       @relation(fields: [country_id], references: [id])
+  language      language?      @relation(fields: [language_id], references: [id])
+  title         title?         @relation(fields: [title_id], references: [id])
+  religion      religion?      @relation(fields: [religion_id], references: [id])
+
+  business_unit                    business_unit[]
+  attachment                       attachment[]
+  dependent                        dependent[]
+  discipline                       discipline[]
+  education                        education[]
+  employee_action                  employee_action[]
+  employee_attachment              employee_attachment[]
+  employee_contact                 employee_contact[]
+  employee_loan_repayment          employee_loan_repayment[]
+  employee_pay_frequency           employee_pay_frequency[]
+  employee_paygrade                employee_paygrade[]
+  employee_salary_component        employee_salary_component[]
+  experience                       experience[]
+  leave_assignment                 leave_assignment[]
+  leave_entitlement                leave_entitlement[]
+  leave_transfer                   leave_transfer[]
+  license                          license[]
+  service_allowance_pay            service_allowance_pay[]
+  shift_assignment                 shift_assignment[]
+  address                          address[]
+  employee_commitment              employee_commitment[]
+  vacancy_applicant                vacancy_applicant[]
+  vacancy_examiner                 vacancy_examiner[]
+  vacancy_internal_applicant       vacancy_internal_applicant[]
+  employee_pay_scale               employee_pay_scale[]
+  employee_back_penality_deduction employee_back_penality_deduction[]
+  employee_penality                employee_penality[]
+  payroll_log                      payroll_log[]
+  payroll_log_employee             payroll_log_employee[]
+  payroll_summary                  payroll_summary[]
+  payroll_summary_history          payroll_summary_history[]
+  salary_adjustment                salary_adjustment[]
+  overtime                         overtime[]
+  attendance_captured              attendance_captured[]
+  attendance_payroll               attendance_payroll[]
+  device_id_mapping                device_id_mapping[]
+  leave_plan                       leave_plan[]
+  punch                            punch[]
+  punch_time                       punch_time[]
+  cash_payment_voucher_checked     cash_payment_voucher[]             @relation("checked_by_cash")
+  cash_payment_voucher_prepared    cash_payment_voucher[]             @relation("prepared_by_cash")
+  payment_preparers                cpv_payment_request[]              @relation("prepared_by")
+  payment_checkers                 cpv_payment_request[]              @relation("checked_by")
+  payment_requests                 cpv_payment_request[]              @relation("approved_by")
+  // request_payment_prepared_by      request_payment[]                  @relation("prepared_by")
+  // request_payment_checked_by       request_payment[]                  @relation("checked_by")
+  // request_payment_approved_by      request_payment[]                  @relation("approved_by")
+  request_payment_prepared_by      request_payment[]                  @relation("prepared_by_req_pay")
+  request_payment_checked_by       request_payment[]                  @relation("checked_by_req_pay")
+  request_payment_approved_by      request_payment[]                  @relation("approved_by_req_pay")
+  petty_cash                       petty_cash[]
+}
+
+model employee_action {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime         @default(now())
+  createdBy          String
+  revisionDate       DateTime         @updatedAt
+  revisedBy          String
+  status             Int              @default(0)
+  isProtectedForEdit Boolean          @default(false)
+  id                 Int              @id @default(autoincrement())
+  employee_status    Int?
+  attachment_id      Int?
+  employee_id        Int
+  action_reason_id   Int
+  employee           employee         @relation(fields: [employee_id], references: [id])
+  attachment         attachment?      @relation(fields: [attachment_id], references: [id])
+  action_reason      action_reason    @relation(fields: [action_reason_id], references: [id])
+  org_assignment     org_assignment[]
+}
+
+model employee_attachment {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  description        String
+  path               String?
+  employee_id        Int
+  employee           employee @relation(fields: [employee_id], references: [id])
+}
+
+model employee_commitment {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime   @default(now())
+  createdBy          String
+  revisionDate       DateTime   @updatedAt
+  revisedBy          String
+  status             Int        @default(0)
+  isProtectedForEdit Boolean    @default(false)
+  id                 Int        @id @default(autoincrement())
+  commitment_type_id Int
+  remark             String?
+  employee_id        Int
+  employee           employee   @relation(fields: [employee_id], references: [id])
+  commitment_type    commitment @relation(fields: [commitment_type_id], references: [id])
+}
+
+model employee_contact {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  name               String
+  relationship       String
+  address_line_1     String
+  address_line_2     String?
+  mobile_number      String
+  employee_id        Int
+  employee           employee @relation(fields: [employee_id], references: [id])
+}
+
+model employee_id_range {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime       @default(now())
+  createdBy          String
+  revisionDate       DateTime       @updatedAt
+  revisedBy          String
+  status             Int            @default(0)
+  isProtectedForEdit Boolean        @default(false)
+  id                 Int            @id @default(autoincrement())
+  start              Int
+  end                Int
+  number_of_digit    Int?
+  employee_type_id   Int?
+  employee_type      employee_type? @relation(fields: [employee_type_id], references: [id])
+}
+
+model employee_loan_repayment {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime          @default(now())
+  createdBy           String
+  revisionDate        DateTime          @updatedAt
+  revisedBy           String
+  status              Int               @default(0)
+  isProtectedForEdit  Boolean           @default(false)
+  id                  Int               @id @default(autoincrement())
+  repayment_amount    Float
+  total_amount        Float
+  employee_id         Int?
+  salary_component_id Int?
+  employee            employee?         @relation(fields: [employee_id], references: [id])
+  salary_component    salary_component? @relation(fields: [salary_component_id], references: [id])
+}
+
+model employee_pay_frequency {
+  startDate                 DateTime
+  endDate                   DateTime
+  creationDate              DateTime                @default(now())
+  createdBy                 String
+  revisionDate              DateTime                @updatedAt
+  revisedBy                 String
+  status                    Int                     @default(0)
+  isProtectedForEdit        Boolean                 @default(false)
+  id                        Int                     @id @default(autoincrement())
+  expected_working_hrs      Int
+  employee_id               Int?
+  payroll_frequency_type_id Int?
+  employee                  employee?               @relation(fields: [employee_id], references: [id])
+  payroll_frequency_type    payroll_frequency_type? @relation(fields: [payroll_frequency_type_id], references: [id])
+}
+
+model employee_paygrade {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  employee_id        Int
+  paygrade_id        Int
+  employee           employee @relation(fields: [employee_id], references: [id])
+  paygrade           paygrade @relation(fields: [paygrade_id], references: [id])
+}
+
+model employee_salary_component {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime         @default(now())
+  createdBy           String
+  revisionDate        DateTime         @updatedAt
+  revisedBy           String
+  status              Int              @default(0)
+  isProtectedForEdit  Boolean          @default(false)
+  id                  Int              @id @default(autoincrement())
+  amount              Float?
+  employee_id         Int
+  salary_component_id Int
+  employee            employee         @relation(fields: [employee_id], references: [id])
+  salary_component    salary_component @relation(fields: [salary_component_id], references: [id])
+}
+
+model experience {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  company            String
+  job_title          String
+  salary             Float?
+  comment            String?
+  employee_id        Int
+  employee           employee @relation(fields: [employee_id], references: [id])
+}
+
+model leave_assignment {
+  startDate                   DateTime
+  endDate                     DateTime
+  creationDate                DateTime                  @default(now())
+  createdBy                   String
+  revisionDate                DateTime                  @updatedAt
+  revisedBy                   String
+  status                      Int                       @default(0)
+  isProtectedForEdit          Boolean                   @default(false)
+  id                          Int                       @id @default(autoincrement())
+  is_half_day                 Boolean?
+  leave_assignment_type       Int?
+  leave_request_status        Int?
+  action_date                 DateTime?
+  delegated_user_name         String?
+  employee_id                 Int
+  attendance_abscence_type_id Int?
+  employee                    employee                  @relation(fields: [employee_id], references: [id])
+  attendance_abscence_type    attendance_abscence_type? @relation(fields: [attendance_abscence_type_id], references: [id])
+}
+
+model leave_entitlement {
+  startDate                   DateTime
+  endDate                     DateTime
+  creationDate                DateTime                 @default(now())
+  createdBy                   String
+  revisionDate                DateTime                 @updatedAt
+  revisedBy                   String
+  status                      Int                      @default(0)
+  isProtectedForEdit          Boolean                  @default(false)
+  id                          Int                      @id @default(autoincrement())
+  employee_id                 Int
+  attendance_abscence_type_id Int
+  employee                    employee                 @relation(fields: [employee_id], references: [id])
+  attendance_abscence_type    attendance_abscence_type @relation(fields: [attendance_abscence_type_id], references: [id])
+}
+
+model leave_transfer {
+  startDate            DateTime
+  endDate              DateTime
+  creationDate         DateTime  @default(now())
+  createdBy            String
+  revisionDate         DateTime  @updatedAt
+  revisedBy            String
+  status               Int       @default(0)
+  isProtectedForEdit   Boolean   @default(false)
+  id                   Int       @id @default(autoincrement())
+  from_year            Int?
+  to_year              Int?
+  number_of_days       Int?
+  leave_request_status Int?
+  remark               String
+  action_date          DateTime?
+  delegated_user_name  String?
+  employee_id          Int
+  employee             employee  @relation(fields: [employee_id], references: [id])
+}
+
+model license {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime      @default(now())
+  createdBy          String
+  revisionDate       DateTime      @updatedAt
+  revisedBy          String
+  status             Int           @default(0)
+  isProtectedForEdit Boolean       @default(false)
+  id                 Int           @id @default(autoincrement())
+  license_number     String?
+  issued_date        DateTime?
+  expiry_date        DateTime
+  license_type_id    Int?
+  employee_id        Int?
+  employee           employee?     @relation(fields: [employee_id], references: [id])
+  license_type       license_type? @relation(fields: [license_type_id], references: [id])
+}
+
+model org_assignment {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime         @default(now())
+  createdBy          String
+  revisionDate       DateTime         @updatedAt
+  revisedBy          String
+  status             Int              @default(0)
+  isProtectedForEdit Boolean          @default(false)
+  id                 Int              @id @default(autoincrement())
+  employee_group_id  Int?
+  location_id        Int?
+  employee_action_id Int?
+  job_title_id       Int
+  business_unit_id   Int
+  business_unit      business_unit    @relation(fields: [business_unit_id], references: [id])
+  job_title          job_title        @relation(fields: [job_title_id], references: [id])
+  employee_action    employee_action? @relation(fields: [employee_action_id], references: [id])
+  employee_group     employee_group?  @relation(fields: [employee_group_id], references: [id])
+  location           location?        @relation(fields: [location_id], references: [id])
+}
+
+model service_allowance_pay {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime  @default(now())
+  createdBy          String
+  revisionDate       DateTime  @updatedAt
+  revisedBy          String
+  status             Int       @default(0)
+  isProtectedForEdit Boolean   @default(false)
+  id                 Int       @id @default(autoincrement())
+  allowance_pay      Float //[0+]
+  employee_id        Int?
+  employee           employee? @relation(fields: [employee_id], references: [id])
+}
+
+model shift_assignment {
+  startDate             DateTime
+  endDate               DateTime
+  creationDate          DateTime           @default(now())
+  createdBy             String
+  revisionDate          DateTime           @updatedAt
+  revisedBy             String
+  status                Int                @default(0)
+  isProtectedForEdit    Boolean            @default(false)
+  id                    Int                @id @default(autoincrement())
+  shift_schedule_hdr_id Int
+  employee_id           Int
+  employee              employee           @relation(fields: [employee_id], references: [id])
+  shift_schedule_hdr    shift_schedule_hdr @relation(fields: [shift_schedule_hdr_id], references: [id])
+
+  //needs employee
+  //needs shift_schedule_hdr -- inside hcm/timeandleave
+}
+
+model business_unit {
+  startDate                        DateTime
+  endDate                          DateTime
+  creationDate                     DateTime                           @default(now())
+  createdBy                        String
+  revisionDate                     DateTime                           @updatedAt
+  revisedBy                        String
+  status                           Int                                @default(0)
+  isProtectedForEdit               Boolean                            @default(false)
+  id                               Int                                @id @default(autoincrement())
+  name                             String
+  parent_id                        Int?
+  is_root                          Boolean?
+  cost_center_id                   Int?
+  employee_id                      Int?
+  employee                         employee?                          @relation(fields: [employee_id], references: [id])
+  cost_center                      cost_center?                       @relation(fields: [cost_center_id], references: [id])
+  org_assignment                   org_assignment[]
+  global_payroll_account_mapping   global_payroll_account_mapping[]
+  payroll_summary                  payroll_summary[]
+  payroll_summary_history          payroll_summary_history[]
+  salary_component_account_mapping salary_component_account_mapping[]
+}
+
+model location {
+  startDate                DateTime
+  endDate                  DateTime
+  creationDate             DateTime                   @default(now())
+  createdBy                String
+  revisionDate             DateTime                   @updatedAt
+  revisedBy                String
+  status                   Int                        @default(0)
+  isProtectedForEdit       Boolean                    @default(false)
+  id                       Int                        @id @default(autoincrement())
+  location_name            String
+  address_1                String
+  address_2                String?
+  city                     String?
+  state_or_province        String?
+  zip_or_portal_code       String?
+  phone                    String?
+  fax                      String?
+  website                  String?
+  email                    String?
+  org_assignment           org_assignment[]
+  company_primary_contact  company_primary_contact[]
+  payroll_location_setting payroll_location_setting[]
+}
+
+model job_title {
+  startDate            DateTime
+  endDate              DateTime
+  creationDate         DateTime               @default(now())
+  createdBy            String
+  revisionDate         DateTime               @updatedAt
+  revisedBy            String
+  status               Int                    @default(0)
+  isProtectedForEdit   Boolean                @default(false)
+  id                   Int                    @id @default(autoincrement())
+  title_name           String
+  job_specification    String?
+  min_experience       Int?
+  paygrade_id          Int?
+  training_type_id     Int?
+  job_category_id      Int?
+  paygrade             paygrade?              @relation(fields: [paygrade_id], references: [id])
+  training_type        training_type?         @relation(fields: [training_type_id], references: [id])
+  job_category         job_category?          @relation(fields: [job_category_id], references: [id])
+  org_assignment       org_assignment[]
+  job_safety_equipment job_safety_equipment[]
+  vacancy              vacancy[]
+}
+
+model job_category {
+  startDate            DateTime
+  endDate              DateTime
+  creationDate         DateTime    @default(now())
+  createdBy            String
+  revisionDate         DateTime    @updatedAt
+  revisedBy            String
+  status               Int         @default(0)
+  isProtectedForEdit   Boolean     @default(false)
+  id                   Int         @id @default(autoincrement())
+  category_description String
+  job_title            job_title[]
+}
+
+model job_safety_equipment {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime         @default(now())
+  createdBy           String
+  revisionDate        DateTime         @updatedAt
+  revisedBy           String
+  status              Int              @default(0)
+  isProtectedForEdit  Boolean          @default(false)
+  id                  Int              @id @default(autoincrement())
+  safety_equipment_id Int
+  job_title_id        Int
+  job_title           job_title        @relation(fields: [job_title_id], references: [id])
+  safety_equipment    safety_equipment @relation(fields: [safety_equipment_id], references: [id])
+}
+
+model safety_equipment {
+  startDate            DateTime
+  endDate              DateTime
+  creationDate         DateTime               @default(now())
+  createdBy            String
+  revisionDate         DateTime               @updatedAt
+  revisedBy            String
+  status               Int                    @default(0)
+  isProtectedForEdit   Boolean                @default(false)
+  id                   Int                    @id @default(autoincrement())
+  name                 String
+  job_safety_equipment job_safety_equipment[]
+}
+
+model company {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime  @default(now())
+  createdBy          String
+  revisionDate       DateTime  @updatedAt
+  revisedBy          String
+  status             Int       @default(0)
+  isProtectedForEdit Boolean   @default(false)
+  id                 Int       @id @default(autoincrement())
+  code               String
+  name               String    @unique
+  country_id         Int?
+  currency_id        Int?
+  logo               String? //needs file handling
+  country            country?  @relation(fields: [country_id], references: [id])
+  currency           currency? @relation(fields: [currency_id], references: [id])
+}
+
+model company_primary_contact {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime  @default(now())
+  createdBy          String
+  revisionDate       DateTime  @updatedAt
+  revisedBy          String
+  status             Int       @default(0)
+  isProtectedForEdit Boolean   @default(false)
+  id                 Int       @id @default(autoincrement())
+  name               String
+  phone              String
+  email              String?
+  location_id        Int?
+  location           location? @relation(fields: [location_id], references: [id])
+}
+
+model external_applicant {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime            @default(now())
+  createdBy          String
+  revisionDate       DateTime            @updatedAt
+  revisedBy          String
+  status             Int                 @default(0)
+  isProtectedForEdit Boolean             @default(false)
+  id                 Int                 @id @default(autoincrement())
+  applicant_name     String
+  father_name        String
+  grand_father_name  String?
+  mobile_number      String?
+  email              String?
+  experience_year    Int? //[0+]
+  gender             Int
+  marital_status     Int?
+  file               String?
+  name               String?
+  type               String?
+  training_type_id   Int
+  training_type      training_type       @relation(fields: [training_type_id], references: [id])
+  //needs training_type
+  vacancy_applicant  vacancy_applicant[]
+}
+
+model vacancy {
+  startDate                  DateTime
+  endDate                    DateTime
+  creationDate               DateTime                     @default(now())
+  createdBy                  String
+  revisionDate               DateTime                     @updatedAt
+  revisedBy                  String
+  status                     Int                          @default(0)
+  isProtectedForEdit         Boolean                      @default(false)
+  id                         Int                          @id @default(autoincrement())
+  number_of_position         Int //[1+]
+  vacancy_status             Int
+  opening_date               DateTime?
+  closing_date               DateTime?
+  action_date                DateTime?
+  vacancy_type               Int
+  requested_by               String?
+  approved_by                String?
+  remark                     String?
+  job_title_id               Int
+  vacancy_request_reason_id  Int?
+  job_title                  job_title                    @relation(fields: [job_title_id], references: [id])
+  vacancy_request_reason     vacancy_request_reason?      @relation(fields: [vacancy_request_reason_id], references: [id])
+  //needs job_title
+  //needs vacancy_request_reason
+  vacancy_applicant          vacancy_applicant[]
+  vacancy_examiner           vacancy_examiner[]
+  vacancy_internal_applicant vacancy_internal_applicant[]
+}
+
+model vacancy_applicant {
+  startDate             DateTime
+  endDate               DateTime
+  creationDate          DateTime            @default(now())
+  createdBy             String
+  revisionDate          DateTime            @updatedAt
+  revisedBy             String
+  status                Int                 @default(0)
+  isProtectedForEdit    Boolean             @default(false)
+  id                    Int                 @id @default(autoincrement())
+  name                  String
+  application_date      DateTime
+  remark                String?
+  scale                 Float?
+  result                Float?
+  application_status    Int
+  is_employee           Int
+  external_applicant_id Int?
+  employee_id           Int?
+  vacancy_id            Int
+  external_applicant    external_applicant? @relation(fields: [external_applicant_id], references: [id])
+  employee              employee?           @relation(fields: [employee_id], references: [id])
+  vacancy               vacancy             @relation(fields: [vacancy_id], references: [id])
+  //needs external_applicant
+  //needs employee
+  //needs vacancy
+}
+
+model vacancy_examiner {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  vacancy_id         Int
+  employee_id        Int
+  vacancy            vacancy  @relation(fields: [vacancy_id], references: [id])
+  employee           employee @relation(fields: [employee_id], references: [id])
+  //needs vacancy
+  //needs employee
+}
+
+model vacancy_internal_applicant {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  employee_id        Int
+  vacancy_id         Int
+  vacancy            vacancy  @relation(fields: [vacancy_id], references: [id])
+  employee           employee @relation(fields: [employee_id], references: [id])
+}
+
+model vacancy_request_reason {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime  @default(now())
+  createdBy          String
+  revisionDate       DateTime  @updatedAt
+  revisedBy          String
+  status             Int       @default(0)
+  isProtectedForEdit Boolean   @default(false)
+  id                 Int       @id @default(autoincrement())
+  reason             String
+  vacancy            vacancy[]
+}
+
+model salary_component {
+  startDate                        DateTime
+  endDate                          DateTime
+  creationDate                     DateTime                           @default(now())
+  createdBy                        String
+  revisionDate                     DateTime                           @updatedAt
+  revisedBy                        String
+  status                           Int                                @default(0)
+  isProtectedForEdit               Boolean                            @default(false)
+  id                               Int                                @id @default(autoincrement())
+  name                             String                             @unique
+  salary_component_type            Int?
+  value_type                       Int
+  value                            Float?
+  taxable                          Boolean?
+  chart_of_account_id              Int
+  chart_of_account                 chart_of_account?                  @relation(fields: [chart_of_account_id], references: [id])
+  employee_loan_repayment          employee_loan_repayment[]
+  employee_salary_component        employee_salary_component[]
+  paygrade_salary_component        paygrade_salary_component[]
+  payroll_detail                   payroll_detail[]
+  payroll_detail_history           payroll_detail_history[]
+  salary_adjustment                salary_adjustment[]
+  salary_component_account_mapping salary_component_account_mapping[]
+}
+
+model payroll_frequency_type {
+  startDate                        DateTime
+  endDate                          DateTime
+  creationDate                     DateTime                           @default(now())
+  createdBy                        String
+  revisionDate                     DateTime                           @updatedAt
+  revisedBy                        String
+  status                           Int                                @default(0)
+  isProtectedForEdit               Boolean                            @default(false)
+  id                               Int                                @id @default(autoincrement())
+  payroll_frequency_desc           String                             @unique
+  employee_pay_frequency           employee_pay_frequency[]
+  employee_back_penality_deduction employee_back_penality_deduction[]
+  payroll_log_employee             payroll_log_employee[]
+  payroll_period_autogen           payroll_period_autogen[]
+  payroll_period_template          payroll_period_template[]
+  payroll_summary                  payroll_summary[]
+  payroll_summary_history          payroll_summary_history[]
+}
+
+model paygrade {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime            @default(now())
+  createdBy          String
+  revisionDate       DateTime            @updatedAt
+  revisedBy          String
+  status             Int                 @default(0)
+  isProtectedForEdit Boolean             @default(false)
+  id                 Int                 @id @default(autoincrement())
+  paygrade_name      String              @unique
+  min_salary         Float
+  max_salary         Float
+  job_title          job_title[]
+  employee_paygrade  employee_paygrade[]
+
+  paygrade_salary_component paygrade_salary_component[]
+  paygrade_scale            paygrade_scale[]
+  pay_scale_history_log     pay_scale_history_log[]
+}
+
+model employee_back_penality_deduction {
+  startDate                 DateTime
+  endDate                   DateTime
+  creationDate              DateTime                @default(now())
+  createdBy                 String
+  revisionDate              DateTime                @updatedAt
+  revisedBy                 String
+  status                    Int                     @default(0)
+  isProtectedForEdit        Boolean                 @default(false)
+  id                        Int                     @id @default(autoincrement())
+  transaction_date          DateTime
+  remaining_deduction       Float?
+  currently_deducted_amount Float?
+  is_payroll_posted         Boolean?
+  employee_id               Int
+  payroll_frequency_type_id Int?
+  employee                  employee                @relation(fields: [employee_id], references: [id])
+  payroll_frequency_type    payroll_frequency_type? @relation(fields: [payroll_frequency_type_id], references: [id])
+}
+
+model employee_pay_scale {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  scale              Int
+  employee_id        Int
+  employee           employee @relation(fields: [employee_id], references: [id])
+}
+
+model employee_penality {
+  startDate                       DateTime
+  endDate                         DateTime
+  creationDate                    DateTime                      @default(now())
+  createdBy                       String
+  revisionDate                    DateTime                      @updatedAt
+  revisedBy                       String
+  status                          Int                           @default(0)
+  isProtectedForEdit              Boolean                       @default(false)
+  id                              Int                           @id @default(autoincrement())
+  penality_date                   DateTime
+  case_description                String
+  is_applied_for_payroll          Boolean?
+  employee_penality_detail_mst_id Int?
+  employee_id                     Int
+  employee                        employee                      @relation(fields: [employee_id], references: [id])
+  employee_penality_detail_mst    employee_penality_detail_mst? @relation(fields: [employee_penality_detail_mst_id], references: [id])
+}
+
+model employee_penality_detail_mst {
+  startDate                 DateTime
+  endDate                   DateTime
+  creationDate              DateTime               @default(now())
+  createdBy                 String
+  revisionDate              DateTime               @updatedAt
+  revisedBy                 String
+  status                    Int                    @default(0)
+  isProtectedForEdit        Boolean                @default(false)
+  id                        Int                    @id @default(autoincrement())
+  level                     Int
+  penality_description      String
+  penality_days             Int
+  employee_penality_type_id Int
+  employee_penality_type    employee_penality_type @relation(fields: [employee_penality_type_id], references: [id])
+
+  employee_penality employee_penality[]
+}
+
+model employee_penality_type {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  ref_number         String
+  description        String
+
+  employee_penality_detail_mst employee_penality_detail_mst[]
+}
+
+model employee_tax {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  start              Float
+  end                Float
+  percent            Float
+}
+
+model global_payroll_account_mapping {
+  startDate            DateTime
+  endDate              DateTime
+  creationDate         DateTime @default(now())
+  createdBy            String
+  revisionDate         DateTime @updatedAt
+  revisedBy            String
+  status               Int      @default(0)
+  isProtectedForEdit   Boolean  @default(false)
+  id                   Int      @id @default(autoincrement())
+  payroll_account_type Int?
+  chart_of_account_id  Int
+  business_unit_id     Int
+
+  chart_of_account chart_of_account @relation(fields: [chart_of_account_id], references: [id])
+  business_unit    business_unit    @relation(fields: [business_unit_id], references: [id])
+}
+
+model overtime {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime       @default(now())
+  createdBy          String
+  revisionDate       DateTime       @updatedAt
+  revisedBy          String
+  status             Int            @default(0)
+  isProtectedForEdit Boolean        @default(false)
+  id                 Int            @id @default(autoincrement())
+  date               DateTime       @unique
+  hours              Float //[0.24]
+  remark             String
+  overtime_status    Int
+  action_date        DateTime?
+  delegated_username String?
+  employee_id        Int            @unique //this means one to one relationship
+  overtime_rate_id   Int?
+  employee           employee       @relation(fields: [employee_id], references: [id])
+  overtime_rate      overtime_rate? @relation(fields: [overtime_rate_id], references: [id])
+
+  //needs employee
+  //needs overtime_rate
+}
+
+model overtime_rate {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime   @default(now())
+  createdBy          String
+  revisionDate       DateTime   @updatedAt
+  revisedBy          String
+  status             Int        @default(0)
+  isProtectedForEdit Boolean    @default(false)
+  id                 Int        @id @default(autoincrement())
+  description        String     @unique
+  rate               Float //[0.5]
+  overtime           overtime[]
+}
+
+model paygrade_salary_component {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime         @default(now())
+  createdBy           String
+  revisionDate        DateTime         @updatedAt
+  revisedBy           String
+  status              Int              @default(0)
+  isProtectedForEdit  Boolean          @default(false)
+  id                  Int              @id @default(autoincrement())
+  paygrade_id         Int
+  salary_component_id Int
+  paygrade            paygrade         @relation(fields: [paygrade_id], references: [id])
+  salary_component    salary_component @relation(fields: [salary_component_id], references: [id])
+
+}
+
+model paygrade_scale {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  scale              Int
+  amount             Float?
+  paygrade_id        Int
+  paygrade           paygrade @relation(fields: [paygrade_id], references: [id])
+  //needs paygrade
+}
+
+model payroll_detail {
+  startDate                  DateTime
+  endDate                    DateTime
+  creationDate               DateTime          @default(now())
+  createdBy                  String
+  revisionDate               DateTime          @updatedAt
+  revisedBy                  String
+  status                     Int               @default(0)
+  isProtectedForEdit         Boolean           @default(false)
+  id                         Int               @id @default(autoincrement())
+  description                String?
+  total_amount               Float?
+  payroll_component          Int
+  isEmployerPart             Boolean?
+  isEarning                  Boolean?
+  payroll_posting_entry_type Int?
+  payroll_summary_id         Int
+  salary_component_id        Int?
+  payroll_summary            payroll_summary   @relation(fields: [payroll_summary_id], references: [id])
+  salary_component           salary_component? @relation(fields: [salary_component_id], references: [id])
+  //needs payroll_summary
+  //needs salary_component
+}
+
+model payroll_detail_history {
+  startDate                  DateTime
+  endDate                    DateTime
+  creationDate               DateTime                @default(now())
+  createdBy                  String
+  revisionDate               DateTime                @updatedAt
+  revisedBy                  String
+  status                     Int                     @default(0)
+  isProtectedForEdit         Boolean                 @default(false)
+  id                         Int                     @id @default(autoincrement())
+  description                String
+  total_amount               Float
+  payroll_component          Int?
+  is_employer_part           Boolean?
+  is_earning                 Boolean?
+  payroll_posting_entry_type Int?
+  salary_component_id        Int?
+  payroll_summary_history_id Int
+  salary_component           salary_component?       @relation(fields: [salary_component_id], references: [id])
+  payroll_summary_history    payroll_summary_history @relation(fields: [payroll_summary_history_id], references: [id])
+
+}
+
+model payroll_location_setting {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  location_id        Int
+  location           location @relation(fields: [location_id], references: [id])
+}
+
+model payroll_log {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  period             Int
+  year               Int
+  message            String?
+  employee_id        Int
+  employee           employee @relation(fields: [employee_id], references: [id])
+
+  //needs employee
+}
+
+model payroll_log_employee {
+  startDate                 DateTime
+  endDate                   DateTime
+  creationDate              DateTime               @default(now())
+  createdBy                 String
+  revisionDate              DateTime               @updatedAt
+  revisedBy                 String
+  status                    Int                    @default(0)
+  isProtectedForEdit        Boolean                @default(false)
+  id                        Int                    @id @default(autoincrement())
+  start_period              DateTime
+  end_period                DateTime
+  message                   String?
+  employee_id               Int
+  payroll_frequency_type_id Int
+  employee                  employee               @relation(fields: [employee_id], references: [id])
+  payroll_frequency_type    payroll_frequency_type @relation(fields: [payroll_frequency_type_id], references: [id])
+
+  //needs employee
+  //needs payroll_frequency_type
+}
+
+model payroll_period_autogen {
+  startDate                   DateTime
+  endDate                     DateTime
+  creationDate                DateTime               @default(now())
+  createdBy                   String
+  revisionDate                DateTime               @updatedAt
+  revisedBy                   String
+  status                      Int                    @default(0)
+  isProtectedForEdit          Boolean                @default(false)
+  id                          Int                    @id @default(autoincrement())
+  period_id                   String
+  start_period                DateTime
+  end_period                  DateTime
+  year                        Int
+  is_payroll_processed        Boolean
+  is_payroll_posted           Boolean
+  is_processing_started       Boolean
+  is_payroll_interfaced_to_FI Boolean?
+  is_payroll_locked           Boolean?
+  payroll_frequency_type_id   Int
+  payroll_frequency_type      payroll_frequency_type @relation(fields: [payroll_frequency_type_id], references: [id])
+  //needs payroll_frequency_type
+}
+
+model payroll_period_autogen_log {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime @default(now())
+  createdBy           String
+  revisionDate        DateTime @updatedAt
+  revisedBy           String
+  status              Int      @default(0)
+  isProtectedForEdit  Boolean  @default(false)
+  id                  Int      @id @default(autoincrement())
+  year                Int
+  is_period_generated Boolean
+}
+
+model payroll_period_template {
+  startDate                 DateTime
+  endDate                   DateTime
+  creationDate              DateTime               @default(now())
+  createdBy                 String
+  revisionDate              DateTime               @updatedAt
+  revisedBy                 String
+  status                    Int                    @default(0)
+  isProtectedForEdit        Boolean                @default(false)
+  id                        Int                    @id @default(autoincrement())
+  period_id                 String
+  start_period              DateTime
+  end_period                DateTime
+  payroll_frequency_type_id Int
+  payroll_frequency_type    payroll_frequency_type @relation(fields: [payroll_frequency_type_id], references: [id])
+  //needs payroll_frequency_type
+}
+
+model payroll_posting_log {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  log_message        String
+}
+
+model payroll_processing_log {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  log_message        String
+}
+
+model payroll_summary {
+  startDate                 DateTime
+  endDate                   DateTime
+  creationDate              DateTime                @default(now())
+  createdBy                 String
+  revisionDate              DateTime                @updatedAt
+  revisedBy                 String
+  status                    Int                     @default(0)
+  isProtectedForEdit        Boolean                 @default(false)
+  id                        Int                     @id @default(autoincrement())
+  expected_working_hours    Float
+  total_worked_hours        Float
+  total_worked_OT_hours     Float?
+  total_worked_OT_amount    Float?
+  total_absent_hours        Float?
+  total_absent_amount       Float?
+  total_amount              Float?
+  payroll_frequency_type_id Int?
+  employee_id               Int?
+  business_unit_id          Int?
+  payroll_frequency_type    payroll_frequency_type? @relation(fields: [payroll_frequency_type_id], references: [id])
+  employee                  employee?               @relation(fields: [employee_id], references: [id])
+  business_unit             business_unit?          @relation(fields: [business_unit_id], references: [id])
+
+  //needs payroll_frequency_type
+  //needs employee
+  //needs business_unit
+  payroll_detail payroll_detail[]
+}
+
+model payroll_summary_history {
+  startDate                 DateTime
+  endDate                   DateTime
+  creationDate              DateTime                 @default(now())
+  createdBy                 String
+  revisionDate              DateTime                 @updatedAt
+  revisedBy                 String
+  status                    Int                      @default(0)
+  isProtectedForEdit        Boolean                  @default(false)
+  id                        Int                      @id @default(autoincrement())
+  expected_working_hours    Float
+  total_worked_hours        Float
+  total_worked_OT_hours     Float?
+  total_worked_OT_amount    Float?
+  total_absent_hours        Float?
+  total_absent_amount       Float?
+  total_amount              Float?
+  is_payroll_posted         Boolean?
+  payroll_frequency_type_id Int?
+  employee_id               Int?
+  business_unit_id          Int?
+  payroll_frequency_type    payroll_frequency_type?  @relation(fields: [payroll_frequency_type_id], references: [id])
+  employee                  employee?                @relation(fields: [employee_id], references: [id])
+  business_unit             business_unit?           @relation(fields: [business_unit_id], references: [id])
+  //needs payroll_frequency_type
+  //needs employee
+  //needs business_unit
+  payroll_detail_history    payroll_detail_history[]
+}
+
+model pay_scale_history_log {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime  @default(now())
+  createdBy          String
+  revisionDate       DateTime  @updatedAt
+  revisedBy          String
+  status             Int       @default(0)
+  isProtectedForEdit Boolean   @default(false)
+  id                 Int       @id @default(autoincrement())
+  scale              Int //[11]
+  effective_date     DateTime?
+  amount             Float
+  paygrade_id        Int
+  paygrade           paygrade  @relation(fields: [paygrade_id], references: [id])
+  //needs paygrade
+}
+
+model salary_adjustment {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime         @default(now())
+  createdBy           String
+  revisionDate        DateTime         @updatedAt
+  revisedBy           String
+  status              Int              @default(0)
+  isProtectedForEdit  Boolean          @default(false)
+  id                  Int              @id @default(autoincrement())
+  payroll_date        DateTime?
+  amount              Float
+  salary_component_id Int              @unique
+  employee_id         Int              @unique
+  employee            employee         @relation(fields: [employee_id], references: [id])
+  salary_component    salary_component @relation(fields: [salary_component_id], references: [id])
+
+  //needs employee
+  //needs salary_component
+}
+
+model salary_component_account_mapping {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime         @default(now())
+  createdBy           String
+  revisionDate        DateTime         @updatedAt
+  revisedBy           String
+  status              Int              @default(0)
+  isProtectedForEdit  Boolean          @default(false)
+  id                  Int              @id @default(autoincrement())
+  chart_of_account_id Int
+  business_unit_id    Int
+  salary_component_id Int
+  salary_component    salary_component @relation(fields: [salary_component_id], references: [id])
+  chart_of_account    chart_of_account @relation(fields: [chart_of_account_id], references: [id])
+  business_unit       business_unit    @relation(fields: [business_unit_id], references: [id])
+  //needs salary_component
+  //needs chart_of_account
+  //needs business_unit
+}
+
+model attendance_abscence_type {
+  startDate                     DateTime
+  endDate                       DateTime
+  creationDate                  DateTime             @default(now())
+  createdBy                     String
+  revisionDate                  DateTime             @updatedAt
+  revisedBy                     String
+  status                        Int                  @default(0)
+  isProtectedForEdit            Boolean              @default(false)
+  id                            Int                  @id @default(autoincrement())
+  aa_description                String               @unique
+  aa_type                       Int                  @default(1)
+  is_with_quota                 Boolean?
+  is_with_pay                   Boolean?
+  is_annual_leave               Boolean?
+  is_with_entitlement           Boolean?
+  is_regular_attendance         Boolean?
+  number_of_days                Int?
+  number_of_increment_each_year Float?
+  is_absence_includes_day_off   Boolean?
+  leave_assignment              leave_assignment[]
+  leave_entitlement             leave_entitlement[]
+  attendance_payroll            attendance_payroll[]
+}
+
+model shift_schedule_hdr {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime             @default(now())
+  createdBy          String
+  revisionDate       DateTime             @updatedAt
+  revisedBy          String
+  status             Int                  @default(0)
+  isProtectedForEdit Boolean              @default(false)
+  id                 Int                  @id @default(autoincrement())
+  shift_name         String               @unique
+  sub_shift_group_id Int
+  sub_shift_group    sub_shift_group      @relation(fields: [sub_shift_group_id], references: [id])
+  shift_assignment   shift_assignment[]
+  shift_schedule_dtl shift_schedule_dtl[]
+}
+
+model sub_shift_group {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime             @default(now())
+  createdBy          String
+  revisionDate       DateTime             @updatedAt
+  revisedBy          String
+  status             Int                  @default(0)
+  isProtectedForEdit Boolean              @default(false)
+  id                 Int                  @id @default(autoincrement())
+  sub_shift_name     String               @unique
+  morning_out        Float
+  afternoon_in       Float
+  tolerance_minutes  Int?
+  shift_schedule_hdr shift_schedule_hdr[]
+}
+
+model attendance_captured {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime      @default(now())
+  createdBy          String
+  revisionDate       DateTime      @updatedAt
+  revisedBy          String
+  status             Int           @default(0)
+  isProtectedForEdit Boolean       @default(false)
+  id                 Int           @id @default(autoincrement())
+  date               DateTime
+  in_out_mode        Int?
+  punch_device_id    Int?
+  employee_id        Int
+  employee           employee      @relation(fields: [employee_id], references: [id])
+  punch_device       punch_device? @relation(fields: [punch_device_id], references: [id])
+}
+
+model attendance_payroll {
+  startDate                   DateTime
+  endDate                     DateTime
+  creationDate                DateTime                  @default(now())
+  createdBy                   String
+  revisionDate                DateTime                  @updatedAt
+  revisedBy                   String
+  status                      Int                       @default(0)
+  isProtectedForEdit          Boolean                   @default(false)
+  id                          Int                       @id @default(autoincrement())
+  date                        DateTime
+  total_worked_hours          Float?
+  attendance_status           Int?
+  action_date                 DateTime?
+  delegated_username          String?
+  attendance_abscence_type_id Int?
+  employee_id                 Int
+  employee                    employee                  @relation(fields: [employee_id], references: [id])
+  attendance_abscence_type    attendance_abscence_type? @relation(fields: [attendance_abscence_type_id], references: [id])
+}
+
+model device_id_mapping {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime      @default(now())
+  createdBy          String
+  revisionDate       DateTime      @updatedAt
+  revisedBy          String
+  status             Int           @default(0)
+  isProtectedForEdit Boolean       @default(false)
+  id                 Int           @id @default(autoincrement())
+  finger_print_id    String        @unique
+  employee_id        Int           @unique
+  punch_device_id    Int?
+  employee           employee      @relation(fields: [employee_id], references: [id])
+  punch_device       punch_device? @relation(fields: [punch_device_id], references: [id])
+}
+
+model holiday {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime           @default(now())
+  createdBy          String
+  revisionDate       DateTime           @updatedAt
+  revisedBy          String
+  status             Int                @default(0)
+  isProtectedForEdit Boolean            @default(false)
+  id                 Int                @id @default(autoincrement())
+  holiday_name       String             @unique
+  is_recurring       Boolean?
+  holiday_calendar   holiday_calendar[]
+}
+
+model holiday_calendar {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  date               DateTime @unique
+  is_half_day        Boolean?
+  holiday_id         Int      @unique
+  holiday            holiday  @relation(fields: [holiday_id], references: [id])
+}
+
+model leave_period {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  date               DateTime
+}
+
+model leave_plan {
+  startDate            DateTime
+  endDate              DateTime
+  creationDate         DateTime  @default(now())
+  createdBy            String
+  revisionDate         DateTime  @updatedAt
+  revisedBy            String
+  status               Int       @default(0)
+  isProtectedForEdit   Boolean   @default(false)
+  id                   Int       @id @default(autoincrement())
+  is_half_day          Boolean
+  leave_request_status Int?
+  action_date          DateTime?
+  delegated_username   String?
+  employee_id          Int       @unique
+  employee             employee  @relation(fields: [employee_id], references: [id])
+}
+
+model punch {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime     @default(now())
+  createdBy          String
+  revisionDate       DateTime     @updatedAt
+  revisedBy          String
+  status             Int          @default(0)
+  isProtectedForEdit Boolean      @default(false)
+  id                 Int          @id @default(autoincrement())
+  punch_date         DateTime
+  in_out_mode        Int?
+  is_manual          Boolean?
+  imported_by        String?
+  approved_by        String?
+  verify_mode        Int?
+  imported_date      DateTime?
+  remark             String?
+  punch_device_id    Int
+  employee_id        Int
+  employee           employee     @relation(fields: [employee_id], references: [id])
+  punch_device       punch_device @relation(fields: [punch_device_id], references: [id])
+}
+
+model punch_device {
+  startDate           DateTime
+  endDate             DateTime
+  creationDate        DateTime              @default(now())
+  createdBy           String
+  revisionDate        DateTime              @updatedAt
+  revisedBy           String
+  status              Int                   @default(0)
+  isProtectedForEdit  Boolean               @default(false)
+  id                  Int                   @id @default(autoincrement())
+  device_name         String                @unique
+  ip_address          String
+  attendance_captured attendance_captured[]
+  device_id_mapping   device_id_mapping[]
+  punch               punch[]
+  punch_log           punch_log[]
+  punch_manual_import punch_manual_import[]
+}
+
+model punch_log {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime     @default(now())
+  createdBy          String
+  revisionDate       DateTime     @updatedAt
+  revisedBy          String
+  status             Int          @default(0)
+  isProtectedForEdit Boolean      @default(false)
+  id                 Int          @id @default(autoincrement())
+  imported_date      DateTime?
+  log_remark         String?
+  punch_device_id    Int
+  punch_device       punch_device @relation(fields: [punch_device_id], references: [id])
+}
+
+model punch_manual_import {
+  startDate             DateTime
+  endDate               DateTime
+  creationDate          DateTime     @default(now())
+  createdBy             String
+  revisionDate          DateTime     @updatedAt
+  revisedBy             String
+  status                Int          @default(0)
+  isProtectedForEdit    Boolean      @default(false)
+  id                    Int          @id @default(autoincrement())
+  is_processed          Boolean?
+  remark                String?
+  processing_date       DateTime?
+  is_processing_started Boolean?
+  punch_device_id       Int
+  punch_device          punch_device @relation(fields: [punch_device_id], references: [id])
+}
+
+model punch_time {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  date               DateTime
+  total_worked_hours Float?
+  employee_id        Int
+  employee           employee @relation(fields: [employee_id], references: [id])
+}
+
+model shift_schedule_dtl {
+  startDate              DateTime
+  endDate                DateTime
+  creationDate           DateTime            @default(now())
+  createdBy              String
+  revisionDate           DateTime            @updatedAt
+  revisedBy              String
+  status                 Int                 @default(0)
+  isProtectedForEdit     Boolean             @default(false)
+  id                     Int                 @id @default(autoincrement())
+  clock_in               Float //in hours(it's a timespan)
+  clock_out              Float //in hours(it's a timespan)
+  min_working_hours      Float //in hours(it's a timespan)
+  working_day            Int?
+  is_shift_span_next_day Boolean?
+  is_half_day            Boolean?
+  shift_schedule_hdr_id  Int?
+  shift_schedule_hdr     shift_schedule_hdr? @relation(fields: [shift_schedule_hdr_id], references: [id])
+}
+
+model unit_of_measure {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime     @default(now())
+  createdBy          String
+  revisionDate       DateTime     @updatedAt
+  revisedBy          String
+  status             Int          @default(0)
+  isProtectedForEdit Boolean      @default(false)
+  id                 Int          @id @default(autoincrement())
+  description        String?
+  short_code         String
+  stock_item         stock_item[]
+}
+
+model warehouse {
+  startDate                DateTime
+  endDate                  DateTime
+  creationDate             DateTime                   @default(now())
+  createdBy                String
+  revisionDate             DateTime                   @updatedAt
+  revisedBy                String
+  status                   Int                        @default(0)
+  isProtectedForEdit       Boolean                    @default(false)
+  id                       Int                        @id @default(autoincrement())
+  name                     String
+  city                     String
+  state                    String?
+  zip_code                 String?
+  phone_no                 String?
+  email                    String?
+  is_primary               Boolean?
+  country_id               Int
+  country                  country                    @relation(fields: [country_id], references: [id])
+  stock_transaction_header stock_transaction_header[]
+}
+
+model stock_batch {
+  startDate                DateTime
+  endDate                  DateTime
+  creationDate             DateTime                   @default(now())
+  createdBy                String
+  revisionDate             DateTime                   @updatedAt
+  revisedBy                String
+  status                   Int                        @default(0)
+  isProtectedForEdit       Boolean                    @default(false)
+  id                       Int                        @id @default(autoincrement())
+  batch_ref                String
+  manufacturer             String?
+  manufactured_date        DateTime?
+  date_of_expiry           DateTime?
+  remark                   String?
+  stock_transaction_detail stock_transaction_detail[]
+}
+
+model stock_item {
+  startDate                              DateTime
+  endDate                                DateTime
+  creationDate                           DateTime                   @default(now())
+  createdBy                              String
+  revisionDate                           DateTime                   @updatedAt
+  revisedBy                              String
+  status                                 Int                        @default(0)
+  isProtectedForEdit                     Boolean                    @default(false)
+  id                                     Int                        @id @default(autoincrement())
+  item_name                              String
+  SKU                                    String
+  item_type                              Int
+  reorder_level                          Int
+  stock_item_tracking                    Int?
+  item_can_be                            Int?
+  is_item_returnable                     Boolean?
+  UPC                                    String?
+  EAN                                    String?
+  MPN                                    String?
+  ISBN                                   String?
+  selling_price                          Float?
+  additional_sales_info                  String?
+  purchasing_price                       Float?
+  addtional_purchase_info                String?
+  item_group_id                          Int?
+  dimensions                             String?
+  manufacturer                           String?
+  inventory_tracking_chart_of_account_id Int?
+  purchase_chart_of_account_id           Int?
+  sales_chart_of_account_id              Int?
+  unit_of_measure_id                     Int?
+  tax_id                                 Int?
+  unit_of_measure                        unit_of_measure?           @relation(fields: [unit_of_measure_id], references: [id])
+  tax                                    tax?                       @relation(fields: [tax_id], references: [id])
+  sales_chart_of_account                 chart_of_account?          @relation(name: "sales_chart", fields: [sales_chart_of_account_id], references: [id])
+  purchase_chart_of_account              chart_of_account?          @relation(name: "purchase_chart", fields: [purchase_chart_of_account_id], references: [id])
+  inventory_tracking_chart_of_account    chart_of_account?          @relation(name: "inventory_chart", fields: [inventory_tracking_chart_of_account_id], references: [id])
+  stock_transaction_header               stock_transaction_header[]
+}
+
+model stock_transaction_detail {
+  startDate                   DateTime
+  endDate                     DateTime
+  creationDate                DateTime                 @default(now())
+  createdBy                   String
+  revisionDate                DateTime                 @updatedAt
+  revisedBy                   String
+  status                      Int                      @default(0)
+  isProtectedForEdit          Boolean                  @default(false)
+  id                          Int                      @id @default(autoincrement())
+  transaction_date            DateTime?
+  note                        String?
+  price                       Float?
+  quantity                    Float?
+  order_no                    String?
+  transaction_ref             String?
+  is_opening_value            String?
+  stock_transaction_type      Int?
+  stock_transaction_source    Int?
+  remark                      String?
+  serial_number               String?
+  stock_batch_id              Int?
+  stock_transaction_header_id Int
+  stock_batch                 stock_batch?             @relation(fields: [stock_batch_id], references: [id])
+  stock_transaction_header    stock_transaction_header @relation(fields: [stock_transaction_header_id], references: [id])
+}
+
+model stock_transaction_header {
+  startDate                DateTime
+  endDate                  DateTime
+  creationDate             DateTime                   @default(now())
+  createdBy                String
+  revisionDate             DateTime                   @updatedAt
+  revisedBy                String
+  status                   Int                        @default(0)
+  isProtectedForEdit       Boolean                    @default(false)
+  id                       Int                        @id @default(autoincrement())
+  stock_item_id            Int
+  warehouse_id             Int
+  stock_item               stock_item?                @relation(fields: [stock_item_id], references: [id])
+  warehouse                warehouse                  @relation(fields: [warehouse_id], references: [id])
+  stock_transaction_detail stock_transaction_detail[]
 }
