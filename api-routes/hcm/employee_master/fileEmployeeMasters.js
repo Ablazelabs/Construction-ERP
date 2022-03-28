@@ -334,10 +334,10 @@ router.patch(allRoutes, upload.single("file"), async (req, res, next) => {
         );
         if (fileIsGood) {
             const fileType = req.file.originalname.split(".").pop();
-            const newDestination = `uploads\\${operationDataType}\\${req.file.filename}.${fileType}`;
+            const newDestination = `uploads/${operationDataType}/${req.file.filename}.${fileType}`;
             const fileUrl = `/uploads/${operationDataType}/${req.file.filename}.${fileType}`;
             try {
-                const dir = `uploads\\${operationDataType}`;
+                const dir = `uploads/${operationDataType}`;
                 if (!existsSync(dir)) {
                     mkdirSync(dir);
                 }

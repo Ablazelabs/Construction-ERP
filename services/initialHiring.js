@@ -35,6 +35,9 @@ module.exports = async (
         employeeReqBody.employee_type_id,
         next
     );
+    if (!employeeReqBody.id_number) {
+        return;
+    }
     const empdata = await mPost(
         employeeReqBody,
         "employee",
