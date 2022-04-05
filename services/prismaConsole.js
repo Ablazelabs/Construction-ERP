@@ -147,12 +147,16 @@ const prismaIntegratedFn = async () => {
     console.log("taken time - ", 1, " - ", new Date() - a);
 };
 
-const promiseAll = async () => {
-    const data = await Promise.all([
-        user.update({ where: { id: 1 }, data: { username: "yolo" } }),
-        user.update({ where: { id: 1 }, data: { normalized_username: 4 } }),
-    ]);
-    console.table(data);
+// const promiseAll = async () => {
+//     const data = await Promise.all([
+//         user.update({ where: { id: 1 }, data: { username: "yolo" } }),
+//         user.update({ where: { id: 1 }, data: { normalized_username: 4 } }),
+//     ]);
+//     console.table(data);
+// };
+
+const dropProjects = async () => {
+    await allModels.daily_work_log.deleteMany();
 };
 
-promiseAll();
+dropProjects();

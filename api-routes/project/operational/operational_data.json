@@ -2,13 +2,13 @@
     "allInputFilters": {
         "project": {
             "name": "string",
-            "project_manager": "string",
+            "project_manager_id": "number",
             "project_start_date": "string",
             "project_end_date": "string",
             "project_id": "string",
             "contract_number": "string",
-            "site_engineer": "string",
-            "dupty_manager": "string",
+            "site_engineer_id": "number",
+            "dupty_manager_id": "number",
             "project_address": "string",
             "client_id": "number"
         },
@@ -39,7 +39,8 @@
             "transportation": "number",
             "total_expense": "number",
             "manpower_id": "number",
-            "project_id": "number"
+            "project_id": "number",
+            "task_manager_id": "number"
         },
         "required_equipment": {
             "planned_equipment_number": "number",
@@ -49,14 +50,16 @@
             "transportation": "number",
             "total_expense": "number",
             "equipment_id": "number",
-            "project_id": "number"
+            "project_id": "number",
+            "task_manager_id": "number"
         },
         "required_material": {
             "planned_quantity": "number",
             "planned_unit_price": "number",
             "planned_total_amount": "number",
             "material_id": "number",
-            "project_id": "number"
+            "project_id": "number",
+            "task_manager_id": "number"
         },
         "risk_tracking": {
             "impact": "string",
@@ -358,7 +361,8 @@
             "task_end_date": true,
             "duration_in_days": true,
             "working_days": true,
-            "project": true
+            "project": true,
+            "sub_task": true
         },
         "sub_task": {
             "id": true,
@@ -466,12 +470,12 @@
     "allFilters": {
         "project": {
             "name": "string",
-            "project_manager": "string",
+            "project_manager_id": "number",
             "project_description": "string",
             "project_id": "string",
             "contract_number": "string",
-            "site_engineer": "string",
-            "dupty_manager": "string",
+            "site_engineer_id": "number",
+            "dupty_manager_id": "number",
             "project_address": "string",
             "client_id": "number"
         },

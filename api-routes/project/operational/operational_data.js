@@ -32,6 +32,30 @@ const {
     uniqueValues,
 } = allConfigs;
 
+let checkAgainstProject = {};
+let checkAgainstTaskManager = {};
+for (let i in dateValues) {
+    if (dateValues[i].length) {
+        let containsProject = false;
+        let containsTaskManager = false;
+        const keys = [
+            ...Object.keys(allInputFilters[i]),
+            ...Object.keys(allOptionalInputFilters[i]),
+        ];
+        if (keys.indexOf("project_id") !== -1) {
+            containsProject = true;
+        }
+        if (keys.indexOf("task_manager_id") !== -1) {
+            containsTaskManager = true;
+        }
+        if (containsTaskManager) {
+            checkAgainstTaskManager[i] = dateValues[i];
+        } else if (containsProject) {
+            checkAgainstProject[i] = dateValues[i];
+        }
+    }
+}
+
 router.post(allRoutes, async (req, res, next) => {
     const operationDataType = req.path.split("/").pop();
     const requiredInputFilter = allInputFilters[operationDataType],
@@ -58,14 +82,19 @@ router.post(allRoutes, async (req, res, next) => {
     if (!reqBody) {
         return;
     }
-
+    //before posting like the others we need to check date values of operational data(except for the ones that don't have project id as foreign key to keep the date limit)
+    //this will be extended now with also task_manager id holder values to respect the task manager dates!
     try {
         const data = await post(
             reqBody,
             operationDataType,
             res.locals.id,
             uniqueValues[operationDataType],
-            next
+            operationDataType !== "project" &&
+                checkAgainstProject[operationDataType],
+            checkAgainstTaskManager[operationDataType],
+            next,
+            operationDataType === "project"
         );
         if (data == false) {
             return;

@@ -7,10 +7,10 @@ const { authenticate } = require("./validation/auth");
 const app = express();
 const basicAuth = require("express-basic-auth");
 const cors = require("cors");
+const allRoutes = require("./api-routes");
 
 app.use(json());
 app.use(cors());
-const allRoutes = require("./api-routes");
 app.use(authenticate);
 
 /**
@@ -23,6 +23,15 @@ app.use((req, _res, next) => {
                 try {
                     req.body = JSON.parse(req.query.body);
                 } catch {}
+            } else {
+                let body = req.query;
+                for (let i in body) {
+                    const num = parseInt(body[i]);
+                    if (num) {
+                        body[i] = num;
+                    }
+                }
+                req.body = body;
             }
         }
     }
