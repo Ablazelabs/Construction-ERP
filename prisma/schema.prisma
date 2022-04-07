@@ -457,30 +457,32 @@ model risk_tracking {
 }
 
 model task_manager {
-  id                   Int                    @id @default(autoincrement())
-  name                 String
-  description          String?
-  task_start_date      DateTime
-  task_end_date        DateTime?
-  duration_in_days     String
-  working_days         String
-  project_id           Int
-  startDate            DateTime
-  endDate              DateTime
-  creationDate         DateTime               @default(now())
-  createdBy            String
-  revisionDate         DateTime               @updatedAt
-  revisedBy            String
-  status               Int                    @default(0)
-  isProtectedForEdit   Boolean                @default(false)
-  dependency_id        Int?
-  dependency           task_manager?          @relation(fields: [dependency_id], references: [id], name: "dependency")
+  id                 Int       @id @default(autoincrement())
+  name               String
+  description        String?
+  task_start_date    DateTime
+  task_end_date      DateTime?
+  duration_in_days   String
+  working_days       String
+  project_id         Int
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime  @default(now())
+  createdBy          String
+  revisionDate       DateTime  @updatedAt
+  revisedBy          String
+  status             Int       @default(0)
+  isProtectedForEdit Boolean   @default(false)
+
+  prerequisites task_manager[] @relation("dependency", references: [id])
+  dependents    task_manager[] @relation("dependency", references: [id])
+
   project              project                @relation(fields: [project_id], references: [id])
   sub_task             sub_task[]
   manpower_requirement manpower_requirement[]
   required_equipment   required_equipment[]
   required_material    required_material[]
-  task_manager         task_manager[]         @relation("dependency")
+
 }
 
 model sub_task {
@@ -498,9 +500,16 @@ model sub_task {
   createdBy          String
   revisionDate       DateTime     @updatedAt
   revisedBy          String
+  // dependency_id      Int?
+  // dependency         sub_task?    @relation(fields: [dependency_id], references: [id], name: "dependency")
   status             Int          @default(0)
   isProtectedForEdit Boolean      @default(false)
   task_manager       task_manager @relation(fields: [task_manager_id], references: [id])
+  // sub_task           sub_task[]   @relation("dependency")3
+  prerequisites      sub_task[]   @relation("sub_task_dependency", references: [id], map: "dependents")
+  dependents         sub_task[]   @relation("sub_task_dependency", references: [id], map: "prerequisites")
+
+  todos todos[]
 }
 
 model simple_task {
@@ -566,10 +575,6 @@ model weather_data {
 }
 
 model todos {
-  id                 Int      @id @default(autoincrement())
-  notes              String
-  name               String
-  date               String
   startDate          DateTime
   endDate            DateTime
   creationDate       DateTime @default(now())
@@ -578,10 +583,21 @@ model todos {
   revisedBy          String
   status             Int      @default(0)
   isProtectedForEdit Boolean  @default(false)
-  project_id         Int
-  priority_id        Int
-  project            project  @relation(fields: [project_id], references: [id])
-  priority           priority @relation(fields: [priority_id], references: [id])
+
+  id    Int     @id @default(autoincrement())
+  notes String?
+  name  String
+
+  completed Boolean @default(false)
+
+  // date               String
+
+  project_id  Int?
+  priority_id Int?
+  sub_task_id Int?
+  sub_task    sub_task? @relation(fields: [sub_task_id], references: [id])
+  project     project?  @relation(fields: [project_id], references: [id])
+  priority    priority? @relation(fields: [priority_id], references: [id])
 }
 
 model request {

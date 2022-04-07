@@ -181,7 +181,7 @@
         "simple_task": { "task_end_date": "string" },
         "work_log_and_branch_of_work": {},
         "weather_data": { "reason": "string" },
-        "todos": {},
+        "todos": { "completed": "boolean" },
         "request": {
             "request_description": "string",
             "date_required": "string",
@@ -362,7 +362,8 @@
             "duration_in_days": true,
             "working_days": true,
             "project": true,
-            "sub_task": true
+            "sub_task": true,
+            "prerequisites": true
         },
         "sub_task": {
             "id": true,
@@ -372,7 +373,9 @@
             "task_end_date": true,
             "duration_in_days": true,
             "working_days": true,
-            "task_manager": true
+            "task_manager": true,
+            "todos": true,
+            "prerequisites": true
         },
         "simple_task": {
             "id": true,

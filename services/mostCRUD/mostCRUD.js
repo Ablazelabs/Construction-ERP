@@ -7,7 +7,7 @@ const { error, allModels } = require("../../config/config");
  * @param {Array<string>} uniqueValues list of keys that shouldn't have a duplicate in db
  * @param {function} next if this is called the fn returns false and sends an error to client
  * @param {boolean} sendId if this is true returns id of posted data with success message
- * @returns boolean|object
+ * @returns false|object
  */
 const post = async (
     reqBody,
@@ -20,7 +20,7 @@ const post = async (
     if (reqBody.list && Array.isArray(reqBody.list)) {
         let data;
         for (let i in reqBody.list) {
-            data = post(
+            data = await post(
                 reqBody.list[i],
                 modelName,
                 creator,

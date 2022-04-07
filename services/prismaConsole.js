@@ -1,7 +1,7 @@
 const { allModels } = require("../config/config");
 
 const { accounting_period, user, project } = allModels;
-
+const prisma = allModels;
 const test = async (fiscalYearType, creator, dateTime) => {
     let accountingPeriods = [];
     let fiscalYearStartMonth = 0;
@@ -159,4 +159,26 @@ const dropProjects = async () => {
     await allModels.daily_work_log.deleteMany();
 };
 
-dropProjects();
+const primsaConnectFailureMessage = async () => {
+    const role = await prisma.role.findFirst();
+    if (!role) {
+        console.log("no role!");
+        return;
+    }
+    console.log(role);
+    const connected = await prisma.role.update({
+        where: {
+            id: role.id,
+        },
+        data: {
+            description: "this role should stay deleted",
+            privileges: {
+                connect: 1,
+            },
+        },
+    });
+    //for some reason this doesn't work! figure it out later
+    console.log(connected);
+};
+
+primsaConnectFailureMessage();
