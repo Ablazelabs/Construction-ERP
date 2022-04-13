@@ -1,4 +1,4 @@
-const { allModels, error } = require("../config/config");
+const { allModels, error, snakeToPascal } = require("../config/config");
 const {
     post: mPost,
     get: mGet,
@@ -27,7 +27,6 @@ const post = async (
     next,
     sendId = false
 ) => {
-    console.log({ checkAgainstProject, checkAgainstTaskManager });
     if (checkAgainstTaskManager) {
         const taskManager = await task_manager.findUnique({
             where: { id: reqBody.task_manager_id },
@@ -35,21 +34,26 @@ const post = async (
         for (let i in checkAgainstTaskManager) {
             if (
                 reqBody[checkAgainstTaskManager[i]] <
-                taskManager.task_start_date
+                    taskManager.task_start_date &&
+                reqBody[checkAgainstTaskManager[i]].getTime() <
+                    taskManager.task_start_date.getTime()
             ) {
                 error(
-                    i,
-                    i +
+                    checkAgainstTaskManager[i],
+                    snakeToPascal(checkAgainstTaskManager[i]) +
                         ` can't be less than main task start date ${taskManager.task_start_date.toDateString()}`,
                     next
                 );
                 return;
             } else if (
-                reqBody[checkAgainstTaskManager[i]] > taskManager.task_end_date
+                reqBody[checkAgainstTaskManager[i]] >
+                    taskManager.task_end_date &&
+                reqBody[checkAgainstTaskManager[i]].getTime() >
+                    taskManager.task_end_date.getTime()
             ) {
                 error(
-                    i,
-                    i +
+                    checkAgainstTaskManager[i],
+                    snakeToPascal(checkAgainstTaskManager[i]) +
                         ` can't be more than main task end date ${taskManager.task_end_date.toDateString()}`,
                     next
                 );
@@ -62,20 +66,30 @@ const post = async (
         });
         for (let i in checkAgainstProject) {
             if (
-                reqBody[checkAgainstProject[i]] < projectData.project_start_date
+                reqBody[checkAgainstProject[i]] <
+                    projectData.project_start_date &&
+                reqBody[checkAgainstProject[i]].getTime() <
+                    projectData.project_start_date.getTime()
             ) {
                 error(
-                    i,
-                    `${i} can't be less than project start date ${projectData.project_start_date.toDateString()}`,
+                    checkAgainstProject[i],
+                    `${snakeToPascal(
+                        checkAgainstProject[i]
+                    )} can't be less than project start date ${projectData.project_start_date.toDateString()}`,
                     next
                 );
                 return;
             } else if (
-                reqBody[checkAgainstProject[i]] > projectData.project_end_date
+                reqBody[checkAgainstProject[i]] >
+                    projectData.project_end_date &&
+                reqBody[checkAgainstProject[i]].getTime() >
+                    projectData.project_end_date.getTime()
             ) {
                 error(
-                    i,
-                    `${i} can't be more than project end date ${projectData.project_end_date.toDateString()}`,
+                    checkAgainstProject[i],
+                    `${snakeToPascal(
+                        checkAgainstProject[i]
+                    )} can't be more than project end date ${projectData.project_end_date.toDateString()}`,
                     next
                 );
                 return;
@@ -156,6 +170,11 @@ const patch = async (
         next
     );
 };
+/**
+ *
+ * @param {string} str
+ */
+
 module.exports = {
     post,
     get,

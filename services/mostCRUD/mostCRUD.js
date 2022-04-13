@@ -1,4 +1,4 @@
-const { error, allModels } = require("../../config/config");
+const { error, allModels, snakeToPascal } = require("../../config/config");
 /**
  *
  * @param {object} reqBody object to be posted
@@ -64,7 +64,11 @@ const post = async (
                 });
                 return { success: true, id: sendId ? data.id : undefined };
             }
-            error(`${uniqueKey}`, `${modelName} already exists`, next);
+            error(
+                `${uniqueKey}`,
+                `${snakeToPascal(modelName)} already exists`,
+                next
+            );
             return false;
         }
     }
@@ -84,9 +88,9 @@ const post = async (
         return { success: true, id: sendId ? data.id : undefined };
     } catch (e) {
         if (e.meta.field_name) {
-            const fieldModel = e.meta.field_name
-                .replace("_id", "")
-                .replace(/_/g, " ");
+            const fieldModel = snakeToPascal(
+                e.meta.field_name.replace("_id", "")
+            );
             error(
                 e.meta.field_name,
                 `no ${fieldModel} exists with this id`,
@@ -132,11 +136,15 @@ const patch = async (
         where: { id: reqBody.id },
     });
     if (!myModel) {
-        error("id", `${modelName} doesn't exist`, next);
+        error("id", `${snakeToPascal(modelName)} doesn't exist`, next);
         return false;
     }
     if (myModel.isProtectedForEdit) {
-        error("id", `this ${modelName} is protected against edit`, next);
+        error(
+            "id",
+            `this ${snakeToPascal(modelName)} is protected against edit`,
+            next
+        );
         return false;
     }
     for (let i in uniqueValues) {
@@ -156,7 +164,7 @@ const patch = async (
                     where: { ...whereData },
                 });
                 if (data) {
-                    error(key, "already exists", next);
+                    error(key, `${snakeToPascal(key)} already exists`, next);
                     return false;
                 }
             }
@@ -173,9 +181,9 @@ const patch = async (
     } catch (e) {
         console.log(e);
         if (e.meta.field_name) {
-            const fieldModel = e.meta.field_name
-                .replace("_id", "")
-                .replace(/_/g, " ");
+            const fieldModel = snakeToPascal(
+                e.meta.field_name.replace("_id", "")
+            );
             error(
                 e.meta.field_name,
                 `no ${fieldModel} exists with this id`,

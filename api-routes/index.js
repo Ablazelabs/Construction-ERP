@@ -17,8 +17,13 @@ const material = require("./project/master/material");
 const documentation = require("./project/master/documentation");
 const restMasterData = require("./project/master/restMasterData");
 
+const dashboard = require("./project/dashboard/dashboard");
+
 const operationalData = require("./project/operational/operational_data");
 const mainSubTodo = require("./project/operational/mainsubtodo");
+const dailyWorkLog = require("./project/operational/dailyWorkLog");
+const workingDays = require("./project/workingDays");
+const projectValidations = require("./project/validation/allValidations");
 
 const financeContact = require("./finance/master/contact");
 const financemasters = require("./finance/master/financemasters");
@@ -76,8 +81,13 @@ router.use("/project/master", material);
 router.use("/project/master", documentation);
 router.use("/project/master", restMasterData);
 
+router.use("/project/dashboard", dashboard);
+
+router.use("/project", workingDays);
+router.use("/project/operational", dailyWorkLog);
 router.use("/project/operational", mainSubTodo);
 router.use("/project/operational", operationalData);
+router.use("/project/validation", projectValidations);
 
 router.use("/finance/master", financeContact);
 router.use("/finance/master", financemasters);

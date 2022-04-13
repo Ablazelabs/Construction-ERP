@@ -1,3 +1,5 @@
+const { snakeToPascal } = require("../config/config");
+
 const validator = {
     checkType: (value, type) => {
         if (typeof value != type) {
@@ -61,7 +63,7 @@ module.exports = (
     try {
         validator.checkKeys(keys, givenObj);
     } catch (e) {
-        throw { key: e, message: `${e} is empty or wasn't set` };
+        throw { key: e, message: `${snakeToPascal(e)} is empty or wasn't set` };
     }
     for (let i in optionalObj) {
         if (givenObj[i] != undefined && optionalObj[i] != undefined) {
@@ -72,7 +74,7 @@ module.exports = (
                     validator.checkLength(givenObj[i], maxLength);
                 }
             } catch (e) {
-                throw { key: i, message: `${i} ${e}` };
+                throw { key: i, message: `${snakeToPascal(i)} ${e}` };
             }
         }
     }
@@ -87,7 +89,7 @@ module.exports = (
                 validator.checkLength(givenObj[i], maxLength);
             }
         } catch (e) {
-            throw { key: i, message: `${i} ${e}` };
+            throw { key: i, message: `${snakeToPascal(i)} ${e}` };
         }
     }
     let returnedObj = {};

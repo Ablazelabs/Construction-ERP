@@ -33,6 +33,7 @@ router.post("/account/login", async (req, res, next) => {
         }
         res.json(data);
     } catch (e) {
+        console.log(e);
         error("database", "error", next, 500);
     }
 });

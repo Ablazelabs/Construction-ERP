@@ -38,6 +38,12 @@ async function main() {
                 deleted_status: 0,
                 description: "hcm privilege!",
             },
+            {
+                action: "manager",
+                concurrency_stamp: "random",
+                deleted_status: 0,
+                description: "hcm privilege!",
+            },
         ],
         skipDuplicates: true,
     });

@@ -195,7 +195,6 @@
         "request_payment": {
             "amount": "number",
             "request_type": "number",
-            "approval_status": "number",
             "description": "string",
             "check_number": "string",
             "remaining_balance": "number",
@@ -313,7 +312,8 @@
             "manpower": true,
             "project_id": true,
             "number_of_actual_man_power": true,
-            "remark": true
+            "remark": true,
+            "approval_status": true
         },
         "required_equipment": {
             "id": true,
@@ -326,7 +326,8 @@
             "total_expense": true,
             "remark": true,
             "equipment": true,
-            "project": true
+            "project": true,
+            "approval_status": true
         },
         "required_material": {
             "id": true,
@@ -340,7 +341,8 @@
             "remark": true,
             "delivery_date": true,
             "material": true,
-            "project": true
+            "project": true,
+            "approval_status": true
         },
         "risk_tracking": {
             "id": true,
@@ -426,7 +428,8 @@
             "date_responded": true,
             "notes": true,
             "project": true,
-            "priority": true
+            "priority": true,
+            "approval_status": true
         },
         "invoice_tracking": {
             "id": true,
@@ -451,7 +454,8 @@
             "received_date": true,
             "location": true,
             "project": true,
-            "documentation": true
+            "documentation": true,
+            "approval_status": true
         },
         "request_payment": {
             "id": true,
@@ -501,18 +505,21 @@
         "manpower_requirement": {
             "remarks": "string",
             "manpower_id": "number",
-            "project_id": "number"
+            "project_id": "number",
+            "approval_status": "number"
         },
         "required_equipment": {
             "equipment_lifetime": "string",
             "remark": "string",
             "equipment_id": "number",
-            "project_id": "number"
+            "project_id": "number",
+            "approval_status": "number"
         },
         "required_material": {
             "remark": "string",
             "material_id": "number",
-            "project_id": "number"
+            "project_id": "number",
+            "approval_status": "number"
         },
         "risk_tracking": {
             "impact": "string",
@@ -566,7 +573,8 @@
             "assigned_to": "string",
             "notes": "string",
             "project_id": "number",
-            "priority_id": "number"
+            "priority_id": "number",
+            "approval_status": "number"
         },
         "invoice_tracking": {
             "detail": "string",
@@ -581,7 +589,8 @@
             "received": "string",
             "location": "string",
             "documentation_id": "number",
-            "project_id": "number"
+            "project_id": "number",
+            "approval_status": "number"
         },
         "request_payment": {
             "id": "number",
@@ -646,7 +655,8 @@
             "total_expense": "number",
             "remark": "number",
             "manpower_id": "number",
-            "project_id": "number"
+            "project_id": "number",
+            "approval_status": "number"
         },
         "required_equipment": {
             "id": "number",
@@ -659,7 +669,8 @@
             "total_expense": "number",
             "remark": "number",
             "equipment_id": "number",
-            "project_id": "number"
+            "project_id": "number",
+            "approval_status": "number"
         },
         "required_material": {
             "id": "number",
@@ -673,7 +684,8 @@
             "remark": "number",
             "delivery_date": "number",
             "material_id": "number",
-            "project_id": "number"
+            "project_id": "number",
+            "approval_status": "number"
         },
         "risk_tracking": {
             "id": "number",
@@ -755,7 +767,8 @@
             "date_responded": "number",
             "notes": "number",
             "project": "number",
-            "priority": "number"
+            "priority": "number",
+            "approval_status": "number"
         },
         "invoice_tracking": {
             "id": "string",
@@ -780,7 +793,8 @@
             "received_date": "number",
             "location": "number",
             "project": "number",
-            "documentation": "number"
+            "documentation": "number",
+            "approval_status": "number"
         },
         "request_payment": {
             "id": "number",

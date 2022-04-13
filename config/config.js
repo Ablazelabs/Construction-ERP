@@ -26,6 +26,15 @@ const sendEmail = async (to, title, subject, body, attachments) => {
 const randomConcurrencyStamp = () => {
     return "random";
 };
+const snakeToPascal = (str) => {
+    let newStr = str.split("_");
+    newStr = newStr.map((elem) => {
+        elem = elem.split("");
+        elem[0] = elem[0].toUpperCase();
+        return elem.join("");
+    });
+    return newStr.join(" ");
+};
 /**
  *
  * @param {string} key argument of the error
@@ -47,6 +56,7 @@ module.exports = {
     sendEmail,
     confirmCredential,
     randomConcurrencyStamp,
+    snakeToPascal,
     allModels,
     COMPANY_NAME: "ElHadar-PLC",
     REPORT_BASIS_TITLE: "Accounting Method: ",

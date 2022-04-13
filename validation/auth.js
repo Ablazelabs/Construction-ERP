@@ -22,7 +22,7 @@ const authorization = {
             },
         });
         if (!myUser) {
-            error("id", "user doesn't have privilege", next, 403);
+            error("id", "you don't have enough privileges", next, 403);
             return false;
         }
         return true;
@@ -55,7 +55,7 @@ const authorization = {
             },
         });
         if (!myUser) {
-            error("id", "user doesn't have privilege", next, 403);
+            error("id", "you don't have enough privileges", next, 403);
             return false;
         }
         if (myUser.role.privileges.find(({ action }) => action === "super")) {
@@ -106,6 +106,10 @@ const authorization = {
         });
         return Boolean(myUser);
     },
+    /**
+     *
+     * @description make a readable code!
+     */
     authenticate: async (req, res, next) => {
         const requestRoute = req.path.split("/").pop();
         const requestPath = req.path;
@@ -161,6 +165,12 @@ const authorization = {
             : requestRoute == "account" && method === "POST"
             ? "admin"
             : "*";
+        const additionalPrivileges = [
+            (requestPath.match("validation") ||
+                requestPath.match("dashboard") ||
+                requestPath.match("master")) &&
+                "manager",
+        ].filter((elem) => elem);
         if (
             requestRoute == "account" &&
             (method == "PATCH" || method == "DELETE")
@@ -178,7 +188,7 @@ const authorization = {
                 return;
             }
         } else {
-            if (requestRoute === "account") {
+            if (requestRoute === "account" || method === "GET") {
                 next();
                 return;
             }
@@ -190,6 +200,18 @@ const authorization = {
                 ))
             )
                 return;
+            if (additionalPrivileges.length) {
+                for (let i in additionalPrivileges) {
+                    if (
+                        !(await authorization.userHasPrivilege(
+                            payLoad.id,
+                            additionalPrivileges[i],
+                            next
+                        ))
+                    )
+                        return;
+                }
+            }
         }
         next();
     },

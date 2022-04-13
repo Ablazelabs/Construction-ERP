@@ -41,6 +41,7 @@ model user {
   journal_users          journal_users[]
   general_journal_header general_journal_header[]
   journal_comment        journal_comment[]
+  project_edit_request   project_edit_request[]
 }
 
 model privilege {
@@ -265,6 +266,14 @@ model documentation {
   required_document    required_document[]
 }
 
+model project_edit_request {
+  id              Int      @id @default(autoincrement())
+  requester_id    Int
+  requester       user     @relation(fields: [requester_id], references: [id])
+  approval_status Int      @default(1)
+  requested_date  DateTime @default(now())
+}
+
 model project {
   id   Int    @id @default(autoincrement())
   name String
@@ -365,6 +374,7 @@ model manpower_requirement {
   transportation              Float
   total_expense               Float
   remark                      String?
+  approval_status             Int           @default(1)
   manpower_id                 Int
   project_id                  Int
   task_manager_id             Int?
@@ -391,6 +401,7 @@ model required_equipment {
   transportation           Float
   total_expense            Float
   remark                   String?
+  approval_status          Int           @default(1)
   equipment_id             Int
   task_manager_id          Int?
   project_id               Int
@@ -417,6 +428,7 @@ model required_material {
   delivered_total_amount Float?
   total_expense          Float?
   remark                 String?
+  approval_status        Int           @default(1)
   delivery_date          DateTime?
   material_id            Int
   project_id             Int
@@ -610,6 +622,7 @@ model request {
   date_requested      DateTime
   date_required       DateTime?
   date_responded      DateTime?
+  approval_status     Int       @default(1)
   notes               String
   project_id          Int
   priority_id         Int
@@ -658,6 +671,7 @@ model required_document {
   received           String?
   received_date      DateTime?
   location           String
+  approval_status    Int           @default(1)
   documentation_id   Int
   project_id         Int
   project            project       @relation(fields: [project_id], references: [id])
@@ -1240,45 +1254,45 @@ model export_template {
 }
 
 model chart_of_account {
-  startDate                        DateTime
-  endDate                          DateTime
-  creationDate                     DateTime                           @default(now())
-  createdBy                        String
-  revisionDate                     DateTime                           @updatedAt
-  revisedBy                        String
-  status                           Int                                @default(0)
-  isProtectedForEdit               Boolean                            @default(false)
-  id                               Int                                @id @default(autoincrement())
-  account_name                     String
-  account_code                     String                             @unique
-  account_number                   String?
-  is_active                        Boolean?
-  description                      String?
-  add_to_dashboard_watch_list      Boolean?
-  attachment_path                  Int?
-  is_sub_account                   Boolean?
-  is_default                       Boolean?
-  is_employee_account              Boolean?
-  has_opening_balance              Boolean?
-  is_bank_account                  Boolean?
-  parent_account_id                Int?
-  head_account_id                  Int?
-  currency_id                      Int?
-  account_type_id                  Int
-  account_type                     account_type                       @relation(fields: [account_type_id], references: [id])
-  currency                         currency?                          @relation(fields: [currency_id], references: [id])
-  parent_account                   chart_of_account?                  @relation(name: "parent_account", fields: [parent_account_id], references: [id])
-  head_account                     chart_of_account?                  @relation(name: "head_account", fields: [head_account_id], references: [id])
+  startDate                   DateTime
+  endDate                     DateTime
+  creationDate                DateTime               @default(now())
+  createdBy                   String
+  revisionDate                DateTime               @updatedAt
+  revisedBy                   String
+  status                      Int                    @default(0)
+  isProtectedForEdit          Boolean                @default(false)
+  id                          Int                    @id @default(autoincrement())
+  account_name                String
+  account_code                String                 @unique
+  account_number              String?
+  is_active                   Boolean?
+  description                 String?
+  add_to_dashboard_watch_list Boolean?
+  attachment_path             Int?
+  is_sub_account              Boolean?
+  is_default                  Boolean?
+  is_employee_account         Boolean?
+  has_opening_balance         Boolean?
+  is_bank_account             Boolean?
+  parent_account_id           Int?
+  head_account_id             Int?
+  currency_id                 Int?
+  account_type_id             Int
+  account_type                account_type           @relation(fields: [account_type_id], references: [id])
+  currency                    currency?              @relation(fields: [currency_id], references: [id])
+  parent_account              chart_of_account?      @relation(name: "parent_account", fields: [parent_account_id], references: [id])
+  head_account                chart_of_account?      @relation(name: "head_account", fields: [head_account_id], references: [id])
   //needs account_type
   //needs currency
   //needs chart_of_account
-  parent_accounts                  chart_of_account[]                 @relation("parent_account")
-  head_accounts                    chart_of_account[]                 @relation("head_account")
-  contact                          contact[]
-  cost_center_accounts             cost_center_accounts[]
-  tax_debits                       tax[]                              @relation("chart_of_account_debit")
-  tax_credits                      tax[]                              @relation("chart_of_account_credit")
-  // tax_chart_of_account        tax_chart_of_account[]
+  parent_accounts             chart_of_account[]     @relation("parent_account")
+  head_accounts               chart_of_account[]     @relation("head_account")
+  contact                     contact[]
+  cost_center_accounts        cost_center_accounts[]
+  tax_debits                  tax[]                  @relation("chart_of_account_debit")
+  tax_credits                 tax[]                  @relation("chart_of_account_credit")
+
   bank_reconcilation               bank_reconcilation[]
   chart_of_account_files           chart_of_account_files[]
   budget_account                   budget_account[]
@@ -1489,10 +1503,7 @@ model general_journal_header {
   currency                     currency                   @relation(fields: [currency_id], references: [id])
   posting_responsible_user     user                       @relation(fields: [posting_responsible_user_id], references: [id])
 
-  //needs journal_type
-  //needs recurring_general_journal
-  //needs currency
-  //needs user
+
   general_ledger         general_ledger[]
   journal_comment        journal_comment[]
   general_journal_detail general_journal_detail[]
@@ -1728,7 +1739,7 @@ model request_payment {
   date                    DateTime
   amount                  Float?
   request_type            Int?
-  approval_status         Int?
+  approval_status         Int                   @default(1)
   description             String?
   check_number            String?
   remaining_balance       Int?

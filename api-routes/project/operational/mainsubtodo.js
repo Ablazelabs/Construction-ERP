@@ -6,7 +6,7 @@ const { post, get, patch } = require("../../../services/mainsubtodo");
 const {
     returnReqBody,
     returnGetData,
-    returnPatchData,
+    // returnPatchData,
 } = require("../../../validation/basicValidators");
 
 const defaultDeleter = require("../../defaultDeleter");
@@ -132,8 +132,11 @@ router.post(allRoutes, async (req, res, next) => {
             operationDataType,
             res.locals.id,
             uniqueValues[operationDataType],
-            pre,
-            todos,
+            [pre, todos],
+            [
+                checkAgainstProject[operationDataType],
+                checkAgainstTaskManager[operationDataType],
+            ],
             next,
             operationDataType === "project"
         );
