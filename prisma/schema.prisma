@@ -318,6 +318,7 @@ model project {
   crv_payment                  crv_payment[]
   request_payment              request_payment[]
   petty_cash                   petty_cash[]
+  project_request              project_request[]
 }
 
 model daily_work_log {
@@ -374,7 +375,7 @@ model manpower_requirement {
   transportation              Float
   total_expense               Float
   remark                      String?
-  approval_status             Int           @default(1)
+  // approval_status             Int           @default(1)
   manpower_id                 Int
   project_id                  Int
   task_manager_id             Int?
@@ -401,7 +402,7 @@ model required_equipment {
   transportation           Float
   total_expense            Float
   remark                   String?
-  approval_status          Int           @default(1)
+  // approval_status          Int           @default(1)
   equipment_id             Int
   task_manager_id          Int?
   project_id               Int
@@ -428,7 +429,7 @@ model required_material {
   delivered_total_amount Float?
   total_expense          Float?
   remark                 String?
-  approval_status        Int           @default(1)
+  // approval_status        Int           @default(1)
   delivery_date          DateTime?
   material_id            Int
   project_id             Int
@@ -638,6 +639,55 @@ model request {
   priority            priority  @relation(fields: [priority_id], references: [id])
 }
 
+model project_request {
+  id                  Int                   @id @default(autoincrement())
+  request_type        Int //[payment,manpower,store],
+  priority            Int //[high,mid,low],
+  total_amount        Float?
+  vat_amount          Float?
+  sub_total           Float?
+  prepared_by_id      Int
+  checked_by_id       Int?
+  approved_by_id      Int?
+  approval_status     Int //[pending, approved, denied]
+  requested_date      DateTime              @default(now())
+  action_taken_date   DateTime?
+  status              Int                   @default(0)
+  creationDate        DateTime              @default(now())
+  createdBy           String
+  revisionDate        DateTime              @updatedAt
+  revisedBy           String
+  project_id          Int
+  action_note         String?
+  remark              String?               @db.VarChar(1000)
+  prepared_by         employee              @relation(fields: [prepared_by_id], references: [id], name: "project_request_prepared_by")
+  checked_by          employee?             @relation(fields: [checked_by_id], references: [id], name: "project_request_checked_by")
+  approved_by         employee?             @relation(fields: [approved_by_id], references: [id], name: "project_request_approved_by")
+  project             project               @relation(fields: [project_id], references: [id])
+  individual_requests individual_requests[]
+  isProtectedForEdit  Boolean               @default(false)
+
+}
+
+model individual_requests {
+  id                 Int             @id @default(autoincrement())
+  persons            String
+  description        String?
+  returnable         Boolean?
+  return_date        DateTime? //greater than now
+  quantity           Int
+  quantity_type      String?
+  unit_rate          Float?
+  vat                Boolean?
+  status             Int             @default(0)
+  project_request_id Int
+  creationDate       DateTime        @default(now())
+  createdBy          String
+  revisionDate       DateTime        @updatedAt
+  revisedBy          String
+  project_request    project_request @relation(fields: [project_request_id], references: [id])
+}
+
 model invoice_tracking {
   id                 Int      @id @default(autoincrement())
   detail             String?
@@ -671,7 +721,7 @@ model required_document {
   received           String?
   received_date      DateTime?
   location           String
-  approval_status    Int           @default(1)
+  // approval_status    Int           @default(1)
   documentation_id   Int
   project_id         Int
   project            project       @relation(fields: [project_id], references: [id])
@@ -2586,6 +2636,9 @@ model employee {
   engineered_sites                 project[]                          @relation("site_engineer")
   managed_dupties                  project[]                          @relation("dupty_manager")
   managed_proects                  project[]                          @relation("project_manager")
+  prepared_project_request         project_request[]                  @relation("project_request_prepared_by")
+  checked_project_request          project_request[]                  @relation("project_request_checked_by")
+  approved_project_request         project_request[]                  @relation("project_request_approved_by")
 }
 
 model employee_action {
