@@ -4,21 +4,12 @@ const { error } = require("../../../config/config");
 const inputFilter = require("../../../validation/inputFilter");
 const { patch } = require("../../../services/projectValidations");
 
-const allRoutes = [
-    "/manpower_requirement",
-    "/required_equipment",
-    "/required_material",
-    "/request",
-    "/required_document",
-    "/request_payment",
-];
-router.patch(allRoutes, async (req, res, next) => {
-    const operationDataType = req.path.split("/").pop();
+router.patch("/project_request", async (req, res, next) => {
     let reqBody;
     try {
         reqBody = inputFilter(
             { id: "number", approval_status: "number" },
-            {},
+            { action_note: "string" },
             req.body
         );
         if (reqBody.approval_status < 2 || reqBody.approval_status > 3) {
@@ -35,7 +26,12 @@ router.patch(allRoutes, async (req, res, next) => {
     }
     let { id, approval_status } = reqBody;
     try {
-        const data = await patch(id, approval_status, operationDataType, next);
+        const data = await patch(
+            id,
+            approval_status,
+            reqBody.action_note,
+            next
+        );
         if (data == false) {
             return;
         }

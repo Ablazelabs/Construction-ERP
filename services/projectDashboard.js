@@ -11,22 +11,24 @@ const indexService = async () => {
     const inCompleteProjectsLength =
         totalProjectsLength - completedProjectsLenth;
     const requestModels = [
-        "manpower_requirement",
-        "required_equipment",
-        "required_material",
-        "request",
-        "required_document",
-        "request_payment",
+        "",
+        "payment_request",
+        "manpower_request",
+        "store_request",
     ];
+    filters = [1, 2, 3];
     let requests = {};
     total = 0;
-    for (let i in requestModels) {
-        requests[requestModels[i]] = await allModels[requestModels[i]].count({
+    for (let i in filters) {
+        requests[requestModels[filters[i]]] = await allModels[
+            "project_request"
+        ].count({
             where: {
                 approval_status: 1,
+                request_type: filters[i],
             },
         });
-        total += requests[requestModels[i]];
+        total += requests[requestModels[filters[i]]];
     }
     requests["total"] = total;
     return {

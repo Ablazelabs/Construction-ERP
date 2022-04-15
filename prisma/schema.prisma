@@ -272,6 +272,8 @@ model project_edit_request {
   requester       user     @relation(fields: [requester_id], references: [id])
   approval_status Int      @default(1)
   requested_date  DateTime @default(now())
+  project_id      Int
+  project         project  @relation(fields: [project_id], references: [id])
 }
 
 model project {
@@ -319,6 +321,7 @@ model project {
   request_payment              request_payment[]
   petty_cash                   petty_cash[]
   project_request              project_request[]
+  project_edit_request         project_edit_request[]
 }
 
 model daily_work_log {
@@ -671,7 +674,7 @@ model project_request {
 
 model individual_requests {
   id                 Int             @id @default(autoincrement())
-  persons            String
+  persons            String?
   description        String?
   returnable         Boolean?
   return_date        DateTime? //greater than now

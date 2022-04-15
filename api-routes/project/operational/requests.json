@@ -3,7 +3,8 @@
         "all_requests": {
             "request_type": "number",
             "priority": "number",
-            "prepared_by_id": "number"
+            "prepared_by_id": "number",
+            "project_id": "number"
         },
         "all_individuals": { "quantity": "number" },
         "individual_payment": {
@@ -15,6 +16,10 @@
         "individual_store": {
             "description": "string",
             "returnable": "boolean"
+        },
+        "project_edit_request": {
+            "requester_id": "number",
+            "project_id": "number"
         }
     },
     "allOptionalInputFilters": {
@@ -24,7 +29,8 @@
         "individual_manpower": {},
         "individual_store": {
             "return_date": "string"
-        }
+        },
+        "project_edit_request": {}
     },
     "enums": {
         "all_requests": {
@@ -34,14 +40,16 @@
         "all_individuals": {},
         "individual_payment": {},
         "individual_manpower": {},
-        "individual_store": {}
+        "individual_store": {},
+        "project_edit_request": {}
     },
     "dateValues": {
         "all_requests": [],
         "all_individuals": [],
         "individual_payment": [],
         "individual_manpower": [],
-        "individual_store": ["return_date"]
+        "individual_store": ["return_date"],
+        "project_edit_request": []
     },
     "allProjections": {
         "request_payment": {
@@ -106,10 +114,18 @@
             "return_date": true,
             "quantity": true,
             "quantity_type": true
+        },
+        "project_edit_request": {
+            "id": true,
+            "requester": true,
+            "approval_status": true,
+            "requested_date": true,
+            "project": true
         }
     },
     "allFilters": {
         "request_payment": {
+            "id": "number",
             "request_type": "number",
             "priority": "number",
             "total_amount": "number",
@@ -124,6 +140,7 @@
             "remark": "string"
         },
         "request_manpower": {
+            "id": "number",
             "request_type": "number",
             "priority": "number",
             "total_amount": "number",
@@ -136,6 +153,7 @@
             "remark": "string"
         },
         "request_store": {
+            "id": "number",
             "request_type": "number",
             "priority": "number",
             "prepared_by_id": "number",
@@ -147,6 +165,7 @@
             "remark": "string"
         },
         "individual_payment": {
+            "id": "number",
             "description": "string",
             "unit_rate": "number",
             "vat": "boolean",
@@ -154,16 +173,24 @@
             "quantity_type": "string"
         },
         "individual_manpower": {
+            "id": "number",
             "persons": "string",
             "unit_rate": "number",
             "quantity": "number",
             "quantity_type": "string"
         },
         "individual_store": {
+            "id": "number",
             "description": "string",
             "returnable": "boolean",
             "quantity": "number",
             "quantity_type": "string"
+        },
+        "project_edit_request": {
+            "id": "number",
+            "requester_id": "number",
+            "approval_status": "number",
+            "project_id": "number"
         }
     },
     "allSorts": {
@@ -229,6 +256,13 @@
             "return_date": "number",
             "quantity": "number",
             "quantity_type": "number"
+        },
+        "project_edit_request": {
+            "id": "number",
+            "requester_id": "number",
+            "approval_status": "number",
+            "requested_date": "number",
+            "project_id": "number"
         }
     }
 }

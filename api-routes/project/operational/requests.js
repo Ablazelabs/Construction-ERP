@@ -4,14 +4,12 @@ const { error } = require("../../../config/config");
 const {
     post,
     get,
-    patch,
-    getProjectId,
+    postEditRequest,
 } = require("../../../services/projectRequests");
 
 const {
     returnReqBody,
     returnGetData,
-    returnPatchData,
 } = require("../../../validation/basicValidators");
 
 const defaultDeleter = require("../../defaultDeleter");
@@ -27,7 +25,7 @@ const {
     allFilters,
 } = allConfigs;
 
-router.post("/project_requests", async (req, res, next) => {
+router.post("/project_request", async (req, res, next) => {
     const requiredInputFilter = allInputFilters.all_requests;
     const dateValue = dateValues.all_requests;
     const myEnums = enums.all_requests;
@@ -49,13 +47,16 @@ router.post("/project_requests", async (req, res, next) => {
     if (!reqBody) {
         return;
     }
+
     //#region delete unnecessary reqbody returns;
     delete reqBody.startDate;
     delete reqBody.endDate;
     //#endregion
+
     //header data(data not in array)
     //now we know all neccesary header data has been sent( now to make sure )
     //now to check for individual requests
+
     let { request } = req.body;
     if (!request || !request.length) {
         error("request", "at least one request must be sent", next);
@@ -101,15 +102,8 @@ router.post("/project_requests", async (req, res, next) => {
         request[i] = individualRequestBody;
     }
     try {
-        console.log({ reqBody, request });
-        return { success: true };
-        const data = await post(
-            reqBody,
-            operationDataType,
-            res.locals.id,
-            uniqueValues[operationDataType],
-            next
-        );
+        // console.log({ reqBody, request });
+        const data = await post(reqBody, request, res.locals.id, next);
         if (data == false) {
             return;
         }
@@ -119,11 +113,60 @@ router.post("/project_requests", async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
-router.get("/project_requests", async (req, res, next) => {
-    const operationDataType = req.path.split("/").pop();
-    const filters = allFilters[operationDataType],
-        sorts = allSorts[operationDataType],
-        projections = allProjections[operationDataType];
+router.post("/project_edit_request", async (req, res, next) => {
+    const requiredInputFilter = allInputFilters.project_edit_request;
+    const dateValue = dateValues.project_edit_request;
+    const myEnums = enums.project_edit_request;
+    const optionalInputFilter = allOptionalInputFilters.project_edit_request;
+
+    let reqBody = returnReqBody(
+        req.body,
+        {
+            requiredInputFilter,
+            optionalInputFilter,
+            dateValue,
+            myEnums,
+            phoneValue: undefined,
+            emailValue: undefined,
+            rangeValues: undefined,
+        },
+        next
+    );
+    if (!reqBody) {
+        return;
+    }
+
+    //#region delete unnecessary reqbody returns;
+    delete reqBody.startDate;
+    delete reqBody.endDate;
+    delete reqBody.isProtectedForEdit;
+    //#endregion
+
+    try {
+        // console.log({ reqBody, request });
+        const data = await postEditRequest(reqBody, res.locals.id, next);
+        if (data == false) {
+            return;
+        }
+        res.json(data);
+    } catch (e) {
+        console.log(e);
+        error("database", "error", next, 500);
+    }
+});
+router.get("/all_project_requests", async (req, res, next) => {
+    const filters = allFilters["request_payment"],
+        sorts = allSorts["request_payment"],
+        projections = {
+            request_type: true,
+            priority: true,
+            approval_status: true,
+            prepared_by: true,
+            remark: true,
+            id: true,
+        };
+    delete req.body?.sort?.startDate;
+    delete req.body?.sort?.endDate;
     const getData = returnGetData(
         req.body,
         { filters, sorts, projections },
@@ -132,7 +175,9 @@ router.get("/project_requests", async (req, res, next) => {
     if (!getData) {
         return;
     }
-    const { queryFilter, querySort, limit, skip, projection } = getData;
+    let { queryFilter, querySort, limit, skip, projection } = getData;
+    delete projection.startDate;
+    delete projection.endDate;
     try {
         res.json(
             await get(
@@ -141,7 +186,7 @@ router.get("/project_requests", async (req, res, next) => {
                 limit,
                 skip,
                 projection,
-                operationDataType
+                "project_request"
             )
         );
     } catch (e) {
@@ -149,53 +194,66 @@ router.get("/project_requests", async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
-router.patch("/project_requests", async (req, res, next) => {
-    const operationDataType = req.path.split("/").pop();
-
-    const requiredInputFilter = allInputFilters[operationDataType],
-        optionalInputFilter = allOptionalInputFilters[operationDataType],
-        dateValue = dateValues[operationDataType],
-        myEnums = enums[operationDataType],
-        phoneValue = phoneValues[operationDataType],
-        emailValue = emailValues[operationDataType],
-        rangeValues = allRangeValues[operationDataType];
-
-    const data = returnPatchData(
-        req.body,
-        {
-            requiredInputFilter,
-            optionalInputFilter,
-            dateValue,
-            myEnums,
-            phoneValue,
-            emailValue,
-            rangeValues,
-        },
-        next
-    );
-    if (!data) {
+router.get("/detail_project_requests", async (req, res, next) => {
+    const request_type = req.body?.filter?.request_type;
+    if (typeof request_type !== "number") {
+        error("request_type", "please send appropriate request type", next);
         return;
     }
-    const { updateData, updateDataProjection } = data;
+    if (!request_type || request_type < 1 || request_type > 3) {
+        error("request_type", "please send appropriate request type", next);
+        return;
+    }
+    const requestTypeKey = [
+        "",
+        "request_payment",
+        "request_manpower",
+        "request_store",
+    ][request_type];
+    const individualTypeKey = [
+        "",
+        "individual_payment",
+        "individual_manpower",
+        "individual_store",
+    ][request_type];
+    const filters = allFilters[requestTypeKey],
+        sorts = allSorts[requestTypeKey];
+    const projections = allProjections[requestTypeKey];
+    delete req.body?.sort?.startDate;
+    delete req.body?.sort?.endDate;
+    const getData = returnGetData(
+        req.body,
+        { filters, sorts, projections },
+        next
+    );
+    if (!getData) {
+        return;
+    }
+    let { queryFilter, querySort, limit, skip, projection } = getData;
+    delete projection.startDate;
+    delete projection.endDate;
+
+    projection.individual_requests = {
+        select: {
+            ...allProjections[individualTypeKey],
+        },
+    };
     try {
-        const data = await patch(
-            updateDataProjection,
-            req.body,
-            updateData,
-            operationDataType,
-            res.locals.id,
-            uniqueValues[operationDataType],
-            next
+        res.json(
+            await get(
+                queryFilter,
+                querySort,
+                limit,
+                skip,
+                projection,
+                "project_request"
+            )
         );
-        if (data == false) {
-            return;
-        }
-        res.json(data);
     } catch (e) {
         console.log(e);
         error("database", "error", next, 500);
-        return;
     }
 });
-router.delete("/project_requests", defaultDeleter);
+
+router.delete("/project_request", defaultDeleter);
 module.exports = router;

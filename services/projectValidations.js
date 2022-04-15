@@ -1,4 +1,7 @@
-const { allModels, error, snakeToPascal } = require("../config/config");
+const {
+    allModels: { project_request, project },
+    error,
+} = require("../config/config");
 
 /**
  *
@@ -8,19 +11,30 @@ const { allModels, error, snakeToPascal } = require("../config/config");
  * @param {Function} next
  * @returns
  */
-const patch = async (id, approval_status, modelName, next) => {
-    const myModel = await allModels[modelName].findUnique({
-        select: { approval_status: true, isProtectedForEdit: true },
-        where: { id: id },
+const patch = async (id, approval_status, action_note, next) => {
+    const myModel = await project_request.findUnique({
+        select: {
+            approval_status: true,
+            isProtectedForEdit: true,
+            request_type: true,
+            project_id: true,
+        },
+        where: { id },
     });
+    const displayRequestType = [
+        "",
+        "Payment Request",
+        "Manpower Request",
+        "Store Request",
+    ][myModel.request_type];
     if (!myModel) {
-        error("id", `${snakeToPascal(modelName)} doesn't exist`, next);
+        error("id", `${displayRequestType} doesn't exist`, next);
         return false;
     }
     if (myModel.isProtectedForEdit) {
         error(
             "id",
-            `this ${snakeToPascal(modelName)} is protected against edit`,
+            `this ${displayRequestType} is protected against edit`,
             next
         );
         return false;
@@ -28,7 +42,7 @@ const patch = async (id, approval_status, modelName, next) => {
     if (myModel.approval_status !== 1) {
         error(
             "id",
-            `this ${snakeToPascal(modelName)} has already been ${
+            `this ${displayRequestType} has already been ${
                 ["", "", "approved", "rejected"][myModel.approval_status]
             }`,
             next
@@ -36,9 +50,16 @@ const patch = async (id, approval_status, modelName, next) => {
         return false;
     }
     //if any error happens its totally 500!
-    await allModels[modelName].update({
+    const { project_manager_id } = (await project.findUnique({
+        where: { id: myModel.project_id },
+        select: { project_manager_id: true },
+    })) || { project_manager_id: null };
+    await project_request.update({
         data: {
             approval_status,
+            action_note,
+            action_taken_date: new Date(),
+            approved_by_id: project_manager_id,
         },
         where: { id: id },
     });
