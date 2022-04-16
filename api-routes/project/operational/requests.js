@@ -5,6 +5,8 @@ const {
     post,
     get,
     postEditRequest,
+    getEditRequest,
+    statusEditRequest,
 } = require("../../../services/projectRequests");
 
 const {
@@ -135,7 +137,7 @@ router.post("/project_edit_request", async (req, res, next) => {
     if (!reqBody) {
         return;
     }
-
+    reqBody.requester_id = res.locals.id;
     //#region delete unnecessary reqbody returns;
     delete reqBody.startDate;
     delete reqBody.endDate;
@@ -143,12 +145,44 @@ router.post("/project_edit_request", async (req, res, next) => {
     //#endregion
 
     try {
-        // console.log({ reqBody, request });
-        const data = await postEditRequest(reqBody, res.locals.id, next);
+        const data = await postEditRequest(reqBody, next);
         if (data == false) {
             return;
         }
         res.json(data);
+    } catch (e) {
+        console.log(e);
+        error("database", "error", next, 500);
+    }
+});
+router.get("/project_edit_request", async (req, res, next) => {
+    try {
+        res.json([
+            {
+                id: 1,
+                requester: { id: 1 },
+                approval_status: 1,
+                requested_date: new Date(),
+                project: { id: 3 },
+            },
+        ]);
+        res.json(await getEditRequest(Boolean(req.body.all)));
+    } catch (e) {
+        console.log(e);
+        error("database", "error", next, 500);
+    }
+});
+router.get("/project_edit_request/status", async (req, res, next) => {
+    try {
+        if (!req.body.project_id) {
+            error("project_id", "please send project id", next);
+            return;
+        }
+        if (typeof req.body.project_id !== "number") {
+            error("project_id", "project id, please send number", next);
+            return;
+        }
+        res.json(await statusEditRequest(res.locals.id, req.body.project_id));
     } catch (e) {
         console.log(e);
         error("database", "error", next, 500);
@@ -254,6 +288,8 @@ router.get("/detail_project_requests", async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
+
+router.uploadInvoice;
 
 router.delete("/project_request", defaultDeleter);
 module.exports = router;

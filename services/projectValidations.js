@@ -1,5 +1,5 @@
 const {
-    allModels: { project_request, project },
+    allModels: { project_request, project, project_edit_request },
     error,
 } = require("../config/config");
 
@@ -65,6 +65,42 @@ const patch = async (id, approval_status, action_note, next) => {
     });
     return { success: true };
 };
+/**
+ *
+ * @param {number} id
+ * @param {number} approval_status
+ * @param {Function} next
+ * @returns
+ */
+const editRequest = async (id, approval_status, next) => {
+    let yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const myModel = await project_edit_request.update({ where: { id } });
+    if (!myModel) {
+        error("id", `project edit request doesn't exist`, next);
+        return false;
+    }
+    if (myModel.approval_status !== 1) {
+        error(
+            "id",
+            `this project edit request has already been ${
+                ["", "", "approved", "rejected"][myModel.approval_status]
+            }`,
+            next
+        );
+        return false;
+    }
+    if (myModel.requested_date < yesterday) {
+        error("id", "this project edit request has expired", next);
+        return false;
+    }
+    await project_edit_request.update({
+        where: { id },
+        data: { approval_status },
+    });
+    return { success: true };
+};
 module.exports = {
     patch,
+    editRequest,
 };

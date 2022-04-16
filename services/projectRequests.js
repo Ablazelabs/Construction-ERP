@@ -1,5 +1,5 @@
 const {
-    allModels: { project_request, project_edit_request },
+    allModels: { project_request, project_edit_request, project },
     error,
 } = require("../config/config");
 const { get: mGet } = require("./mostCRUD/mostCRUD");
@@ -62,7 +62,7 @@ const post = async (reqBody, request, creator, next) => {
  * @param {*} next
  * @returns
  */
-const postEditRequest = async ({ requester_id, project_id }, creator, next) => {
+const postEditRequest = async ({ requester_id, project_id }, next) => {
     let yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     const prevReq = await project_edit_request.findFirst({
@@ -91,6 +91,52 @@ const postEditRequest = async ({ requester_id, project_id }, creator, next) => {
     return { success: true };
 };
 
+/**
+ *
+ * @param {boolean} all
+ * @returns
+ */
+const getEditRequest = async (all = false) => {
+    let yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const whereData = all
+        ? {}
+        : {
+              requested_date: {
+                  gt: yesterday,
+              },
+              approval_status: 1,
+          };
+    return await project_edit_request.findMany({
+        where: whereData,
+    });
+};
+
+/**
+ *
+ * @param {number} user_id
+ * @param {number} project_id
+ * @param {Function} next
+ * @returns
+ */
+const statusEditRequest = async (user_id, project_id) => {
+    let yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const data = await project_edit_request.findFirst({
+        where: {
+            requested_date: {
+                gt: yesterday,
+            },
+            requester_id: user_id,
+            project_id,
+        },
+    });
+    return {
+        canUserRequest: !Boolean(data),
+        isUserApproved: data ? data.approval_status === 2 : false,
+    };
+};
+
 const get = async (
     queryFilter,
     querySort,
@@ -113,4 +159,6 @@ module.exports = {
     post,
     get,
     postEditRequest,
+    getEditRequest,
+    statusEditRequest,
 };

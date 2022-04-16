@@ -18,7 +18,6 @@
             "returnable": "boolean"
         },
         "project_edit_request": {
-            "requester_id": "number",
             "project_id": "number"
         }
     },
@@ -53,6 +52,7 @@
     },
     "allProjections": {
         "request_payment": {
+            "id": true,
             "request_type": true,
             "priority": true,
             "total_amount": true,
@@ -69,6 +69,7 @@
             "remark": true
         },
         "request_manpower": {
+            "id": true,
             "request_type": true,
             "priority": true,
             "total_amount": true,
@@ -83,6 +84,7 @@
             "remark": true
         },
         "request_store": {
+            "id": true,
             "request_type": true,
             "priority": true,
             "prepared_by": true,

@@ -662,6 +662,7 @@ model project_request {
   revisedBy           String
   project_id          Int
   action_note         String?
+  invoice             String?               @db.VarChar(3000) //i intend to use arrays
   remark              String?               @db.VarChar(1000)
   prepared_by         employee              @relation(fields: [prepared_by_id], references: [id], name: "project_request_prepared_by")
   checked_by          employee?             @relation(fields: [checked_by_id], references: [id], name: "project_request_checked_by")

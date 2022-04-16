@@ -39,8 +39,7 @@
             "transportation": "number",
             "total_expense": "number",
             "manpower_id": "number",
-            "project_id": "number",
-            "task_manager_id": "number"
+            "project_id": "number"
         },
         "required_equipment": {
             "planned_equipment_number": "number",
@@ -50,16 +49,14 @@
             "transportation": "number",
             "total_expense": "number",
             "equipment_id": "number",
-            "project_id": "number",
-            "task_manager_id": "number"
+            "project_id": "number"
         },
         "required_material": {
             "planned_quantity": "number",
             "planned_unit_price": "number",
             "planned_total_amount": "number",
             "material_id": "number",
-            "project_id": "number",
-            "task_manager_id": "number"
+            "project_id": "number"
         },
         "risk_tracking": {
             "impact": "string",
@@ -312,8 +309,7 @@
             "manpower": true,
             "project_id": true,
             "number_of_actual_man_power": true,
-            "remark": true,
-            "approval_status": true
+            "remark": true
         },
         "required_equipment": {
             "id": true,
@@ -326,8 +322,7 @@
             "total_expense": true,
             "remark": true,
             "equipment": true,
-            "project": true,
-            "approval_status": true
+            "project": true
         },
         "required_material": {
             "id": true,
@@ -341,8 +336,7 @@
             "remark": true,
             "delivery_date": true,
             "material": true,
-            "project": true,
-            "approval_status": true
+            "project": true
         },
         "risk_tracking": {
             "id": true,
@@ -428,8 +422,7 @@
             "date_responded": true,
             "notes": true,
             "project": true,
-            "priority": true,
-            "approval_status": true
+            "priority": true
         },
         "invoice_tracking": {
             "id": true,
@@ -454,8 +447,7 @@
             "received_date": true,
             "location": true,
             "project": true,
-            "documentation": true,
-            "approval_status": true
+            "documentation": true
         },
         "request_payment": {
             "id": true,
@@ -505,21 +497,18 @@
         "manpower_requirement": {
             "remarks": "string",
             "manpower_id": "number",
-            "project_id": "number",
-            "approval_status": "number"
+            "project_id": "number"
         },
         "required_equipment": {
             "equipment_lifetime": "string",
             "remark": "string",
             "equipment_id": "number",
-            "project_id": "number",
-            "approval_status": "number"
+            "project_id": "number"
         },
         "required_material": {
             "remark": "string",
             "material_id": "number",
-            "project_id": "number",
-            "approval_status": "number"
+            "project_id": "number"
         },
         "risk_tracking": {
             "impact": "string",
@@ -573,8 +562,7 @@
             "assigned_to": "string",
             "notes": "string",
             "project_id": "number",
-            "priority_id": "number",
-            "approval_status": "number"
+            "priority_id": "number"
         },
         "invoice_tracking": {
             "detail": "string",
@@ -589,8 +577,7 @@
             "received": "string",
             "location": "string",
             "documentation_id": "number",
-            "project_id": "number",
-            "approval_status": "number"
+            "project_id": "number"
         },
         "request_payment": {
             "id": "number",
@@ -655,8 +642,7 @@
             "total_expense": "number",
             "remark": "number",
             "manpower_id": "number",
-            "project_id": "number",
-            "approval_status": "number"
+            "project_id": "number"
         },
         "required_equipment": {
             "id": "number",
@@ -669,8 +655,7 @@
             "total_expense": "number",
             "remark": "number",
             "equipment_id": "number",
-            "project_id": "number",
-            "approval_status": "number"
+            "project_id": "number"
         },
         "required_material": {
             "id": "number",
@@ -684,8 +669,7 @@
             "remark": "number",
             "delivery_date": "number",
             "material_id": "number",
-            "project_id": "number",
-            "approval_status": "number"
+            "project_id": "number"
         },
         "risk_tracking": {
             "id": "number",
@@ -767,8 +751,7 @@
             "date_responded": "number",
             "notes": "number",
             "project": "number",
-            "priority": "number",
-            "approval_status": "number"
+            "priority": "number"
         },
         "invoice_tracking": {
             "id": "string",
@@ -793,8 +776,7 @@
             "received_date": "number",
             "location": "number",
             "project": "number",
-            "documentation": "number",
-            "approval_status": "number"
+            "documentation": "number"
         },
         "request_payment": {
             "id": "number",
