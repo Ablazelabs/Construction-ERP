@@ -157,15 +157,6 @@ router.post("/project_edit_request", async (req, res, next) => {
 });
 router.get("/project_edit_request", async (req, res, next) => {
     try {
-        res.json([
-            {
-                id: 1,
-                requester: { id: 1 },
-                approval_status: 1,
-                requested_date: new Date(),
-                project: { id: 3 },
-            },
-        ]);
         res.json(await getEditRequest(Boolean(req.body.all)));
     } catch (e) {
         console.log(e);

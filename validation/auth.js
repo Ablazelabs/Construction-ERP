@@ -165,12 +165,17 @@ const authorization = {
             : requestRoute == "account" && method === "POST"
             ? "admin"
             : "*";
-        const additionalPrivileges = [
-            (requestPath.match("validation") ||
-                requestPath.match("dashboard") ||
-                requestPath.match("master")) &&
-                "manager",
-        ].filter((elem) => elem);
+        const additionalPrivileges =
+            PRIVILEGE_TYPE === "hcm" ||
+            PRIVILEGE_TYPE === "finance" ||
+            PRIVILEGE_TYPE === "project"
+                ? [
+                      (requestPath.match("validation") ||
+                          requestPath.match("dashboard") ||
+                          requestPath.match("master")) &&
+                          `${PRIVILEGE_TYPE}_manager`,
+                  ].filter((elem) => elem)
+                : [];
         if (
             requestRoute == "account" &&
             (method == "PATCH" || method == "DELETE")

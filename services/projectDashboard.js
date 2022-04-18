@@ -1,6 +1,6 @@
 const { allModels } = require("../config/config");
 
-const { project } = allModels;
+const { project, project_edit_request } = allModels;
 
 const indexService = async () => {
     const totalProjectsLength = await project.count();
@@ -30,7 +30,18 @@ const indexService = async () => {
         });
         total += requests[requestModels[filters[i]]];
     }
-    requests["total"] = total;
+    let yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const projectEditRequestLength = await project_edit_request.count({
+        where: {
+            requested_date: {
+                gt: yesterday,
+            },
+            approval_status: 1,
+        },
+    });
+    requests["total"] = total + projectEditRequestLength;
+    requests = { ...requests, project_edit_request: projectEditRequestLength };
     return {
         totalProjectsLength,
         completedProjects,

@@ -134,14 +134,14 @@ router.patch("/role", async (req, res, next) => {
             if (!Array.isArray(updateData.privileges)) {
                 throw { key: "privileges", message: "must be an array" };
             }
-            if (!req.body.privileges.length) {
+            if (!updateData.privileges.length) {
                 throw {
                     key: "privileges",
                     message: "privileges must be more than 1",
                 };
             }
-            for (let i in req.body.privileges) {
-                if (typeof req.body.privileges[i] !== "number") {
+            for (let i in updateData.privileges) {
+                if (typeof updateData.privileges[i] !== "number") {
                     throw {
                         key: "privileges",
                         message: "privileges must be an array of numbers",

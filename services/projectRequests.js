@@ -109,6 +109,9 @@ const getEditRequest = async (all = false) => {
           };
     return await project_edit_request.findMany({
         where: whereData,
+        include: {
+            requester: true,
+        },
     });
 };
 
