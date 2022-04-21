@@ -1,15 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const { error } = require("../../../config/config");
-const { post, get, patch } = require("../../../services/mainsubtodo");
+const { post, get, projectTodo } = require("../../../services/mainsubtodo");
 
 const {
     returnReqBody,
     returnGetData,
-    // returnPatchData,
 } = require("../../../validation/basicValidators");
-
-const defaultDeleter = require("../../defaultDeleter");
 
 const allConfigs = require("./operational_data.json");
 const {
@@ -179,53 +176,13 @@ router.get(allRoutes, async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
-// router.patch(allRoutes, async (req, res, next) => {
-//     const operationDataType = req.path.split("/").pop();
 
-//     const requiredInputFilter = allInputFilters[operationDataType],
-//         optionalInputFilter = allOptionalInputFilters[operationDataType],
-//         dateValue = dateValues[operationDataType],
-//         myEnums = enums[operationDataType],
-//         phoneValue = phoneValues[operationDataType],
-//         emailValue = emailValues[operationDataType],
-//         rangeValues = allRangeValues[operationDataType];
+router.get("/project_todos", async (req, res, _next) => {
+    if (req.body.project_id && typeof req.body.project_id == "number") {
+        res.json(await projectTodo(req.body.project_id));
+    } else {
+        error("project_id", "please send a project id");
+    }
+});
 
-//     const data = returnPatchData(
-//         req.body,
-//         {
-//             requiredInputFilter,
-//             optionalInputFilter,
-//             dateValue,
-//             myEnums,
-//             phoneValue,
-//             emailValue,
-//             rangeValues,
-//         },
-//         next
-//     );
-//     if (!data) {
-//         return;
-//     }
-//     const { updateData, updateDataProjection } = data;
-//     try {
-//         const data = await patch(
-//             updateDataProjection,
-//             req.body,
-//             updateData,
-//             operationDataType,
-//             res.locals.id,
-//             uniqueValues[operationDataType],
-//             next
-//         );
-//         if (data == false) {
-//             return;
-//         }
-//         res.json(data);
-//     } catch (e) {
-//         console.log(e);
-//         error("database", "error", next, 500);
-//         return;
-//     }
-// });
-// router.delete(allRoutes, defaultDeleter);
 module.exports = router;

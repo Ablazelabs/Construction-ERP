@@ -7,6 +7,7 @@ const {
     postEditRequest,
     getEditRequest,
     statusEditRequest,
+    deleter,
 } = require("../../../services/projectRequests");
 
 const {
@@ -189,6 +190,7 @@ router.get("/all_project_requests", async (req, res, next) => {
             prepared_by: true,
             remark: true,
             id: true,
+            status: true,
         };
     delete req.body?.sort?.startDate;
     delete req.body?.sort?.endDate;
@@ -280,7 +282,11 @@ router.get("/detail_project_requests", async (req, res, next) => {
     }
 });
 
-router.uploadInvoice;
+// router.uploadInvoice;
 
-router.delete("/project_request", defaultDeleter);
+router.delete("/project_request", async (req, res, next) => {
+    if (req.body.id && typeof req.body.id === "number")
+        await deleter(req.body.id);
+    res.json({ success: true });
+});
 module.exports = router;

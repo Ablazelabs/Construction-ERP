@@ -4,7 +4,7 @@ const {
     get: mGet,
     patch: mPatch,
 } = require("./mostCRUD/mostCRUD");
-const { project, task_manager } = allModels;
+const { project, task_manager, todos, daily_report } = allModels;
 /**
  *
  * @param {any} reqBody filtered request body for the model of *operation data type* parameter
@@ -96,6 +96,13 @@ const post = async (
             }
         }
     }
+    if (reqBody.todo_ids) {
+        const todos = reqBody.todo_ids;
+        delete reqBody.todo_ids;
+        reqBody.todos = {
+            connect: todos.map((elem) => ({ id: elem })),
+        };
+    }
     let data = await mPost(
         reqBody,
         operationDataType,
@@ -151,6 +158,11 @@ const getProjectId = async () => {
         return "000001";
     }
 };
+/**
+ *
+ * @param {string} operationDataType
+ * @returns
+ */
 const patch = async (
     updateDataProjection,
     reqBody,
@@ -160,6 +172,14 @@ const patch = async (
     uniqueValues,
     next
 ) => {
+    if (operationDataType === "todos") {
+        const todo = await todos.findUnique({ where: { id: reqBody.id } });
+        if (todo) {
+            if (todo.daily_report_id) {
+                updateData.completed = todo.completed;
+            }
+        }
+    }
     return mPatch(
         updateDataProjection,
         reqBody,
@@ -175,9 +195,34 @@ const patch = async (
  * @param {string} str
  */
 
+const patchSecondRemark = async (id, remark) => {
+    const dailyReport = await daily_report.findUnique({
+        where: { id },
+    });
+    if (!dailyReport) {
+        return { success: false };
+    }
+    let oldRemark;
+    try {
+        oldRemark = JSON.parse(dailyReport.remark)[0];
+    } catch {
+        oldRemark = dailyReport.remark;
+    }
+    await daily_report.update({
+        where: {
+            id,
+        },
+        data: {
+            remark: JSON.stringify([oldRemark, remark]),
+        },
+    });
+    return { success: true };
+};
+
 module.exports = {
     post,
     get,
     patch,
     getProjectId,
+    patchSecondRemark,
 };

@@ -75,7 +75,7 @@ const patch = async (id, approval_status, action_note, next) => {
 const editRequest = async (id, approval_status, next) => {
     let yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
-    const myModel = await project_edit_request.update({ where: { id } });
+    const myModel = await project_edit_request.findUnique({ where: { id } });
     if (!myModel) {
         error("id", `project edit request doesn't exist`, next);
         return false;

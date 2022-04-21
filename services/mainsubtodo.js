@@ -1,10 +1,6 @@
 const { allModels, error, snakeToPascal } = require("../config/config");
-const {
-    post: mPost,
-    get: mGet,
-    patch: mPatch,
-} = require("./mostCRUD/mostCRUD");
-const { project, task_manager } = allModels;
+const { post: mPost, get: mGet } = require("./mostCRUD/mostCRUD");
+const { project, task_manager, todos } = allModels;
 /**
  *
  * @param {any} reqBody filtered request body for the model of *operation data type* parameter
@@ -161,27 +157,26 @@ const get = async (
     }
     return data;
 };
-const patch = async (
-    updateDataProjection,
-    reqBody,
-    updateData,
-    operationDataType,
-    creator,
-    uniqueValues,
-    next
-) => {
-    return mPatch(
-        updateDataProjection,
-        reqBody,
-        updateData,
-        operationDataType,
-        creator,
-        uniqueValues,
-        next
-    );
+/**
+ *
+ * @param {number} project_id
+ * @returns
+ */
+const projectTodo = async (project_id) => {
+    return await todos.findMany({
+        where: {
+            sub_task: {
+                task_manager: {
+                    project_id,
+                },
+            },
+            completed: true,
+            daily_report_id: null,
+        },
+    });
 };
 module.exports = {
     post,
-    patch,
+    projectTodo,
     get,
 };

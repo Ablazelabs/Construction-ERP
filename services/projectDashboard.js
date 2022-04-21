@@ -4,10 +4,12 @@ const { project, project_edit_request } = allModels;
 
 const indexService = async () => {
     const totalProjectsLength = await project.count();
-    const completedProjects = await project.findMany({
+    const completedProjectsLenth = await project.count({
         where: { project_end_date: { lte: new Date() } },
     });
-    const completedProjectsLenth = completedProjects.length;
+    const onGoingProjects = await project.findMany({
+        where: { project_end_date: { gt: new Date() } },
+    });
     const inCompleteProjectsLength =
         totalProjectsLength - completedProjectsLenth;
     const requestModels = [
@@ -44,7 +46,7 @@ const indexService = async () => {
     requests = { ...requests, project_edit_request: projectEditRequestLength };
     return {
         totalProjectsLength,
-        completedProjects,
+        onGoingProjects,
         completedProjectsLenth,
         inCompleteProjectsLength,
         requests,

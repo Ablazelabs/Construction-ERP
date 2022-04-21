@@ -1,6 +1,7 @@
 const {
-    allModels: { project_request, project_edit_request, project },
+    allModels: { project_request, project_edit_request },
     error,
+    allModels,
 } = require("../config/config");
 const { get: mGet } = require("./mostCRUD/mostCRUD");
 /**
@@ -157,11 +158,17 @@ const get = async (
         operationDataType
     );
 };
-
+const deleter = async (id) => {
+    await allModels.project_request.update({
+        where: { id },
+        data: { status: 1 },
+    });
+};
 module.exports = {
     post,
     get,
     postEditRequest,
     getEditRequest,
     statusEditRequest,
+    deleter,
 };

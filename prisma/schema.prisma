@@ -322,6 +322,7 @@ model project {
   petty_cash                   petty_cash[]
   project_request              project_request[]
   project_edit_request         project_edit_request[]
+  daily_report                 daily_report[]
 }
 
 model daily_work_log {
@@ -347,6 +348,7 @@ model daily_work_log {
   project                     project                       @relation(fields: [project_id], references: [id])
   project_id                  Int
   work_log_and_branch_of_work work_log_and_branch_of_work[]
+  todos                       todos[]
 }
 
 model instruction_given_on_project {
@@ -608,12 +610,18 @@ model todos {
 
   // date               String
 
-  project_id  Int?
-  priority_id Int?
-  sub_task_id Int?
-  sub_task    sub_task? @relation(fields: [sub_task_id], references: [id])
-  project     project?  @relation(fields: [project_id], references: [id])
-  priority    priority? @relation(fields: [priority_id], references: [id])
+  project_id        Int?
+  priority_id       Int?
+  sub_task_id       Int?
+  daily_work_log_id Int?
+  daily_report_id   Int?
+
+  sub_task       sub_task?       @relation(fields: [sub_task_id], references: [id])
+  project        project?        @relation(fields: [project_id], references: [id])
+  priority       priority?       @relation(fields: [priority_id], references: [id])
+  daily_work_log daily_work_log? @relation(fields: [daily_work_log_id], references: [id])
+  daily_report   daily_report?   @relation(fields: [daily_report_id], references: [id])
+
 }
 
 model request {
@@ -670,7 +678,30 @@ model project_request {
   project             project               @relation(fields: [project_id], references: [id])
   individual_requests individual_requests[]
   isProtectedForEdit  Boolean               @default(false)
+}
 
+model daily_report {
+  id                        Int      @id @default(autoincrement())
+  date                      DateTime
+  activities_performed      String   @db.VarChar(1200)
+  material_delivered        String?  @db.VarChar(1200)
+  available_machine_on_site String?  @db.VarChar(1200)
+  problem_encountered       String?  @db.VarChar(1200)
+  no_of_labours             String?  @db.VarChar(1200)
+  remark                    String?  @db.VarChar(1000)
+  project_id                Int
+  employee_id               Int
+  todos                     todos[]
+  startDate                 DateTime
+  endDate                   DateTime
+  status                    Int      @default(0)
+  creationDate              DateTime @default(now())
+  createdBy                 String
+  revisionDate              DateTime @updatedAt
+  revisedBy                 String
+  isProtectedForEdit        Boolean  @default(false)
+  project                   project  @relation(fields: [project_id], references: [id])
+  employee                  employee @relation(fields: [employee_id], references: [id])
 }
 
 model individual_requests {
@@ -2643,6 +2674,7 @@ model employee {
   prepared_project_request         project_request[]                  @relation("project_request_prepared_by")
   checked_project_request          project_request[]                  @relation("project_request_checked_by")
   approved_project_request         project_request[]                  @relation("project_request_approved_by")
+  daily_report                     daily_report[]
 }
 
 model employee_action {

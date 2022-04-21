@@ -6,6 +6,7 @@ const {
     get,
     patch,
     getProjectId,
+    patchSecondRemark,
 } = require("../../../services/operational_data");
 
 const {
@@ -66,7 +67,7 @@ router.post(allRoutes, async (req, res, next) => {
         emailValue = emailValues[operationDataType],
         rangeValues = allRangeValues[operationDataType];
 
-    const reqBody = returnReqBody(
+    let reqBody = returnReqBody(
         req.body,
         {
             requiredInputFilter,
@@ -81,6 +82,20 @@ router.post(allRoutes, async (req, res, next) => {
     );
     if (!reqBody) {
         return;
+    }
+    if (
+        operationDataType === "daily_report" &&
+        req.body.todo_ids &&
+        Array.isArray(req.body.todo_ids) &&
+        req.body.todo_ids.length
+    ) {
+        let success = true;
+        for (const i in req.body.todo_ids) {
+            if (typeof req.body.todo_ids[i] !== "number") {
+                success = false;
+            }
+        }
+        success && (reqBody.todo_ids = req.body.todo_ids);
     }
     //before posting like the others we need to check date values of operational data(except for the ones that don't have project id as foreign key to keep the date limit)
     //this will be extended now with also task_manager id holder values to respect the task manager dates!
@@ -120,16 +135,29 @@ router.get(allRoutes, async (req, res, next) => {
     }
     const { queryFilter, querySort, limit, skip, projection } = getData;
     try {
-        res.json(
-            await get(
-                queryFilter,
-                querySort,
-                limit,
-                skip,
-                projection,
-                operationDataType
-            )
+        let data = await get(
+            queryFilter,
+            querySort,
+            limit,
+            skip,
+            projection,
+            operationDataType
         );
+        if (operationDataType === "daily_report") {
+            res.json(
+                data.map((elem) => {
+                    let remarks = [];
+                    try {
+                        remarks = JSON.parse(elem.remark) || [null, null];
+                    } catch (e) {
+                        remarks = [elem.remark, null];
+                    }
+                    return { ...elem, remark: remarks[0], remark2: remarks[1] };
+                })
+            );
+        } else {
+            res.json(data);
+        }
     } catch (e) {
         console.log(e);
         error("database", "error", next, 500);
@@ -185,6 +213,17 @@ router.patch(allRoutes, async (req, res, next) => {
         error("database", "error", next, 500);
         return;
     }
+});
+router.patch("/report_remark", async (req, res, next) => {
+    if (!(req.body.remark && typeof req.body.remark === "string")) {
+        error("remark", "remark please send string", next);
+        return;
+    }
+    if (!(req.body.id && typeof req.body.id === "number")) {
+        error("id", "id please send number", next);
+        return;
+    }
+    res.json(await patchSecondRemark(req.body.id, req.body.remark));
 });
 router.delete(allRoutes, defaultDeleter);
 module.exports = router;
