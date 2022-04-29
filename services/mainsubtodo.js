@@ -175,8 +175,28 @@ const projectTodo = async (project_id) => {
         },
     });
 };
+/**
+ *
+ * @param {number} project_id
+ * @returns
+ */
+const projectPercent = async (project_id) => {
+    const pro = await project.findUnique({
+        where: { id: project_id },
+        include: { task_manager: true },
+    });
+    let progress = 0;
+    if (pro) {
+        for (let i in pro.task_manager) {
+            progress += pro.task_manager[i].progress;
+        }
+        progress /= pro.task_manager.length;
+    }
+    return { progress };
+};
 module.exports = {
     post,
     projectTodo,
+    projectPercent,
     get,
 };

@@ -284,5 +284,32 @@
         "description",
         "notes",
         "journal_date"
+    ],
+    "employee": [
+        "id",
+        "id_number",
+        "first_name",
+        "middle_name",
+        "last_name",
+        "gender",
+        "date_of_birth",
+        "employment_start_date",
+        "date_of_joining",
+        "marital_status",
+        "marital_since",
+        "place_of_birth",
+        "photo",
+        "is_employee_active",
+        "type",
+        "prev_employment_leave_days",
+        "bank_account_number",
+        "document_ref",
+        "pension_ref",
+        "nationality",
+        "country",
+        "language",
+        "title",
+        "religion",
+        "employee_type"
     ]
 }

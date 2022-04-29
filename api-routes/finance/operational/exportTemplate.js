@@ -4,8 +4,7 @@ const allModuleFields = require("./allModuleFields.json");
 const express = require("express");
 const router = express.Router();
 const { error } = require("../../../config/config");
-const inputFilter = require("../../../validation/inputFilter");
-const { post, patch } = require("../../../services/rest_finance_operational");
+const { post } = require("../../../services/rest_finance_operational");
 
 const { returnReqBody } = require("../../../validation/basicValidators");
 
@@ -29,7 +28,7 @@ router.post("/export_template", async (req, res, next) => {
         phoneValue = phoneValues[operationDataType],
         emailValue = emailValues[operationDataType],
         rangeValues = allRangeValues[operationDataType];
-
+    console.log(req.body);
     let reqBody = returnReqBody(
         req.body,
         {
@@ -44,6 +43,7 @@ router.post("/export_template", async (req, res, next) => {
         next
     );
     if (!reqBody) {
+        console.log(reqBody, requiredInputFilter);
         return;
     }
     const fields = [

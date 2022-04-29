@@ -3,6 +3,13 @@ const { verify } = require("jsonwebtoken");
 const { error, allModels } = require("../config/config");
 const { user } = allModels;
 const authorization = {
+    /**
+     *
+     * @param {number} userId
+     * @param {string} privilege
+     * @param {Function} next
+     * @desc calls error if user isn't authenticated
+     */
     userHasPrivilege: async (userId, privilege, next) => {
         const myUser = await user.findFirst({
             where: {
@@ -26,7 +33,6 @@ const authorization = {
             return false;
         }
         return true;
-        //calls error if user isn't authenticated
     },
     userHasPrivilegeOver: async (userId, secondUserId, previlage, next) => {
         if (userId == secondUserId) {

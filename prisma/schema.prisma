@@ -18,25 +18,28 @@ model refresh_tokens {
 }
 
 model user {
-  id                     Int                      @id @default(autoincrement())
+  id                     Int       @id @default(autoincrement())
   username               String?
   normalized_username    String?
-  email                  String?                  @unique
+  email                  String?   @unique
   password               String
-  email_confirmed        Boolean?                 @default(false)
+  email_confirmed        Boolean?  @default(false)
   security_stamp         String?
   concurrency_stamp      String
-  phone_number           String?                  @unique
+  phone_number           String?   @unique
   phone_number_confirmed Boolean?
   lockout_end            DateTime?
-  two_factor_enabled     Boolean?                 @default(false)
+  two_factor_enabled     Boolean?  @default(false)
   lockout_enabled        Boolean?
-  access_failed_count    Int                      @default(0)
+  access_failed_count    Int       @default(0)
   first_login            Boolean?
   code                   Int
-  role                   role?                    @relation(fields: [roleId], references: [id])
+  role                   role?     @relation(fields: [roleId], references: [id])
   roleId                 Int?
-  deleted_status         Int                      @default(0)
+  deleted_status         Int       @default(0)
+  employee_id            Int?
+  employee               employee? @relation(fields: [employee_id], references: [id])
+
   refresh_tokens         refresh_tokens[]
   journal_users          journal_users[]
   general_journal_header general_journal_header[]
@@ -491,6 +494,7 @@ model task_manager {
   revisedBy          String
   status             Int       @default(0)
   isProtectedForEdit Boolean   @default(false)
+  progress           Float     @default(0)
 
   prerequisites task_manager[] @relation("dependency", references: [id])
   dependents    task_manager[] @relation("dependency", references: [id])
@@ -526,6 +530,7 @@ model sub_task {
   // sub_task           sub_task[]   @relation("dependency")3
   prerequisites      sub_task[]   @relation("sub_task_dependency", references: [id], map: "dependents")
   dependents         sub_task[]   @relation("sub_task_dependency", references: [id], map: "prerequisites")
+  progress           Float        @default(0)
 
   todos todos[]
 }
@@ -2675,6 +2680,7 @@ model employee {
   checked_project_request          project_request[]                  @relation("project_request_checked_by")
   approved_project_request         project_request[]                  @relation("project_request_approved_by")
   daily_report                     daily_report[]
+  user                             user[]
 }
 
 model employee_action {

@@ -383,7 +383,17 @@
             "language": true,
             "title": true,
             "religion": true,
-            "employee_type": true
+            "employee_type": true,
+            "address": true,
+            "employee_action": {
+                "select": {
+                    "org_assignment": {
+                        "select": {
+                            "job_title": true
+                        }
+                    }
+                }
+            }
         },
         "employee_action": {
             "id": true,
@@ -547,7 +557,7 @@
         },
         "employee": {
             "id": "number",
-            "id_number": "number",
+            "id_number": "string",
             "first_name": "string",
             "middle_name": "string",
             "last_name": "string",

@@ -372,7 +372,8 @@
             "working_days": true,
             "project": true,
             "sub_task": true,
-            "prerequisites": true
+            "prerequisites": true,
+            "progress": true
         },
         "sub_task": {
             "id": true,
@@ -384,7 +385,8 @@
             "working_days": true,
             "task_manager": true,
             "todos": true,
-            "prerequisites": true
+            "prerequisites": true,
+            "progress": true
         },
         "simple_task": {
             "id": true,

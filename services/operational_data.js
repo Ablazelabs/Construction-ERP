@@ -4,7 +4,10 @@ const {
     get: mGet,
     patch: mPatch,
 } = require("./mostCRUD/mostCRUD");
-const { project, task_manager, todos, daily_report } = allModels;
+const { project, task_manager, todos, daily_report, sub_task } = allModels;
+const unique = (value, index, self) => {
+    return self.indexOf(value) === index;
+};
 /**
  *
  * @param {any} reqBody filtered request body for the model of *operation data type* parameter
@@ -111,7 +114,65 @@ const post = async (
         next,
         sendId
     );
-    console.log(data);
+
+    if (reqBody.todos) {
+        const doneTodos = await todos.findMany({
+            where: {
+                OR: reqBody.todos.connect,
+            },
+            select: {
+                sub_task: {
+                    include: {
+                        todos: true,
+                        task_manager: true,
+                    },
+                },
+            },
+        });
+        const allSubTasks = doneTodos.map((elem) => elem.sub_task);
+        const uniqueSubTaskIds = allSubTasks
+            .map((elem) => elem.id)
+            .filter(unique);
+        let uniqueSubTasks = [];
+        for (let i in uniqueSubTaskIds) {
+            uniqueSubTasks.push(
+                allSubTasks.find((elem) => elem.id === uniqueSubTaskIds[i])
+            );
+        }
+        for (let i in uniqueSubTasks) {
+            const subTask = uniqueSubTasks[i];
+            const totalTodos = subTask.todos.length;
+            const doneSubTodos = subTask.todos.filter(
+                (elem) => elem.daily_report_id
+            ).length;
+            const donePercent = (doneSubTodos / totalTodos) * 100;
+            await sub_task.update({
+                where: { id: subTask.id },
+                data: { progress: donePercent },
+            });
+        }
+        const mainTaskIds = uniqueSubTasks.map((elem) => elem.task_manager_id);
+        const uniqueMainTasks = await task_manager.findMany({
+            where: {
+                OR: mainTaskIds.map((elem) => ({ id: elem })),
+            },
+            include: {
+                sub_task: true,
+            },
+        });
+        for (let i in uniqueMainTasks) {
+            const mainTask = uniqueMainTasks[i];
+            let completedPercent = 0;
+            for (const j in mainTask.sub_task) {
+                completedPercent += mainTask.sub_task[j].progress;
+            }
+            completedPercent /= mainTask.sub_task.length;
+            await task_manager.update({
+                where: { id: mainTask.id },
+                data: { progress: completedPercent },
+            });
+        }
+    }
 
     if (operationDataType !== "project") {
         return data;
@@ -122,7 +183,6 @@ const post = async (
     const projectData = await project.findUnique({ where: { id: data.id } });
     delete data.id;
 
-    console.log(data);
     return { ...data, project: projectData };
 };
 const get = async (
@@ -172,13 +232,16 @@ const patch = async (
     uniqueValues,
     next
 ) => {
+    // console.log("patching", operationDataType);
     if (operationDataType === "todos") {
         const todo = await todos.findUnique({ where: { id: reqBody.id } });
+        // console.log(todo.completed, todo.daily_report_id, updateData.completed);
         if (todo) {
             if (todo.daily_report_id) {
                 updateData.completed = todo.completed;
             }
         }
+        // console.log(updateData.completed);
     }
     return mPatch(
         updateDataProjection,

@@ -4,19 +4,24 @@ const { error } = require("../../../config/config");
 
 const inputFilter = require("../../../validation/inputFilter");
 
-const { returnReqBody } = require("../../../validation/basicValidators");
+const {
+    returnReqBody,
+    returnGetData,
+} = require("../../../validation/basicValidators");
 const exporter = require("../../../services/financeGeneralExport");
 const allData = require("./rest_finance_operational.json");
 const allMasterData = require("../master/financemasters.json");
 const allModuleFields = require("./allModuleFields.json");
+const employeeEnums =
+    require("../../hcm/employee_master/hcmEmployeeMasters.json").enums.employee;
 router.post("/general_export", async (req, res, next) => {
     let reqBody = {};
     const inputFilterData = {
-        from: "string",
-        to: "string",
         template_id: "number",
     };
     const inputFilterOptionalData = {
+        from: "string",
+        to: "string",
         journal_posting_status: "number",
         account_status: "number",
         account_category_name: "string",
@@ -37,11 +42,10 @@ router.post("/general_export", async (req, res, next) => {
                 journal_posting_status: reqBody.journal_posting_status,
             },
             {
-                requiredInputFilter: {
+                requiredInputFilter: {},
+                optionalInputFilter: {
                     from: "string",
                     to: "string",
-                },
-                optionalInputFilter: {
                     period_filter: "number",
                     account_status: "number",
                     journal_posting_status: "number",
@@ -78,6 +82,7 @@ router.post("/general_export", async (req, res, next) => {
             allModuleFields,
             {
                 ...allData.enums,
+                employee: employeeEnums,
                 exportReadyJournal: {
                     report_basis:
                         allData.enums.general_journal_header.report_basis,
@@ -91,6 +96,7 @@ router.post("/general_export", async (req, res, next) => {
             },
             allMasterData.enums,
             res.locals.id,
+            req.body.sort,
             next
         );
         if (data == false) {

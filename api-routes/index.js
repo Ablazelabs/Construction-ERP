@@ -40,7 +40,10 @@ const budget = require("./finance/operational/budget");
 const accountTypeFSSection = require("./finance/operational/accountTypeFinancialStatementSection");
 const restFinanceOperational = require("./finance/operational/rest_finance_operational");
 const financeUpload = require("./finance/operational/upload");
+
 const hcmMasters = require("./hcm/master/hcmMasters");
+
+const hcmEmployeeExport = require("./hcm/employee_master/excelExport");
 const hcmEmployeeMasters = require("./hcm/employee_master/hcmEmployeeMasters");
 const fileEmployeeMasters = require("./hcm/employee_master/fileEmployeeMasters");
 const disciplineAttachment = require("./hcm/employee_master/disciplineAttachment");
@@ -48,12 +51,14 @@ const employeeAction = require("./hcm/employee_master/employeeAction");
 const initialHiring = require("./hcm/employee_master/initialHiring");
 const hcmApprovals = require("./hcm/employee_master/hcmApprovals");
 const employeeActionMeasure = require("./hcm/employee_master/employeeActionMeasure");
+
 const hcmVacancyApplicant = require("./hcm/jobPosCompStrucRecru/vacancyApplicant");
 const hcmVacancyExaminer = require("./hcm/jobPosCompStrucRecru/vacancyExaminer");
 const hcmVacancyResult = require("./hcm/jobPosCompStrucRecru/vacancyResult");
 const hcmJobTitle = require("./hcm/jobPosCompStrucRecru/jobTitle");
 const jobPosCompStrucRecru = require("./hcm/jobPosCompStrucRecru/jobPosCompStrucRecru");
 const compStrucRecruFile = require("./hcm/jobPosCompStrucRecru/compStrucRecruFile");
+
 const hcmPayroll = require("./hcm/payroll/hcmPayroll");
 const hcmPayrollSlip = require("./hcm/payroll/payrollSlip");
 const employeePayscaleUpload = require("./hcm/payroll/employeePayscaleUpload");
@@ -61,9 +66,11 @@ const paygradeScale = require("./hcm/payroll/paygradeScale");
 const payrollControl = require("./hcm/payroll/payrollControl");
 const accountMapping = require("./hcm/payroll/accountMapping");
 const paygradeSalaryComponent = require("./hcm/payroll/paygradeSalaryComponent");
+
 const attendanceSheet = require("./hcm/timeAndLeave/attendanceSheet");
 const hcmShiftSchedule = require("./hcm/timeAndLeave/shiftSchedule");
 const hcmTimeAndLeave = require("./hcm/timeAndLeave/hcmTimeAndLeave");
+
 const inventMasterAndStock = require("./inventory/masterAndStock/inventMasterAndStock");
 
 router.use(login);
@@ -105,14 +112,17 @@ router.use("/finance/operational", budget);
 router.use("/finance/operational", accountTypeFSSection);
 router.use("/finance/operational", restFinanceOperational);
 router.use("/finance/operational", financeUpload);
+
 router.use("/hcm/master", hcmMasters);
 router.use("/hcm/employee_master", disciplineAttachment);
 router.use("/hcm/employee_master", employeeAction);
 router.use("/hcm", hcmApprovals);
+
 router.use("/hcm/employee_master", employeeActionMeasure);
 router.use("/hcm/employee_master", fileEmployeeMasters);
 router.use("/hcm/employee_master", initialHiring);
 router.use("/hcm/employee_master", hcmEmployeeMasters);
+router.use("/hcm/employee_master", hcmEmployeeExport);
 router.use("/hcm/recruitment", hcmVacancyApplicant);
 router.use("/hcm/recruitment", hcmVacancyExaminer);
 router.use("/hcm/recruitment", hcmVacancyResult);

@@ -1,7 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const { error } = require("../../../config/config");
-const { post, get, projectTodo } = require("../../../services/mainsubtodo");
+const {
+    post,
+    get,
+    projectTodo,
+    projectPercent,
+} = require("../../../services/mainsubtodo");
 
 const {
     returnReqBody,
@@ -180,6 +185,13 @@ router.get(allRoutes, async (req, res, next) => {
 router.get("/project_todos", async (req, res, _next) => {
     if (req.body.project_id && typeof req.body.project_id == "number") {
         res.json(await projectTodo(req.body.project_id));
+    } else {
+        error("project_id", "please send a project id");
+    }
+});
+router.get("/project_percent", async (req, res, _next) => {
+    if (req.body.project_id && typeof req.body.project_id == "number") {
+        res.json(await projectPercent(req.body.project_id));
     } else {
         error("project_id", "please send a project id");
     }
