@@ -18,6 +18,7 @@ const allInputFilters = {
     employee_attachment: {
         description: "string",
         employee_id: "string", //number
+        file_type: "string",
     },
     employee: stringInputFilters,
 };

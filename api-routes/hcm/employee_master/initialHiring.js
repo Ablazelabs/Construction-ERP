@@ -28,15 +28,24 @@ for (let i in stringActionInput) {
     stringActionInput[i] = "string";
 }
 delete stringActionInput.employee_id;
+let stringCommitmentInput = {
+    ...employeeMastersData.allInputFilters.employee_commitment,
+};
+for (let i in stringCommitmentInput) {
+    stringCommitmentInput[i] = "string";
+}
+delete stringCommitmentInput.employee_id;
 let allInputFilters = {
     employee: { ...stringInputFilters, startDate: "string", endDate: "string" },
     org_assignment: stringOrgInput,
     employee_action: stringActionInput,
+    employee_commitment: stringCommitmentInput,
 };
 allInputFilters.initial_hiring = {
     ...allInputFilters.employee,
     ...allInputFilters.org_assignment,
     ...allInputFilters.employee_action,
+    ...allInputFilters.employee_commitment,
 };
 delete allInputFilters.initial_hiring.id_number;
 let realTypes = {
@@ -55,22 +64,30 @@ let realTypes = {
         ...employeeMastersData.allOptionalInputFilters.employee_action,
         isProtectedForEdit: "boolean",
     },
+    employee_commitment: {
+        ...employeeMastersData.allInputFilters.employee_commitment,
+        ...employeeMastersData.allOptionalInputFilters.employee_commitment,
+        isProtectedForEdit: "boolean",
+    },
 };
 realTypes.initial_hiring = {
     ...realTypes.employee_action,
     ...realTypes.employee,
     ...realTypes.org_assignment,
+    ...realTypes.employee_commitment,
     vacancy_applicant_id: "number",
 };
 let enums = {
     employee: employeeMastersData.enums.employee,
     org_assignment: employeeMastersData.enums.org_assignment,
     employee_action: employeeMastersData.enums.employee_action,
+    employee_commitment: employeeMastersData.enums.employee_commitment,
 };
 enums.initial_hiring = {
     ...enums.employee_action,
     ...enums.employee,
     ...enums.org_assignment,
+    ...enums.employee_commitment,
 };
 let stringOptionalInputFilters = {
     ...employeeMastersData.allOptionalInputFilters.employee,
@@ -90,49 +107,64 @@ let stringOptionalAction = {
 for (let i in stringOptionalAction) {
     stringOptionalAction[i] = "string";
 }
+let stringOptionalCommitment = {
+    ...employeeMastersData.allOptionalInputFilters.employee_commitment,
+};
+for (let i in stringOptionalCommitment) {
+    stringOptionalCommitment[i] = "string";
+}
 let allOptionalInputFilters = {
     employee: stringOptionalInputFilters,
     org_assignment: stringOptionalOrg,
     employee_action: stringOptionalAction,
+    employee_commitment: stringOptionalCommitment,
     id_number: "string",
 };
 // adding vacancy applicant id for the last operation
-// Chnage application status if action is initiated from recruitment(there fore we need vacancy applicant id)
+// Change application status if action is initiated from recruitment(there fore we need vacancy applicant id)
 allOptionalInputFilters.initial_hiring = {
     ...allOptionalInputFilters.employee_action,
     ...allOptionalInputFilters.employee,
     ...allOptionalInputFilters.org_assignment,
+    ...allOptionalInputFilters.employee_commitment,
     vacancy_applicant_id: "string",
+    password: "string",
 };
 let phoneValues = {
     employee: employeeMastersData.phoneValues.employee,
     org_assignment: employeeMastersData.phoneValues.org_assignment,
     employee_action: employeeMastersData.phoneValues.employee_action,
+    employee_commitment: employeeMastersData.phoneValues.employee_commitment,
 };
 phoneValues.initial_hiring = {
     ...phoneValues.employee_action,
     ...phoneValues.employee,
     ...phoneValues.org_assignment,
+    ...phoneValues.employee_commitment,
 };
 let emailValues = {
     employee: employeeMastersData.emailValues.employee,
     org_assignment: employeeMastersData.emailValues.org_assignment,
     employee_action: employeeMastersData.emailValues.employee_action,
+    employee_commitment: employeeMastersData.emailValues.employee_commitment,
 };
 emailValues.initial_hiring = [
     ...emailValues.employee_action,
     ...emailValues.employee,
     ...emailValues.org_assignment,
+    ...emailValues.employee_commitment,
 ];
 let dateValues = {
     employee: employeeMastersData.dateValues.employee,
     org_assignment: employeeMastersData.dateValues.org_assignment,
     employee_action: employeeMastersData.dateValues.employee_action,
+    employee_commitment: employeeMastersData.dateValues.employee_commitment,
 };
 dateValues.initial_hiring = [
     ...dateValues.employee_action,
     ...dateValues.employee,
     ...dateValues.org_assignment,
+    ...dateValues.employee_commitment,
     "startDate",
     "endDate",
 ];
@@ -347,6 +379,24 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
         employeeActionReqBody.startDate = reqBody.startDate;
         employeeActionReqBody.endDate = reqBody.endDate;
 
+        let employeeCommitmentReqBody = inputFilter(
+            {},
+            {
+                ...allInputFilters.employee_commitment,
+                ...allOptionalInputFilters.employee_commitment,
+                ...realTypes.employee_commitment,
+                startDate: undefined,
+                endDate: undefined,
+            },
+            reqBody
+        );
+        for (let i in dateValues["employee_action"]) {
+            const key = dateValues["employee_action"][i];
+            employeeCommitmentReqBody[key] = reqBody[key];
+        }
+        employeeCommitmentReqBody.startDate = reqBody.startDate;
+        employeeCommitmentReqBody.endDate = reqBody.endDate;
+
         if (reqBody.startDate > new Date()) {
             error("startDate", "can't be future date", next);
             return;
@@ -375,6 +425,12 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
                 return;
             }
         }
+        let accountReqBody = {};
+        if (reqBody.password) {
+            accountReqBody.username =
+                employeeReqBody.first_name + " " + employeeReqBody.middle_name;
+            accountReqBody.password = reqBody.password; //this will be hashed in the services
+        }
         // console.log(
         //     { employeeReqBody },
         //     { orgAssignmentReqBody },
@@ -397,6 +453,11 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
                 employeeActionReqBody,
                 uniqueOrg: employeeMastersData.uniqueValues.employee_action,
             },
+            {
+                employeeCommitmentReqBody,
+                uniqueOrg: employeeMastersData.uniqueValues.employee_commitment,
+            },
+            { accountReqBody },
             reqBody,
             res.locals.id,
             next

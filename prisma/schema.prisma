@@ -2288,6 +2288,7 @@ model commitment {
   isProtectedForEdit  Boolean               @default(false)
   id                  Int                   @id @default(autoincrement())
   type_name           String                @unique
+  period              Float?
   //needs no one
   employee_commitment employee_commitment[]
 }
@@ -2693,7 +2694,7 @@ model employee_action {
   status             Int              @default(0)
   isProtectedForEdit Boolean          @default(false)
   id                 Int              @id @default(autoincrement())
-  employee_status    Int?
+  employee_status    Int?             @default(1)
   attachment_id      Int?
   employee_id        Int
   action_reason_id   Int
@@ -2717,6 +2718,7 @@ model employee_attachment {
   path               String?
   employee_id        Int
   employee           employee @relation(fields: [employee_id], references: [id])
+  file_type          String?
 }
 
 model employee_commitment {
@@ -3123,6 +3125,8 @@ model company {
   country_id         Int?
   currency_id        Int?
   logo               String? //needs file handling
+  header             String? //needs file handling
+  footer             String? //needs file handling
   country            country?  @relation(fields: [country_id], references: [id])
   currency           currency? @relation(fields: [currency_id], references: [id])
 }

@@ -22,12 +22,12 @@
         "employee_action": {
             "employee_id": "number",
             "action_reason_id": "number",
-            "startDate": "string",
-            "endDate": "string"
+            "startDate": "string"
         },
         "employee_commitment": {
             "commitment_type_id": "number",
-            "employee_id": "number"
+            "employee_id": "number",
+            "startDate": "string"
         },
         "employee_contact": {
             "name": "string",
@@ -296,7 +296,7 @@
         ],
         "employee_action": ["startDate", "endDate"],
         "employee_attachment": [],
-        "employee_commitment": [],
+        "employee_commitment": ["startDate"],
         "employee_contact": [],
         "employee_id_range": [],
         "employee_loan_repayment": [],
@@ -386,7 +386,7 @@
             "employee_type": true,
             "address": true,
             "employee_action": {
-                "select": {
+                "include": {
                     "org_assignment": {
                         "select": {
                             "job_title": true
@@ -406,7 +406,8 @@
             "id": true,
             "description": true,
             "path": true,
-            "employee": true
+            "employee": true,
+            "file_type": true
         },
         "employee_commitment": {
             "id": true,
@@ -587,7 +588,8 @@
         "employee_attachment": {
             "id": "number",
             "description": "string",
-            "employee_id": "number"
+            "employee_id": "number",
+            "file_type": "string"
         },
         "employee_commitment": {
             "id": "number",
@@ -777,7 +779,8 @@
             "id": "number",
             "description": "number",
             "path": "number",
-            "employee_id": "number"
+            "employee_id": "number",
+            "file_type": "number"
         },
         "employee_commitment": {
             "id": "number",

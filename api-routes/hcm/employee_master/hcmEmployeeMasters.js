@@ -59,7 +59,6 @@ router.post(allPostRoutes, async (req, res, next) => {
             break;
         }
     }
-
     try {
         const data = await post(
             reqBody,

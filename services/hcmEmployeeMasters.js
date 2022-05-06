@@ -1,4 +1,7 @@
 const {
+    allModels: { commitment },
+} = require("../config/config");
+const {
     post: mPost,
     get: mGet,
     patch: mPatch,
@@ -11,6 +14,18 @@ const post = async (
     next,
     sendId = false
 ) => {
+    if (operationDataType === "employee_commitment") {
+        const commitmentMonths = await commitment.findUnique({
+            where: {
+                id: reqBody.commitment_id,
+            },
+        });
+        if (commitmentMonths) {
+            let endDay = new Date(employeeCommitmentReqBody.startDate);
+            endDay.setMonth(endDay.getMonth() + commitmentMonths.period || 0);
+            employeeCommitmentReqBody.endDate = endDay;
+        }
+    }
     return mPost(
         reqBody,
         operationDataType,
