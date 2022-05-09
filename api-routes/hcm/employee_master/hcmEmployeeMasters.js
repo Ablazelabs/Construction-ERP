@@ -59,6 +59,97 @@ router.post(allPostRoutes, async (req, res, next) => {
             break;
         }
     }
+    if (operationDataType === "announcement") {
+        // employees:{
+        //     connect:[{id:1}]
+        // },
+        // business_unit:{
+        //     connect:[{id:2}]
+        // },
+        // job_title:{
+        //     connect:[{id:1}]
+        // },
+        if (reqBody.all_employees) {
+            //do nothing
+        } else if (reqBody.employee_id) {
+            if (Array.isArray(reqBody.employee_id)) {
+                let employeesArray = [...reqBody.employee_id];
+                employeesArray = employeesArray
+                    .map((elem) => parseInt(elem))
+                    .filter((elem) => elem);
+                if (!employeesArray.length) {
+                    error(
+                        "employee_id",
+                        "employee id please send array of numbers",
+                        next
+                    );
+                    return;
+                }
+                reqBody.employees = {
+                    connect: employeesArray.map((elem) => ({ id: elem })),
+                };
+            } else {
+                error("employee_id", "employee id please send array", next);
+                return;
+            }
+        } else if (reqBody.business_unit_id) {
+            if (Array.isArray(reqBody.business_unit_id)) {
+                let businessUnits = [...reqBody.business_unit_id];
+                businessUnits = businessUnits
+                    .map((elem) => parseInt(elem))
+                    .filter((elem) => elem);
+                if (!businessUnits.length) {
+                    error(
+                        "business_unit_id",
+                        "business units please send array of numbers",
+                        next
+                    );
+                    return;
+                }
+                reqBody.business_unit = {
+                    connect: businessUnits.map((elem) => ({ id: elem })),
+                };
+            } else {
+                error(
+                    "business_unit_id",
+                    "business units please send array",
+                    next
+                );
+                return;
+            }
+        } else if (reqBody.job_title_id) {
+            if (Array.isArray(reqBody.job_title_id)) {
+                let jobTitlesArray = [...reqBody.job_title_id];
+                jobTitlesArray = jobTitlesArray
+                    .map((elem) => parseInt(elem))
+                    .filter((elem) => elem);
+                if (!jobTitlesArray.length) {
+                    error(
+                        "job_title_id",
+                        "Job Titles please send array of numbers",
+                        next
+                    );
+                    return;
+                }
+                reqBody.job_title = {
+                    connect: jobTitlesArray.map((elem) => ({ id: elem })),
+                };
+            } else {
+                error("job_title_id", "Job Titles please send array", next);
+                return;
+            }
+        } else {
+            error(
+                "display",
+                "please send one of all employees, selected employees, job titles, or business units connected to the announcement",
+                next
+            );
+            return;
+        }
+        delete reqBody.employee_id;
+        delete reqBody.business_unit_id;
+        delete reqBody.job_title_id;
+    }
     try {
         const data = await post(
             reqBody,

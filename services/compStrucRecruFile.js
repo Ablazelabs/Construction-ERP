@@ -109,10 +109,17 @@ const patch = async (
         where: { id: reqBody.id },
     });
     if (updateDataProjection["logo"] || updateDataProjection["file"]) {
-        const fileUrl = myModel["logo"] || myModel["file"];
-        const fullFileName = fileUrl.split("/").pop();
+        const fileUrl = [
+            myModel["logo"],
+            myModel["file"],
+            myModel["header"],
+            myModel["footer"],
+        ].filter((elem) => elem);
+        const fullFileName = fileUrl.map((elem) => elem.split("/").pop());
         try {
-            unlinkSync(`uploads\\${operationDataType}\\${fullFileName}`);
+            for (let i in fullFileName) {
+                unlinkSync(`uploads\\${operationDataType}\\${fullFileName[i]}`);
+            }
         } catch {}
     }
     if (!myModel) {

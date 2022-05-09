@@ -70,6 +70,10 @@
         "shift_assignment": {
             "shift_schedule_hdr_id": "number",
             "employee_id": "number"
+        },
+        "announcement": {
+            "date": "string",
+            "title": "string"
         }
     },
     "enums": {
@@ -209,7 +213,16 @@
             "employee_action_id": "number"
         },
         "service_allowance_pay": { "employee_id": "number" },
-        "shift_assignment": {}
+        "shift_assignment": {},
+        "announcement": {
+            "start_timme": "string",
+            "end_time": "string",
+            "description": "string",
+            "all_employees": "boolean",
+            "business_unit_id": "object",
+            "job_title_id": "object",
+            "employee_id": "object"
+        }
     },
     "defaultValues": {
         "leave_assignment": {
@@ -310,7 +323,8 @@
         "license": ["issued_date", "expiry_date"],
         "org_assignment": [],
         "service_allowance_pay": [],
-        "shift_assignment": []
+        "shift_assignment": [],
+        "announcement": ["date", "start_timme", "end_time"]
     },
     "allProjections": {
         "address": {
@@ -510,6 +524,18 @@
             "id": true,
             "shift_schedule_hdr": true,
             "employee": true
+        },
+        "announcement": {
+            "id": true,
+            "date": true,
+            "start_timme": true,
+            "end_time": true,
+            "description": true,
+            "title": true,
+            "all_employees": true,
+            "business_unit": true,
+            "job_title": true,
+            "employees": true
         }
     },
     "allFilters": {
@@ -693,6 +719,12 @@
             "id": "number",
             "shift_schedule_hdr_id": "number",
             "employee_id": "number"
+        },
+        "announcement": {
+            "id": "number",
+            "description": "string",
+            "title": "string",
+            "all_employees": "boolean"
         }
     },
     "allSorts": {
@@ -887,6 +919,15 @@
             "id": "number",
             "shift_schedule_hdr_id": "number",
             "employee_id": "number"
+        },
+        "announcement": {
+            "id": "number",
+            "date": "number",
+            "start_timme": "number",
+            "end_time": "number",
+            "description": "number",
+            "title": "number",
+            "all_employees": "number"
         }
     },
     "allRoutes": [
@@ -912,7 +953,8 @@
         "/license",
         "/org_assignment",
         "/service_allowance_pay",
-        "/shift_assignment"
+        "/shift_assignment",
+        "/announcement"
     ],
     "allPostRoutes": [
         "/address",
@@ -934,7 +976,8 @@
         "/license",
         "/org_assignment",
         "/service_allowance_pay",
-        "/shift_assignment"
+        "/shift_assignment",
+        "/announcement"
     ],
     "uniqueValues": {
         "address": [],
@@ -959,6 +1002,7 @@
         "license": [],
         "org_assignment": [],
         "service_allowance_pay": [],
-        "shift_assignment": []
+        "shift_assignment": [],
+        "announcement": []
     }
 }

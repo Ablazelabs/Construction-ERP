@@ -80,8 +80,8 @@ const allowedFileTypes = {
     external_applicant: ["pdf"],
 };
 const fileAttributes = {
-    company: "logo",
-    external_applicant: "file",
+    company: ["logo", "header", "footer"],
+    external_applicant: ["file"],
 };
 const allRoutes = [
     "/company_structure/company",
@@ -96,7 +96,8 @@ const deleteUnusedFile = (file) => {
         if (file && file.path) unlinkSync(file.path);
     } catch {}
 };
-router.post(allRoutes, upload.single("file"), async (req, res, next) => {
+const inputFiles = ["logo", "header", "footer", "file"];
+router.post(allRoutes, upload.fields(inputFiles), async (req, res, next) => {
     const operationDataType = req.path.split("/").pop();
     let reqBody;
     const requiredInputFilter = allInputFilters[operationDataType];
@@ -155,9 +156,7 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
                 if (reqBody[key] < 1 || reqBody[key] > myArray.length) {
                     throw {
                         key,
-                        message: `please send a number between 1 and ${
-                            myArray.length
-                        }, as it identifies the following ${String(myArray)}`,
+                        message: `please send a number between 1 and ${myArray.length}, as it identifies the following ${myArray}`,
                     };
                 } else {
                     reqBody[key] = Math.floor(reqBody[key]);
@@ -166,45 +165,52 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
         }
     } catch (e) {
         error(e.key, e.message, next, 400);
-        deleteUnusedFile(req.file);
+        for (let i in inputFiles) {
+            deleteUnusedFile(req.files[inputFiles[i]]);
+        }
         return;
     }
-    try {
-        const fileIsGood = uploadValidation(
-            req.file,
-            allowedFileTypes[operationDataType],
-            next,
-            fileRequired[operationDataType]
-        );
-        if (!fileIsGood && fileRequired[operationDataType]) {
+    for (let i = 0; i < fileAttributes[operationDataType].length; i++) {
+        try {
+            const fileAttribute = fileAttributes[operationDataType][i];
+            const fileIsGood = uploadValidation(
+                req.files[fileAttribute],
+                allowedFileTypes[operationDataType],
+                next,
+                fileRequired[operationDataType]
+            );
+            if (!fileIsGood && fileRequired[operationDataType]) {
+                deleteUnusedFile(req.files[fileAttribute]);
+                return;
+            }
+            if (fileIsGood) {
+                const fileType = req.files[fileAttribute].originalname
+                    .split(".")
+                    .pop();
+                const newDestination = `uploads\\${operationDataType}\\${req.files[fileAttribute].filename}.${fileType}`;
+                const fileUrl = `/uploads/${operationDataType}/${req.files[fileAttribute].filename}.${fileType}`;
+                try {
+                    const dir = `uploads\\${operationDataType}`;
+                    if (!existsSync(dir)) {
+                        mkdirSync(dir);
+                    }
+                    renameSync(req.files[fileAttribute].path, newDestination);
+                } catch (e) {
+                    console.log(e);
+                    deleteUnusedFile(req.files[fileAttribute]);
+                    error("file", "couldn't rename", next);
+                    return;
+                }
+                reqBody[fileAttribute] = fileUrl;
+                if (operationDataType == "external_applicant") {
+                    reqBody["name"] = req.files[fileAttribute].filename;
+                    reqBody["type"] = fileType;
+                }
+            }
+        } catch {
             deleteUnusedFile(req.file);
             return;
         }
-        if (fileIsGood) {
-            const fileType = req.file.originalname.split(".").pop();
-            const newDestination = `uploads\\${operationDataType}\\${req.file.filename}.${fileType}`;
-            const fileUrl = `/uploads/${operationDataType}/${req.file.filename}.${fileType}`;
-            try {
-                const dir = `uploads\\${operationDataType}`;
-                if (!existsSync(dir)) {
-                    mkdirSync(dir);
-                }
-                renameSync(req.file.path, newDestination);
-            } catch (e) {
-                console.log(e);
-                deleteUnusedFile(req.file);
-                error("file", "couldn't rename", next);
-                return;
-            }
-            reqBody[fileAttributes[operationDataType]] = fileUrl;
-            if (operationDataType == "external_applicant") {
-                reqBody["name"] = req.file.filename;
-                reqBody["type"] = fileType;
-            }
-        }
-    } catch {
-        deleteUnusedFile(req.file);
-        return;
     }
     for (let i in phoneValues[operationDataType]) {
         if (reqBody[phoneValues[operationDataType][i]])
@@ -260,7 +266,7 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
-router.patch(allRoutes, upload.single("file"), async (req, res, next) => {
+router.patch(allRoutes, upload.fields(inputFiles), async (req, res, next) => {
     const operationDataType = req.path.split("/").pop();
     let updateData = {};
     try {
@@ -327,9 +333,7 @@ router.patch(allRoutes, upload.single("file"), async (req, res, next) => {
                 if (updateData[key] < 1 || updateData[key] > myArray.length) {
                     throw {
                         key,
-                        message: `please send a number between 1 and ${
-                            myArray.length
-                        }, as it identifies the following ${String(myArray)}`,
+                        message: `please send a number between 1 and ${myArray.length}, as it identifies the following ${myArray}`,
                     };
                 } else {
                     updateData[key] = Math.floor(updateData[key]);
@@ -338,40 +342,48 @@ router.patch(allRoutes, upload.single("file"), async (req, res, next) => {
         }
     } catch (e) {
         error(e.key, e.message, next);
+        for (let i in inputFiles) {
+            deleteUnusedFile(req.files[inputFiles[i]]);
+        }
         return;
     }
-    try {
-        const fileIsGood = uploadValidation(
-            req.file,
-            allowedFileTypes[operationDataType],
-            next,
-            false
-        );
-        if (fileIsGood) {
-            const fileType = req.file.originalname.split(".").pop();
-            const newDestination = `uploads\\${operationDataType}\\${req.file.filename}.${fileType}`;
-            const fileUrl = `/uploads/${operationDataType}/${req.file.filename}.${fileType}`;
-            try {
-                const dir = `uploads\\${operationDataType}`;
-                if (!existsSync(dir)) {
-                    mkdirSync(dir);
+    for (let i = 0; i < fileAttributes[operationDataType].length; i++) {
+        try {
+            const fileAttribute = fileAttributes[operationDataType][i];
+            const fileIsGood = uploadValidation(
+                req.files[fileAttribute],
+                allowedFileTypes[operationDataType],
+                next,
+                false
+            );
+            if (fileIsGood) {
+                const fileType = req.files[fileAttribute].originalname
+                    .split(".")
+                    .pop();
+                const newDestination = `uploads\\${operationDataType}\\${req.files[fileAttribute].filename}.${fileType}`;
+                const fileUrl = `/uploads/${operationDataType}/${req.files[fileAttribute].filename}.${fileType}`;
+                try {
+                    const dir = `uploads\\${operationDataType}`;
+                    if (!existsSync(dir)) {
+                        mkdirSync(dir);
+                    }
+                    renameSync(req.files[fileAttribute].path, newDestination);
+                } catch (e) {
+                    console.log(e);
+                    deleteUnusedFile(req.files[fileAttribute]);
+                    error("file", "couldn't rename", next);
+                    return;
                 }
-                renameSync(req.file.path, newDestination);
-            } catch (e) {
-                console.log(e);
-                deleteUnusedFile(req.file);
-                error("file", "couldn't rename", next);
-                return;
+                updateData[fileAttribute] = fileUrl;
+                if (operationDataType == "external_applicant") {
+                    reqBody["name"] = req.files[fileAttribute].filename;
+                    reqBody["type"] = fileType;
+                }
             }
-            updateData[fileAttributes[operationDataType]] = fileUrl;
-            if (operationDataType == "external_applicant") {
-                reqBody["name"] = req.file.filename;
-                reqBody["type"] = fileType;
-            }
+        } catch {
+            deleteUnusedFile(req.files[fileAttribute]);
+            return;
         }
-    } catch {
-        deleteUnusedFile(req.file);
-        return;
     }
     if (Object.keys(updateData).length == 0) {
         error("updateData", "no data has been sent for update", next);

@@ -1,6 +1,7 @@
 const { error, allModels, snakeToPascal } = require("../../config/config");
 /**
- *
+ * It takes an object, a model name, a creator id, a list of unique keys, a next function, and a
+ * boolean, and returns false or an object
  * @param {object} reqBody object to be posted
  * @param {string} modelName name of the model to post the obj to
  * @param {number} creator id of the user posting
@@ -101,6 +102,16 @@ const post = async (
         }
     }
 };
+/**
+ * It takes in a bunch of arguments and returns a promise that resolves to an array of objects.
+ * @param queryFilter - {
+ * @param querySort - [{ id: "desc" }]
+ * @param limit - number of records to return
+ * @param skip - number of records to skip
+ * @param projection - {
+ * @param modelName - The name of the model you want to query.
+ * @returns An array of objects.
+ */
 const get = async (
     queryFilter,
     querySort,
@@ -123,6 +134,18 @@ const get = async (
     });
     return data;
 };
+/**
+ * It takes a bunch of arguments, and then it updates a database record
+ * @param updateDataProjection - the projection of the data that you want to update
+ * @param reqBody - the request body
+ * @param updateData - the data that will be updated
+ * @param modelName - the name of the model you're updating
+ * @param creator - the user who is making the request
+ * @param uniqueValues - an array of strings that are the names of the fields that are unique in the
+ * model
+ * @param next - the next function in the express route
+ * @returns an object with a key of success and a value of true.
+ */
 const patch = async (
     updateDataProjection,
     reqBody,
@@ -195,6 +218,13 @@ const patch = async (
     }
     return { success: true };
 };
+/**
+ * This function takes an id and a model name, and then updates the status and endDate of the record
+ * with the given id in the given model.
+ * @param id - the id of the record to be deleted
+ * @param modelName - The name of the model you want to delete from.
+ * @returns { success: true }
+ */
 const deleter = async (id, modelName) => {
     try {
         await allModels[modelName].update({

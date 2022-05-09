@@ -158,6 +158,14 @@ const returnReqBody = (
     }
     return reqBody;
 };
+/**
+ * It takes in a request body, a set of filters, sorts, and projections, and returns a query filter,
+ * query sort, limit, skip, and projection
+ * @param reqBody - The request body
+ * @param next - is the next function in the middleware chain
+ * @returns An object with the following properties:
+ * queryFilter, querySort, limit, skip, projection
+ */
 const returnGetData = (reqBody, { filters, sorts, projections }, next) => {
     let filter = {};
     let sort = {};
@@ -225,6 +233,13 @@ const returnGetData = (reqBody, { filters, sorts, projections }, next) => {
     }
     return { queryFilter, querySort, limit, skip, projection };
 };
+/**
+ * It takes in a request body, a set of filters, and a next function, and returns an object containing
+ * the filtered data and a projection of that data
+ * @param reqBody - the request body
+ * @param next - is the next function in the middleware chain
+ * @returns An object with two properties: updateData and updateDataProjection.
+ */
 const returnPatchData = (
     reqBody,
     {

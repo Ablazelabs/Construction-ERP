@@ -6,6 +6,19 @@ const {
     get: mGet,
     patch: mPatch,
 } = require("./mostCRUD/mostCRUD");
+/**
+ * If the operationDataType is employee_commitment, then find the commitment_id in the commitment
+ * table, and if it exists, then set the endDate to the startDate plus the period of the commitment.
+ * @param reqBody - The request body
+ * @param operationDataType - The name of the table you want to insert into
+ * @param creator - the user who is creating the record
+ * @param uniqueValues - an array of strings that are the names of the columns that are unique in the
+ * table.
+ * @param next - is the next function in the middleware chain
+ * @param [sendId=false] - boolean - if true, the id of the created object will be sent back to the
+ * client
+ * @returns the result of the mPost function.
+ */
 const post = async (
     reqBody,
     operationDataType,
@@ -35,6 +48,17 @@ const post = async (
         sendId
     );
 };
+/**
+ * It returns a promise that resolves to the result of calling the function mGet with the same
+ * arguments.
+ * @param queryFilter - This is the filter object that you pass to the mongoose find() method.
+ * @param querySort - { _id: -1 }
+ * @param limit - The number of documents to return.
+ * @param skip - The number of documents to skip.
+ * @param projection - {
+ * @param operationDataType - This is the name of the collection you want to query.
+ * @returns The function mGet is being returned.
+ */
 const get = async (
     queryFilter,
     querySort,

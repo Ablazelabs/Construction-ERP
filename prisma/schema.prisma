@@ -2682,6 +2682,7 @@ model employee {
   approved_project_request         project_request[]                  @relation("project_request_approved_by")
   daily_report                     daily_report[]
   user                             user[]
+  announcements                    announcement[]
 }
 
 model employee_action {
@@ -3015,6 +3016,7 @@ model business_unit {
   payroll_summary                  payroll_summary[]
   payroll_summary_history          payroll_summary_history[]
   salary_component_account_mapping salary_component_account_mapping[]
+  announcement                     announcement[]
 }
 
 model location {
@@ -3064,6 +3066,7 @@ model job_title {
   org_assignment       org_assignment[]
   job_safety_equipment job_safety_equipment[]
   vacancy              vacancy[]
+  announcement         announcement[]
 }
 
 model job_category {
@@ -3992,6 +3995,27 @@ model holiday_calendar {
   is_half_day        Boolean?
   holiday_id         Int      @unique
   holiday            holiday  @relation(fields: [holiday_id], references: [id])
+}
+
+model announcement {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime        @default(now())
+  createdBy          String
+  revisionDate       DateTime        @updatedAt
+  revisedBy          String
+  status             Int             @default(0)
+  isProtectedForEdit Boolean         @default(false)
+  id                 Int             @id @default(autoincrement())
+  date               DateTime
+  start_timme        DateTime?
+  end_time           DateTime?
+  description        String?
+  title              String
+  all_employees      Boolean         @default(false)
+  business_unit      business_unit[]
+  job_title          job_title[]
+  employees          employee[]
 }
 
 model leave_period {

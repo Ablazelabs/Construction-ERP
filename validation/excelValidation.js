@@ -6,7 +6,15 @@ const finishUp = (filePath) => {
     fs.unlink(filePath, () => {});
     // fs.rmSync(filePath);
 };
-module.exports = async (reqFile, next, shouldDelete = true) => {
+/**
+ * It takes a file, checks if it's an excel file, if it is, it parses it and returns the parsed object,
+ * if it's not, it returns false.
+ * @param reqFile - the file that was sent to the server
+ * @param next - is the next function in the middleware chain
+ * @param [shouldDelete=true] - if you want to delete the file after you're done with it.
+ * @returns the object that is created by the xlsx.parse() function.
+ */
+const excelValidation = async (reqFile, next, shouldDelete = true) => {
     if (reqFile) {
         const filePath = reqFile.path;
         const fileSize = reqFile.size;
@@ -31,3 +39,4 @@ module.exports = async (reqFile, next, shouldDelete = true) => {
         return false;
     }
 };
+module.exports = excelValidation;

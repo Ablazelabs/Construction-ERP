@@ -34,6 +34,7 @@ const authorization = {
         }
         return true;
     },
+    /* Checking if the user has the privilege to update the user. */
     userHasPrivilegeOver: async (userId, secondUserId, previlage, next) => {
         if (userId == secondUserId) {
             return true;
@@ -92,6 +93,7 @@ const authorization = {
             return true;
         }
     },
+    /* Checking if the user is a super user. */
     isUserSuper: async (id) => {
         const myUser = await user.findFirst({
             where: {
@@ -113,8 +115,7 @@ const authorization = {
         return Boolean(myUser);
     },
     /**
-     *
-     * @description make a readable code!
+     * make a readable code!
      */
     authenticate: async (req, res, next) => {
         const requestRoute = req.path.split("/").pop();

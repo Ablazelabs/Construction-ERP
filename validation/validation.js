@@ -1,5 +1,6 @@
 const { error } = require("../config/config");
 module.exports = {
+    /** Checking the phone number. */
     checkPhoneNumber: (phoneNumber, next, key = "phone_number") => {
         const splitPhone = phoneNumber.split("-");
         if (splitPhone.length != 2) {
@@ -26,6 +27,7 @@ module.exports = {
             error(key, "phone number characters must be Numbers", next);
         }
     },
+    /**  Checking the email format. */
     checkEmail: (email, next, key = "email") => {
         if (email.match(".+@.+[.].+")) return true;
         else {
@@ -36,6 +38,7 @@ module.exports = {
             );
         }
     },
+    /** Checking the password length. */
     checkPassword: (password, next, key = "password") => {
         if (password.length < 8)
             error(key, "password length must be at least 8", next);
