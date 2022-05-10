@@ -182,16 +182,26 @@ router.get(allRoutes, async (req, res, next) => {
     }
     const { queryFilter, querySort, limit, skip, projection } = getData;
     try {
-        res.json(
-            await get(
-                queryFilter,
-                querySort,
-                limit,
-                skip,
-                projection,
-                operationDataType
-            )
+        const data = await get(
+            queryFilter,
+            querySort,
+            limit,
+            skip,
+            projection,
+            operationDataType,
+            res.locals.id
         );
+        if (operationDataType === "announcement") {
+            res.json(
+                data.map((elem) => ({
+                    ...elem,
+                    startDate: elem.start_timme,
+                    endDate: elem.end_time,
+                }))
+            );
+        } else {
+            res.json(data);
+        }
     } catch (e) {
         console.log(e);
         error("database", "error", next, 500);

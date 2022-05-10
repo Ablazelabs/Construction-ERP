@@ -211,7 +211,9 @@
             "name": true,
             "logo": true,
             "country": true,
-            "currency": true
+            "currency": true,
+            "header": true,
+            "footer": true
         },
         "location": {
             "id": true,

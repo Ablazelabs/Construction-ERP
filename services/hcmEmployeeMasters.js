@@ -1,5 +1,6 @@
 const {
-    allModels: { commitment },
+    allModels: { commitment, user },
+    allModels,
 } = require("../config/config");
 const {
     post: mPost,
@@ -65,10 +66,120 @@ const get = async (
     limit,
     skip,
     projection,
-    operationDataType
+    operationDataType,
+    creator = 0
 ) => {
+    let insideQuery = {};
+    if (operationDataType === "annoncements" && creator) {
+        const acc = await user.findUnique({
+            where: {
+                id: creator,
+            },
+            include: {
+                employee: {
+                    include: {
+                        employee_action: true,
+                    },
+                },
+            },
+        });
+        if (acc.employee_id) {
+            const actionId = acc.employee.employee_action
+                .sort(
+                    (a, b) =>
+                        a.creationDate.getTime() - b.creationDate.getTime()
+                )
+                .pop()?.id;
+            //filter if this user has any annoncements!!
+            //#region the way it works to fetch if the annoncement concerns the user
+            // await allModels.announcement.findMany({
+            //     where: {
+            //         OR: [
+            //             {
+            //                 all_employees: true,
+            //             },
+            //             {
+            //                 employees: {
+            //                     some: {
+            //                         id: acc.employee_id,
+            //                     },
+            //                 },
+            //             },
+            //             {
+            //                 business_unit: {
+            //                     some: {
+            //                         org_assignment: {
+            //                             some: {
+            //                                 employee_action: {
+            //                                     id: actionId,
+            //                                 },
+            //                             },
+            //                         },
+            //                     },
+            //                 },
+            //             },
+            //             {
+            //                 job_title: {
+            //                     some: {
+            //                         org_assignment: {
+            //                             some: {
+            //                                 employee_action: {
+            //                                     id: actionId,
+            //                                 },
+            //                             },
+            //                         },
+            //                     },
+            //                 },
+            //             },
+            //         ],
+            //     },
+            // });
+            //#endregion
+            insideQuery = {
+                OR: [
+                    {
+                        all_employees: true,
+                    },
+                    {
+                        employees: {
+                            some: {
+                                id: acc.employee_id,
+                            },
+                        },
+                    },
+                    {
+                        business_unit: {
+                            some: {
+                                org_assignment: {
+                                    some: {
+                                        employee_action: {
+                                            id: actionId,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    {
+                        job_title: {
+                            some: {
+                                org_assignment: {
+                                    some: {
+                                        employee_action: {
+                                            id: actionId,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                ],
+            };
+        }
+    }
+    console.log({ ...queryFilter, ...insideQuery });
     return mGet(
-        queryFilter,
+        { ...queryFilter, ...insideQuery },
         querySort,
         limit,
         skip,

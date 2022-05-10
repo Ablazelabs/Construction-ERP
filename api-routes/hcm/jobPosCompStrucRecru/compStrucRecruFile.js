@@ -97,7 +97,13 @@ const deleteUnusedFile = (file) => {
     } catch {}
 };
 const inputFiles = ["logo", "header", "footer", "file"];
-router.post(allRoutes, upload.fields(inputFiles), async (req, res, next) => {
+const inputFields = [
+    { name: "logo", maxCount: 1 },
+    { name: "header", maxCount: 1 },
+    { name: "footer", maxCount: 1 },
+    { name: "file", maxCount: 1 },
+];
+router.post(allRoutes, upload.fields(inputFields), async (req, res, next) => {
     const operationDataType = req.path.split("/").pop();
     let reqBody;
     const requiredInputFilter = allInputFilters[operationDataType];
@@ -174,40 +180,46 @@ router.post(allRoutes, upload.fields(inputFiles), async (req, res, next) => {
         try {
             const fileAttribute = fileAttributes[operationDataType][i];
             const fileIsGood = uploadValidation(
-                req.files[fileAttribute],
+                req.files[fileAttribute]?.[0],
                 allowedFileTypes[operationDataType],
                 next,
                 fileRequired[operationDataType]
             );
             if (!fileIsGood && fileRequired[operationDataType]) {
-                deleteUnusedFile(req.files[fileAttribute]);
+                deleteUnusedFile(req.files[fileAttribute][0]);
                 return;
             }
             if (fileIsGood) {
-                const fileType = req.files[fileAttribute].originalname
+                const fileType = req.files[fileAttribute][0].originalname
                     .split(".")
                     .pop();
-                const newDestination = `uploads\\${operationDataType}\\${req.files[fileAttribute].filename}.${fileType}`;
-                const fileUrl = `/uploads/${operationDataType}/${req.files[fileAttribute].filename}.${fileType}`;
+
+                const newDestination = `uploads\\${operationDataType}\\${req.files[fileAttribute][0].filename}.${fileType}`;
+                const fileUrl = `/uploads/${operationDataType}/${req.files[fileAttribute][0].filename}.${fileType}`;
                 try {
                     const dir = `uploads\\${operationDataType}`;
                     if (!existsSync(dir)) {
                         mkdirSync(dir);
                     }
-                    renameSync(req.files[fileAttribute].path, newDestination);
+                    renameSync(
+                        req.files[fileAttribute][0].path,
+                        newDestination
+                    );
                 } catch (e) {
                     console.log(e);
-                    deleteUnusedFile(req.files[fileAttribute]);
+                    deleteUnusedFile(req.files[fileAttribute][0]);
                     error("file", "couldn't rename", next);
                     return;
                 }
                 reqBody[fileAttribute] = fileUrl;
                 if (operationDataType == "external_applicant") {
-                    reqBody["name"] = req.files[fileAttribute].filename;
+                    reqBody["name"] = req.files[fileAttribute][0].filename;
                     reqBody["type"] = fileType;
                 }
             }
-        } catch {
+        } catch (e) {
+            console.log(e);
+            error("database", "error", next, 500);
             deleteUnusedFile(req.file);
             return;
         }
@@ -266,7 +278,7 @@ router.post(allRoutes, upload.fields(inputFiles), async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
-router.patch(allRoutes, upload.fields(inputFiles), async (req, res, next) => {
+router.patch(allRoutes, upload.fields(inputFields), async (req, res, next) => {
     const operationDataType = req.path.split("/").pop();
     let updateData = {};
     try {
@@ -351,37 +363,42 @@ router.patch(allRoutes, upload.fields(inputFiles), async (req, res, next) => {
         try {
             const fileAttribute = fileAttributes[operationDataType][i];
             const fileIsGood = uploadValidation(
-                req.files[fileAttribute],
+                req.files[fileAttribute]?.[0],
                 allowedFileTypes[operationDataType],
                 next,
                 false
             );
             if (fileIsGood) {
-                const fileType = req.files[fileAttribute].originalname
+                const fileType = req.files[fileAttribute][0].originalname
                     .split(".")
                     .pop();
-                const newDestination = `uploads\\${operationDataType}\\${req.files[fileAttribute].filename}.${fileType}`;
-                const fileUrl = `/uploads/${operationDataType}/${req.files[fileAttribute].filename}.${fileType}`;
+                const newDestination = `uploads\\${operationDataType}\\${req.files[fileAttribute][0].filename}.${fileType}`;
+                const fileUrl = `/uploads/${operationDataType}/${req.files[fileAttribute][0].filename}.${fileType}`;
                 try {
                     const dir = `uploads\\${operationDataType}`;
                     if (!existsSync(dir)) {
                         mkdirSync(dir);
                     }
-                    renameSync(req.files[fileAttribute].path, newDestination);
+                    renameSync(
+                        req.files[fileAttribute][0].path,
+                        newDestination
+                    );
                 } catch (e) {
                     console.log(e);
-                    deleteUnusedFile(req.files[fileAttribute]);
+                    deleteUnusedFile(req.files[fileAttribute][0]);
                     error("file", "couldn't rename", next);
                     return;
                 }
                 updateData[fileAttribute] = fileUrl;
                 if (operationDataType == "external_applicant") {
-                    reqBody["name"] = req.files[fileAttribute].filename;
+                    reqBody["name"] = req.files[fileAttribute][0].filename;
                     reqBody["type"] = fileType;
                 }
             }
-        } catch {
-            deleteUnusedFile(req.files[fileAttribute]);
+        } catch (e) {
+            console.log(e);
+            error("database", "error", next, 500);
+            deleteUnusedFile(req.files[fileAttribute][0]);
             return;
         }
     }
