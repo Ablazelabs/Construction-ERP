@@ -172,7 +172,7 @@ router.post(allRoutes, upload.fields(inputFields), async (req, res, next) => {
     } catch (e) {
         error(e.key, e.message, next, 400);
         for (let i in inputFiles) {
-            deleteUnusedFile(req.files[inputFiles[i]]);
+            deleteUnusedFile(req.files?.[inputFiles?.[i]]);
         }
         return;
     }
@@ -355,7 +355,7 @@ router.patch(allRoutes, upload.fields(inputFields), async (req, res, next) => {
     } catch (e) {
         error(e.key, e.message, next);
         for (let i in inputFiles) {
-            deleteUnusedFile(req.files[inputFiles[i]]);
+            deleteUnusedFile(req.files?.[inputFiles?.[i]]);
         }
         return;
     }

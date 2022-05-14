@@ -55,7 +55,11 @@
             "job_title": "string",
             "employee_id": "number"
         },
-        "leave_assignment": { "employee_id": "number" },
+        "leave_assignment": {
+            "employee_id": "number",
+            "startDate": "string",
+            "endDate": "string"
+        },
         "leave_entitlement": {
             "employee_id": "number",
             "attendance_abscence_type_id": "number"
@@ -189,7 +193,6 @@
         "leave_assignment": {
             "is_half_day": "boolean",
             "leave_assignment_type": "number",
-            "action_date": "string",
             "delegated_user_name": "string",
             "attendance_abscence_type_id": "number"
         },
@@ -317,7 +320,7 @@
         "employee_paygrade": [],
         "employee_salary_component": [],
         "experience": [],
-        "leave_assignment": ["action_date"],
+        "leave_assignment": ["startDate", "endDate"],
         "leave_entitlement": [],
         "leave_transfer": ["action_date"],
         "license": ["issued_date", "expiry_date"],

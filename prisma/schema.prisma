@@ -45,6 +45,8 @@ model user {
   general_journal_header general_journal_header[]
   journal_comment        journal_comment[]
   project_edit_request   project_edit_request[]
+  leave_assignment       leave_assignment?        @relation(fields: [leave_assignmentId], references: [id])
+  leave_assignmentId     Int?
 }
 
 model privilege {
@@ -2880,6 +2882,7 @@ model leave_assignment {
   attendance_abscence_type_id Int?
   employee                    employee                  @relation(fields: [employee_id], references: [id])
   attendance_abscence_type    attendance_abscence_type? @relation(fields: [attendance_abscence_type_id], references: [id])
+  users                       user[]
 }
 
 model leave_entitlement {

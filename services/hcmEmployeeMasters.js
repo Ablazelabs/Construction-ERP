@@ -70,7 +70,7 @@ const get = async (
     creator = 0
 ) => {
     let insideQuery = {};
-    if (operationDataType === "annoncements" && creator) {
+    if (operationDataType === "announcement" && creator) {
         const acc = await user.findUnique({
             where: {
                 id: creator,
@@ -83,6 +83,7 @@ const get = async (
                 },
             },
         });
+
         if (acc.employee_id) {
             const actionId = acc.employee.employee_action
                 .sort(
@@ -177,7 +178,6 @@ const get = async (
             };
         }
     }
-    console.log({ ...queryFilter, ...insideQuery });
     return mGet(
         { ...queryFilter, ...insideQuery },
         querySort,

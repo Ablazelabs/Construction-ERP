@@ -140,11 +140,12 @@ const getCreate = async ({ startDate, endDate, employee_id }) => {
             aaTypeList.length > 0 &&
             aaTypeList.length > r
         )
-            attendanceSheet.AAType = await attendance_abscence_type.findUnique({
-                where: { id: aaTypeList[r] },
-                select: { id: true, aa_description: true },
-            });
-
+            attendanceSheet.AAType =
+                aaTypeList[r] &&
+                (await attendance_abscence_type.findUnique({
+                    where: { id: aaTypeList[r] },
+                    select: { id: true, aa_description: true },
+                }));
         attendanceSheet.AADateHours = [];
         attendanceSheet.targetHours = {};
         attendanceSheet.actualHours = {};

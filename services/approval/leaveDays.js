@@ -87,6 +87,17 @@ const getLeaveBalance = async (employeeId, leaveTypeId, startDate, next) => {
     }
     return totalBalanceDays;
 };
+/**
+ * It checks if the employee has enough leave balance to apply for a leave.
+ * </code>
+ * @param employeeId - employee id
+ * @param leaveTypeId - 1
+ * @param startDate - 2020-01-01
+ * @param endDate - 2020-01-01T00:00:00.000Z
+ * @param is_half_day - boolean
+ * @param next - is a function that will be called if there's an error
+ * @returns A Promise
+ */
 const getLeaveBalance2 = async (
     employeeId,
     leaveTypeId,
@@ -190,6 +201,17 @@ const getLeaveBalance2 = async (
         return true;
     }
 };
+/**
+ * "Get the total number of working days between two dates, excluding holidays and days off."
+ * 
+ * The function is called like this:
+ * 
+ * getEmployeeWorkingDays(new Date(2019, 1, 1), new Date(2019, 1, 31), 1);
+ * @param startDate - Date
+ * @param endDate - 2019-12-31T18:30:00.000Z
+ * @param employeeId - employee id
+ * @returns A promise.
+ */
 const getEmployeeWorkingDays = async (startDate, endDate, employeeId) => {
     let totalWorkingDays = 0;
 
@@ -238,6 +260,16 @@ const getEmployeeWorkingDays = async (startDate, endDate, employeeId) => {
     }
     return totalWorkingDays;
 };
+/**
+ * If the leave type is annual leave, then the total entitlement is the number of days plus the number
+ * of years of service multiplied by the number of increments each year, otherwise the total
+ * entitlement is the number of days.
+ * @param employee - is an object that contains the employee's information
+ * @param leaveType - {
+ * @param startDate - 2020-01-01
+ * @param next - is a function that will be called if there's an error
+ * @returns a Promise.
+ */
 const getLeaveEntitlementDays = async (
     employee,
     leaveType,

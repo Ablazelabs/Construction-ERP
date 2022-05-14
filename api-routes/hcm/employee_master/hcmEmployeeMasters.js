@@ -6,6 +6,7 @@ const {
     returnReqBody,
     returnGetData,
     returnPatchData,
+    getManagerUsers,
 } = require("../../../validation/basicValidators");
 
 const defaultDeleter = require("../../defaultDeleter");
@@ -206,6 +207,9 @@ router.get(allRoutes, async (req, res, next) => {
         console.log(e);
         error("database", "error", next, 500);
     }
+});
+router.get("/user", async (req, res, next) => {
+    res.json(await getManagerUsers());
 });
 router.patch(allPostRoutes, async (req, res, next) => {
     const operationDataType = req.path.split("/").pop();

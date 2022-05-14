@@ -22,6 +22,7 @@ const {
     phoneValues,
     emailValues,
     allRangeValues,
+    defaultValues,
     allProjections,
     allSorts,
     allFilters,

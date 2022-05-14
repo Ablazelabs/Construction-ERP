@@ -1,6 +1,6 @@
 const inputFilter = require("./inputFilter");
 const validation = require("./validation");
-const { error, snakeToPascal } = require("../config/config");
+const { error, snakeToPascal, allModels } = require("../config/config");
 const auditLogProjection = {
     startDate: true,
     endDate: true,
@@ -346,8 +346,31 @@ const returnPatchData = (
     }
     return { updateData, updateDataProjection };
 };
+
+const getManagerUsers = async () => {
+    await allModels.user.findMany({
+        where: {
+            role: {
+                privileges: {
+                    some: {
+                        action: {
+                            in: [
+                                "project_manager",
+                                "project_head",
+                                "super",
+                                "admin",
+                            ],
+                        },
+                    },
+                },
+            },
+        },
+    });
+};
+
 module.exports = {
     returnReqBody,
     returnGetData,
     returnPatchData,
+    getManagerUsers,
 };

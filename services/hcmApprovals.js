@@ -97,22 +97,20 @@ const transferApproval = async (leaveList, creator, next) => {
  *
  * @param {{startDate:Date, endDate:Date, employee_id:number, delegated_username:string}} param0
  */
-const getLeaveTransfer = async ({
-    startDate,
-    endDate,
-    employee_id,
-    delegated_username: delegated_user_name,
-}) => {
+const getLeaveTransfer = async ({ endDate, employee_id }) => {
     let employeeFilter = {};
     if (employee_id) {
         employeeFilter.employee_id = employee_id;
     }
+    let endDateFilter = {};
+    if (endDate) {
+        endDateFilter = { lte: endDate };
+    }
     return await leave_transfer.findMany({
         where: {
-            delegated_user_name,
-            creationDate: {
-                gte: startDate,
-                lte: endDate,
+            startDate: {
+                gte: new Date(),
+                ...endDateFilter,
             },
             ...employeeFilter,
             OR: [{ leave_request_status: 1 }, { leave_request_status: 4 }],
@@ -126,22 +124,20 @@ const getLeaveTransfer = async ({
  *
  * @param {{startDate:Date, endDate:Date, employee_id:number, delegated_username:string}} param0
  */
-const getLeaveAssignment = async ({
-    startDate,
-    endDate,
-    employee_id,
-    delegated_username: delegated_user_name,
-}) => {
+const getLeaveAssignment = async ({ endDate, employee_id }) => {
     let employeeFilter = {};
     if (employee_id) {
         employeeFilter.employee_id = employee_id;
     }
+    let endDateFilter = {};
+    if (endDate) {
+        endDateFilter = { lte: endDate };
+    }
     return await leave_assignment.findMany({
         where: {
-            delegated_user_name,
-            creationDate: {
-                gte: startDate,
-                lte: endDate,
+            startDate: {
+                gte: new Date(),
+                ...endDateFilter,
             },
             ...employeeFilter,
             OR: [{ leave_request_status: 1 }, { leave_request_status: 4 }],
@@ -161,19 +157,13 @@ const getLeaveAssignment = async ({
  *
  * @param {{startDate:Date, endDate:Date, employee_id:number, delegated_username:string}} param0
  */
-const getAttendance = async ({
-    startDate,
-    endDate,
-    employee_id,
-    delegated_username,
-}) => {
+const getAttendance = async ({ startDate, endDate, employee_id }) => {
     let employeeFilter = {};
     if (employee_id) {
         employeeFilter.employee_id = employee_id;
     }
     return await attendance_payroll.findMany({
         where: {
-            delegated_username,
             date: {
                 gte: startDate,
                 lte: endDate,
@@ -191,22 +181,20 @@ const getAttendance = async ({
  *
  * @param {{startDate:Date, endDate:Date, employee_id:number, delegated_username:string}} param0
  */
-const getLeavePlan = async ({
-    startDate,
-    endDate,
-    employee_id,
-    delegated_username,
-}) => {
+const getLeavePlan = async ({ endDate, employee_id }) => {
     let employeeFilter = {};
     if (employee_id) {
         employeeFilter.employee_id = employee_id;
     }
+    let endDateFilter = {};
+    if (endDate) {
+        endDateFilter = { lte: endDate };
+    }
     return await leave_plan.findMany({
         where: {
-            delegated_username,
-            creationDate: {
-                gte: startDate,
-                lte: endDate,
+            startDate: {
+                gte: new Date(),
+                ...endDateFilter,
             },
             ...employeeFilter,
             OR: [{ leave_request_status: 1 }, { leave_request_status: 4 }],
@@ -220,19 +208,13 @@ const getLeavePlan = async ({
  *
  * @param {{startDate:Date, endDate:Date, employee_id:number, delegated_username:string}} param0
  */
-const getOvertime = async ({
-    startDate,
-    endDate,
-    employee_id,
-    delegated_username,
-}) => {
+const getOvertime = async ({ startDate, endDate, employee_id }) => {
     let employeeFilter = {};
     if (employee_id) {
         employeeFilter.employee_id = employee_id;
     }
     return await overtime.findMany({
         where: {
-            delegated_username,
             OR: [{ overtime_status: 1 }, { overtime_status: 4 }],
             date: {
                 gte: startDate,
