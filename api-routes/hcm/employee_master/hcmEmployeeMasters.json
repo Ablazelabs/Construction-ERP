@@ -194,7 +194,8 @@
             "is_half_day": "boolean",
             "leave_assignment_type": "number",
             "delegated_user_name": "string",
-            "attendance_abscence_type_id": "number"
+            "attendance_abscence_type_id": "number",
+            "user_id": "object"
         },
         "leave_entitlement": {},
         "leave_transfer": {

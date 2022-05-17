@@ -3874,6 +3874,7 @@ model attendance_abscence_type {
   number_of_days                Int?
   number_of_increment_each_year Float?
   is_absence_includes_day_off   Boolean?
+  working_time                  Float?
   leave_assignment              leave_assignment[]
   leave_entitlement             leave_entitlement[]
   attendance_payroll            attendance_payroll[]

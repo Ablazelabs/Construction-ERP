@@ -1,12 +1,17 @@
 const express = require("express");
 const router = express.Router();
 const { error } = require("../../../config/config");
-const { post, get, patch } = require("../../../services/hcmEmployeeMasters");
+const {
+    post,
+    get,
+    patch,
+    getManagerUsers,
+    notifications,
+} = require("../../../services/hcmEmployeeMasters");
 const {
     returnReqBody,
     returnGetData,
     returnPatchData,
-    getManagerUsers,
 } = require("../../../validation/basicValidators");
 
 const defaultDeleter = require("../../defaultDeleter");
@@ -151,6 +156,32 @@ router.post(allPostRoutes, async (req, res, next) => {
         delete reqBody.business_unit_id;
         delete reqBody.job_title_id;
     }
+    if (operationDataType === "leave_assignment") {
+        if (reqBody.user_id) {
+            if (Array.isArray(reqBody.user_id)) {
+                let usersArray = [...reqBody.user_id];
+                usersArray = usersArray
+                    .map((elem) => parseInt(elem))
+                    .filter((elem) => elem);
+                if (!usersArray.length) {
+                    error(
+                        "user_id",
+                        "user id please send array of numbers",
+                        next
+                    );
+                    return;
+                }
+                reqBody.users = {
+                    connect: usersArray.map((elem) => ({ id: elem })),
+                };
+                delete reqBody.user_id;
+            } else {
+                error("user_id", "user id please send array", next);
+                return;
+            }
+        }
+    }
+
     try {
         const data = await post(
             reqBody,
@@ -208,8 +239,11 @@ router.get(allRoutes, async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
-router.get("/user", async (req, res, next) => {
+router.get("/user", async (_req, res, _next) => {
     res.json(await getManagerUsers());
+});
+router.get("/notifications", async (req, res, next) => {
+    res.json(await notifications(req?.body?.filter?.total));
 });
 router.patch(allPostRoutes, async (req, res, next) => {
     const operationDataType = req.path.split("/").pop();

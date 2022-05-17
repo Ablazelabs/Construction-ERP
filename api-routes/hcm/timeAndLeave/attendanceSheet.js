@@ -45,7 +45,7 @@ router.get("/release", async (req, res, next) => {
         if (diffDays > 31) {
             throw {
                 message:
-                    "Number of days in the date range(Start Date - End Date) can't be greater than from 31",
+                    "Number of days in the date range(Start Date - End Date) can't be greater than 31",
                 key: "endDate",
             };
         }

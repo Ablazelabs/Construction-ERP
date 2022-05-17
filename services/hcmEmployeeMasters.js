@@ -1,6 +1,5 @@
 const {
-    allModels: { commitment, user },
-    allModels,
+    allModels: { commitment, user, leave_assignment },
 } = require("../config/config");
 const {
     post: mPost,
@@ -206,9 +205,64 @@ const patch = async (
         next
     );
 };
+
+/**
+ * Get all users who have at least one of the following privileges: project_manager, project_head,
+ * super, admin
+ */
+const getManagerUsers = async () => {
+    return await user.findMany({
+        where: {
+            role: {
+                privileges: {
+                    some: {
+                        action: {
+                            in: [
+                                "project_manager",
+                                "project_head",
+                                "super",
+                                "admin",
+                            ],
+                        },
+                    },
+                },
+            },
+        },
+    });
+};
+
+/**
+ * It returns an array of objects, each object containing a count of a certain type of notification.
+ * @param total - boolean - if true, returns the total number of notifications
+ * @returns An array of objects.
+ */
+const notifications = async (total) => {
+    const leaveAssignmentCount = await leave_assignment.count({
+        where: {
+            leave_request_status: 1,
+        },
+    });
+    const leaveAssignmentData = leaveAssignmentCount
+        ? {
+              name: 0,
+              message: `You have ${leaveAssignmentCount} pending leave requests!`,
+              count: leaveAssignmentCount,
+          }
+        : undefined;
+    const returnedArray = [leaveAssignmentData].filter((elem) => elem);
+    if (total) {
+        let sum = 0;
+        returnedArray.forEach((elem) => (sum += elem.count));
+        return { total: sum };
+    }
+    return returnedArray;
+};
+
 module.exports = {
     post,
     get,
     patch,
+    getManagerUsers,
+    notifications,
 };
 // same as the others

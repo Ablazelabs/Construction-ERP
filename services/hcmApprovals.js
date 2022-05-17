@@ -143,12 +143,7 @@ const getLeaveAssignment = async ({ endDate, employee_id }) => {
             OR: [{ leave_request_status: 1 }, { leave_request_status: 4 }],
         },
         include: {
-            attendance_abscence_type: {
-                select: {
-                    is_absence_includes_day_off: true,
-                    aa_description: true,
-                },
-            },
+            attendance_abscence_type: true,
             employee: true,
         },
     });
@@ -410,6 +405,9 @@ const assignmentApproval = async (leaveList, creator, next) => {
             [],
             next
         );
+        if (leaveList[i].approve) {
+        }
+        //yared
         if (result == false) return;
         success = true;
     }
