@@ -245,6 +245,7 @@ const notifications = async (total) => {
     const leaveAssignmentData = leaveAssignmentCount
         ? {
               name: 0,
+              type: 1,
               message: `You have ${leaveAssignmentCount} pending leave requests!`,
               count: leaveAssignmentCount,
           }

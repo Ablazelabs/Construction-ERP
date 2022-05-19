@@ -279,6 +279,13 @@ const overtimeApproval = async (leaveList, creator, next) => {
  * @param {number} creator
  * @param {Function} next
  */
+/**
+ * It updates the status of a leave request to either approved or rejected
+ * @param leaveList - [{id: 1, approve: true}, {id: 2, approve: false}]
+ * @param creator - {
+ * @param next - is a function that is called when an error occurs
+ * @returns an object with a property called success.
+ */
 const assignmentApproval = async (leaveList, creator, next) => {
     const leavePeriod = await leave_period.findFirst({ where: { status: 0 } });
     if (!leavePeriod) {
@@ -346,7 +353,7 @@ const assignmentApproval = async (leaveList, creator, next) => {
                 leaveAssignment.employee_id,
                 leaveType.id,
                 new Date(
-                    `${leaveAssignment.from_year}/${
+                    `${leaveAssignment.startDate.getFullYear()}/${
                         leavePeriod.startDate.getMonth() + 1
                     }/${leavePeriod.startDate.getDate()}`
                 ),

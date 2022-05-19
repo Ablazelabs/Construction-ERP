@@ -176,7 +176,7 @@ router.get("/create", async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
-router.get("/aa_type", async (req, res, next) => {
+router.get("/aa_type", async (_req, res, next) => {
     try {
         const data = await getAAtype();
         if (data == false) {

@@ -34,7 +34,11 @@ module.exports = (reqBody, next) => {
                     reqBody
                 );
             } catch (e) {
-                error(e.key, "is required if absence is with quota", next);
+                error(
+                    e.key,
+                    e.key + " is required if absence is with quota",
+                    next
+                );
                 return false;
             }
         } else {
