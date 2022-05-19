@@ -276,7 +276,8 @@ const getAttendanceTarget = async (employee_id, date) => {
     return 0;
 };
 /**
- *
+ * It returns an object with a message property if the employee is on leave or day off, otherwise it
+ * returns an object with the employee's shift schedule.
  * @param {number} employee_id
  * @param {Date} date
  */

@@ -3878,6 +3878,7 @@ model attendance_abscence_type {
   leave_assignment              leave_assignment[]
   leave_entitlement             leave_entitlement[]
   attendance_payroll            attendance_payroll[]
+  worked_time                   Int?
 }
 
 model shift_schedule_hdr {

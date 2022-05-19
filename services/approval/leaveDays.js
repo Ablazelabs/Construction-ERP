@@ -203,9 +203,9 @@ const getLeaveBalance2 = async (
 };
 /**
  * "Get the total number of working days between two dates, excluding holidays and days off."
- * 
+ *
  * The function is called like this:
- * 
+ *
  * getEmployeeWorkingDays(new Date(2019, 1, 1), new Date(2019, 1, 31), 1);
  * @param startDate - Date
  * @param endDate - 2019-12-31T18:30:00.000Z
@@ -215,10 +215,10 @@ const getLeaveBalance2 = async (
 const getEmployeeWorkingDays = async (startDate, endDate, employeeId) => {
     let totalWorkingDays = 0;
 
-    for (var dt = startDate; dt <= endDate; dt = dt.AddDays(1)) {
+    for (let dt = startDate; dt <= endDate; dt = dt.AddDays(1)) {
         for (
             let dt = new Date(startDate);
-            dt < leaveAssignment.endDate;
+            dt < endDate;
             dt.setDate(dt.getDate() + 1)
         ) {
             //var shift = GetEmployeeShiftSchedule(dt, employeeId);
