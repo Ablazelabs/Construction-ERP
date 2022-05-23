@@ -44,7 +44,9 @@
         }
     },
     "allRangeValues": {
-        "attendance_abscence_type": {},
+        "attendance_abscence_type": {
+            "worked_time": [0, 24]
+        },
         "attendance_captured": {},
         "attendance_payroll": {},
         "device_id_mapping": {},
@@ -106,7 +108,8 @@
             "is_regular_attendance": "boolean",
             "number_of_days": "number",
             "number_of_increment_each_year": "number",
-            "is_absence_includes_day_off": "boolean"
+            "is_absence_includes_day_off": "boolean",
+            "worked_time": "number"
         },
         "attendance_captured": {
             "in_out_mode": "number",
@@ -246,7 +249,8 @@
             "is_regular_attendance": true,
             "number_of_days": true,
             "number_of_increment_each_year": true,
-            "is_absence_includes_day_off": true
+            "is_absence_includes_day_off": true,
+            "worked_time": true
         },
         "attendance_captured": {
             "id": true,
@@ -357,7 +361,8 @@
             "is_regular_attendance": "boolean",
             "number_of_days": "number",
             "number_of_increment_each_year": "number",
-            "is_absence_includes_day_off": "boolean"
+            "is_absence_includes_day_off": "boolean",
+            "worked_time": "number"
         },
         "attendance_captured": {
             "id": "number",
@@ -465,7 +470,8 @@
             "is_regular_attendance": "number",
             "number_of_days": "number",
             "number_of_increment_each_year": "number",
-            "is_absence_includes_day_off": "number"
+            "is_absence_includes_day_off": "number",
+            "worked_time": "number"
         },
         "attendance_captured": {
             "id": "number",

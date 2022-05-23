@@ -132,14 +132,15 @@ router.get("/create", async (req, res, next) => {
     try {
         reqBody = inputFilter(
             {
-                startDate: "string",
-                endDate: "string",
-                employee_id: "number",
+                date: "string",
             },
-            {},
+            {
+                employee_id: "number",
+                business_unit_id: "number",
+            },
             req.body
         );
-        const dateValue = ["startDate", "endDate"];
+        const dateValue = ["date"];
         for (let i in dateValue) {
             if (!reqBody[dateValue[i]]) {
                 continue;
@@ -151,15 +152,6 @@ router.get("/create", async (req, res, next) => {
                     message: "please send date in yyyy/mm/dd format",
                 };
             }
-        }
-        const diffDays =
-            (reqBody.endDate - reqBody.startDate) / (1000 * 3600 * 24);
-        if (diffDays > 31) {
-            throw {
-                message:
-                    "Number of days in the date range(Start Date - End Date) can't be greater than from 31",
-                key: "endDate",
-            };
         }
     } catch (e) {
         error(e.key, e.message, next);
@@ -194,7 +186,6 @@ router.patch("/create", async (req, res, next) => {
             {
                 attendanceList: "object",
                 delegated_username: "string",
-                employee_id: "number",
             },
             {},
             req.body,
@@ -213,60 +204,33 @@ router.patch("/create", async (req, res, next) => {
         error(e.key, e.message, next);
         return;
     }
-    let { attendanceList, employee_id, delegated_username } = reqBody;
+    let { attendanceList, delegated_username } = reqBody;
     let listError = "";
     for (let i in attendanceList) {
         try {
             attendanceList[i] = inputFilter(
                 {
                     id: "number",
-                    aaDateHours: "object",
+                    date: "string",
+                    employee: "number",
                 },
                 {},
                 attendanceList[i]
             );
-            if (
-                attendanceList[i].aa_type == 1 ||
-                attendanceList[i].aa_type == 2
-            ) {
-                throw { message: "aa_type must be one of Attendance, Absence" };
-            }
-            if (!Array.isArray(attendanceList[i].aaDateHours)) {
-                throw {
-                    key: "aaDateHours",
-                    message: "aaDateHours please send array",
-                };
-            }
-            if (!attendanceList[i].aaDateHours.length) {
-                throw {
-                    key: "aaDateHours",
-                    message: "aaDateHours array can't be empty",
-                };
-            }
-            for (let k in attendanceList[i].aaDateHours) {
-                attendanceList[i].aaDateHours[k] = returnReqBody(
-                    attendanceList[i].aaDateHours[k],
-                    {
-                        requiredInputFilter: {
-                            date: "string",
-                            hours: "number",
-                        },
-                        optionalInputFilter: {
-                            attendance_payroll_id: "number",
-                        },
-                        dateValue: ["date"],
-                        myEnums: {},
-                        phoneValue: [],
-                        emailValue: [],
-                        rangeValues: {},
-                    },
-                    next
-                );
-                if (!attendanceList[i].aaDateHours[k]) {
-                    return;
+            const dateValue = ["date"];
+            for (let k in dateValue) {
+                if (!attendanceList[i][dateValue[k]]) {
+                    continue;
                 }
-                delete attendanceList[i].aaDateHours[k].startDate;
-                delete attendanceList[i].aaDateHours[k].endDate;
+                attendanceList[i][dateValue[k]] = new Date(
+                    attendanceList[i][dateValue[k]]
+                );
+                if (!attendanceList[i][dateValue[k]].getTime()) {
+                    throw {
+                        key: dateValue[k],
+                        message: "please send date in yyyy/mm/dd format",
+                    };
+                }
             }
         } catch {
             listError = e.message;
@@ -281,7 +245,6 @@ router.patch("/create", async (req, res, next) => {
         const data = await postCreate(
             delegated_username,
             attendanceList,
-            employee_id,
             res.locals.id
         );
         if (data == false) {
