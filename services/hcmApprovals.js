@@ -1,3 +1,4 @@
+const { stringify } = require("yamljs");
 const { error, allModels } = require("../config/config");
 const {
     getLeaveBalance,
@@ -412,10 +413,70 @@ const assignmentApproval = async (leaveList, creator, next) => {
             [],
             next
         );
-        if (leaveList[i].approve) {
-        }
-        //yared
         if (result == false) return;
+        if (leaveList[i].approve) {
+            const leaveAss = await leave_assignment.findUnique({
+                where: { id: leaveList[i].id },
+                include: { attendance_abscence_type: true },
+            });
+            for (
+                let date = new Date(leaveAss.startDate);
+                date <= leaveAss.endDate.getDate() &&
+                date <= leaveAss.endDate.getMonth();
+                date.setDate(date.getDate() + 1)
+            ) {
+                let prevAttendance = await attendance_payroll.findFirst({
+                    where: {
+                        employee_id: leaveAss.employee_id,
+                        date: {
+                            gte: new Date(
+                                date.getFullYear(),
+                                date.getMonth(),
+                                date.getDate()
+                            ),
+                            lt: new Date(
+                                date.getFullYear(),
+                                date.getMonth(),
+                                date.getDate() + 1
+                            ),
+                        },
+                    },
+                });
+                if (prevAttendance) {
+                    await attendance_payroll.update({
+                        where: {
+                            id: prevAttendance.id,
+                        },
+                        data: {
+                            revisedBy: String(creator),
+                            status: 0,
+                            attendance_abscence_type_id:
+                                leaveAss.attendance_abscence_type_id,
+                            total_worked_hours:
+                                leaveAss.attendance_abscence_type.worked_time,
+                            delegated_username: String(creator),
+                        },
+                    });
+                } else {
+                    await attendance_payroll.create({
+                        data: {
+                            startDate: new Date(),
+                            endDate: new Date("9999/12/31"),
+                            createdBy: String(creator),
+                            revisedBy: String(creator),
+                            employee_id: leaveAss.employee_id,
+                            date,
+                            total_worked_hours:
+                                leaveAss.attendance_abscence_type.worked_time,
+                            attendance_status: 3,
+                            attendance_abscence_type_id:
+                                leaveAss.attendance_abscence_type_id,
+                            delegated_username: String(creator),
+                        },
+                    });
+                }
+            }
+        }
         success = true;
     }
     return { success };
@@ -523,7 +584,7 @@ const planApproval = async (leaveList, creator, next) => {
                 if (prevLeaveAssignment) {
                     error(
                         "leave_assignment",
-                        "Overlapping leave assignment record exist, please change the date and try again at row " +
+                        "Overlapping leave assignment record exists, please change the date and try again at row " +
                             i,
                         next
                     );

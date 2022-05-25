@@ -370,7 +370,7 @@ const postCreate = async (delegated_username, attendanceList, creator) => {
                     where: { id: prevAttendance.id },
                 });
             } else {
-                const data = await attendance_payroll.update({
+                await attendance_payroll.update({
                     where: {
                         id: prevAttendance.id,
                     },
@@ -385,7 +385,7 @@ const postCreate = async (delegated_username, attendanceList, creator) => {
             }
         } else {
             if (attendanceExists) {
-                const data = await attendance_payroll.create({
+                await attendance_payroll.create({
                     data: {
                         startDate: new Date(),
                         endDate: new Date("9999/12/31"),
