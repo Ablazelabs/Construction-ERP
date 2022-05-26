@@ -42,9 +42,11 @@ const {
     checkForHoliday,
 } = require("./approval/leaveDays");
 /**
- *
+ * If there is a payroll period that is processing, return false, otherwise return all payroll
+ * frequencies that are not locked.
  * @param {"run"|"lock"} runOrLock either run or lock
  * @param {Function} next express next middleware function
+ * @returns An array of objects.
  */
 const getLockandRun = async (runOrLock, next) => {
     const payrollPeriod = await payroll_period_autogen.findFirst({
@@ -58,11 +60,11 @@ const getLockandRun = async (runOrLock, next) => {
         );
         return false;
     }
-    //TODO this is cool but make a route add this as a middleware cause the get of payroll frequency type already allows filter and stuff
     return await payroll_frequency_type.findMany({ where: { status: 0 } });
 };
 /**
- *
+ * It checks if the payroll is locked, if not it checks if it's posted, if not it posts it and locks
+ * it.
  * @param {{startDate:Date, endDate:Date, payroll_frequency_type_id:number}} param0 reqbody
  * @param {number} creator creator id
  * @param {Function} next express next middleware function
@@ -141,12 +143,14 @@ const postLock = async (
     return false;
 };
 /**
- *
- * @param {{startDate:Date, endDate:Date, payroll_frequency_type_id:number}} param0 reqbody
- * @param {number} creator creator id
- * @param {boolean} reprocess if sent from prompt(yes)
- * @param {Function} next express next middleware function
- * @returns object | false
+ * It checks if the payroll period is already processed, if it is, it asks the user if they want to
+ * reprocess it. If they do, it reprocesses it. If they don't, it returns a message. If the payroll
+ * period is not processed, it processes it.
+ * @param {{startDate:Date, endDate:Date, payroll_frequency_type_id:number}} param0
+ * @param {number} creator - The user who is running the process
+ * @param {boolean} reprocess - boolean
+ * @param {Function} next - is a function that is used to return an error message to the user.
+ * @returns a Promise.
  */
 const postRun = async (
     { startDate, endDate, payroll_frequency_type_id },
@@ -261,10 +265,21 @@ const getPost = async (id, next) => {
 };
 /**
  *
+ * It takes an id, a creator, and a next function as arguments. It then finds a payrollPeriod, and if
+ * it doesn't exist, it calls the next function with an error. If it does exist, it checks if the
+ * payrollPeriod is_payroll_posted, and if it is, it calls the next function with an error. If it
+ * isn't, it finds a gl, and if it exists, it calls the next function with an error. If it doesn't
+ * exist, it finds a payrollConfig, and if it doesn't exist, it calls the next function with an error.
+ * If it does exist, it sets a postingUser, and then calls processPostingToGl with the startDate,
+ * endDate, payroll_frequency_type_id, creator, postingUser, and next function as arguments. If
+ * processPostingToGl returns false, it returns. If processPostingToGl returns an object with a success
+ * property
+ *
+ * returns false if next's called(means error raised)
+ *
  * @param {number} id
  * @param {number} creator
- * @param {function} next returns false if next called(means error raiseds)
- * @returns
+ * @param {function} next
  */
 const postPost = async (id, creator, next) => {
     const payrollPeriod = await payroll_period_autogen.findFirst({
@@ -301,7 +316,6 @@ const postPost = async (id, creator, next) => {
         return false;
     }
     const postingUser = String(creator);
-    //TODO this isn't the correct string!!!(hashed user mnamn)
     const processResult = await processPostingToGl(
         {
             startDate: payrollPeriod.startDate,
@@ -415,11 +429,13 @@ const processPostingToGl = async (
     return message;
 };
 /**
- *
+ * It takes a start date, end date, payroll frequency type id, and a creator, and returns an object
+ * with a success property and a message property
  * @param {Date} startDate
  * @param {Date} endDate
  * @param {number} payroll_frequency_type_id
  * @param {number} creator
+ * @returns An object with a success property and a message property.
  */
 const summarizePayrollAndPostToGl = async (
     startDate,
@@ -957,9 +973,8 @@ const summarizePayrollAndPostToGl = async (
                             },
                         });
                     }
-                    //i could just do creator(cause its userid but if later if we wanna do id-name this will extract the id(ik smart))
                     const myUser = await user.findUnique({
-                        where: { id: Number(String(num).match(/[0-9]*/)[0]) },
+                        where: { id: creator },
                     });
                     if (myUser) {
                         await journal_comment.create({
@@ -1045,6 +1060,24 @@ const summarizePayrollAndPostToGl = async (
  *
  * @param {{startDate:Date, endDate:Date, payroll_frequency_type_id:number}} param0
  * @param {number} creator
+ */
+/**
+ * It takes in a startDate, endDate, and payroll_frequency_type_id, and then finds all employees who
+ * have a payroll_frequency_type_id that matches the one passed in, and whose startDate is less than or
+ * equal to the startDate passed in, and whose endDate is greater than or equal to the endDate passed
+ * in.
+ *
+ * Then, for each employee, it updates the attendance_payroll, overtime, and
+ * employee_back_penality_deduction tables.
+ *
+ * The attendance_payroll table is updated by setting the attendance_status to 5 and the revisedBy to
+ * the creator passed in, for all attendance_payroll records where the startDate is greater than or
+ * equal to the startDate passed in, the endDate is less than or equal to the endDate passed in, and
+ * the attendance_status is 3.
+ *
+ * The overtime table is updated by setting the overtime_
+ * @param creator - The user who is locking the attendance
+ * @returns an object with a key of success and a value of true.
  */
 const lockAttendanceOverTime = async (
     { startDate, endDate, payroll_frequency_type_id },
@@ -1148,6 +1181,13 @@ const lockAttendanceOverTime = async (
  * @param {import("@prisma/client").hcm_configuration} hcmConfig
  * @param {number} creator
  */
+/**
+ * It deletes all the payroll_summary, payroll_detail, payroll_log, payroll_processing_log,
+ * employee_back_penality_deduction records and then calls computeEmployeeSalary function.
+ * @param payrollPeriod
+ * @param hcmConfig
+ * @param creator
+ */
 const processPayroll = async (
     { startDate, endDate, payroll_frequency_type_id },
     payrollPeriod,
@@ -1207,11 +1247,12 @@ const processPayroll = async (
     });
 };
 /**
- *
+ * It calculates the payroll for a given period for all employees
  * @param {{startDate:Date, endDate:Date, payroll_frequency_type_id:number}} param0
- * @param {import("@prisma/client").hcm_configuration} hcmConfig
- * @param {number} creator
- * @param {Function} next
+ * @param {import("@prisma/client").hcm_configuration} hcmConfig - This is the configuration object that contains the employer and employee pension
+ * percentage.
+ * @param {number} creator - The user who is running the payroll
+ * @returns An object with two properties: success and message.
  */
 const computeEmployeeSalary = async (
     { startDate, endDate, payroll_frequency_type_id },
@@ -1321,11 +1362,9 @@ const computeEmployeeSalary = async (
                 break;
             }
             if (payrollLocationSettings.length) {
-                const employeeLocation = payrollLocationSettings
-                    .filter(
-                        (element) => element.location_id == orgAss.location_id
-                    )
-                    .shift();
+                const employeeLocation = payrollLocationSettings.find(
+                    (element) => element.location_id == orgAss.location_id
+                );
                 if (!employeeLocation) {
                     skipEmployeePayrollProcessing = true;
                     break;
@@ -1435,15 +1474,15 @@ const computeEmployeeSalary = async (
             //#region calculating basic
             employeeCurentSalaryAmount = 0;
             if (employeePayScales.length && paygradeScales.length) {
-                const employeeScale = employeePayScales.filter(
+                const employeeScale = employeePayScales.find(
                     (element) => element.employee_id === emp.id
-                )[0];
+                );
                 if (employeeScale) {
-                    const paygradeScale = paygradeScales.filter(
+                    const paygradeScale = paygradeScales.find(
                         (element) =>
                             element.paygrade_id === employeePayGrade.id &&
                             element.scale === employeeScale.scale
-                    )[0];
+                    );
                     if (paygradeScale) {
                         employeeCurentSalaryAmount = paygradeScale.amount;
                     }
