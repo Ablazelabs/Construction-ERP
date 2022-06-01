@@ -200,9 +200,10 @@ router.post("/run", async (req, res, next) => {
                 startDate: "string",
                 endDate: "string",
                 payroll_frequency_type_id: "number",
+            },
+            {
                 reprocess: "boolean",
             },
-            {},
             req.body
         );
         reqBody.startDate = new Date(reqBody.startDate);
@@ -231,12 +232,14 @@ router.post("/run", async (req, res, next) => {
             next
         );
         if (!data) {
+            console.error("error");
             return;
         }
+
         res.json(data);
     } catch (e) {
         console.log(e);
-        error("database", "error", next, 500);
+        error("database", "error", next, 500); //database error means internal server error
         return false;
     }
 });

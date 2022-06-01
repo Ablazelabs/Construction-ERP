@@ -100,7 +100,7 @@ const test = async (fiscalYearType, creator, dateTime) => {
 
     console.log(false);
 };
-// test(1, "seed", new Date(2022, 01, 10));
+test(1, "seed", new Date(2022, 01, 01));
 
 const prismaNullFilter = async () => {
     const data = await user.findMany({
@@ -181,4 +181,17 @@ const primsaConnectFailureMessage = async () => {
     console.log(connected);
 };
 
-primsaConnectFailureMessage();
+// primsaConnectFailureMessage();
+
+const { calculateAttendanceTime } = require("./payrollControl");
+
+const employeeTimeCalculator = async () => {
+    const data = await calculateAttendanceTime(
+        new Date("2022/05/01 00:00:00"),
+        new Date("2022/05/05 00:00:00"),
+        2,
+        false
+    );
+    console.log(data);
+};
+// employeeTimeCalculator();

@@ -500,16 +500,21 @@ const datesAreEqual = (date1, date2) => {
 const getEmployeeShiftSchedule = async (date, employeeId) => {
     const shiftAssignment = await shift_assignment.findFirst({
         where: {
-            startDate: {
-                lte: date,
-            },
-            endDate: {
-                gte: date,
-            },
             employee_id: employeeId,
+        },
+        orderBy: {
+            creationDate: "desc",
         },
     });
     if (!shiftAssignment) {
+        console.log({
+            where: {
+                employee_id: employeeId,
+            },
+            orderBy: {
+                creationDate: "desc",
+            },
+        });
         return undefined;
     }
     const shiftSchedules = await shift_schedule_dtl.findMany({
@@ -530,12 +535,17 @@ const getEmployeeShiftSchedule = async (date, employeeId) => {
             return shiftSchedule;
         }
     }
-    //continue from here
 };
 /**
  *
+
+ */
+/**
+ * If the day of the week of the date passed in is the same as the day of the week of the shift
+ * schedule passed in, return true, otherwise return false.
  * @param {Date} date
  * @param {import("@prisma/client").shift_schedule_dtl} shiftSchedule
+ * @returns A boolean value.
  */
 const checkShiftDay = (date, shiftSchedule) => {
     const fDay = date.getDay() + 1;

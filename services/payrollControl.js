@@ -35,6 +35,7 @@ const {
     number_tracker,
     journal_type,
     user,
+    accounting_period,
 } = allModels;
 const {
     getEmployeeShiftSchedule,
@@ -52,7 +53,7 @@ const getLockandRun = async (runOrLock, next) => {
     const payrollPeriod = await payroll_period_autogen.findFirst({
         where: { is_processing_started: true },
     });
-    if (!payrollPeriod) {
+    if (payrollPeriod) {
         error(
             "payroll",
             `You can not ${runOrLock} payroll right now, an already started processing is not completed and it is still running`,
@@ -160,37 +161,78 @@ const postRun = async (
 ) => {
     const hcmConfig = await hcm_configuration.findFirst();
     if (!hcmConfig) {
-        next(
+        error(
             "hcm_configuration",
             "HCM Configuration Must be maintained first",
             next
         );
         return false;
     }
-    const payrollPeriod = await payroll_period_autogen.findFirst({
+    const accPeriod = await accounting_period.findFirst({
         where: {
-            startDate: {
-                gte: startDate,
-                lt: new Date(
-                    new Date(startDate).setDate(startDate.getDate() + 1)
-                ),
-            },
-            endDate: {
-                gte: endDate,
-                lt: new Date(new Date(endDate).setDate(endDate.getDate() + 1)),
-            },
-            payroll_frequency_type_id: payroll_frequency_type_id,
+            accounting_period_status: 1,
+            is_current_posting_period: true,
         },
-        select: {
-            is_payroll_locked: true,
-            is_payroll_posted: true,
-            payroll_frequency_type: true,
-            id: true,
-            is_payroll_processed: true,
-            is_payroll_interfaced_to_FI: true,
-        },
-        orderBy: [{ startDate: "asc" }],
     });
+    console.log({
+        accPeriod,
+        payrollPeriod: await payroll_period_autogen.findFirst({
+            where: {
+                payroll_frequency_type_id: payroll_frequency_type_id,
+                period_id: accPeriod.period_number,
+            },
+            select: {
+                is_payroll_locked: true,
+                is_payroll_posted: true,
+                payroll_frequency_type: true,
+                id: true,
+                is_payroll_processed: true,
+                is_payroll_interfaced_to_FI: true,
+            },
+            orderBy: [{ startDate: "asc" }],
+        }),
+    });
+    const payrollPeriod =
+        (await payroll_period_autogen.findFirst({
+            where: {
+                payroll_frequency_type_id: payroll_frequency_type_id,
+            },
+            select: {
+                is_payroll_locked: true,
+                is_payroll_posted: true,
+                payroll_frequency_type: true,
+                id: true,
+                is_payroll_processed: true,
+                is_payroll_interfaced_to_FI: true,
+            },
+            orderBy: [{ startDate: "asc" }],
+        })) ||
+        (await payroll_period_autogen.create({
+            data: {
+                createdBy: String(creator),
+                endDate: accPeriod.endDate,
+                end_period: accPeriod.period_ending_date,
+                is_payroll_posted: false,
+                is_payroll_processed: false,
+                is_processing_started: false,
+                period_id: `${accPeriod.id}`,
+                revisedBy: String(creator),
+                startDate: new Date(),
+                start_period: accPeriod.period_starting_date,
+                year: accPeriod.period_starting_date.getFullYear(),
+                is_payroll_interfaced_to_FI: false,
+                payroll_frequency_type_id: payroll_frequency_type_id,
+                is_payroll_locked: false,
+            },
+            select: {
+                is_payroll_locked: true,
+                is_payroll_posted: true,
+                payroll_frequency_type: true,
+                id: true,
+                is_payroll_processed: true,
+                is_payroll_interfaced_to_FI: true,
+            },
+        }));
     if (!payrollPeriod) {
         error(
             "payroll_period_autogen",
@@ -233,12 +275,16 @@ const postRun = async (
         }
     }
     if (reprocess || !payrollPeriod.is_payroll_processed) {
-        await processPayroll(
+        //whatever error happens on the process payroll happens here too, the route handler will handle returning nothing if next called
+        return await processPayroll(
             { startDate, endDate, payroll_frequency_type_id },
             payrollPeriod,
-            creator
+            hcmConfig,
+            creator,
+            next
         );
     }
+    return { success: false };
 };
 /**
  *
@@ -347,7 +393,7 @@ const postPost = async (id, creator, next) => {
 const processPostingToGl = async (
     { startDate, endDate, payroll_frequency_type_id },
     creator,
-    hashedUserId,
+    hashedUserId, //String(creator)
     next
 ) => {
     const payrollPeriod = await payroll_period_autogen.findFirst({
@@ -387,7 +433,11 @@ const processPostingToGl = async (
         where: { description: postingRef },
     });
     if (gl) {
-        error("payroll_frequency_id", "Unknown Payroll frequency...", next);
+        error(
+            "payroll_frequency",
+            "payroll has already been posted to general ledger",
+            next
+        );
         return false;
     }
     const prevJsHeaders = await general_journal_header.findMany({
@@ -429,14 +479,13 @@ const processPostingToGl = async (
     return message;
 };
 /**
- * It takes a start date, end date, payroll frequency type id, and a creator, and returns an object
- * with a success property and a message property
  * @param {Date} startDate
  * @param {Date} endDate
  * @param {number} payroll_frequency_type_id
  * @param {number} creator
  * @returns An object with a success property and a message property.
  */
+
 const summarizePayrollAndPostToGl = async (
     startDate,
     endDate,
@@ -603,7 +652,7 @@ const summarizePayrollAndPostToGl = async (
                         );
                         break;
                     }
-                    //#region save payroll summery history
+                    //#region save payroll summary history
                     const {
                         business_unit_id,
                         createdBy,
@@ -1057,11 +1106,6 @@ const summarizePayrollAndPostToGl = async (
     }
 };
 /**
- *
- * @param {{startDate:Date, endDate:Date, payroll_frequency_type_id:number}} param0
- * @param {number} creator
- */
-/**
  * It takes in a startDate, endDate, and payroll_frequency_type_id, and then finds all employees who
  * have a payroll_frequency_type_id that matches the one passed in, and whose startDate is less than or
  * equal to the startDate passed in, and whose endDate is greater than or equal to the endDate passed
@@ -1076,7 +1120,8 @@ const summarizePayrollAndPostToGl = async (
  * the attendance_status is 3.
  *
  * The overtime table is updated by setting the overtime_
- * @param creator - The user who is locking the attendance
+ * @param {{startDate:Date, endDate:Date, payroll_frequency_type_id:number}} param0
+ * @param {number} creator
  * @returns an object with a key of success and a value of true.
  */
 const lockAttendanceOverTime = async (
@@ -1104,9 +1149,7 @@ const lockAttendanceOverTime = async (
     for (let i in employees) {
         const currentEmp = employees[i];
         await employee.update({
-            where: {
-                id: currentEmp.id,
-            },
+            where: { id: currentEmp.id },
             data: {
                 attendance_payroll: {
                     updateMany: {
@@ -1175,24 +1218,19 @@ const lockAttendanceOverTime = async (
     return { success: true };
 };
 /**
- *
+ * It deletes all the payroll_summary, payroll_detail, payroll_log, payroll_processing_log,
+ * employee_back_penality_deduction records and then calls computeEmployeeSalary function.
  * @param {{startDate:Date, endDate:Date, payroll_frequency_type_id:number}} param0
  * @param {import("@prisma/client").payroll_period_autogen} payrollPeriod
  * @param {import("@prisma/client").hcm_configuration} hcmConfig
  * @param {number} creator
  */
-/**
- * It deletes all the payroll_summary, payroll_detail, payroll_log, payroll_processing_log,
- * employee_back_penality_deduction records and then calls computeEmployeeSalary function.
- * @param payrollPeriod
- * @param hcmConfig
- * @param creator
- */
 const processPayroll = async (
     { startDate, endDate, payroll_frequency_type_id },
     payrollPeriod,
     hcmConfig,
-    creator
+    creator,
+    next
 ) => {
     await payroll_period_autogen.update({
         where: {
@@ -1237,6 +1275,12 @@ const processPayroll = async (
         creator,
         next
     );
+    console.log(message);
+    if (!message || !message.success) {
+        error("processing", message.message, next);
+        return false;
+    }
+    /* Updating the payroll_period_autogen table. */
     await payroll_period_autogen.update({
         where: {
             id: payrollPeriod.id,
@@ -1257,7 +1301,8 @@ const processPayroll = async (
 const computeEmployeeSalary = async (
     { startDate, endDate, payroll_frequency_type_id },
     hcmConfig,
-    creator
+    creator,
+    next
 ) => {
     let totalPayrollAmount = 0;
     const employerPension = hcmConfig.employer_pension / 100,
@@ -2253,11 +2298,12 @@ const getTotalOverTimeHour = async (empId, startDate, endDate, hourlyRate) => {
     return { totalHour, totalAmount };
 };
 /**
- *
+ * It calculates the total expected hours and total worked hours of an employee for a given period.
  * @param {Date} startDate
  * @param {Date} endDate
  * @param {number} empId
  * @param {boolean} isApproved
+ * @returns An object with two properties: totalExpectedHours and totalWorkedHours.
  */
 const calculateAttendanceTime = async (
     startDate,
@@ -2277,13 +2323,14 @@ const calculateAttendanceTime = async (
         i.setDate(i.getDate() + 1)
     ) {
         const shiftScheduleDtl = await getEmployeeShiftSchedule(i, empId);
+
         if (!shiftScheduleDtl) continue;
 
         const shiftDayOnOff = getShiftDay(i, shiftScheduleDtl);
         if (!shiftDayOnOff) continue;
 
         const holiday = await checkForHoliday(i);
-        minutesHours = shiftScheduleDtl.min_working_hours;
+        minutesHours = 0;
         const leaveAssignment = await leave_assignment.findFirst({
             where: {
                 employee_id: empId,
@@ -2295,10 +2342,12 @@ const calculateAttendanceTime = async (
                 attendance_abscence_type: true,
             },
         });
+
         if (!holiday) {
             //#region no leave no holiday
             if (!leaveAssignment) {
                 if (shiftDayOnOff == 1) {
+                    console.log("here");
                     tempTotalWorkedHours = await getEmployeeWorkedTime(
                         i,
                         shiftScheduleDtl,
@@ -2308,10 +2357,13 @@ const calculateAttendanceTime = async (
                     tempTotalExpectedHours =
                         shiftScheduleDtl.min_working_hours + minutesHours;
                     totalExpectedHours += tempTotalExpectedHours;
-                    totalWorkedHours += Math.min(
-                        tempTotalWorkedHours,
-                        tempTotalExpectedHours
-                    );
+                    totalWorkedHours +=
+                        tempTotalWorkedHours === -1
+                            ? totalExpectedHours
+                            : Math.min(
+                                  tempTotalWorkedHours,
+                                  tempTotalExpectedHours
+                              );
                 } else {
                     tempTotalWorkedHours =
                         (await getEmployeeWorkedTime(
@@ -2325,10 +2377,13 @@ const calculateAttendanceTime = async (
 
                     totalExpectedHours += tempTotalExpectedHours;
 
-                    totalWorkedHours += Math.min(
-                        tempTotalWorkedHours,
-                        tempTotalExpectedHours
-                    );
+                    totalWorkedHours +=
+                        tempTotalWorkedHours < 0
+                            ? totalExpectedHours
+                            : Math.min(
+                                  tempTotalWorkedHours,
+                                  tempTotalExpectedHours
+                              );
                 }
             }
 
@@ -2355,6 +2410,10 @@ const calculateAttendanceTime = async (
                                     empId,
                                     isApproved
                                 )) / 2;
+                            tempTotalWorkedHours =
+                                tempTotalWorkedHours < 0
+                                    ? tempTotalExpectedHours
+                                    : tempTotalWorkedHours;
                             if (tempTotalWorkedHours > tempTotalExpectedHours) {
                                 totalWorkedHours += tempTotalExpectedHours;
                             } else {
@@ -2385,7 +2444,10 @@ const calculateAttendanceTime = async (
                                     empId,
                                     isApproved
                                 )) / 2;
-
+                            tempTotalWorkedHours =
+                                tempTotalWorkedHours < 0
+                                    ? tempTotalExpectedHours
+                                    : tempTotalWorkedHours;
                             if (tempTotalWorkedHours > tempTotalExpectedHours) {
                                 totalWorkedHours += tempTotalExpectedHours;
                             } else {
@@ -2401,7 +2463,7 @@ const calculateAttendanceTime = async (
             //#endregion
         } else {
             //#region holiday
-            if (holiday.IsHalfDay) {
+            if (holiday.is_half_day) {
                 //half day holiday
                 if (leaveAssignment != null) {
                     //consider unpaid leave, full day work schedule
@@ -2444,7 +2506,7 @@ const calculateAttendanceTime = async (
     return { totalExpectedHours, totalWorkedHours };
 };
 /**
- *
+ * It returns the number of hours worked by an employee on a given date.
  * @param {Date} date
  * @param {import("@prisma/client").shift_schedule_dtl &{
  *          shift_schedule_hdr: import("@prisma/client").shift_schedule_hdr &{
@@ -2477,19 +2539,22 @@ const getEmployeeWorkedTime = async (
             attendance_abscence_type: true,
         },
     });
-    if (!attendances.length) return 0;
+    console.log({ date, attendances });
+    if (!attendances.length) return -1; //sending -1 so that actual hour equals expected hour 👍 (if person comes regularly no need to fill their attendance)
     for (let i in attendances) {
         const attendance = attendances[i];
-        if (attendance.attendance_abscence_type.aa_type == 1) {
-            attendanceHrs += attendance.total_worked_hours;
-        } else {
-            if (attendance.attendance_abscence_type.is_with_pay) {
-                attendanceHrs + attendance.total_worked_hours;
-            } else {
-                absenceHrs += attendance.total_worked_hours;
-            }
-        }
+        attendanceHrs += attendance.total_worked_hours;
+        break;
+        // if (attendance.attendance_abscence_type.aa_type == 1) {
+        // } else {
+        //     if (attendance.attendance_abscence_type.is_with_pay) {
+        //         attendanceHrs += attendance.total_worked_hours;
+        //     } else {
+        //         absenceHrs += attendance.total_worked_hours;
+        //     }
+        // }
     }
+    console.log({ attendanceHrs });
     let targetHrs =
         shiftSchedule.min_working_hours +
         (shiftSchedule.min_working_hours * 60 -
@@ -2518,11 +2583,20 @@ const getEmployeeDepartment = async (empId) => {
             org_assignment: {
                 select: {
                     business_unit_id: true,
+                    creationDate: true,
                 },
             },
         },
+        orderBy: {
+            creationDate: "desc",
+        },
     });
     if (action && action.org_assignment.length) {
+        action.org_assignment.sort(
+            ({ creationDate: a }, { creationDate: b }) =>
+                b.getTime() - a.getTime()
+        );
+
         return action.org_assignment[0].business_unit_id;
     }
     return 0;
@@ -2580,4 +2654,5 @@ module.exports = {
     postPost,
     getEmployeeDepartment,
     groupByFn,
+    calculateAttendanceTime,
 };
