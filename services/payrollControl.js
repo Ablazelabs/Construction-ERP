@@ -1055,22 +1055,24 @@ const summarizePayrollAndPostToGl = async (
                     }
                     for (let i in aggregatedPayrollDtl) {
                         const dtl = aggregatedPayrollDtl[i];
-                        await general_journal_detail.create({
-                            data: {
-                                general_journal_header_id: journalHeader.id,
-                                startDate,
-                                endDate,
-                                createdBy: String(creator),
-                                revisedBy: String(creator),
-                                chart_of_account_id: dtl.account_id,
-                                amount_credit: dtl.AmountCr,
-                                amount_debit: dtl.AmountDr,
-                                debit_or_credit: dtl.AmountDr > 0 ? 2 : 1,
-                                posting_reference: journalDetailNumberTracker
-                                    ? `${journalDetailNumberTracker.prefix}P-${journalDetailNumberTracker.next_number}`
-                                    : "",
-                            },
-                        });
+                        const createdDetail =
+                            await general_journal_detail.create({
+                                data: {
+                                    general_journal_header_id: journalHeader.id,
+                                    startDate,
+                                    endDate,
+                                    createdBy: String(creator),
+                                    revisedBy: String(creator),
+                                    chart_of_account_id: dtl.account_id,
+                                    amount_credit: dtl.AmountCr,
+                                    amount_debit: dtl.AmountDr,
+                                    debit_or_credit: dtl.AmountDr > 0 ? 2 : 1,
+                                    posting_reference:
+                                        journalDetailNumberTracker
+                                            ? `${journalDetailNumberTracker.prefix}P-${journalDetailNumberTracker.next_number}`
+                                            : "",
+                                },
+                            });
                         if (
                             journalDetailNumberTracker &&
                             aggregatedPayrollDtl.length
@@ -1099,13 +1101,14 @@ const summarizePayrollAndPostToGl = async (
                                 startDate: startDate,
                                 posting_date: new Date(),
                                 posting_reference:
-                                    `${
-                                        payrollFreq.payroll_frequency_type
-                                            .payroll_frequency_desc
-                                    }/${startDate.toLocaleDateString()}/${endDate.toLocaleDateString()}` +
-                                    i
-                                        ? i
-                                        : "", //i?i:"", means no two posting refs are the same and also the first one will be without numbers which tells us the payroll period for the current accounting period has been posted!
+                                    createdDetail.posting_reference,
+                                // `${
+                                //     payrollFreq.payroll_frequency_type
+                                //         .payroll_frequency_desc
+                                // }/${startDate.toLocaleDateString()}/${endDate.toLocaleDateString()}` +
+                                // i
+                                //     ? i
+                                //     : "", //i?i:"", means no two posting refs are the same and also the first one will be without numbers which tells us the payroll period for the current accounting period has been posted!
                                 group_posting_reference:
                                     journalHeader.posting_reference, //here will create an error now but, I've changed it to not unique so... itll work in a min
                                 journal_date: journalHeader.journal_date,
