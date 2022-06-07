@@ -100,7 +100,7 @@ const test = async (fiscalYearType, creator, dateTime) => {
 
     console.log(false);
 };
-test(1, "seed", new Date(2022, 01, 01));
+// test(1, "seed", new Date(2022, 01, 01));
 
 const prismaNullFilter = async () => {
     const data = await user.findMany({
@@ -195,3 +195,10 @@ const employeeTimeCalculator = async () => {
     console.log(data);
 };
 // employeeTimeCalculator();
+const add = async () => 1 + 1;
+
+const temp2 = async () => {
+    console.log(await user.findFirst());
+};
+temp2();
+console.log("abebe");

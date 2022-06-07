@@ -131,15 +131,15 @@ router.get(["/lock", "/run"], async (req, res, next) => {
     }
 });
 router.get("/post", async (req, res, next) => {
-    let reqBody = {};
+    // let reqBody = {};
+    // try {
+    //     reqBody = inputFilter({ id: "number" }, {}, req.body);
+    // } catch (e) {
+    //     error(e.key, e.message, next);
+    //     return;
+    // }
     try {
-        reqBody = inputFilter({ id: "number" }, {}, req.body);
-    } catch (e) {
-        error(e.key, e.message, next);
-        return;
-    }
-    try {
-        const data = await getPost(reqBody.id, next);
+        const data = await getPost();
         if (!data) {
             return;
         }
@@ -197,36 +197,20 @@ router.post("/run", async (req, res, next) => {
     try {
         reqBody = inputFilter(
             {
-                startDate: "string",
-                endDate: "string",
-                payroll_frequency_type_id: "number",
+                id: "number",
             },
             {
                 reprocess: "boolean",
             },
             req.body
         );
-        reqBody.startDate = new Date(reqBody.startDate);
-        reqBody.endDate = new Date(reqBody.endDate);
-        if (isNaN(reqBody.startDate.getTime())) {
-            throw {
-                key: "startDate",
-                message: "please send string with format yyyy/mm/dd",
-            };
-        }
-        if (isNaN(reqBody.endDate.getTime())) {
-            throw {
-                key: "endDate",
-                message: "please send string with format yyyy/mm/dd",
-            };
-        }
     } catch (e) {
         error(e.key, e.message, next);
         return;
     }
     try {
         const data = await postRun(
-            reqBody,
+            { payroll_frequency_type_id: reqBody.id },
             res.locals.id,
             reqBody.reprocess,
             next

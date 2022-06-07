@@ -507,14 +507,6 @@ const getEmployeeShiftSchedule = async (date, employeeId) => {
         },
     });
     if (!shiftAssignment) {
-        console.log({
-            where: {
-                employee_id: employeeId,
-            },
-            orderBy: {
-                creationDate: "desc",
-            },
-        });
         return undefined;
     }
     const shiftSchedules = await shift_schedule_dtl.findMany({

@@ -151,10 +151,9 @@ const postLock = async (
  * @param {number} creator - The user who is running the process
  * @param {boolean} reprocess - boolean
  * @param {Function} next - is a function that is used to return an error message to the user.
- * @returns a Promise.
  */
 const postRun = async (
-    { startDate, endDate, payroll_frequency_type_id },
+    { payroll_frequency_type_id },
     creator,
     reprocess,
     next
@@ -174,28 +173,13 @@ const postRun = async (
             is_current_posting_period: true,
         },
     });
-    console.log({
-        accPeriod,
-        payrollPeriod: await payroll_period_autogen.findFirst({
-            where: {
-                payroll_frequency_type_id: payroll_frequency_type_id,
-                period_id: accPeriod.period_number,
-            },
-            select: {
-                is_payroll_locked: true,
-                is_payroll_posted: true,
-                payroll_frequency_type: true,
-                id: true,
-                is_payroll_processed: true,
-                is_payroll_interfaced_to_FI: true,
-            },
-            orderBy: [{ startDate: "asc" }],
-        }),
-    });
+    startDate = accPeriod.period_starting_date;
+    endDate = accPeriod.period_ending_date;
     const payrollPeriod =
         (await payroll_period_autogen.findFirst({
             where: {
                 payroll_frequency_type_id: payroll_frequency_type_id,
+                period_id: `${accPeriod.period_number}`,
             },
             select: {
                 is_payroll_locked: true,
@@ -204,20 +188,22 @@ const postRun = async (
                 id: true,
                 is_payroll_processed: true,
                 is_payroll_interfaced_to_FI: true,
+                end_period: true,
+                start_period: true,
             },
             orderBy: [{ startDate: "asc" }],
         })) ||
         (await payroll_period_autogen.create({
             data: {
                 createdBy: String(creator),
-                endDate: accPeriod.endDate,
+                endDate: accPeriod.period_ending_date,
+                startDate: accPeriod.period_starting_date,
                 end_period: accPeriod.period_ending_date,
                 is_payroll_posted: false,
                 is_payroll_processed: false,
                 is_processing_started: false,
                 period_id: `${accPeriod.id}`,
                 revisedBy: String(creator),
-                startDate: new Date(),
                 start_period: accPeriod.period_starting_date,
                 year: accPeriod.period_starting_date.getFullYear(),
                 is_payroll_interfaced_to_FI: false,
@@ -269,8 +255,7 @@ const postRun = async (
         if (!reprocess) {
             return {
                 success: false,
-                message:
-                    "Payroll is already proccessed, do you want to re-process for the selected period?",
+                message: "Payroll is already proccessed",
             };
         }
     }
@@ -286,28 +271,31 @@ const postRun = async (
     }
     return { success: false };
 };
-/**
- *
- * @param {number} id
- * @param {Function} next express next middleware function
- */
-const getPost = async (id, next) => {
-    const period = await payroll_period_autogen.findFirst({
-        where: { id },
-        include: { payroll_frequency_type: true },
+const getPost = async () => {
+    // const period = await payroll_period_autogen.findFirst({
+    //     where: { id },
+    //     include: { payroll_frequency_type: true },
+    // });
+    // if (!period) {
+    //     error("id", "no payroll period autogen with this id", next);
+    //     return false;
+    // }
+    // if (!period.is_payroll_processed) {
+    //     error("id", "Payroll is not processed for the selected period!", next);
+    //     return false;
+    // } else if (period.is_payroll_posted) {
+    //     error("id", "Payroll is already posted to GL!", next);
+    //     return false;
+    // }
+    return await payroll_period_autogen.findMany({
+        where: {
+            is_payroll_processed: true,
+            is_payroll_posted: false,
+        },
+        include: {
+            payroll_frequency_type: true,
+        },
     });
-    if (!period) {
-        error("id", "no payroll period autogen with this id", next);
-        return false;
-    }
-    if (!period.is_payroll_processed) {
-        error("id", "Payroll is not processed for the selected period!", next);
-        return false;
-    } else if (period.is_payroll_posted) {
-        error("id", "Payroll is already posted to GL!", next);
-        return false;
-    }
-    return period;
 };
 /**
  *
@@ -319,7 +307,7 @@ const getPost = async (id, next) => {
  * If it does exist, it sets a postingUser, and then calls processPostingToGl with the startDate,
  * endDate, payroll_frequency_type_id, creator, postingUser, and next function as arguments. If
  * processPostingToGl returns false, it returns. If processPostingToGl returns an object with a success
- * property
+ * property!
  *
  * returns false if next's called(means error raised)
  *
@@ -376,12 +364,11 @@ const postPost = async (id, creator, next) => {
         return;
     }
     if (!processResult.success) {
-        error("posting", processResult.message);
+        error("posting", processResult.message, next);
         return false;
     } else {
         return processResult;
     }
-    //jumped here processPostingToGl
 };
 /**
  *
@@ -410,21 +397,29 @@ const processPostingToGl = async (
                 lt: new Date(new Date(endDate).setDate(endDate.getDate() + 1)),
             },
         },
+        include: {
+            payroll_frequency_type: true,
+        },
     });
-    if (payrollPeriod) {
-        await payroll_period_autogen.update({
-            where: { id: payrollPeriod.id },
-            data: { is_processing_started: true },
-        });
-    }
-    const payrollFreq = await payroll_period_autogen.findFirst({
-        where: { payroll_frequency_type_id },
-        include: { payroll_frequency_typet: true },
-    });
-    if (!payrollFreq) {
-        error("payroll_frequency_id", "Unknown Payroll frequency...", next);
+    if (!payrollPeriod) {
+        error("payrollPeriod", "something went wrong", next);
         return false;
     }
+
+    await payroll_period_autogen.update({
+        where: { id: payrollPeriod.id },
+        data: { is_processing_started: true },
+    });
+
+    // not necessary we already checked up!👆
+    // const payrollFreq = await payroll_period_autogen.findFirst({
+    //     where: { payroll_frequency_type_id },
+    //     include: { payroll_frequency_type: true },
+    // });
+    // if (!payrollFreq) {
+    //     error("payroll_frequency_id", "Unknown Payroll frequency...", next);
+    //     return false;
+    // }
     const postingRef = `${
         payrollPeriod.payroll_frequency_type.payroll_frequency_desc
     }/${payrollPeriod.startDate.toLocaleDateString()}/${payrollPeriod.endDate.toLocaleDateString()}`;
@@ -442,7 +437,7 @@ const processPostingToGl = async (
     }
     const prevJsHeaders = await general_journal_header.findMany({
         where: { posting_reference: postingRef },
-        select: { id },
+        select: { id: true },
     });
     if (prevJsHeaders.length) {
         await general_journal_detail.deleteMany({
@@ -461,35 +456,39 @@ const processPostingToGl = async (
         });
     }
     //#endregion
+
     const message = await summarizePayrollAndPostToGl(
         startDate,
         endDate,
         payroll_frequency_type_id,
+        payrollPeriod,
         creator
     );
-    if (payrollPeriod) {
-        await payroll_period_autogen.update({
-            where: { id: payrollPeriod.id },
-            data: {
-                is_payroll_interfaced_to_FI: message.success,
-                is_processing_started: false,
-            },
-        });
-    }
+
+    await payroll_period_autogen.update({
+        where: { id: payrollPeriod.id },
+        data: {
+            is_payroll_interfaced_to_FI: message.success,
+            is_payroll_posted: message.success,
+            is_processing_started: false,
+        },
+    });
+
     return message;
 };
 /**
  * @param {Date} startDate
  * @param {Date} endDate
  * @param {number} payroll_frequency_type_id
+ * @param {import("@prisma/client").payroll_period_autogen & {payroll_frequency_type: import("@prisma/client").payroll_frequency_type}} payrollPeriod
  * @param {number} creator
  * @returns An object with a success property and a message property.
  */
-
 const summarizePayrollAndPostToGl = async (
     startDate,
     endDate,
     payroll_frequency_type_id,
+    payrollPeriod,
     creator
 ) => {
     let isPostingProcessHasError = false;
@@ -498,9 +497,32 @@ const summarizePayrollAndPostToGl = async (
     const hcmConfig = await hcm_configuration.findFirst();
     const comp = await company.findFirst();
     let errorMessages = [];
+    if (!comp.currency_id) {
+        errorMessages.push("Please add currency to your company");
+    }
+    let journalDetailNumberTracker = await number_tracker.findFirst({
+        where: {
+            reason: 2,
+        },
+    });
+    if (!journalDetailNumberTracker) {
+        errorMessages.push(
+            "please add number tracker for reason general journal detail"
+        );
+    }
+    let journalHeaderNumberTracker = await number_tracker.findFirst({
+        where: {
+            reason: 1,
+        },
+    });
+    if (!journalHeaderNumberTracker) {
+        errorMessages.push(
+            "please add number tracker with reason general journal header"
+        );
+    }
     try {
-        if (hcmConfig && comp) {
-            //#region
+        if (hcmConfig && comp && !errorMessages.length) {
+            //#region multiple employee accounts from hcm configuration!
             const employeeIncomeControlAccount =
                 await chart_of_account.findUnique({
                     where: {
@@ -572,6 +594,7 @@ const summarizePayrollAndPostToGl = async (
                         payroll_frequency_type: true,
                         business_unit: true,
                         employee: true,
+                        payroll_detail: true,
                     },
                 });
                 for (let i in payrollHdr) {
@@ -738,8 +761,8 @@ const summarizePayrollAndPostToGl = async (
                                     startDate,
                                     status,
                                     description,
-                                    isEarning,
-                                    isEmployerPart,
+                                    is_earning: isEarning,
+                                    is_employer_part: isEmployerPart,
                                     salary_component_id,
                                     total_amount,
                                     payroll_posting_entry_type,
@@ -881,7 +904,7 @@ const summarizePayrollAndPostToGl = async (
                             payrollEntryDouble.DrCr = "Cr";
                             payrollEntryDouble.account_id =
                                 employeerPensionControlAccount.id;
-                            payrollEntryListTemp.Add(payrollEntryDouble);
+                            payrollEntryListTemp.push(payrollEntryDouble);
                         } else {
                             //credit all the rest, at they are liability for the company
                             payrollEntry.AmountCr = dtl.total_amount;
@@ -895,7 +918,7 @@ const summarizePayrollAndPostToGl = async (
                     if (payrollEntryListTemp.length) {
                         if (deduction > earning) {
                             await payroll_summary_history.update({
-                                where: { id: payroll_summary_history },
+                                where: { id: payrollSummaryHistory.id },
                                 data: { is_payroll_posted: false },
                             });
                             errorMessages.push(
@@ -927,6 +950,7 @@ const summarizePayrollAndPostToGl = async (
                 // basically groups arrays with the same keys of first parameter and if specific true returnes the grouped array with the other key(only one length) of added values of the group
                 // [{name:"yared",value:1},{name:"yared",value:1}] changes to [{name:"yared",value:2}] if first param is name and third param is value
                 // this is the best explanation i can do for now! the loop is pretty straight forward from here
+                console.log({ payrollEntryList });
                 const tempGrouped1 = groupByFn(
                     ["account_id", "employee_id", "DrCr"],
                     payrollEntryList,
@@ -946,6 +970,7 @@ const summarizePayrollAndPostToGl = async (
                         ...tempGrouped2[i],
                     });
                 }
+                console.log({ tempGrouped1, tempGrouped2 });
                 if (groupAccDepPayroll.length) {
                     for (let i in groupAccDepPayroll) {
                         aggregatedPayrollDtl.push({
@@ -956,13 +981,10 @@ const summarizePayrollAndPostToGl = async (
                             AmountDr: groupAccDepPayroll[i].AmountDr, //this is the total sum of the group mind u
                         });
                         totalPayrollPostingAmount +=
-                            groupAccDepPayroll[i].AmountCr;
+                            groupAccDepPayroll[i].AmountCr || 0;
                     }
                     //#region SavePayrollDetail
-                    const payrollFreq = await payroll_period_autogen.findFirst({
-                        where: { payroll_frequency_type_id },
-                        include: { payroll_frequency_type: true },
-                    });
+                    const payrollFreq = payrollPeriod;
 
                     let postingRef = "";
 
@@ -971,12 +993,6 @@ const summarizePayrollAndPostToGl = async (
                             payrollFreq.payroll_frequency_type
                                 .payroll_frequency_desc
                         }/${startDate.toLocaleDateString()}/${endDate.toLocaleDateString()}`;
-                    const journalHeaderNumberTracker =
-                        await number_tracker.findFirst({
-                            where: {
-                                reason: 1,
-                            },
-                        });
                     const journalHeader = await general_journal_header.create({
                         data: {
                             currency_id: comp.currency_id,
@@ -992,16 +1008,14 @@ const summarizePayrollAndPostToGl = async (
                             posting_reference: journalHeaderNumberTracker
                                 ? `${journalHeaderNumberTracker.prefix}P-${journalHeaderNumberTracker.next_number}`
                                 : "",
-                            posting_responsible_user_id: Number(
-                                String(num).match(/[0-9]*/)[0]
-                            ),
+                            posting_responsible_user_id: creator,
                             total_amount: totalPayrollPostingAmount,
                             journal_source: 2,
                         },
                     });
                     const journalType = await journal_type.findFirst({
                         where: {
-                            type: "General Jounal",
+                            type: "General Journal",
                         },
                     });
 
@@ -1014,13 +1028,14 @@ const summarizePayrollAndPostToGl = async (
                             },
                         });
                     if (journalHeaderNumberTracker) {
-                        await number_tracker.update({
-                            where: { id: journalHeaderNumberTracker.id },
-                            data: {
-                                next_number: { increment: 1 },
-                                revisedBy: String(creator),
-                            },
-                        });
+                        journalHeaderNumberTracker =
+                            await number_tracker.update({
+                                where: { id: journalHeaderNumberTracker.id },
+                                data: {
+                                    next_number: { increment: 1 },
+                                    revisedBy: String(creator),
+                                },
+                            });
                     }
                     const myUser = await user.findUnique({
                         where: { id: creator },
@@ -1038,13 +1053,6 @@ const summarizePayrollAndPostToGl = async (
                             },
                         });
                     }
-
-                    const journalDetailNumberTracker =
-                        await number_tracker.findFirst({
-                            where: {
-                                reason: 2,
-                            },
-                        });
                     for (let i in aggregatedPayrollDtl) {
                         const dtl = aggregatedPayrollDtl[i];
                         await general_journal_detail.create({
@@ -1067,16 +1075,52 @@ const summarizePayrollAndPostToGl = async (
                             journalDetailNumberTracker &&
                             aggregatedPayrollDtl.length
                         ) {
-                            await number_tracker.update({
-                                where: { id: journalDetailNumberTracker.id },
-                                data: {
-                                    next_number:
-                                        journalDetailNumberTracker.next_number +
-                                        aggregatedPayrollDtl.length,
-                                    revisedBy: String(creator),
-                                },
-                            });
+                            journalDetailNumberTracker =
+                                await number_tracker.update({
+                                    where: {
+                                        id: journalDetailNumberTracker.id,
+                                    },
+                                    data: {
+                                        next_number:
+                                            journalDetailNumberTracker.next_number +
+                                            1,
+                                        // aggregatedPayrollDtl.length,
+                                        revisedBy: String(creator),
+                                    },
+                                });
                         }
+                        //wende ended it all here, I say something must be posted to general ledger yared, going to get more info
+
+                        await general_ledger.create({
+                            data: {
+                                createdBy: String(creator),
+                                revisedBy: String(creator),
+                                endDate: endDate,
+                                startDate: startDate,
+                                posting_date: new Date(),
+                                posting_reference:
+                                    `${
+                                        payrollFreq.payroll_frequency_type
+                                            .payroll_frequency_desc
+                                    }/${startDate.toLocaleDateString()}/${endDate.toLocaleDateString()}` +
+                                    i
+                                        ? i
+                                        : "", //i?i:"", means no two posting refs are the same and also the first one will be without numbers which tells us the payroll period for the current accounting period has been posted!
+                                group_posting_reference:
+                                    journalHeader.posting_reference, //here will create an error now but, I've changed it to not unique so... itll work in a min
+                                journal_date: journalHeader.journal_date,
+                                amount_credit: "idk what to do here yet",
+                                amount_debit: "idk what to do here yet",
+                                chart_of_account_id: dtl.account_id,
+                                currency_id: journalHeader.currency_id,
+                                description: journalHeader.notes,
+                                general_journal_header_id: journalHeader.id,
+                                ledger_status: 1,
+                                // tax_group_id: ,
+                                // tax_id
+                            },
+                        });
+
                         // #endregion
                     }
                     //#endregion
@@ -1091,16 +1135,17 @@ const summarizePayrollAndPostToGl = async (
                 isPostingProcessHasError = true;
             }
         }
-    } catch {
+    } catch (e) {
+        console.log(e);
         errorMessages.push("something went wrong");
         isPostingProcessHasError = true;
     }
     const timeTaken = new Date() - processStartTime;
     if (isPostingProcessHasError) {
-        errorMessages.unshift(
-            `Payroll posting completed with error(${timeTaken}ms taken), please check all encounetered errors below`
-        );
-        return { success: false, message: errorMessages };
+        // errorMessages.unshift(
+        //     `Payroll posting completed with error(${timeTaken}ms taken), please check all encounetered errors below`
+        // );
+        return { success: false, message: errorMessages.shift() };
     } else {
         return { success: true };
     }
@@ -1232,6 +1277,8 @@ const processPayroll = async (
     creator,
     next
 ) => {
+    startDate = payrollPeriod.start_period;
+    endDate = payrollPeriod.end_period;
     await payroll_period_autogen.update({
         where: {
             id: payrollPeriod.id,
@@ -1289,6 +1336,7 @@ const processPayroll = async (
             is_payroll_processed: message.success,
         },
     });
+    return message;
 };
 /**
  * It calculates the payroll for a given period for all employees
@@ -1323,15 +1371,17 @@ const computeEmployeeSalary = async (
                     },
                 },
             },
+            //delete this
+            id: 7,
         },
         select: {
             id: true,
             id_number: true,
             employee_action: {
-                orderBy: { endDate: "asc" },
+                orderBy: { creationDate: "desc" },
                 include: {
                     org_assignment: {
-                        orderBy: { endDate: "desc" },
+                        orderBy: { creationDate: "desc" },
                         include: {
                             job_title: { include: { paygrade: true } },
                             location: true,
@@ -1340,21 +1390,13 @@ const computeEmployeeSalary = async (
                 },
             },
             employee_pay_frequency: {
-                where: {
-                    OR: [
-                        {
-                            startDate: { lte: startDate },
-                            endDate: { gte: startDate },
-                        },
-                        {
-                            startDate: { lte: endDate },
-                            endDate: { gte: endDate },
-                        },
-                    ],
+                orderBy: {
+                    creationDate: "desc",
                 },
             },
         },
     });
+    console.log(employees);
     // const employeeCount = await employee.count();
     // const processingStartTime = new Date();
     for (let i in employees) {
@@ -1365,30 +1407,31 @@ const computeEmployeeSalary = async (
             totalWorkingHoursProrationFactor = 0,
             skipEmployeePayrollProcessing = false;
 
-        let prevActionEndDate = new Date(0),
-            currentActionEndDate = new Date(0),
-            isValidAction = true;
+        // let prevActionEndDate = new Date(0),
+        //     currentActionEndDate = new Date(0),
+        let isValidAction = true;
         let employeePayFrequency;
-        if (actions.length > 1) {
-            for (let i in actions) {
-                const action = action[i];
-                currentActionEndDate = action.endDate;
-                if (i != 0) {
-                    if (currentActionEndDate <= prevActionEndDate) {
-                        isValidAction = false;
-                        break;
-                    }
-                }
-                prevActionEndDate = action.endDate;
-            }
-        }
-        if (isValidAction) {
+        // if (actions.length > 1) {
+        //     for (let i in actions) {
+        //         const action = action[i];
+        //         currentActionEndDate = action.endDate;
+        //         if (i != 0) {
+        //             if (currentActionEndDate <= prevActionEndDate) {
+        //                 isValidAction = false;
+        //                 break;
+        //             }
+        //         }
+        //         prevActionEndDate = action.endDate;
+        //     }
+        // }
+        if (!isValidAction) {
             continue;
         }
         let payrollSummaryData = {};
         let payrollDetails = [];
         for (let i in actions) {
             const action = actions[i];
+            if (i != 0) return;
             let basicPay = 0.0,
                 taxableEarning = 0.0,
                 incomeTax = 0.0,
@@ -1415,6 +1458,7 @@ const computeEmployeeSalary = async (
                     break;
                 }
             }
+            console.log(1);
             //#region check if proration is required
 
             if (!(action.startDate <= startDate && action.endDate >= endDate)) {
@@ -1449,7 +1493,7 @@ const computeEmployeeSalary = async (
             }
 
             //#endregion
-
+            console.log(2);
             //#region check payroll frequency
 
             if (i == 0) {
@@ -1466,27 +1510,28 @@ const computeEmployeeSalary = async (
                 break;
             }
             //#endregion
-
+            console.log(3);
             //#region get employee paygrade info
 
             const employeePayGrade = orgAss.job_title.paygrade;
+            console.log({ employeePayGrade });
             if (!employeePayGrade) {
                 skipEmployeePayrollProcessing = true;
                 break;
             }
 
             //#endregion
-
+            console.log(4);
             //#region get employee department
 
             const empBusUnit = await getEmployeeDepartment(emp.id);
             if (!empBusUnit) {
-                skipEmployeePayrollProcessing = 0;
+                skipEmployeePayrollProcessing = true;
                 break;
             }
 
             //#endregion
-
+            console.log(5);
             //#region calculate total expected/worked hours
 
             const payrollEmployeeTime = await calculateAttendanceTime(
@@ -1495,15 +1540,18 @@ const computeEmployeeSalary = async (
                 emp.id,
                 true
             );
+            console.log({ employeeId: emp.id, payrollEmployeeTime });
             if (
                 payrollEmployeeTime.totalExpectedHours == 0 ||
                 payrollEmployeeTime.totalWorkedHours == 0
             ) {
+                console.log("break here");
                 skipEmployeePayrollProcessing = true;
                 break;
             }
 
             //#endregion
+            console.log(6);
             //#region calculating overtime
             const hourlyRate =
                 employeePayGrade.min_salary /
@@ -1515,7 +1563,7 @@ const computeEmployeeSalary = async (
                 hourlyRate
             );
             //#endregion
-
+            console.log(7);
             //#region calculating basic
             employeeCurentSalaryAmount = 0;
             if (employeePayScales.length && paygradeScales.length) {
@@ -1540,6 +1588,8 @@ const computeEmployeeSalary = async (
 
             if (isProrationRequired) basicPay = basicPay * prorationFactor;
 
+            console.log({ basicPay });
+
             if (
                 payrollEmployeeTime.totalWorkedHours <
                 payrollEmployeeTime.totalExpectedHours
@@ -1551,7 +1601,7 @@ const computeEmployeeSalary = async (
             }
 
             //#endregion
-
+            console.log(8);
             //#region Calculating Earning and Deductions
 
             const earnings = await getEmployeeEarning(
@@ -1583,7 +1633,7 @@ const computeEmployeeSalary = async (
                 basicPay
             );
             //#endregion
-
+            console.log(9);
             //#region saving summary
 
             payrollSummaryData.employee_id = emp.id;
@@ -1591,8 +1641,8 @@ const computeEmployeeSalary = async (
             payrollSummaryData.endDate = endDate;
             payrollSummaryData.payroll_frequency_type_id =
                 payroll_frequency_type_id;
-            payrollSummaryData.expected_working_hrs =
-                payrollSummaryData.expected_working_hrs ||
+            payrollSummaryData.expected_working_hours =
+                payrollSummaryData.expected_working_hours ||
                 0 + payrollEmployeeTime.totalExpectedHours;
             payrollSummaryData.total_worked_hours =
                 payrollSummaryData.total_worked_hours ||
@@ -1611,7 +1661,7 @@ const computeEmployeeSalary = async (
             payrollSummaryData.createdBy = String(creator);
             payrollSummaryData.revisedBy = String(creator);
             //#endregion
-
+            console.log(10);
             //#region Saving Basic Pay and Overtime
             if (payrollSummaryData.total_worked_OT_amount) {
                 let payrollDetail = {};
@@ -1644,7 +1694,7 @@ const computeEmployeeSalary = async (
                 payrollDetail.description = "Employer Pension";
                 payrollDetail.payroll_component = 10;
                 payrollDetail.payroll_posting_entry_type = 4;
-                payrollDetail.isEmployeerPart = true;
+                payrollDetail.isEmployerPart = true;
                 payrollDetail.isEarning = false;
                 payrollDetails.push({ ...payrollDetail });
 
@@ -1662,6 +1712,7 @@ const computeEmployeeSalary = async (
                 totalEmployeeDeductionAmount += payrollDetail.total_amount;
             }
             //#endregion
+            console.log(11);
             //#region Saving Earning
             earnings.forEach((earning) => {
                 if (earning.amount != 0) {
@@ -1703,6 +1754,7 @@ const computeEmployeeSalary = async (
                 }
             });
             //#endregion
+            console.log(12);
             //#region Calculating and Saving Income Tax
             incomeTax = await calcualteIncomeTax(
                 basicPay + taxableEarning + payrollTotalOTWorked.totalAmount
@@ -1720,6 +1772,7 @@ const computeEmployeeSalary = async (
                 totalEmployeeDeductionAmount += incomeTax;
             }
             //#endregion
+            console.log(13);
             //#region Saving Deductions
 
             if (totalAbsentAmount != 0) {
@@ -1770,7 +1823,7 @@ const computeEmployeeSalary = async (
             //#endregion
         }
         if (!skipEmployeePayrollProcessing && payrollDetails.length) {
-            // #region save aggregated payroll summery and detail
+            //#region save aggregated payroll summery and detail
             let createdPayrollSummary = await payroll_summary.create({
                 data: {
                     ...payrollSummaryData,
@@ -1780,7 +1833,7 @@ const computeEmployeeSalary = async (
                     revisedBy: String(creator),
                 },
             });
-            let payrollDetails = groupByFn(
+            payrollDetails = groupByFn(
                 [
                     "description",
                     "isEarning",
@@ -1793,6 +1846,13 @@ const computeEmployeeSalary = async (
                 ["total_amount"],
                 true
             );
+            for (let i in payrollDetails) {
+                payrollDetails[i]["startDate"] = startDate;
+                payrollDetails[i]["endDate"] = endDate;
+                payrollDetails[i].revisedBy = String(creator);
+                payrollDetails[i].createdBy = String(creator);
+                payrollDetails[i].payroll_summary_id = createdPayrollSummary.id;
+            }
             await payroll_detail.createMany({
                 data: payrollDetails,
                 skipDuplicates: true,
@@ -1946,6 +2006,7 @@ const computeEmployeeSalary = async (
             //#endregion
         }
     }
+    console.log({ totalPayrollAmount });
     if (totalPayrollAmount) {
         return { success: true, message: "Payroll sucessfully processed" };
     } else {
@@ -2324,8 +2385,9 @@ const calculateAttendanceTime = async (
     ) {
         const shiftScheduleDtl = await getEmployeeShiftSchedule(i, empId);
 
-        if (!shiftScheduleDtl) continue;
-
+        if (!shiftScheduleDtl) {
+            continue;
+        }
         const shiftDayOnOff = getShiftDay(i, shiftScheduleDtl);
         if (!shiftDayOnOff) continue;
 
@@ -2347,7 +2409,6 @@ const calculateAttendanceTime = async (
             //#region no leave no holiday
             if (!leaveAssignment) {
                 if (shiftDayOnOff == 1) {
-                    console.log("here");
                     tempTotalWorkedHours = await getEmployeeWorkedTime(
                         i,
                         shiftScheduleDtl,
@@ -2359,7 +2420,7 @@ const calculateAttendanceTime = async (
                     totalExpectedHours += tempTotalExpectedHours;
                     totalWorkedHours +=
                         tempTotalWorkedHours === -1
-                            ? totalExpectedHours
+                            ? tempTotalExpectedHours
                             : Math.min(
                                   tempTotalWorkedHours,
                                   tempTotalExpectedHours
@@ -2379,7 +2440,7 @@ const calculateAttendanceTime = async (
 
                     totalWorkedHours +=
                         tempTotalWorkedHours < 0
-                            ? totalExpectedHours
+                            ? tempTotalExpectedHours
                             : Math.min(
                                   tempTotalWorkedHours,
                                   tempTotalExpectedHours
@@ -2539,7 +2600,6 @@ const getEmployeeWorkedTime = async (
             attendance_abscence_type: true,
         },
     });
-    console.log({ date, attendances });
     if (!attendances.length) return -1; //sending -1 so that actual hour equals expected hour 👍 (if person comes regularly no need to fill their attendance)
     for (let i in attendances) {
         const attendance = attendances[i];

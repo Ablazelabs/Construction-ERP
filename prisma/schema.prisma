@@ -1399,6 +1399,10 @@ model chart_of_account {
   purchase_stock_item              stock_item[]                       @relation("purchase_chart")
   inventory_stock_item             stock_item[]                       @relation("inventory_chart")
   opening_balance_account          opening_balance_account[]
+  config_income_tax_payable        hcm_configuration[]                @relation("income_tax_payable")
+  config_employer_tax              hcm_configuration[]                @relation("employer_tax")
+  config_employer_tax_control      hcm_configuration[]                @relation("employer_tax_control")
+  config_employer_pension_account  hcm_configuration[]                @relation("employer_pension_account")
 }
 
 model account_type_financial_statement_section {
@@ -1616,7 +1620,7 @@ model general_ledger {
   amount_debit              Float?
   ledger_status             Int?
   posting_reference         String                      @unique //needs its own implementation  ( sequential string
-  group_posting_reference   String                      @unique //needs its own implementation  ( sequential string
+  group_posting_reference   String
   description               String?
   journal_date              DateTime //this is in the allowed unlocked transaction
   posting_date              DateTime                    @default(now())
@@ -2385,13 +2389,13 @@ model field_of_study {
 model hcm_configuration {
   startDate                   DateTime
   endDate                     DateTime
-  creationDate                DateTime @default(now())
+  creationDate                DateTime          @default(now())
   createdBy                   String
-  revisionDate                DateTime @updatedAt
+  revisionDate                DateTime          @updatedAt
   revisedBy                   String
-  status                      Int      @default(0)
-  isProtectedForEdit          Boolean  @default(false)
-  id                          Int      @id @default(autoincrement())
+  status                      Int               @default(0)
+  isProtectedForEdit          Boolean           @default(false)
+  id                          Int               @id @default(autoincrement())
   income_tax_payable_id       Int?
   employer_tax_id             Int?
   employer_tax_control_id     Int?
@@ -2399,6 +2403,10 @@ model hcm_configuration {
   employer_pension            Float? //[120]
   employee_pension            Float? //[120]
   employee_retirement_age     Int? //[40100]
+  income_tax_payable          chart_of_account? @relation(fields: [income_tax_payable_id], references: [id], name: "income_tax_payable")
+  employer_tax                chart_of_account? @relation(fields: [employer_tax_id], references: [id], name: "employer_tax")
+  employer_tax_control        chart_of_account? @relation(fields: [employer_tax_control_id], references: [id], name: "employer_tax_control")
+  employer_pension_account    chart_of_account? @relation(fields: [employer_pension_account_id], references: [id], name: "employer_pension_account")
 }
 
 model employee_transaction_lock {
