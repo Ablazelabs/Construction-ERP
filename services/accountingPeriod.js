@@ -738,8 +738,8 @@ const processMonthAndYearEndClosing = async (
         });
         let nextPeriodAccountOpeningBalance = {
             opening_balance_date: new Date(
-                accountingPeriod.period_starting_date.getFullYear() + 1,
-                accountingPeriod.period_starting_date.getMonth(),
+                accountingPeriod.period_starting_date.getFullYear(), //the + 1 used to be here
+                accountingPeriod.period_starting_date.getMonth() + 1,
                 accountingPeriod.period_starting_date.getDate()
             ),
             month: accountingPeriod.period_starting_date.getMonth(),

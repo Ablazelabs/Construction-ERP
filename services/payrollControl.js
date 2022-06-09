@@ -1091,7 +1091,7 @@ const summarizePayrollAndPostToGl = async (
                                     },
                                 });
                         }
-                        //wende ended it all here, I say something must be posted to general ledger yared, going to get more info
+                        //wende ended it all here, I say something must be posted to general ledger
 
                         await general_ledger.create({
                             data: {
@@ -1112,8 +1112,8 @@ const summarizePayrollAndPostToGl = async (
                                 group_posting_reference:
                                     journalHeader.posting_reference, //here will create an error now but, I've changed it to not unique so... itll work in a min
                                 journal_date: journalHeader.journal_date,
-                                amount_credit: "idk what to do here yet",
-                                amount_debit: "idk what to do here yet",
+                                amount_credit: dtl.AmountCr,
+                                amount_debit: dtl.AmountDr,
                                 chart_of_account_id: dtl.account_id,
                                 currency_id: journalHeader.currency_id,
                                 description: journalHeader.notes,
