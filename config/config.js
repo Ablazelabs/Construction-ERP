@@ -23,8 +23,25 @@ const sendEmail = async (to, title, subject, body, attachments) => {
     });
     return { success: true };
 };
+/**
+ *   A function that returns a random string.
+ * */
 const randomConcurrencyStamp = () => {
     return "random";
+};
+/**
+ * It takes a string in snake case and returns a string in pascal case
+ * @param {string} str - The string to be converted.
+ * @returns A function that takes a string and returns a string.
+ */
+const snakeToPascal = (str) => {
+    let newStr = str.split("_");
+    newStr = newStr.map((elem) => {
+        elem = elem.split("");
+        elem[0] = elem[0].toUpperCase();
+        return elem.join("");
+    });
+    return newStr.join(" ");
 };
 /**
  *
@@ -47,6 +64,7 @@ module.exports = {
     sendEmail,
     confirmCredential,
     randomConcurrencyStamp,
+    snakeToPascal,
     allModels,
     COMPANY_NAME: "ElHadar-PLC",
     REPORT_BASIS_TITLE: "Accounting Method: ",

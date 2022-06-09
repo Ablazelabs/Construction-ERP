@@ -33,12 +33,10 @@ router.get(
         const operationDataType = req.path.split("/").pop();
         try {
             reqBody = inputFilter(
+                {},
                 {
                     startDate: "string",
                     endDate: "string",
-                    delegated_username: "string",
-                },
-                {
                     employee_id: "number",
                 },
                 req.body

@@ -16,7 +16,7 @@ const postLogic = async (reqBody) => {
     await org_assignment.updateMany({
         where: {
             employee_action: {
-                employee_id: 1,
+                employee_id: reqBody.employee_id,
                 startDate: {
                     gte: reqBody.startDate,
                     lt: new Date(

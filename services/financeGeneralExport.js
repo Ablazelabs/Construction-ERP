@@ -33,6 +33,7 @@ const exporter = async (
     enumerator1,
     enumerator2,
     creator,
+    sort,
     next
 ) => {
     const exportTemplate = await export_template.findUnique({
@@ -112,15 +113,20 @@ const exporter = async (
                 }
             }
         }
+        let creation = {};
+        if (from && to) {
+            creation = {
+                gt: from,
+                lte: to,
+            };
+        }
         const data = await allModels[moduleName].findMany({
             where: {
                 status: 0,
                 ...addedFilter,
-                creationDate: {
-                    gt: from,
-                    lte: to,
-                },
+                creationDate: creation,
             },
+            sort,
             select,
         });
         list = data.map((elem) => {

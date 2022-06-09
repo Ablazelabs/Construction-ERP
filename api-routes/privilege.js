@@ -5,7 +5,7 @@ const inputFilter = require("../validation/inputFilter");
 const { post, get, patch, deleter } = require("../services/privilege");
 router.post("/privilege", async (req, res, next) => {
     try {
-        inputFilter({ action: "string" }, {}, req.body, 4);
+        inputFilter({ action: "string" }, {}, req.body);
         inputFilter({}, { description: "string" }, req.body, 0, 300);
     } catch (e) {
         error(e.key, e.message, next, 400);
@@ -38,7 +38,7 @@ router.get("/privilege", async (req, res, next) => {
         if (req.body.filter) {
             filter = inputFilter(
                 {},
-                { action: "string", description: "string" },
+                { action: "string", description: "string", all: "string" },
                 req.body.filter
             );
         }
@@ -67,7 +67,21 @@ router.get("/privilege", async (req, res, next) => {
     };
     let queryFilter = {};
     for (let i in filter) {
+        if (i === "all") {
+            continue;
+        }
         queryFilter[i] = { contains: filter[i] };
+    }
+    if (filter.all) {
+        queryFilter["OR"] = [];
+        const newFilters = { action: "string", description: "string" };
+        for (let i in newFilters) {
+            if (newFilters[i] === "string") {
+                let temp = {};
+                temp[i] = { contains: filter.all };
+                queryFilter["OR"].push({ ...temp });
+            }
+        }
     }
     let querySort = [];
     for (let i in sort) {
@@ -78,6 +92,7 @@ router.get("/privilege", async (req, res, next) => {
     try {
         res.json(await get(queryFilter, querySort, limit, skip, projection));
     } catch (e) {
+        console.log(e);
         error("database", "error", next, 500);
     }
 });

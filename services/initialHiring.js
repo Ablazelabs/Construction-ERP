@@ -1,11 +1,24 @@
-const { allModels, error } = require("../config/config");
+const { hash } = require("bcrypt");
+const {
+    allModels,
+    error,
+    randomConcurrencyStamp,
+} = require("../config/config");
 const { post: mPost, patch: mPatch } = require("./mostCRUD/mostCRUD");
-const { employee, employee_id_range, vacancy_applicant, attachment } =
-    allModels;
+const {
+    employee,
+    employee_id_range,
+    vacancy_applicant,
+    attachment,
+    user,
+    commitment,
+} = allModels;
 module.exports = async (
     { employeeReqBody, uniqueEmployee },
     { orgAssignmentReqBody, uniqueOrg },
     { employeeActionReqBody, uniqueAction },
+    { employeeCommitmentReqBody, uniqueCommitment },
+    { accountReqBody },
     reqBody,
     creator,
     next
@@ -35,6 +48,9 @@ module.exports = async (
         employeeReqBody.employee_type_id,
         next
     );
+    if (!employeeReqBody.id_number) {
+        return;
+    }
     const empdata = await mPost(
         employeeReqBody,
         "employee",
@@ -97,6 +113,27 @@ module.exports = async (
     if (!actionData) {
         return false;
     }
+    const commitmentMonths = await commitment.findUnique({
+        where: {
+            id: employeeCommitmentReqBody.commitment_type_id,
+        },
+    });
+    if (commitmentMonths) {
+        let endDay = new Date(employeeCommitmentReqBody.startDate);
+        endDay.setMonth(endDay.getMonth() + commitmentMonths.period || 0);
+        employeeCommitmentReqBody.endDate = endDay;
+    }
+    const commitmentData = await mPost(
+        { ...employeeCommitmentReqBody, employee_id: empdata.id },
+        "employee_commitment",
+        creator,
+        uniqueCommitment,
+        next,
+        true
+    );
+    if (!commitmentData) {
+        return false;
+    }
     const orgAss = await mPost(
         { ...orgAssignmentReqBody, employee_action_id: actionData.id },
         "org_assignment",
@@ -104,6 +141,21 @@ module.exports = async (
         uniqueOrg,
         next
     );
+    if (accountReqBody.password) {
+        const empUser = await user.create({
+            data: {
+                code: Number(employeeReqBody.id_number),
+                concurrency_stamp: randomConcurrencyStamp(),
+                password: await hash(accountReqBody.password, 10),
+                email: employeeReqBody.id_number,
+                first_login: true,
+                email_confirmed: true,
+                employee_id: empdata.id,
+                username: accountReqBody.username,
+            },
+        });
+    }
+
     return orgAss;
 };
 

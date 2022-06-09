@@ -18,6 +18,7 @@ const allInputFilters = {
     employee_attachment: {
         description: "string",
         employee_id: "string", //number
+        file_type: "string",
     },
     employee: stringInputFilters,
 };
@@ -290,12 +291,12 @@ router.patch(allRoutes, upload.single("file"), async (req, res, next) => {
             }
         }
         // if date values sent in update data, transform them into a date value, if wrong format detected throw an error
-
         for (let i in dateValues[operationDataType]) {
             const key = dateValues[operationDataType][i];
+            console.log(updateData[key]);
             if (updateData[key]) {
                 updateData[key] = new Date(updateData[key]);
-                if (!updateData[key].getTime()) {
+                if (!(updateData[key].getTime() + 1)) {
                     throw {
                         key: key,
                         message: "please send date in yyyy/mm/dd format",
@@ -334,10 +335,10 @@ router.patch(allRoutes, upload.single("file"), async (req, res, next) => {
         );
         if (fileIsGood) {
             const fileType = req.file.originalname.split(".").pop();
-            const newDestination = `uploads\\${operationDataType}\\${req.file.filename}.${fileType}`;
+            const newDestination = `uploads/${operationDataType}/${req.file.filename}.${fileType}`;
             const fileUrl = `/uploads/${operationDataType}/${req.file.filename}.${fileType}`;
             try {
-                const dir = `uploads\\${operationDataType}`;
+                const dir = `uploads/${operationDataType}`;
                 if (!existsSync(dir)) {
                     mkdirSync(dir);
                 }

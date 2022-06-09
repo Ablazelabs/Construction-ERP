@@ -3,10 +3,13 @@
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
+    "prisma": {
+        "seed": "node prisma/seed.js"
+    },
     "scripts": {
         "test": "mocha",
         "start": "nodemon app.js",
-        "prisma-console": "node .\\services\\prismaConsole.js"
+        "prisma-console": "node ./services/prismaConsole.js"
     },
     "author": "",
     "license": "ISC",

@@ -1,8 +1,14 @@
+const { snakeToPascal } = require("../config/config");
+
 const validator = {
     checkType: (value, type) => {
         if (typeof value != type) {
+            if (type === "string" && typeof value === "number") {
+                return String(value);
+            }
             throw `please send ${type}`;
         }
+        return value;
     },
     checkLength: (value, length, minmax = 1) => {
         if (minmax == 0) {
@@ -31,6 +37,7 @@ const validator = {
         }
     },
 };
+
 /**
  *
  * @param {object} expectedObj givenObj requires this objet's keys(and type also)
@@ -39,6 +46,18 @@ const validator = {
  * @param {number} minLength minimum length of string length in givenObj
  * @param {number} maxLength maximum number of string length in givenObj
  * @returns object
+ */
+
+/**
+ * It takes in an object with keys and values of the expected data type, an object with keys and values
+ * of the optional data type, an object with the data to be validated, a minimum length and a maximum
+ * length. It returns an object with the validated data
+ * @param expectedObj - This is the object that contains the keys that are required.
+ * @param optionalObj - This is the object that contains the keys that are optional.
+ * @param givenObj - the object that is being validated
+ * @param [minLength=0] - minimum length of string or array
+ * @param [maxLength=300] - the maximum length of the string or array
+ * @returns An object with the keys of the givenObj that are in the expectedObj or optionalObj.
  */
 module.exports = (
     expectedObj,
@@ -61,18 +80,18 @@ module.exports = (
     try {
         validator.checkKeys(keys, givenObj);
     } catch (e) {
-        throw { key: e, message: `${e} is empty or wasn't set` };
+        throw { key: e, message: `${snakeToPascal(e)} is empty or wasn't set` };
     }
     for (let i in optionalObj) {
         if (givenObj[i] != undefined && optionalObj[i] != undefined) {
             try {
-                validator.checkType(givenObj[i], optionalObj[i]);
+                givenObj[i] = validator.checkType(givenObj[i], optionalObj[i]);
                 if (optionalObj[i] == "string" || optionalObj[i] == "array") {
                     validator.checkLength(givenObj[i], minLength, 0);
                     validator.checkLength(givenObj[i], maxLength);
                 }
             } catch (e) {
-                throw { key: i, message: `${i} ${e}` };
+                throw { key: i, message: `${snakeToPascal(i)} ${e}` };
             }
         }
     }
@@ -81,13 +100,13 @@ module.exports = (
             continue;
         }
         try {
-            validator.checkType(givenObj[i], expectedObj[i]);
+            givenObj[i] = validator.checkType(givenObj[i], expectedObj[i]);
             if (expectedObj[i] == "string" || expectedObj[i] == "array") {
                 validator.checkLength(givenObj[i], minLength, 0);
                 validator.checkLength(givenObj[i], maxLength);
             }
         } catch (e) {
-            throw { key: i, message: `${i} ${e}` };
+            throw { key: i, message: `${snakeToPascal(i)} ${e}` };
         }
     }
     let returnedObj = {};

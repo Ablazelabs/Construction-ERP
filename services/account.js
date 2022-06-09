@@ -104,7 +104,8 @@ const get = async (queryFilter, querySort, role, limit, skip, projection) => {
                 },
             },
         });
-        data[0].actions = priv?.role?.privileges.map((elem) => elem.action);
+        data[0].actions =
+            priv?.role?.privileges.map((elem) => elem.action) || [];
     }
     return data;
 };

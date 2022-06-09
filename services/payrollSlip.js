@@ -1,3 +1,4 @@
+const { findSync } = require("@prisma/client/runtime");
 const {
     allModels,
     error,
@@ -197,6 +198,7 @@ const getSlip = async (
                 fromDate,
                 toDate
             );
+            require("fs").writeFileSync("./slip.html", constructedHTML);
             stringBuilders.push({
                 html: constructedHTML,
                 EmployeeId: payrollSummary.employee.id_number,
@@ -240,7 +242,9 @@ const constructHTML = (slipHeadDetails, dt, fromDate, toDate) => {
         "Deductions",
     ];
     const keyColumns = ["earnName", "earnValue", "deductName", "deductValue"];
-    let sb = "";
+    let sb = `<div width="100%" style="display: flex; justify-content: center;">
+        <img src="logo.svg" width="100" height="100" style="transform: scale(2);">
+    </div>`;
 
     // #region Generate Slip Header Region
 
@@ -301,7 +305,7 @@ const constructHTML = (slipHeadDetails, dt, fromDate, toDate) => {
     // #endregion
 
     //Generate Invoice (Bill) Items Grid.
-    sb += "<table border = '1'>";
+    sb += `<table border='1' style="border-collapse: collapse; width: 90%; margin-left: 5%;">`;
     sb += "<tr>";
 
     for (let i in columns) {

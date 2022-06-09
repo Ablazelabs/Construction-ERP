@@ -117,6 +117,7 @@ router.get("/account", async (req, res, next) => {
         lockout_enabled: true,
         concurrency_stamp: true,
         role: true,
+        employee: true,
     };
     let role = {};
     if (filter.role) {

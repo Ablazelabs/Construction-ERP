@@ -22,6 +22,7 @@ const {
     phoneValues,
     emailValues,
     allRangeValues,
+    defaultValues,
     allProjections,
     allSorts,
     allFilters,
@@ -51,6 +52,12 @@ router.post(allRoutes, async (req, res, next) => {
     );
     if (!reqBody) {
         return;
+    }
+    for (let i in defaultValues) {
+        if (i === operationDataType) {
+            reqBody = { ...reqBody, ...defaultValues[i] };
+            break;
+        }
     }
     if (operationDataType === "attendance_abscence_type") {
         reqBody = aaTypeFilter(reqBody, next);

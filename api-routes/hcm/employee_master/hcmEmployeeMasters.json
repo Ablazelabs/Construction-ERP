@@ -22,12 +22,12 @@
         "employee_action": {
             "employee_id": "number",
             "action_reason_id": "number",
-            "startDate": "string",
-            "endDate": "string"
+            "startDate": "string"
         },
         "employee_commitment": {
             "commitment_type_id": "number",
-            "employee_id": "number"
+            "employee_id": "number",
+            "startDate": "string"
         },
         "employee_contact": {
             "name": "string",
@@ -55,7 +55,11 @@
             "job_title": "string",
             "employee_id": "number"
         },
-        "leave_assignment": { "employee_id": "number" },
+        "leave_assignment": {
+            "employee_id": "number",
+            "startDate": "string",
+            "endDate": "string"
+        },
         "leave_entitlement": {
             "employee_id": "number",
             "attendance_abscence_type_id": "number"
@@ -70,6 +74,10 @@
         "shift_assignment": {
             "shift_schedule_hdr_id": "number",
             "employee_id": "number"
+        },
+        "announcement": {
+            "date": "string",
+            "title": "string"
         }
     },
     "enums": {
@@ -185,17 +193,15 @@
         "leave_assignment": {
             "is_half_day": "boolean",
             "leave_assignment_type": "number",
-            "leave_request_status": "number",
-            "action_date": "string",
             "delegated_user_name": "string",
-            "attendance_abscence_type_id": "number"
+            "attendance_abscence_type_id": "number",
+            "user_id": "object"
         },
         "leave_entitlement": {},
         "leave_transfer": {
             "from_year": "number",
             "to_year": "number",
             "number_of_days": "number",
-            "leave_request_status": "number",
             "action_date": "string",
             "delegated_user_name": "string"
         },
@@ -211,7 +217,24 @@
             "employee_action_id": "number"
         },
         "service_allowance_pay": { "employee_id": "number" },
-        "shift_assignment": {}
+        "shift_assignment": {},
+        "announcement": {
+            "start_timme": "string",
+            "end_time": "string",
+            "description": "string",
+            "all_employees": "boolean",
+            "business_unit_id": "object",
+            "job_title_id": "object",
+            "employee_id": "object"
+        }
+    },
+    "defaultValues": {
+        "leave_assignment": {
+            "leave_request_status": 1
+        },
+        "leave_transfer": {
+            "leave_request_status": 1
+        }
     },
     "allRangeValues": {
         "employee_id_range": {
@@ -290,7 +313,7 @@
         ],
         "employee_action": ["startDate", "endDate"],
         "employee_attachment": [],
-        "employee_commitment": [],
+        "employee_commitment": ["startDate"],
         "employee_contact": [],
         "employee_id_range": [],
         "employee_loan_repayment": [],
@@ -298,13 +321,14 @@
         "employee_paygrade": [],
         "employee_salary_component": [],
         "experience": [],
-        "leave_assignment": ["action_date"],
+        "leave_assignment": ["startDate", "endDate"],
         "leave_entitlement": [],
         "leave_transfer": ["action_date"],
         "license": ["issued_date", "expiry_date"],
         "org_assignment": [],
         "service_allowance_pay": [],
-        "shift_assignment": []
+        "shift_assignment": [],
+        "announcement": ["date", "start_timme", "end_time"]
     },
     "allProjections": {
         "address": {
@@ -377,7 +401,17 @@
             "language": true,
             "title": true,
             "religion": true,
-            "employee_type": true
+            "employee_type": true,
+            "address": true,
+            "employee_action": {
+                "include": {
+                    "org_assignment": {
+                        "select": {
+                            "job_title": true
+                        }
+                    }
+                }
+            }
         },
         "employee_action": {
             "id": true,
@@ -390,7 +424,8 @@
             "id": true,
             "description": true,
             "path": true,
-            "employee": true
+            "employee": true,
+            "file_type": true
         },
         "employee_commitment": {
             "id": true,
@@ -493,6 +528,18 @@
             "id": true,
             "shift_schedule_hdr": true,
             "employee": true
+        },
+        "announcement": {
+            "id": true,
+            "date": true,
+            "start_timme": true,
+            "end_time": true,
+            "description": true,
+            "title": true,
+            "all_employees": true,
+            "business_unit": true,
+            "job_title": true,
+            "employees": true
         }
     },
     "allFilters": {
@@ -541,7 +588,7 @@
         },
         "employee": {
             "id": "number",
-            "id_number": "number",
+            "id_number": "string",
             "first_name": "string",
             "middle_name": "string",
             "last_name": "string",
@@ -571,7 +618,8 @@
         "employee_attachment": {
             "id": "number",
             "description": "string",
-            "employee_id": "number"
+            "employee_id": "number",
+            "file_type": "string"
         },
         "employee_commitment": {
             "id": "number",
@@ -675,6 +723,12 @@
             "id": "number",
             "shift_schedule_hdr_id": "number",
             "employee_id": "number"
+        },
+        "announcement": {
+            "id": "number",
+            "description": "string",
+            "title": "string",
+            "all_employees": "boolean"
         }
     },
     "allSorts": {
@@ -761,7 +815,8 @@
             "id": "number",
             "description": "number",
             "path": "number",
-            "employee_id": "number"
+            "employee_id": "number",
+            "file_type": "number"
         },
         "employee_commitment": {
             "id": "number",
@@ -868,6 +923,15 @@
             "id": "number",
             "shift_schedule_hdr_id": "number",
             "employee_id": "number"
+        },
+        "announcement": {
+            "id": "number",
+            "date": "number",
+            "start_timme": "number",
+            "end_time": "number",
+            "description": "number",
+            "title": "number",
+            "all_employees": "number"
         }
     },
     "allRoutes": [
@@ -893,7 +957,8 @@
         "/license",
         "/org_assignment",
         "/service_allowance_pay",
-        "/shift_assignment"
+        "/shift_assignment",
+        "/announcement"
     ],
     "allPostRoutes": [
         "/address",
@@ -915,7 +980,8 @@
         "/license",
         "/org_assignment",
         "/service_allowance_pay",
-        "/shift_assignment"
+        "/shift_assignment",
+        "/announcement"
     ],
     "uniqueValues": {
         "address": [],
@@ -940,6 +1006,7 @@
         "license": [],
         "org_assignment": [],
         "service_allowance_pay": [],
-        "shift_assignment": []
+        "shift_assignment": [],
+        "announcement": []
     }
 }

@@ -1,7 +1,7 @@
 const { allModels } = require("../config/config");
 
 const { accounting_period, user, project } = allModels;
-
+const prisma = allModels;
 const test = async (fiscalYearType, creator, dateTime) => {
     let accountingPeriods = [];
     let fiscalYearStartMonth = 0;
@@ -100,7 +100,7 @@ const test = async (fiscalYearType, creator, dateTime) => {
 
     console.log(false);
 };
-// test(1, "seed", new Date(2022, 01, 10));
+// test(1, "seed", new Date(2022, 01, 01));
 
 const prismaNullFilter = async () => {
     const data = await user.findMany({
@@ -136,4 +136,69 @@ const projectIdSetter = async () => {
         });
     }
 };
-projectIdSetter();
+// projectIdSetter();
+
+const prismaIntegratedFn = async () => {
+    const a = new Date();
+    await user.findFirst({
+        where: { roleId: { not: null } },
+        include: { role: true },
+    });
+    console.log("taken time - ", 1, " - ", new Date() - a);
+};
+
+// const promiseAll = async () => {
+//     const data = await Promise.all([
+//         user.update({ where: { id: 1 }, data: { username: "yolo" } }),
+//         user.update({ where: { id: 1 }, data: { normalized_username: 4 } }),
+//     ]);
+//     console.table(data);
+// };
+
+const dropProjects = async () => {
+    await allModels.daily_work_log.deleteMany();
+};
+
+const primsaConnectFailureMessage = async () => {
+    const role = await prisma.role.findFirst();
+    if (!role) {
+        console.log("no role!");
+        return;
+    }
+    console.log(role);
+    const connected = await prisma.role.update({
+        where: {
+            id: role.id,
+        },
+        data: {
+            description: "this role should stay deleted",
+            privileges: {
+                connect: 1,
+            },
+        },
+    });
+    //for some reason this doesn't work! figure it out later
+    console.log(connected);
+};
+
+// primsaConnectFailureMessage();
+
+const { calculateAttendanceTime } = require("./payrollControl");
+
+const employeeTimeCalculator = async () => {
+    const data = await calculateAttendanceTime(
+        new Date("2022/05/01 00:00:00"),
+        new Date("2022/05/05 00:00:00"),
+        2,
+        false
+    );
+    console.log(data);
+};
+// employeeTimeCalculator();
+const add = async () => 1 + 1;
+
+const temp2 = async () => {
+    console.log(await user.findFirst());
+};
+temp2();
+console.log("abebe");

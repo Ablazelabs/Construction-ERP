@@ -34,7 +34,11 @@ module.exports = (reqBody, next) => {
                     reqBody
                 );
             } catch (e) {
-                error(e.key, "is required if absence is with quota", next);
+                error(
+                    e.key,
+                    e.key + " is required if absence is with quota",
+                    next
+                );
                 return false;
             }
         } else {
@@ -62,5 +66,6 @@ module.exports = (reqBody, next) => {
     } else {
         delete newReqBody.number_of_increment_each_year;
     }
+    newReqBody.worked_time = reqBody.worked_time;
     return newReqBody;
 };

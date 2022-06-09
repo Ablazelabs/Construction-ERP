@@ -1,6 +1,6 @@
 const inputFilter = require("./inputFilter");
 const validation = require("./validation");
-const { error } = require("../config/config");
+const { error, snakeToPascal, allModels } = require("../config/config");
 const auditLogProjection = {
     startDate: true,
     endDate: true,
@@ -75,8 +75,7 @@ const returnReqBody = (
                 ...requiredInputFilter,
             },
             { isProtectedForEdit: "boolean", ...optionalInputFilter },
-            reqBody,
-            1
+            reqBody
         );
         if (!reqBody.startDate) {
             reqBody.startDate = new Date();
@@ -92,7 +91,9 @@ const returnReqBody = (
             if (!reqBody[dateValue[i]].getTime()) {
                 throw {
                     key: dateValue[i],
-                    message: "please send date in yyyy/mm/dd format",
+                    message: `${snakeToPascal(
+                        dateValue[i]
+                    )} please send date in yyyy/mm/dd format`,
                 };
             }
         }
@@ -105,7 +106,9 @@ const returnReqBody = (
                 if (reqBody[key] < 1 || reqBody[key] > myArray.length) {
                     throw {
                         key,
-                        message: `please send a number between 1 and ${
+                        message: `${snakeToPascal(
+                            key
+                        )} please send a number between 1 and ${
                             myArray.length
                         }, as it identifies the following ${String(myArray)}`,
                     };
@@ -123,7 +126,11 @@ const returnReqBody = (
             continue;
         }
         if (reqBody[i] < rangeValues[i][0] || reqBody[i] > rangeValues[i][1]) {
-            error(i, `must be in range ${rangeValues[i]}`, next);
+            error(
+                i,
+                `${snakeToPascal(i)} must be in range ${rangeValues[i]}`,
+                next
+            );
             return false;
         }
     }
@@ -151,6 +158,14 @@ const returnReqBody = (
     }
     return reqBody;
 };
+/**
+ * It takes in a request body, a set of filters, sorts, and projections, and returns a query filter,
+ * query sort, limit, skip, and projection
+ * @param reqBody - The request body
+ * @param next - is the next function in the middleware chain
+ * @returns An object with the following properties:
+ * queryFilter, querySort, limit, skip, projection
+ */
 const returnGetData = (reqBody, { filters, sorts, projections }, next) => {
     let filter = {};
     let sort = {};
@@ -218,6 +233,13 @@ const returnGetData = (reqBody, { filters, sorts, projections }, next) => {
     }
     return { queryFilter, querySort, limit, skip, projection };
 };
+/**
+ * It takes in a request body, a set of filters, and a next function, and returns an object containing
+ * the filtered data and a projection of that data
+ * @param reqBody - the request body
+ * @param next - is the next function in the middleware chain
+ * @returns An object with two properties: updateData and updateDataProjection.
+ */
 const returnPatchData = (
     reqBody,
     {
@@ -254,7 +276,9 @@ const returnPatchData = (
                 if (!updateData[key].getTime()) {
                     throw {
                         key: key,
-                        message: "please send date in yyyy/mm/dd format",
+                        message: `${snakeToPascal(
+                            key
+                        )} please send date in yyyy/mm/dd format`,
                     };
                 }
             }
@@ -268,7 +292,9 @@ const returnPatchData = (
                 if (updateData[key] < 1 || updateData[key] > myArray.length) {
                     throw {
                         key,
-                        message: `please send a number between 1 and ${
+                        message: `${snakeToPascal(
+                            key
+                        )} please send a number between 1 and ${
                             myArray.length
                         }, as it identifies the following ${String(myArray)}`,
                     };
@@ -285,7 +311,11 @@ const returnPatchData = (
                 updateData[i] < rangeValues[i][0] ||
                 updateData[i] > rangeValues[i][1]
             ) {
-                error(i, `must be in range ${rangeValues[i]}`, next);
+                error(
+                    i,
+                    `${snakeToPascal(i)} must be in range ${rangeValues[i]}`,
+                    next
+                );
                 return false;
             }
         }
@@ -316,6 +346,7 @@ const returnPatchData = (
     }
     return { updateData, updateDataProjection };
 };
+
 module.exports = {
     returnReqBody,
     returnGetData,

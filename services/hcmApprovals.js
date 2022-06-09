@@ -1,3 +1,4 @@
+const { stringify } = require("yamljs");
 const { error, allModels } = require("../config/config");
 const {
     getLeaveBalance,
@@ -97,22 +98,20 @@ const transferApproval = async (leaveList, creator, next) => {
  *
  * @param {{startDate:Date, endDate:Date, employee_id:number, delegated_username:string}} param0
  */
-const getLeaveTransfer = async ({
-    startDate,
-    endDate,
-    employee_id,
-    delegated_username: delegated_user_name,
-}) => {
+const getLeaveTransfer = async ({ endDate, employee_id }) => {
     let employeeFilter = {};
     if (employee_id) {
         employeeFilter.employee_id = employee_id;
+    }
+    let endDateFilter = {};
+    if (endDate) {
+        endDateFilter = { lte: endDate };
     }
     return await leave_transfer.findMany({
         where: {
-            delegated_user_name,
-            creationDate: {
-                gte: startDate,
-                lte: endDate,
+            startDate: {
+                gte: new Date(),
+                ...endDateFilter,
             },
             ...employeeFilter,
             OR: [{ leave_request_status: 1 }, { leave_request_status: 4 }],
@@ -126,33 +125,26 @@ const getLeaveTransfer = async ({
  *
  * @param {{startDate:Date, endDate:Date, employee_id:number, delegated_username:string}} param0
  */
-const getLeaveAssignment = async ({
-    startDate,
-    endDate,
-    employee_id,
-    delegated_username: delegated_user_name,
-}) => {
+const getLeaveAssignment = async ({ endDate, employee_id }) => {
     let employeeFilter = {};
     if (employee_id) {
         employeeFilter.employee_id = employee_id;
     }
+    let endDateFilter = {};
+    if (endDate) {
+        endDateFilter = { lte: endDate };
+    }
     return await leave_assignment.findMany({
         where: {
-            delegated_user_name,
-            creationDate: {
-                gte: startDate,
-                lte: endDate,
+            startDate: {
+                gte: new Date(),
+                ...endDateFilter,
             },
             ...employeeFilter,
             OR: [{ leave_request_status: 1 }, { leave_request_status: 4 }],
         },
         include: {
-            attendance_abscence_type: {
-                select: {
-                    is_absence_includes_day_off: true,
-                    aa_description: true,
-                },
-            },
+            attendance_abscence_type: true,
             employee: true,
         },
     });
@@ -161,19 +153,13 @@ const getLeaveAssignment = async ({
  *
  * @param {{startDate:Date, endDate:Date, employee_id:number, delegated_username:string}} param0
  */
-const getAttendance = async ({
-    startDate,
-    endDate,
-    employee_id,
-    delegated_username,
-}) => {
+const getAttendance = async ({ startDate, endDate, employee_id }) => {
     let employeeFilter = {};
     if (employee_id) {
         employeeFilter.employee_id = employee_id;
     }
     return await attendance_payroll.findMany({
         where: {
-            delegated_username,
             date: {
                 gte: startDate,
                 lte: endDate,
@@ -191,22 +177,20 @@ const getAttendance = async ({
  *
  * @param {{startDate:Date, endDate:Date, employee_id:number, delegated_username:string}} param0
  */
-const getLeavePlan = async ({
-    startDate,
-    endDate,
-    employee_id,
-    delegated_username,
-}) => {
+const getLeavePlan = async ({ endDate, employee_id }) => {
     let employeeFilter = {};
     if (employee_id) {
         employeeFilter.employee_id = employee_id;
     }
+    let endDateFilter = {};
+    if (endDate) {
+        endDateFilter = { lte: endDate };
+    }
     return await leave_plan.findMany({
         where: {
-            delegated_username,
-            creationDate: {
-                gte: startDate,
-                lte: endDate,
+            startDate: {
+                gte: new Date(),
+                ...endDateFilter,
             },
             ...employeeFilter,
             OR: [{ leave_request_status: 1 }, { leave_request_status: 4 }],
@@ -220,19 +204,13 @@ const getLeavePlan = async ({
  *
  * @param {{startDate:Date, endDate:Date, employee_id:number, delegated_username:string}} param0
  */
-const getOvertime = async ({
-    startDate,
-    endDate,
-    employee_id,
-    delegated_username,
-}) => {
+const getOvertime = async ({ startDate, endDate, employee_id }) => {
     let employeeFilter = {};
     if (employee_id) {
         employeeFilter.employee_id = employee_id;
     }
     return await overtime.findMany({
         where: {
-            delegated_username,
             OR: [{ overtime_status: 1 }, { overtime_status: 4 }],
             date: {
                 gte: startDate,
@@ -302,6 +280,13 @@ const overtimeApproval = async (leaveList, creator, next) => {
  * @param {number} creator
  * @param {Function} next
  */
+/**
+ * It updates the status of a leave request to either approved or rejected
+ * @param leaveList - [{id: 1, approve: true}, {id: 2, approve: false}]
+ * @param creator - {
+ * @param next - is a function that is called when an error occurs
+ * @returns an object with a property called success.
+ */
 const assignmentApproval = async (leaveList, creator, next) => {
     const leavePeriod = await leave_period.findFirst({ where: { status: 0 } });
     if (!leavePeriod) {
@@ -369,7 +354,7 @@ const assignmentApproval = async (leaveList, creator, next) => {
                 leaveAssignment.employee_id,
                 leaveType.id,
                 new Date(
-                    `${leaveAssignment.from_year}/${
+                    `${leaveAssignment.startDate.getFullYear()}/${
                         leavePeriod.startDate.getMonth() + 1
                     }/${leavePeriod.startDate.getDate()}`
                 ),
@@ -429,6 +414,69 @@ const assignmentApproval = async (leaveList, creator, next) => {
             next
         );
         if (result == false) return;
+        if (leaveList[i].approve) {
+            const leaveAss = await leave_assignment.findUnique({
+                where: { id: leaveList[i].id },
+                include: { attendance_abscence_type: true },
+            });
+            for (
+                let date = new Date(leaveAss.startDate);
+                date <= leaveAss.endDate.getDate() &&
+                date <= leaveAss.endDate.getMonth();
+                date.setDate(date.getDate() + 1)
+            ) {
+                let prevAttendance = await attendance_payroll.findFirst({
+                    where: {
+                        employee_id: leaveAss.employee_id,
+                        date: {
+                            gte: new Date(
+                                date.getFullYear(),
+                                date.getMonth(),
+                                date.getDate()
+                            ),
+                            lt: new Date(
+                                date.getFullYear(),
+                                date.getMonth(),
+                                date.getDate() + 1
+                            ),
+                        },
+                    },
+                });
+                if (prevAttendance) {
+                    await attendance_payroll.update({
+                        where: {
+                            id: prevAttendance.id,
+                        },
+                        data: {
+                            revisedBy: String(creator),
+                            status: 0,
+                            attendance_abscence_type_id:
+                                leaveAss.attendance_abscence_type_id,
+                            total_worked_hours:
+                                leaveAss.attendance_abscence_type.worked_time,
+                            delegated_username: String(creator),
+                        },
+                    });
+                } else {
+                    await attendance_payroll.create({
+                        data: {
+                            startDate: new Date(),
+                            endDate: new Date("9999/12/31"),
+                            createdBy: String(creator),
+                            revisedBy: String(creator),
+                            employee_id: leaveAss.employee_id,
+                            date,
+                            total_worked_hours:
+                                leaveAss.attendance_abscence_type.worked_time,
+                            attendance_status: 3,
+                            attendance_abscence_type_id:
+                                leaveAss.attendance_abscence_type_id,
+                            delegated_username: String(creator),
+                        },
+                    });
+                }
+            }
+        }
         success = true;
     }
     return { success };
@@ -536,7 +584,7 @@ const planApproval = async (leaveList, creator, next) => {
                 if (prevLeaveAssignment) {
                     error(
                         "leave_assignment",
-                        "Overlapping leave assignment record exist, please change the date and try again at row " +
+                        "Overlapping leave assignment record exists, please change the date and try again at row " +
                             i,
                         next
                     );

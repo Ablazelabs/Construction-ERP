@@ -88,7 +88,7 @@ const fileRequired = {
 const allowedFileTypes = {
     discipline_attachment: ["pdf"],
 };
-const allRoutes = ["/discipline_attachment"];
+const allRoutes = "/discipline";
 
 const multer = require("multer");
 

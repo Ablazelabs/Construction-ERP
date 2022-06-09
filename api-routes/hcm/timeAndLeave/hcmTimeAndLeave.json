@@ -44,7 +44,9 @@
         }
     },
     "allRangeValues": {
-        "attendance_abscence_type": {},
+        "attendance_abscence_type": {
+            "worked_time": [0, 24]
+        },
         "attendance_captured": {},
         "attendance_payroll": {},
         "device_id_mapping": {},
@@ -106,7 +108,8 @@
             "is_regular_attendance": "boolean",
             "number_of_days": "number",
             "number_of_increment_each_year": "number",
-            "is_absence_includes_day_off": "boolean"
+            "is_absence_includes_day_off": "boolean",
+            "worked_time": "number"
         },
         "attendance_captured": {
             "in_out_mode": "number",
@@ -114,7 +117,6 @@
         },
         "attendance_payroll": {
             "total_worked_hours": "number",
-            "attendance_status": "number",
             "action_date": "string",
             "delegated_username": "string",
             "attendance_abscence_type_id": "number"
@@ -124,7 +126,6 @@
         "holiday_calendar": { "is_half_day": "boolean" },
         "leave_period": {},
         "leave_plan": {
-            "leave_request_status": "number",
             "action_date": "string",
             "delegated_username": "string"
         },
@@ -154,6 +155,14 @@
         },
         "shift_schedule_hdr": {},
         "sub_shift_group": { "tolerance_minutes": "number" }
+    },
+    "defaultValues": {
+        "attendance_payroll": {
+            "attendance_status": 1
+        },
+        "leave_plan": {
+            "leave_request_status": 1
+        }
     },
     "enums": {
         "attendance_abscence_type": {
@@ -240,7 +249,8 @@
             "is_regular_attendance": true,
             "number_of_days": true,
             "number_of_increment_each_year": true,
-            "is_absence_includes_day_off": true
+            "is_absence_includes_day_off": true,
+            "worked_time": true
         },
         "attendance_captured": {
             "id": true,
@@ -351,7 +361,8 @@
             "is_regular_attendance": "boolean",
             "number_of_days": "number",
             "number_of_increment_each_year": "number",
-            "is_absence_includes_day_off": "boolean"
+            "is_absence_includes_day_off": "boolean",
+            "worked_time": "number"
         },
         "attendance_captured": {
             "id": "number",
@@ -459,7 +470,8 @@
             "is_regular_attendance": "number",
             "number_of_days": "number",
             "number_of_increment_each_year": "number",
-            "is_absence_includes_day_off": "number"
+            "is_absence_includes_day_off": "number",
+            "worked_time": "number"
         },
         "attendance_captured": {
             "id": "number",

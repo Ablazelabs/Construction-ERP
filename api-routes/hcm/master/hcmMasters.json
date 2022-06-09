@@ -16,7 +16,7 @@
         },
         "action_type": {},
         "address_type": { "type_name": "string" },
-        "commitment": { "type_name": "string" },
+        "commitment": { "type_name": "string", "period": "number" },
         "custom_report": { "query_name": "string", "query": "string" },
         "discipline_case_type": { "case_description": "string" },
         "duration_measure": { "measure": "string" },
@@ -84,6 +84,9 @@
             "employer_pension": [1, 20],
             "employee_pension": [1, 20],
             "employee_retirement_age": [40, 100]
+        },
+        "commitment": {
+            "period": [1, 100000000]
         }
     },
     "phoneValues": {
@@ -203,7 +206,7 @@
             "employee_status": true
         },
         "address_type": { "id": true, "type_name": true },
-        "commitment": { "id": true, "type_name": true },
+        "commitment": { "id": true, "type_name": true, "period": true },
         "custom_report": { "id": true, "query_name": true, "query": true },
         "discipline_case_type": { "id": true, "case_description": true },
         "duration_measure": { "id": true, "measure": true },
@@ -264,7 +267,11 @@
             "employee_status": "number"
         },
         "address_type": { "id": "number", "type_name": "string" },
-        "commitment": { "id": "number", "type_name": "string" },
+        "commitment": {
+            "id": "number",
+            "type_name": "string",
+            "period": "number"
+        },
         "custom_report": {
             "id": "number",
             "query_name": "string",
@@ -335,7 +342,11 @@
             "employee_status": "number"
         },
         "address_type": { "id": "number", "type_name": "number" },
-        "commitment": { "id": "number", "type_name": "number" },
+        "commitment": {
+            "id": "number",
+            "type_name": "number",
+            "period": "number"
+        },
         "custom_report": {
             "id": "number",
             "query_name": "number",
@@ -395,7 +406,7 @@
         "/training_type"
     ],
     "uniqueValues": {
-        "currency": ["currency_code", "symbol"],
+        "currency": ["currency_code"],
         "country": ["country_code"],
         "title": ["name"],
         "language": ["name"],

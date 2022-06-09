@@ -94,7 +94,10 @@ const patch = async (
         select: { ...updateDataProjection, isProtectedForEdit: true },
         where: { id: reqBody.id },
     });
-    if (updateDataProjection["path"] || updateDataProjection["photo"]) {
+    if (
+        (updateDataProjection["path"] || updateDataProjection["photo"]) &&
+        (myModel["path"] || myModel["photo"])
+    ) {
         const fileUrl = myModel["path"] || myModel["photo"];
         const fullFileName = fileUrl.split("/").pop();
         try {

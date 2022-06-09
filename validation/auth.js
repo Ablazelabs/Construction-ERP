@@ -3,6 +3,13 @@ const { verify } = require("jsonwebtoken");
 const { error, allModels } = require("../config/config");
 const { user } = allModels;
 const authorization = {
+    /**
+     *
+     * @param {number} userId
+     * @param {string} privilege
+     * @param {Function} next
+     * @desc calls error if user isn't authenticated
+     */
     userHasPrivilege: async (userId, privilege, next) => {
         const myUser = await user.findFirst({
             where: {
@@ -22,12 +29,12 @@ const authorization = {
             },
         });
         if (!myUser) {
-            error("id", "user doesn't have privilege", next, 403);
+            error("id", "you don't have enough privileges", next, 403);
             return false;
         }
         return true;
-        //calls error if user isn't authenticated
     },
+    /* Checking if the user has the privilege to update the user. */
     userHasPrivilegeOver: async (userId, secondUserId, previlage, next) => {
         if (userId == secondUserId) {
             return true;
@@ -55,7 +62,7 @@ const authorization = {
             },
         });
         if (!myUser) {
-            error("id", "user doesn't have privilege", next, 403);
+            error("id", "you don't have enough privileges", next, 403);
             return false;
         }
         if (myUser.role.privileges.find(({ action }) => action === "super")) {
@@ -86,7 +93,30 @@ const authorization = {
             return true;
         }
     },
-    isUserSuper: async (id) => {},
+    /* Checking if the user is a super user. */
+    isUserSuper: async (id) => {
+        const myUser = await user.findFirst({
+            where: {
+                id,
+                role: {
+                    privileges: { some: { action: "super" } },
+                },
+            },
+            select: {
+                role: {
+                    select: {
+                        privileges: {
+                            select: { action: true },
+                        },
+                    },
+                },
+            },
+        });
+        return Boolean(myUser);
+    },
+    /**
+     * make a readable code!
+     */
     authenticate: async (req, res, next) => {
         const requestRoute = req.path.split("/").pop();
         const requestPath = req.path;
@@ -135,13 +165,24 @@ const authorization = {
             ? "hcm"
             : requestPath.match("finance")
             ? "finance"
-            : requestPath.match("project")
+            : requestPath.match(/project|client/)
             ? "project"
             : requestPath.match(/role|privilege/)
             ? "admin"
             : requestRoute == "account" && method === "POST"
             ? "admin"
             : "*";
+        const additionalPrivileges =
+            PRIVILEGE_TYPE === "hcm" ||
+            PRIVILEGE_TYPE === "finance" ||
+            PRIVILEGE_TYPE === "project"
+                ? [
+                      (requestPath.match("validation") ||
+                          requestPath.match("dashboard") ||
+                          requestPath.match("master")) &&
+                          `${PRIVILEGE_TYPE}_manager`,
+                  ].filter((elem) => elem)
+                : [];
         if (
             requestRoute == "account" &&
             (method == "PATCH" || method == "DELETE")
@@ -159,7 +200,7 @@ const authorization = {
                 return;
             }
         } else {
-            if (requestRoute === "account") {
+            if (requestRoute === "account" || method === "GET") {
                 next();
                 return;
             }
@@ -171,6 +212,18 @@ const authorization = {
                 ))
             )
                 return;
+            if (additionalPrivileges.length) {
+                for (let i in additionalPrivileges) {
+                    if (
+                        !(await authorization.userHasPrivilege(
+                            payLoad.id,
+                            additionalPrivileges[i],
+                            next
+                        ))
+                    )
+                        return;
+                }
+            }
         }
         next();
     },

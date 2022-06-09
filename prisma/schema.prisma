@@ -18,29 +18,35 @@ model refresh_tokens {
 }
 
 model user {
-  id                     Int                      @id @default(autoincrement())
+  id                     Int       @id @default(autoincrement())
   username               String?
   normalized_username    String?
-  email                  String?                  @unique
+  email                  String?   @unique
   password               String
-  email_confirmed        Boolean?                 @default(false)
+  email_confirmed        Boolean?  @default(false)
   security_stamp         String?
   concurrency_stamp      String
-  phone_number           String?                  @unique
+  phone_number           String?   @unique
   phone_number_confirmed Boolean?
   lockout_end            DateTime?
-  two_factor_enabled     Boolean?                 @default(false)
+  two_factor_enabled     Boolean?  @default(false)
   lockout_enabled        Boolean?
-  access_failed_count    Int                      @default(0)
+  access_failed_count    Int       @default(0)
   first_login            Boolean?
   code                   Int
-  role                   role?                    @relation(fields: [roleId], references: [id])
+  role                   role?     @relation(fields: [roleId], references: [id])
   roleId                 Int?
-  deleted_status         Int                      @default(0)
+  deleted_status         Int       @default(0)
+  employee_id            Int?
+  employee               employee? @relation(fields: [employee_id], references: [id])
+
   refresh_tokens         refresh_tokens[]
   journal_users          journal_users[]
   general_journal_header general_journal_header[]
   journal_comment        journal_comment[]
+  project_edit_request   project_edit_request[]
+  leave_assignment       leave_assignment?        @relation(fields: [leave_assignmentId], references: [id])
+  leave_assignmentId     Int?
 }
 
 model privilege {
@@ -265,17 +271,26 @@ model documentation {
   required_document    required_document[]
 }
 
+model project_edit_request {
+  id              Int      @id @default(autoincrement())
+  requester_id    Int
+  requester       user     @relation(fields: [requester_id], references: [id])
+  approval_status Int      @default(1)
+  requested_date  DateTime @default(now())
+  project_id      Int
+  project         project  @relation(fields: [project_id], references: [id])
+}
+
 model project {
-  id                           Int                            @id @default(autoincrement())
-  name                         String
-  project_manager              String
-  project_start_date           DateTime
-  project_end_date             DateTime
-  project_description          String?
-  project_id                   String                         @unique
-  contract_number              String
-  site_engineer                String
-  dupty_manager                String
+  id   Int    @id @default(autoincrement())
+  name String
+
+  project_start_date  DateTime
+  project_end_date    DateTime
+  project_description String?
+  project_id          String   @unique
+  contract_number     String
+
   project_address              String
   client                       Client                         @relation(fields: [client_id], references: [id])
   client_id                    Int
@@ -287,6 +302,12 @@ model project {
   revisedBy                    String
   status                       Int                            @default(0)
   isProtectedForEdit           Boolean                        @default(false)
+  site_engineer_id             Int                            @default(1)
+  project_manager_id           Int                            @default(1)
+  dupty_manager_id             Int                            @default(1)
+  site_engineer                employee                       @relation(fields: [site_engineer_id], references: [id], name: "site_engineer")
+  dupty_manager                employee                       @relation(fields: [dupty_manager_id], references: [id], name: "dupty_manager")
+  project_manager              employee                       @relation(fields: [project_manager_id], references: [id], name: "project_manager")
   daily_work_log               daily_work_log[]
   instruction_given_on_project instruction_given_on_project[]
   manpower_requirement         manpower_requirement[]
@@ -304,6 +325,9 @@ model project {
   crv_payment                  crv_payment[]
   request_payment              request_payment[]
   petty_cash                   petty_cash[]
+  project_request              project_request[]
+  project_edit_request         project_edit_request[]
+  daily_report                 daily_report[]
 }
 
 model daily_work_log {
@@ -329,6 +353,7 @@ model daily_work_log {
   project                     project                       @relation(fields: [project_id], references: [id])
   project_id                  Int
   work_log_and_branch_of_work work_log_and_branch_of_work[]
+  todos                       todos[]
 }
 
 model instruction_given_on_project {
@@ -351,7 +376,7 @@ model instruction_given_on_project {
 }
 
 model manpower_requirement {
-  id                          Int      @id @default(autoincrement())
+  id                          Int           @id @default(autoincrement())
   number_of_planned_man_power Int
   number_of_actual_man_power  Int?
   food_expense                Float
@@ -360,22 +385,25 @@ model manpower_requirement {
   transportation              Float
   total_expense               Float
   remark                      String?
+  // approval_status             Int           @default(1)
   manpower_id                 Int
   project_id                  Int
+  task_manager_id             Int?
   startDate                   DateTime
   endDate                     DateTime
-  creationDate                DateTime @default(now())
+  creationDate                DateTime      @default(now())
   createdBy                   String
-  revisionDate                DateTime @updatedAt
+  revisionDate                DateTime      @updatedAt
   revisedBy                   String
-  status                      Int      @default(0)
-  isProtectedForEdit          Boolean  @default(false)
-  manpower                    manpower @relation(fields: [manpower_id], references: [id])
-  project                     project  @relation(fields: [project_id], references: [id])
+  status                      Int           @default(0)
+  isProtectedForEdit          Boolean       @default(false)
+  manpower                    manpower      @relation(fields: [manpower_id], references: [id])
+  project                     project       @relation(fields: [project_id], references: [id])
+  task_manager                task_manager? @relation(fields: [task_manager_id], references: [id])
 }
 
 model required_equipment {
-  id                       Int       @id @default(autoincrement())
+  id                       Int           @id @default(autoincrement())
   planned_equipment_number Int
   actual_equipment_number  Int?
   equipment_lifetime       String
@@ -384,22 +412,25 @@ model required_equipment {
   transportation           Float
   total_expense            Float
   remark                   String?
+  // approval_status          Int           @default(1)
   equipment_id             Int
+  task_manager_id          Int?
   project_id               Int
   startDate                DateTime
   endDate                  DateTime
-  creationDate             DateTime  @default(now())
+  creationDate             DateTime      @default(now())
   createdBy                String
-  revisionDate             DateTime  @updatedAt
+  revisionDate             DateTime      @updatedAt
   revisedBy                String
-  status                   Int       @default(0)
-  isProtectedForEdit       Boolean   @default(false)
-  equipment                equipment @relation(fields: [equipment_id], references: [id])
-  project                  project   @relation(fields: [project_id], references: [id])
+  status                   Int           @default(0)
+  isProtectedForEdit       Boolean       @default(false)
+  equipment                equipment     @relation(fields: [equipment_id], references: [id])
+  project                  project       @relation(fields: [project_id], references: [id])
+  task_manager             task_manager? @relation(fields: [task_manager_id], references: [id])
 }
 
 model required_material {
-  id                     Int       @id @default(autoincrement())
+  id                     Int           @id @default(autoincrement())
   planned_quantity       Float
   planned_unit_price     Float
   planned_total_amount   Float
@@ -408,19 +439,22 @@ model required_material {
   delivered_total_amount Float?
   total_expense          Float?
   remark                 String?
+  // approval_status        Int           @default(1)
   delivery_date          DateTime?
   material_id            Int
   project_id             Int
+  task_manager_id        Int?
   startDate              DateTime
   endDate                DateTime
-  creationDate           DateTime  @default(now())
+  creationDate           DateTime      @default(now())
   createdBy              String
-  revisionDate           DateTime  @updatedAt
+  revisionDate           DateTime      @updatedAt
   revisedBy              String
-  status                 Int       @default(0)
-  isProtectedForEdit     Boolean   @default(false)
-  material               material  @relation(fields: [material_id], references: [id])
-  project                project   @relation(fields: [project_id], references: [id])
+  status                 Int           @default(0)
+  isProtectedForEdit     Boolean       @default(false)
+  material               material      @relation(fields: [material_id], references: [id])
+  project                project       @relation(fields: [project_id], references: [id])
+  task_manager           task_manager? @relation(fields: [task_manager_id], references: [id])
 }
 
 model risk_tracking {
@@ -446,24 +480,33 @@ model risk_tracking {
 }
 
 model task_manager {
-  id                 Int        @id @default(autoincrement())
+  id                 Int       @id @default(autoincrement())
   name               String
   description        String?
-  task_start_date    String
-  task_end_date      String?
+  task_start_date    DateTime
+  task_end_date      DateTime?
   duration_in_days   String
   working_days       String
   project_id         Int
   startDate          DateTime
   endDate            DateTime
-  creationDate       DateTime   @default(now())
+  creationDate       DateTime  @default(now())
   createdBy          String
-  revisionDate       DateTime   @updatedAt
+  revisionDate       DateTime  @updatedAt
   revisedBy          String
-  status             Int        @default(0)
-  isProtectedForEdit Boolean    @default(false)
-  project            project    @relation(fields: [project_id], references: [id])
-  sub_task           sub_task[]
+  status             Int       @default(0)
+  isProtectedForEdit Boolean   @default(false)
+  progress           Float     @default(0)
+
+  prerequisites task_manager[] @relation("dependency", references: [id])
+  dependents    task_manager[] @relation("dependency", references: [id])
+
+  project              project                @relation(fields: [project_id], references: [id])
+  sub_task             sub_task[]
+  manpower_requirement manpower_requirement[]
+  required_equipment   required_equipment[]
+  required_material    required_material[]
+
 }
 
 model sub_task {
@@ -481,9 +524,17 @@ model sub_task {
   createdBy          String
   revisionDate       DateTime     @updatedAt
   revisedBy          String
+  // dependency_id      Int?
+  // dependency         sub_task?    @relation(fields: [dependency_id], references: [id], name: "dependency")
   status             Int          @default(0)
   isProtectedForEdit Boolean      @default(false)
   task_manager       task_manager @relation(fields: [task_manager_id], references: [id])
+  // sub_task           sub_task[]   @relation("dependency")3
+  prerequisites      sub_task[]   @relation("sub_task_dependency", references: [id], map: "dependents")
+  dependents         sub_task[]   @relation("sub_task_dependency", references: [id], map: "prerequisites")
+  progress           Float        @default(0)
+
+  todos todos[]
 }
 
 model simple_task {
@@ -549,10 +600,6 @@ model weather_data {
 }
 
 model todos {
-  id                 Int      @id @default(autoincrement())
-  notes              String
-  name               String
-  date               String
   startDate          DateTime
   endDate            DateTime
   creationDate       DateTime @default(now())
@@ -561,10 +608,27 @@ model todos {
   revisedBy          String
   status             Int      @default(0)
   isProtectedForEdit Boolean  @default(false)
-  project_id         Int
-  priority_id        Int
-  project            project  @relation(fields: [project_id], references: [id])
-  priority           priority @relation(fields: [priority_id], references: [id])
+
+  id    Int     @id @default(autoincrement())
+  notes String?
+  name  String
+
+  completed Boolean @default(false)
+
+  // date               String
+
+  project_id        Int?
+  priority_id       Int?
+  sub_task_id       Int?
+  daily_work_log_id Int?
+  daily_report_id   Int?
+
+  sub_task       sub_task?       @relation(fields: [sub_task_id], references: [id])
+  project        project?        @relation(fields: [project_id], references: [id])
+  priority       priority?       @relation(fields: [priority_id], references: [id])
+  daily_work_log daily_work_log? @relation(fields: [daily_work_log_id], references: [id])
+  daily_report   daily_report?   @relation(fields: [daily_report_id], references: [id])
+
 }
 
 model request {
@@ -577,6 +641,7 @@ model request {
   date_requested      DateTime
   date_required       DateTime?
   date_responded      DateTime?
+  approval_status     Int       @default(1)
   notes               String
   project_id          Int
   priority_id         Int
@@ -590,6 +655,79 @@ model request {
   isProtectedForEdit  Boolean   @default(false)
   project             project   @relation(fields: [project_id], references: [id])
   priority            priority  @relation(fields: [priority_id], references: [id])
+}
+
+model project_request {
+  id                  Int                   @id @default(autoincrement())
+  request_type        Int //[payment,manpower,store],
+  priority            Int //[high,mid,low],
+  total_amount        Float?
+  vat_amount          Float?
+  sub_total           Float?
+  prepared_by_id      Int
+  checked_by_id       Int?
+  approved_by_id      Int?
+  approval_status     Int //[pending, approved, denied]
+  requested_date      DateTime              @default(now())
+  action_taken_date   DateTime?
+  status              Int                   @default(0)
+  creationDate        DateTime              @default(now())
+  createdBy           String
+  revisionDate        DateTime              @updatedAt
+  revisedBy           String
+  project_id          Int
+  action_note         String?
+  invoice             String?               @db.VarChar(3000) //i intend to use arrays
+  remark              String?               @db.VarChar(1000)
+  prepared_by         employee              @relation(fields: [prepared_by_id], references: [id], name: "project_request_prepared_by")
+  checked_by          employee?             @relation(fields: [checked_by_id], references: [id], name: "project_request_checked_by")
+  approved_by         employee?             @relation(fields: [approved_by_id], references: [id], name: "project_request_approved_by")
+  project             project               @relation(fields: [project_id], references: [id])
+  individual_requests individual_requests[]
+  isProtectedForEdit  Boolean               @default(false)
+}
+
+model daily_report {
+  id                        Int      @id @default(autoincrement())
+  date                      DateTime
+  activities_performed      String   @db.VarChar(1200)
+  material_delivered        String?  @db.VarChar(1200)
+  available_machine_on_site String?  @db.VarChar(1200)
+  problem_encountered       String?  @db.VarChar(1200)
+  no_of_labours             String?  @db.VarChar(1200)
+  remark                    String?  @db.VarChar(1000)
+  project_id                Int
+  employee_id               Int
+  todos                     todos[]
+  startDate                 DateTime
+  endDate                   DateTime
+  status                    Int      @default(0)
+  creationDate              DateTime @default(now())
+  createdBy                 String
+  revisionDate              DateTime @updatedAt
+  revisedBy                 String
+  isProtectedForEdit        Boolean  @default(false)
+  project                   project  @relation(fields: [project_id], references: [id])
+  employee                  employee @relation(fields: [employee_id], references: [id])
+}
+
+model individual_requests {
+  id                 Int             @id @default(autoincrement())
+  persons            String?
+  description        String?
+  returnable         Boolean?
+  return_date        DateTime? //greater than now
+  quantity           Int
+  quantity_type      String?
+  unit_rate          Float?
+  vat                Boolean?
+  status             Int             @default(0)
+  project_request_id Int
+  creationDate       DateTime        @default(now())
+  createdBy          String
+  revisionDate       DateTime        @updatedAt
+  revisedBy          String
+  project_request    project_request @relation(fields: [project_request_id], references: [id])
 }
 
 model invoice_tracking {
@@ -625,6 +763,7 @@ model required_document {
   received           String?
   received_date      DateTime?
   location           String
+  // approval_status    Int           @default(1)
   documentation_id   Int
   project_id         Int
   project            project       @relation(fields: [project_id], references: [id])
@@ -1207,45 +1346,45 @@ model export_template {
 }
 
 model chart_of_account {
-  startDate                        DateTime
-  endDate                          DateTime
-  creationDate                     DateTime                           @default(now())
-  createdBy                        String
-  revisionDate                     DateTime                           @updatedAt
-  revisedBy                        String
-  status                           Int                                @default(0)
-  isProtectedForEdit               Boolean                            @default(false)
-  id                               Int                                @id @default(autoincrement())
-  account_name                     String
-  account_code                     String                             @unique
-  account_number                   String?
-  is_active                        Boolean?
-  description                      String?
-  add_to_dashboard_watch_list      Boolean?
-  attachment_path                  Int?
-  is_sub_account                   Boolean?
-  is_default                       Boolean?
-  is_employee_account              Boolean?
-  has_opening_balance              Boolean?
-  is_bank_account                  Boolean?
-  parent_account_id                Int?
-  head_account_id                  Int?
-  currency_id                      Int?
-  account_type_id                  Int
-  account_type                     account_type                       @relation(fields: [account_type_id], references: [id])
-  currency                         currency?                          @relation(fields: [currency_id], references: [id])
-  parent_account                   chart_of_account?                  @relation(name: "parent_account", fields: [parent_account_id], references: [id])
-  head_account                     chart_of_account?                  @relation(name: "head_account", fields: [head_account_id], references: [id])
+  startDate                   DateTime
+  endDate                     DateTime
+  creationDate                DateTime               @default(now())
+  createdBy                   String
+  revisionDate                DateTime               @updatedAt
+  revisedBy                   String
+  status                      Int                    @default(0)
+  isProtectedForEdit          Boolean                @default(false)
+  id                          Int                    @id @default(autoincrement())
+  account_name                String
+  account_code                String                 @unique
+  account_number              String?
+  is_active                   Boolean?
+  description                 String?
+  add_to_dashboard_watch_list Boolean?
+  attachment_path             Int?
+  is_sub_account              Boolean?
+  is_default                  Boolean?
+  is_employee_account         Boolean?
+  has_opening_balance         Boolean?
+  is_bank_account             Boolean?
+  parent_account_id           Int?
+  head_account_id             Int?
+  currency_id                 Int?
+  account_type_id             Int
+  account_type                account_type           @relation(fields: [account_type_id], references: [id])
+  currency                    currency?              @relation(fields: [currency_id], references: [id])
+  parent_account              chart_of_account?      @relation(name: "parent_account", fields: [parent_account_id], references: [id])
+  head_account                chart_of_account?      @relation(name: "head_account", fields: [head_account_id], references: [id])
   //needs account_type
   //needs currency
   //needs chart_of_account
-  parent_accounts                  chart_of_account[]                 @relation("parent_account")
-  head_accounts                    chart_of_account[]                 @relation("head_account")
-  contact                          contact[]
-  cost_center_accounts             cost_center_accounts[]
-  tax_debits                       tax[]                              @relation("chart_of_account_debit")
-  tax_credits                      tax[]                              @relation("chart_of_account_credit")
-  // tax_chart_of_account        tax_chart_of_account[]
+  parent_accounts             chart_of_account[]     @relation("parent_account")
+  head_accounts               chart_of_account[]     @relation("head_account")
+  contact                     contact[]
+  cost_center_accounts        cost_center_accounts[]
+  tax_debits                  tax[]                  @relation("chart_of_account_debit")
+  tax_credits                 tax[]                  @relation("chart_of_account_credit")
+
   bank_reconcilation               bank_reconcilation[]
   chart_of_account_files           chart_of_account_files[]
   budget_account                   budget_account[]
@@ -1260,6 +1399,10 @@ model chart_of_account {
   purchase_stock_item              stock_item[]                       @relation("purchase_chart")
   inventory_stock_item             stock_item[]                       @relation("inventory_chart")
   opening_balance_account          opening_balance_account[]
+  config_income_tax_payable        hcm_configuration[]                @relation("income_tax_payable")
+  config_employer_tax              hcm_configuration[]                @relation("employer_tax")
+  config_employer_tax_control      hcm_configuration[]                @relation("employer_tax_control")
+  config_employer_pension_account  hcm_configuration[]                @relation("employer_pension_account")
 }
 
 model account_type_financial_statement_section {
@@ -1456,10 +1599,7 @@ model general_journal_header {
   currency                     currency                   @relation(fields: [currency_id], references: [id])
   posting_responsible_user     user                       @relation(fields: [posting_responsible_user_id], references: [id])
 
-  //needs journal_type
-  //needs recurring_general_journal
-  //needs currency
-  //needs user
+
   general_ledger         general_ledger[]
   journal_comment        journal_comment[]
   general_journal_detail general_journal_detail[]
@@ -1480,7 +1620,7 @@ model general_ledger {
   amount_debit              Float?
   ledger_status             Int?
   posting_reference         String                      @unique //needs its own implementation  ( sequential string
-  group_posting_reference   String                      @unique //needs its own implementation  ( sequential string
+  group_posting_reference   String
   description               String?
   journal_date              DateTime //this is in the allowed unlocked transaction
   posting_date              DateTime                    @default(now())
@@ -1695,7 +1835,7 @@ model request_payment {
   date                    DateTime
   amount                  Float?
   request_type            Int?
-  approval_status         Int?
+  approval_status         Int                   @default(1)
   description             String?
   check_number            String?
   remaining_balance       Int?
@@ -2024,7 +2164,7 @@ model currency {
   currency_code           String                    @unique
   currency_description    String
   name                    String
-  symbol                  String                    @unique
+  symbol                  String
   price_precision         Int?
   currency_format         Int?
   is_base_currency        Boolean
@@ -2154,6 +2294,7 @@ model commitment {
   isProtectedForEdit  Boolean               @default(false)
   id                  Int                   @id @default(autoincrement())
   type_name           String                @unique
+  period              Float?
   //needs no one
   employee_commitment employee_commitment[]
 }
@@ -2248,13 +2389,13 @@ model field_of_study {
 model hcm_configuration {
   startDate                   DateTime
   endDate                     DateTime
-  creationDate                DateTime @default(now())
+  creationDate                DateTime          @default(now())
   createdBy                   String
-  revisionDate                DateTime @updatedAt
+  revisionDate                DateTime          @updatedAt
   revisedBy                   String
-  status                      Int      @default(0)
-  isProtectedForEdit          Boolean  @default(false)
-  id                          Int      @id @default(autoincrement())
+  status                      Int               @default(0)
+  isProtectedForEdit          Boolean           @default(false)
+  id                          Int               @id @default(autoincrement())
   income_tax_payable_id       Int?
   employer_tax_id             Int?
   employer_tax_control_id     Int?
@@ -2262,6 +2403,10 @@ model hcm_configuration {
   employer_pension            Float? //[120]
   employee_pension            Float? //[120]
   employee_retirement_age     Int? //[40100]
+  income_tax_payable          chart_of_account? @relation(fields: [income_tax_payable_id], references: [id], name: "income_tax_payable")
+  employer_tax                chart_of_account? @relation(fields: [employer_tax_id], references: [id], name: "employer_tax")
+  employer_tax_control        chart_of_account? @relation(fields: [employer_tax_control_id], references: [id], name: "employer_tax_control")
+  employer_pension_account    chart_of_account? @relation(fields: [employer_pension_account_id], references: [id], name: "employer_pension_account")
 }
 
 model employee_transaction_lock {
@@ -2539,6 +2684,15 @@ model employee {
   request_payment_checked_by       request_payment[]                  @relation("checked_by_req_pay")
   request_payment_approved_by      request_payment[]                  @relation("approved_by_req_pay")
   petty_cash                       petty_cash[]
+  engineered_sites                 project[]                          @relation("site_engineer")
+  managed_dupties                  project[]                          @relation("dupty_manager")
+  managed_proects                  project[]                          @relation("project_manager")
+  prepared_project_request         project_request[]                  @relation("project_request_prepared_by")
+  checked_project_request          project_request[]                  @relation("project_request_checked_by")
+  approved_project_request         project_request[]                  @relation("project_request_approved_by")
+  daily_report                     daily_report[]
+  user                             user[]
+  announcements                    announcement[]
 }
 
 model employee_action {
@@ -2551,7 +2705,7 @@ model employee_action {
   status             Int              @default(0)
   isProtectedForEdit Boolean          @default(false)
   id                 Int              @id @default(autoincrement())
-  employee_status    Int?
+  employee_status    Int?             @default(1)
   attachment_id      Int?
   employee_id        Int
   action_reason_id   Int
@@ -2575,6 +2729,7 @@ model employee_attachment {
   path               String?
   employee_id        Int
   employee           employee @relation(fields: [employee_id], references: [id])
+  file_type          String?
 }
 
 model employee_commitment {
@@ -2735,6 +2890,7 @@ model leave_assignment {
   attendance_abscence_type_id Int?
   employee                    employee                  @relation(fields: [employee_id], references: [id])
   attendance_abscence_type    attendance_abscence_type? @relation(fields: [attendance_abscence_type_id], references: [id])
+  users                       user[]
 }
 
 model leave_entitlement {
@@ -2871,6 +3027,7 @@ model business_unit {
   payroll_summary                  payroll_summary[]
   payroll_summary_history          payroll_summary_history[]
   salary_component_account_mapping salary_component_account_mapping[]
+  announcement                     announcement[]
 }
 
 model location {
@@ -2920,6 +3077,7 @@ model job_title {
   org_assignment       org_assignment[]
   job_safety_equipment job_safety_equipment[]
   vacancy              vacancy[]
+  announcement         announcement[]
 }
 
 model job_category {
@@ -2981,6 +3139,8 @@ model company {
   country_id         Int?
   currency_id        Int?
   logo               String? //needs file handling
+  header             String? //needs file handling
+  footer             String? //needs file handling
   country            country?  @relation(fields: [country_id], references: [id])
   currency           currency? @relation(fields: [currency_id], references: [id])
 }
@@ -3722,9 +3882,11 @@ model attendance_abscence_type {
   number_of_days                Int?
   number_of_increment_each_year Float?
   is_absence_includes_day_off   Boolean?
+  working_time                  Float?
   leave_assignment              leave_assignment[]
   leave_entitlement             leave_entitlement[]
   attendance_payroll            attendance_payroll[]
+  worked_time                   Int?
 }
 
 model shift_schedule_hdr {
@@ -3846,6 +4008,27 @@ model holiday_calendar {
   is_half_day        Boolean?
   holiday_id         Int      @unique
   holiday            holiday  @relation(fields: [holiday_id], references: [id])
+}
+
+model announcement {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime        @default(now())
+  createdBy          String
+  revisionDate       DateTime        @updatedAt
+  revisedBy          String
+  status             Int             @default(0)
+  isProtectedForEdit Boolean         @default(false)
+  id                 Int             @id @default(autoincrement())
+  date               DateTime
+  start_timme        DateTime?
+  end_time           DateTime?
+  description        String?
+  title              String
+  all_employees      Boolean         @default(false)
+  business_unit      business_unit[]
+  job_title          job_title[]
+  employees          employee[]
 }
 
 model leave_period {
