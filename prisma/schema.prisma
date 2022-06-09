@@ -2164,7 +2164,7 @@ model currency {
   currency_code           String                    @unique
   currency_description    String
   name                    String
-  symbol                  String                    @unique
+  symbol                  String
   price_precision         Int?
   currency_format         Int?
   is_base_currency        Boolean

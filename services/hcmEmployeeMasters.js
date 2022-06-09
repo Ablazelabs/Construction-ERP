@@ -240,6 +240,7 @@ const notifications = async (total) => {
     const leaveAssignmentCount = await leave_assignment.count({
         where: {
             leave_request_status: 1,
+            creationDate: { gte: new Date() },
         },
     });
     const leaveAssignmentData = leaveAssignmentCount

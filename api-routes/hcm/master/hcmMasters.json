@@ -406,7 +406,7 @@
         "/training_type"
     ],
     "uniqueValues": {
-        "currency": ["currency_code", "symbol"],
+        "currency": ["currency_code"],
         "country": ["country_code"],
         "title": ["name"],
         "language": ["name"],

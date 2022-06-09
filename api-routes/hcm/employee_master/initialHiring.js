@@ -36,7 +36,7 @@ for (let i in stringCommitmentInput) {
 }
 delete stringCommitmentInput.employee_id;
 let allInputFilters = {
-    employee: { ...stringInputFilters, startDate: "string", endDate: "string" },
+    employee: { ...stringInputFilters, startDate: "string" },
     org_assignment: stringOrgInput,
     employee_action: stringActionInput,
     employee_commitment: stringCommitmentInput,
@@ -331,7 +331,7 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
             employeeReqBody[key] = reqBody[key];
         }
         employeeReqBody.startDate = reqBody.startDate;
-        employeeReqBody.endDate = reqBody.endDate;
+        employeeReqBody.endDate = new Date("9999/12/31");
         for (let i in dateValues["org_assignment"]) {
             const key = dateValues["org_assignment"][i];
             allInputFilters.org_assignment[key] = undefined;
@@ -354,7 +354,7 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
             orgAssignmentReqBody[key] = reqBody[key];
         }
         orgAssignmentReqBody.startDate = reqBody.startDate;
-        orgAssignmentReqBody.endDate = reqBody.endDate;
+        orgAssignmentReqBody.endDate = new Date("9999/12/31");
         for (let i in dateValues["employee_action"]) {
             const key = dateValues["employee_action"][i];
             allInputFilters.employee_action[key] = undefined;
@@ -377,7 +377,7 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
             employeeActionReqBody[key] = reqBody[key];
         }
         employeeActionReqBody.startDate = reqBody.startDate;
-        employeeActionReqBody.endDate = reqBody.endDate;
+        employeeActionReqBody.endDate = new Date("9999/12/31");
 
         let employeeCommitmentReqBody = inputFilter(
             {},
@@ -395,7 +395,7 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
             employeeCommitmentReqBody[key] = reqBody[key];
         }
         employeeCommitmentReqBody.startDate = reqBody.startDate;
-        employeeCommitmentReqBody.endDate = reqBody.endDate;
+        employeeCommitmentReqBody.endDate = new Date("9999/12/31");
 
         if (reqBody.startDate > new Date()) {
             error("startDate", "can't be future date", next);
@@ -483,7 +483,7 @@ router.patch(allRoutes, async (req, res, next) => {
             business_unit_id: "number",
             employee_group_id: "number",
         },
-        dateValue = ["startDate", "endDate"],
+        dateValue = ["startDate"],
         myEnums = [],
         phoneValue = [],
         emailValue = [],

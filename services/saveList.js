@@ -209,7 +209,7 @@ module.exports = async (data, type, creator, next) => {
                 allErrors.push({
                     row: Number(i) + 1,
                     column: 3 + 1,
-                    message: `no category exists with this name`,
+                    message: `no category exists with the name ${data[i][3]}`,
                 });
             }
         } else if (type == 11) {

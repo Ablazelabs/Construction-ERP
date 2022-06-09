@@ -3,8 +3,12 @@ const { snakeToPascal } = require("../config/config");
 const validator = {
     checkType: (value, type) => {
         if (typeof value != type) {
+            if (type === "string" && typeof value === "number") {
+                return String(value);
+            }
             throw `please send ${type}`;
         }
+        return value;
     },
     checkLength: (value, length, minmax = 1) => {
         if (minmax == 0) {
@@ -81,7 +85,7 @@ module.exports = (
     for (let i in optionalObj) {
         if (givenObj[i] != undefined && optionalObj[i] != undefined) {
             try {
-                validator.checkType(givenObj[i], optionalObj[i]);
+                givenObj[i] = validator.checkType(givenObj[i], optionalObj[i]);
                 if (optionalObj[i] == "string" || optionalObj[i] == "array") {
                     validator.checkLength(givenObj[i], minLength, 0);
                     validator.checkLength(givenObj[i], maxLength);
@@ -96,7 +100,7 @@ module.exports = (
             continue;
         }
         try {
-            validator.checkType(givenObj[i], expectedObj[i]);
+            givenObj[i] = validator.checkType(givenObj[i], expectedObj[i]);
             if (expectedObj[i] == "string" || expectedObj[i] == "array") {
                 validator.checkLength(givenObj[i], minLength, 0);
                 validator.checkLength(givenObj[i], maxLength);

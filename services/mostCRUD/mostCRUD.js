@@ -187,7 +187,7 @@ const patch = async (
                     select: { id: true },
                     where: { ...whereData },
                 });
-                if (data) {
+                if (data && data.id != reqBody.id) {
                     error(key, `${snakeToPascal(key)} already exists`, next);
                     return false;
                 }
