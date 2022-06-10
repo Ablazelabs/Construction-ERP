@@ -144,7 +144,7 @@ router.get("/account", async (req, res, next) => {
         );
     } catch (e) {
         console.log(e);
-        error("database", "error", next, 500);
+        error("database", JSON.stringify(e), next, 500);
     }
 });
 router.patch("/account", async (req, res, next) => {
