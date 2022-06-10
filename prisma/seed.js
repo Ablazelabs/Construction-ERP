@@ -50,10 +50,10 @@ async function main() {
     const salt = await genSalt(10);
     const hashPassword = await hash("password", salt);
     await prisma.user.upsert({
-        where: { email: "yaredterefeg@gmail.com" },
+        where: { email: "hello@gmail.com" },
         update: {},
         create: {
-            email: "yaredterefeg@gmail.com",
+            email: "hello@gmail.com",
             password: hashPassword,
             code: 333,
             concurrency_stamp: "random",
