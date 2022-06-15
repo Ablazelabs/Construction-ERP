@@ -121,7 +121,7 @@ const createRecurring = async (
     });
     journalComments.push({
         comment:
-            " Recurring journal created for " + journalCurrency.currency_code ||
+            " Recurring journal created for " + journalCurrency?.currency_code ||
             "" + sum,
         commented_date: new Date(),
         application_user_id: creator,
@@ -254,13 +254,13 @@ const createRecurring = async (
                     let vatTaxFound = 0;
                     for (let k in associatedTaxes) {
                         const taxRelated = associatedTaxes[k];
-                        if (withHoldingTax.id == taxRelated.id) {
+                        if (withHoldingTax?.id == taxRelated?.id) {
                             amountWithholding =
                                 (detail.amount_credit *
                                     taxRelated.tax_percentage) /
                                 100;
                         }
-                        if (vatTax.id == taxRelated.id) {
+                        if (vatTax?.id == taxRelated?.id) {
                             vatTaxFound = true;
                         } else {
                             totalAmount +=
