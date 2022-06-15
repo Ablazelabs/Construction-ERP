@@ -177,8 +177,8 @@ router.post(allRoutes, upload.fields(inputFields), async (req, res, next) => {
         return;
     }
     for (let i = 0; i < fileAttributes[operationDataType].length; i++) {
+        const fileAttribute = fileAttributes[operationDataType][i];
         try {
-            const fileAttribute = fileAttributes[operationDataType][i];
             const fileIsGood = uploadValidation(
                 req.files[fileAttribute]?.[0],
                 allowedFileTypes[operationDataType],
@@ -194,10 +194,10 @@ router.post(allRoutes, upload.fields(inputFields), async (req, res, next) => {
                     .split(".")
                     .pop();
 
-                const newDestination = `uploads\\${operationDataType}\\${req.files[fileAttribute][0].filename}.${fileType}`;
+                const newDestination = `uploads/${operationDataType}\\${req.files[fileAttribute][0].filename}.${fileType}`;
                 const fileUrl = `/uploads/${operationDataType}/${req.files[fileAttribute][0].filename}.${fileType}`;
                 try {
-                    const dir = `uploads\\${operationDataType}`;
+                    const dir = `uploads/${operationDataType}`;
                     if (!existsSync(dir)) {
                         mkdirSync(dir);
                     }
@@ -220,7 +220,7 @@ router.post(allRoutes, upload.fields(inputFields), async (req, res, next) => {
         } catch (e) {
             console.log(e);
             error("database", "error", next, 500);
-            deleteUnusedFile(req.file);
+            deleteUnusedFile(req.files[fileAttribute][0]);
             return;
         }
     }
@@ -355,13 +355,13 @@ router.patch(allRoutes, upload.fields(inputFields), async (req, res, next) => {
     } catch (e) {
         error(e.key, e.message, next);
         for (let i in inputFiles) {
-            deleteUnusedFile(req.files?.[inputFiles?.[i]]);
+            deleteUnusedFile(req.files?.[inputFiles[i]]);
         }
         return;
     }
     for (let i = 0; i < fileAttributes[operationDataType].length; i++) {
+        const fileAttribute = fileAttributes[operationDataType][i];
         try {
-            const fileAttribute = fileAttributes[operationDataType][i];
             const fileIsGood = uploadValidation(
                 req.files[fileAttribute]?.[0],
                 allowedFileTypes[operationDataType],
@@ -372,10 +372,10 @@ router.patch(allRoutes, upload.fields(inputFields), async (req, res, next) => {
                 const fileType = req.files[fileAttribute][0].originalname
                     .split(".")
                     .pop();
-                const newDestination = `uploads\\${operationDataType}\\${req.files[fileAttribute][0].filename}.${fileType}`;
+                const newDestination = `uploads/${operationDataType}//${req.files[fileAttribute][0].filename}.${fileType}`;
                 const fileUrl = `/uploads/${operationDataType}/${req.files[fileAttribute][0].filename}.${fileType}`;
                 try {
-                    const dir = `uploads\\${operationDataType}`;
+                    const dir = `uploads/${operationDataType}`;
                     if (!existsSync(dir)) {
                         mkdirSync(dir);
                     }

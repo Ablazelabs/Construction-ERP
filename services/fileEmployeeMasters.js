@@ -101,7 +101,7 @@ const patch = async (
         const fileUrl = myModel["path"] || myModel["photo"];
         const fullFileName = fileUrl.split("/").pop();
         try {
-            unlinkSync(`uploads\\${operationDataType}\\${fullFileName}`);
+            unlinkSync(`uploads/${operationDataType}/${fullFileName}`);
         } catch {}
     }
     if (!myModel) {
