@@ -38,8 +38,8 @@ const sendSlip = async (constructedPdf, fromDate, toDate) => {
             ({ employee: emp }) =>
                 emp.id_number == constructedPdf[i].employee_id
         );
-        const fullName = `${empAddress.employee.first_name?.toUpperCase()} ${empAddress.employee.middle_name?.toUpperCase()} ${
-            empAddress.employee.last_name?.toUpperCase() || ""
+        const fullName = `${empAddress.employee?.first_name?.toUpperCase()} ${empAddress.employee?.middle_name?.toUpperCase()} ${
+            empAddress.employee?.last_name?.toUpperCase() || ""
         }`;
         const body =
             `<b>Dear ${fullName}</b></br>` +
@@ -91,6 +91,7 @@ const getSlip = async (
             OR: selectedEmployees.map(({ id }) => {
                 return { employee_id: id };
             }),
+            employee_status: 1,
         },
         include: {
             org_assignment: {

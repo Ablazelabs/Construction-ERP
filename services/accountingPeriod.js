@@ -306,7 +306,7 @@ const processClosing = async ({ id }, creator, next) => {
     if (!baseCurrency) {
         error(
             "currency",
-            "Base Currency could not found. Please set and try again.",
+            "Base Currency could not be found. Please set and try again.",
             next
         );
         return false;
@@ -314,7 +314,7 @@ const processClosing = async ({ id }, creator, next) => {
 
     let closingTypeMessage = "";
 
-    //1. if the Period is the Last Period of the Fasical Year, Make Year-End Closing, otherwise Make Month-End Closing
+    //1. if the Period is the Last Period of the Fiscal Year, Make Year-End Closing, otherwise Make Month-End Closing
     const accountingPeriod = await accounting_period.findUnique({
         where: { id },
     });
@@ -368,7 +368,8 @@ const processClosing = async ({ id }, creator, next) => {
             creator
         );
         if (!validationResult.success) {
-            error("accountingPeriod", validationResult.messages, next);
+            console.log("isClosingValidcalled");
+            error("accountingPeriod", validationResult.messages[0], next);
             return false;
         }
         // #endregion
@@ -381,6 +382,9 @@ const processClosing = async ({ id }, creator, next) => {
             periodJournals,
             next
         );
+    } else {
+        error("id", "no accounting period exists with this id", next);
+        return false;
     }
 };
 
@@ -474,10 +478,8 @@ const isClosingValid = async (
     // #endregion
 
     // #region 3rd Validation (Is transaction locked throughout the system)
-
     if (accountingPeriod) {
         var endDateOfThePeriod = accountingPeriod.period_ending_date;
-
         //var transactionLocks = applicationDbContext.TransactionLocks.Where(t => endDateOfThePeriod <= t.LockDate.Date).ToList();
 
         if (
@@ -621,7 +623,7 @@ const processMonthAndYearEndClosing = async (
         messageList.push("Accounting period not found");
         error(
             `${closingTypeMessage} is not successfully processed, Please correct the error/s and try again.`,
-            messageList,
+            messageList[0],
             next
         );
         return false;
@@ -989,10 +991,10 @@ const processMonthAndYearEndClosing = async (
 
                 netIncome = await getNetIncome(monthStartDate, monthEndDate);
             } else {
-                messageList.Add("The first accounting period was not found");
+                messageList.push("The first accounting period was not found");
                 error(
                     `${closingTypeMessage} is not successfully processed, Please correct the error/s and try again.`,
-                    messageList,
+                    messageList[0],
                     next
                 );
                 return false;
@@ -1000,6 +1002,7 @@ const processMonthAndYearEndClosing = async (
         }
         //#endregion
         let index = 1;
+        console.log({ accountingPeriodForClosing });
         for (let i in accountingPeriodForClosing) {
             const period = accountingPeriodForClosing[i];
             //Get Period Journal
@@ -1084,7 +1087,7 @@ const processMonthAndYearEndClosing = async (
                     },
                 },
             });
-
+            console.log({ periodOpeningBalance });
             //enum of months in acc period
             const month = period.period_starting_date.getMonth() + 2;
 
