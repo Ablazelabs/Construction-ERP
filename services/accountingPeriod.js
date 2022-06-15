@@ -477,7 +477,15 @@ const isClosingValid = async (
     if (!baseCurrency) messages.push("Base Currency is not configured.");
     // #endregion
 
-    // #region 3rd Validation (Is transaction locked throughout the system)
+    // #region 3rd Validation (Is financial settings configured)
+    const financialSetting = await financial_settings.findFirst({
+        where: { status: 0 },
+    });
+
+    if (!financialSetting) messages.push("Financial Settings Not Configured");
+    // #endregion
+
+    // #region 4th Validation (Is transaction locked throughout the system)
     if (accountingPeriod) {
         var endDateOfThePeriod = accountingPeriod.period_ending_date;
         //var transactionLocks = applicationDbContext.TransactionLocks.Where(t => endDateOfThePeriod <= t.LockDate.Date).ToList();
@@ -491,7 +499,7 @@ const isClosingValid = async (
 
     // #endregion
 
-    // #region 4th Validation (Are EXCHANGE RATE configured for the Period)
+    // #region 5th Validation (Are EXCHANGE RATE configured for the Period)
 
     if (accountingPeriod) {
         const exchangeRates = await exchange_rate.findMany({
@@ -1089,7 +1097,7 @@ const processMonthAndYearEndClosing = async (
             });
             console.log({ periodOpeningBalance });
             //enum of months in acc period
-            const month = period.period_starting_date.getMonth() + 2;
+            const month = period.period_starting_date.getMonth() + 2; //+1 for enum, +1 since it's next period
 
             nextPeriodAccountOpeningBalance = {
                 opening_balance_date: new Date(
@@ -1142,9 +1150,9 @@ const processMonthAndYearEndClosing = async (
                 }
 
                 accountOpeningBalanceOfThisPeriod =
-                    periodOpeningBalance?.opening_balance_account.find(
+                    periodOpeningBalance?.opening_balance_account?.find(
                         (ob) => ob.chart_of_account_id == account.id
-                    );
+                    ) || 0;
                 nextPeriodOpeningBalanceAmount =
                     transactionAccountAmountDuringThePeriodInBCY +
                     transactionAccountAmountDuringThePeriodInFCY;
@@ -1204,19 +1212,20 @@ const processMonthAndYearEndClosing = async (
                     `Couldn't construct Opening Balance for ${
                         new Date(1010, month - 1, 1)
                             ?.toDateString()
-                            ?.split(" ")?.[1]
+                            ?.split(" ")?.[1] //tryna find month name(jan, feb and stuff)
                     } Period. Please check if there is any transaction on this period.`
                 );
             } else {
                 const financialSettings = await financial_settings.findFirst({
                     where: { status: 0 },
-                    include: {
-                        base_currency: true,
-                        time_format: true,
-                    },
+                    // include: {
+                    //     base_currency: true,
+                    //     time_format: true,
+                    // },
                 });
+                //this is definitely a wrong code(just found random financial setting and check if it's closing type is month end?🤷‍♀️)
                 if (financialSettings.closing_type != 3) {
-                    if (existingOpeningBalance == null) {
+                    if (!existingOpeningBalance) {
                         await opening_balance.create({
                             data: {
                                 ...nextPeriodAccountOpeningBalance,
@@ -1334,7 +1343,7 @@ const processMonthAndYearEndClosing = async (
                 );
                 if (!changed1) {
                     messageList.push(
-                        `Failed to change Period status to CLOSED and Transaction has been rolled back.`
+                        `Failed to change Period status to CLOSED`
                     );
                     break;
                 }
@@ -1342,6 +1351,7 @@ const processMonthAndYearEndClosing = async (
 
                 // #region Open the next Accounting Period
                 if (period.period_number < 12) {
+                    //this should always be true since this isn't the year end closing
                     let nextMonthPeriod = new Date(
                         accountingPeriod.period_starting_date
                     );
@@ -1385,7 +1395,7 @@ const processMonthAndYearEndClosing = async (
     if (messageList.length) {
         error(
             `${closingTypeMessage} is not successfully processed, Please correct the error/s and try again.`,
-            messageList,
+            messageList[0],
             next
         );
         return false;

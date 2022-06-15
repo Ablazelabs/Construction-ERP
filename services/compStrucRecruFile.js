@@ -118,7 +118,7 @@ const patch = async (
         const fullFileName = fileUrl.map((elem) => elem.split("/").pop());
         try {
             for (let i in fullFileName) {
-                unlinkSync(`uploads\\${operationDataType}\\${fullFileName[i]}`);
+                unlinkSync(`uploads/${operationDataType}/${fullFileName[i]}`);
             }
         } catch {}
     }
