@@ -11,9 +11,9 @@ const { chart_of_account, budget, cost_center } = allModels;
  * @param {any}} budget
  * @param {{
  *      annual_budget_exceeded_mr : number,
- *      annual_budget_exceeded_po:number,
- *      annual_budget_exceeded_actual:number,
- *      accounts:Array<number>
+ *      annual_budget_exceeded_po : number,
+ *      annual_budget_exceeded_actual : number,
+ *      accounts : Array<number>
  * }} budgetControlAction
  * @param {*} creator
  * @param {*} next
@@ -85,7 +85,9 @@ const post = async (budgetInput, budgetControlAction, creator, next) => {
     if (count) {
         error(
             budgetInput.budget_reason == 1 ? "cost_center_id" : "project_name",
-            "budget already exists",
+            budgetInput.budget_reason == 1
+                ? "cost_center_id"
+                : "project_name" + " budget already exists",
             next
         );
         return false;

@@ -194,7 +194,7 @@ router.post(allRoutes, upload.fields(inputFields), async (req, res, next) => {
                     .split(".")
                     .pop();
 
-                const newDestination = `uploads/${operationDataType}\\${req.files[fileAttribute][0].filename}.${fileType}`;
+                const newDestination = `uploads/${operationDataType}/${req.files[fileAttribute][0].filename}.${fileType}`;
                 const fileUrl = `/uploads/${operationDataType}/${req.files[fileAttribute][0].filename}.${fileType}`;
                 try {
                     const dir = `uploads/${operationDataType}`;
@@ -372,7 +372,7 @@ router.patch(allRoutes, upload.fields(inputFields), async (req, res, next) => {
                 const fileType = req.files[fileAttribute][0].originalname
                     .split(".")
                     .pop();
-                const newDestination = `uploads/${operationDataType}//${req.files[fileAttribute][0].filename}.${fileType}`;
+                const newDestination = `uploads/${operationDataType}/${req.files[fileAttribute][0].filename}.${fileType}`;
                 const fileUrl = `/uploads/${operationDataType}/${req.files[fileAttribute][0].filename}.${fileType}`;
                 try {
                     const dir = `uploads/${operationDataType}`;

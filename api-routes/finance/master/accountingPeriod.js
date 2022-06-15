@@ -216,9 +216,7 @@ router.post(`${url}/change_status`, async (req, res, next) => {
     }
     try {
         const data = await changeStatus(reqBody, res.locals.id, next);
-        if (data == false) {
-            return;
-        }
+        if (data == false) return;
         res.json(data);
     } catch (e) {
         console.log(e);
