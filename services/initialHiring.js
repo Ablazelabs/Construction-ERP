@@ -160,14 +160,7 @@ module.exports = async (
 };
 
 const generateId = async (id_number, employee_type_id, next) => {
-    const idRange = await employee_id_range.findFirst({
-        where: {
-            employee_type_id,
-        },
-        orderBy: {
-            id: "desc",
-        },
-    });
+    const idRange = await employee_id_range.findFirst();
     if (!idRange) {
         error(
             "employee_type_id",
