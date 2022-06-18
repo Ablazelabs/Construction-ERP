@@ -167,7 +167,8 @@
             "id_number": "string",
             "religion_id": "number",
             "startDate": "string",
-            "endDate": "string"
+            "endDate": "string",
+            "tin_number": "string"
         },
         "employee_action": {
             "attachment_id": "number",
@@ -403,6 +404,7 @@
             "religion": true,
             "employee_type": true,
             "address": true,
+            "tin_number": true,
             "employee_action": {
                 "include": {
                     "org_assignment": {
@@ -606,7 +608,8 @@
             "language_id": "number",
             "title_id": "number",
             "religion_id": "number",
-            "employee_type_id": "number"
+            "employee_type_id": "number",
+            "tin_number": "string"
         },
         "employee_action": {
             "id": "number",
@@ -802,7 +805,8 @@
             "language_id": "number",
             "title_id": "number",
             "religion_id": "number",
-            "employee_type_id": "number"
+            "employee_type_id": "number",
+            "tin_number": "number"
         },
         "employee_action": {
             "id": "number",

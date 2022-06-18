@@ -51,9 +51,11 @@ const snakeToPascal = (str) => {
  * @param {number} status status of the error(default 400)
  */
 const error = (key, message, next, status = 400) => {
-    const myError = { status };
+    let myError = { status };
     if (key == "status") key = "Status";
-    myError[key] = message;
+    myError["error_id"] = (Math.random() * 100).toFixed(2);
+    myError[key] = message + "^" + myError["error_id"];
+    status != 400 && console.log({ error: myError });
     next(new Error(JSON.stringify(myError)));
 };
 const { PrismaClient } = require("@prisma/client");
