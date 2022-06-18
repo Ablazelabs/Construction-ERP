@@ -318,74 +318,73 @@ const processClosing = async ({ id }, creator, next) => {
     const accountingPeriod = await accounting_period.findUnique({
         where: { id },
     });
-    if (accountingPeriod) {
-        if (accountingPeriod.period_number == 12)
-            closingTypeMessage = "Year-End Closing";
-        else closingTypeMessage = "Month-End Closing";
+    if (!accountingPeriod) {
+        error("id", "no accounting period exists with this id", next);
+        return false;
+    }
+    if (accountingPeriod.period_number == 12)
+        closingTypeMessage = "Year-End Closing";
+    else closingTypeMessage = "Month-End Closing";
 
-        let monthStartDate = accountingPeriod.period_starting_date;
-        //last day of the month start date
-        let monthEndDate = new Date(
-            monthStartDate.getFullYear(),
-            monthStartDate.getMonth() + 1,
-            0
-        );
+    let monthStartDate = accountingPeriod.period_starting_date;
+    //last day of the month start date
+    let monthEndDate = new Date(
+        monthStartDate.getFullYear(),
+        monthStartDate.getMonth() + 1,
+        0
+    );
 
-        const periodJournals = await general_journal_detail.findMany({
-            where: {
-                general_journal_header: {
-                    journal_date: {
-                        gte: monthStartDate,
-                        lte: monthEndDate,
-                    },
-                    journal_posting_status: 1,
-                    status: 0,
+    const periodJournals = await general_journal_detail.findMany({
+        where: {
+            general_journal_header: {
+                journal_date: {
+                    gte: monthStartDate,
+                    lte: monthEndDate,
+                },
+                journal_posting_status: 1,
+                status: 0,
+            },
+        },
+        include: {
+            general_journal_header: {
+                include: {
+                    currency: true,
                 },
             },
-            include: {
-                general_journal_header: {
-                    include: {
-                        currency: true,
-                    },
-                },
-                chart_of_account: {
-                    include: {
-                        account_type: {
-                            include: {
-                                account_category: true,
-                            },
+            chart_of_account: {
+                include: {
+                    account_type: {
+                        include: {
+                            account_category: true,
                         },
                     },
                 },
             },
-        });
-        // #region Check if Closing is Valid
-        const validationResult = await isClosingValid(
-            baseCurrency,
-            periodJournals,
-            accountingPeriod,
-            accountingPeriod.period_number == 12 ? 3 : 2,
-            creator
-        );
-        if (!validationResult.success) {
-            console.log("isClosingValidcalled");
-            error("accountingPeriod", validationResult.messages[0], next);
-            return false;
-        }
-        // #endregion
-
-        return await processMonthAndYearEndClosing(
-            accountingPeriod,
-            creator,
-            baseCurrency,
-            closingTypeMessage,
-            periodJournals,
-            next
-        );
-    } else {
-        error("id", "no accounting period exists with this id", next);
+        },
+    });
+    // #region Check if Closing is Valid
+    const validationResult = await isClosingValid(
+        baseCurrency,
+        periodJournals,
+        accountingPeriod,
+        accountingPeriod.period_number == 12 ? 3 : 2,
+        creator
+    );
+    if (!validationResult.success) {
+        console.log("isClosingValidcalled");
+        error("accountingPeriod", validationResult.messages[0], next);
         return false;
     }
+    // #endregion
+
+    return await processMonthAndYearEndClosing(
+        accountingPeriod,
+        creator,
+        baseCurrency,
+        closingTypeMessage,
+        periodJournals,
+        next
+    );
 };
 
 //#endregion
@@ -460,6 +459,7 @@ const isClosingValid = async (
                     ),
                     lte: accountingPeriod.period_starting_date,
                 },
+                status: 0,
             },
         });
         if (
@@ -554,6 +554,10 @@ const isClosingValid = async (
 };
 /**
  *
+ * @param  periods
+ */
+/**
+ * If any of the periods are not closed, return false, otherwise return true.
  * @param {import("@prisma/client").accounting_period[]} periods
  */
 const isAllPreviousPeriodClosed = (periods) => {
@@ -592,9 +596,9 @@ const isTransactionLocked = async (transactionRecordDate, creator) => {
     return lockTransaction;
 };
 /**
- *
- * @param {import("@prisma/client").accounting_period} accountingPeriod
- * @param {number} creator
+ * It closes the current accounting period and opens the next accounting period
+ * @param {import("@prisma/client").accounting_period} accountingPeriod the accounting period to be closed
+ * @param {number} creator the user who is closing the period
  * @param {import("@prisma/client").currency} baseCurrency
  * @param {string} closingTypeMessage
  * @param {import("@prisma/client").general_journal_detail&{
@@ -606,7 +610,7 @@ const isTransactionLocked = async (transactionRecordDate, creator) => {
  *                  account_category: import("@prisma/client").account_category
  *              }
  *         }
- * }[]} periodJournalsDefault
+ * }[]} periodJournalsDefault this is the list of journals for the current period
  */
 const processMonthAndYearEndClosing = async (
     accountingPeriod,
@@ -627,8 +631,9 @@ const processMonthAndYearEndClosing = async (
         accountingPeriodForClosing = await getAccountingPeriodInvolvedInClosing(
             accountingPeriod
         );
-    if (!accountingPeriodForClosing.length) {
+    if (accountingPeriodForClosing.length) {
         messageList.push("Accounting period not found");
+        console.log({ accountingPeriodForClosing });
         error(
             `${closingTypeMessage} is not successfully processed, Please correct the error/s and try again.`,
             messageList[0],
@@ -892,13 +897,13 @@ const processMonthAndYearEndClosing = async (
                                         result.debitAmount
                                     );
                                     updateData.amount_credit = 0;
-                                    updateData.debit_or_credit = 1;
+                                    updateData.debit_or_credit = 2; //2 is debit
                                 } else {
                                     updateData.amount_credit = Math.abs(
                                         result.creditAmount
                                     );
                                     updateData.amount_debit = 0;
-                                    updateData.debit_or_credit = 1;
+                                    updateData.debit_or_credit = 1; //1 is credit
                                 }
                             }
                             await opening_balance.update({
@@ -989,6 +994,7 @@ const processMonthAndYearEndClosing = async (
     } else {
         // #region Get Income
 
+        //useless if, because the top if handles year_end_closing, which means period number can't be 12
         if (accountingPeriod.period_number == 12) {
             const firstAccountingPeriod = await accounting_period.findFirst({
                 where: { period_number: 1, status: 0 },
@@ -1011,6 +1017,7 @@ const processMonthAndYearEndClosing = async (
         //#endregion
         let index = 1;
         console.log({ accountingPeriodForClosing });
+        //this is only 1 data (the current to be closed accounting period) for loop not needed!
         for (let i in accountingPeriodForClosing) {
             const period = accountingPeriodForClosing[i];
             //Get Period Journal
@@ -1372,6 +1379,7 @@ const processMonthAndYearEndClosing = async (
                 // #endregion
             }
         }
+        //useless if, because the top if handles year_end_closing, which means period number can't be 12
         if (accountingPeriod.period_number == 12) {
             //Generate Period for the coming FISICAL YEAR
             const financialSettings = await financial_settings.findFirst();
@@ -1632,9 +1640,10 @@ const constructOpeningBalanceAccountForNextPeriod = (
     return openingBalanceAccount;
 };
 /**
- *
+ * It gets the net income of a company for a given period
  * @param {Date} startDate
  * @param {Date} endDate
+ * @returns the net profit or loss.
  */
 const getNetIncome = async (startDate, endDate) => {
     let operatingIncomeBalance = 0.0,
@@ -1788,25 +1797,28 @@ const getNetIncome = async (startDate, endDate) => {
     return netProfitOrLoss;
 };
 /**
- *
+ * It gets all accounting periods for a given year, then it filters out the periods that are not
+ * involved in the closing process.
  * @param {import("@prisma/client").accounting_period} accountingPeriod
  */
 const getAccountingPeriodInvolvedInClosing = async (accountingPeriod) => {
     // #region 2. Get all Accounting Periods including the period you are trying to close but except the Current Opened Period
     const accountingPeriods = await accounting_period.findMany({
         where: {
-            period_starting_date: {
-                gte: new Date(
-                    accountingPeriod.period_starting_date.getFullYear(),
-                    0,
-                    1
-                ),
-                lt: new Date(
-                    accountingPeriod.period_starting_date.getFullYear() + 1,
-                    0,
-                    1
-                ),
-            },
+            // if starting period(period no 1) isn't in january then this won't work! cause if i starts in july u'll only get data from july-december not july-june
+            // but just getting data where status is 0 gives u all 12 accounting periods of the year!
+            // period_starting_date: {
+            //     gte: new Date(
+            //         accountingPeriod.period_starting_date.getFullYear(),
+            //         0,
+            //         1
+            //     ),
+            //     lt: new Date(
+            //         accountingPeriod.period_starting_date.getFullYear() + 1,
+            //         0,
+            //         1
+            //     ),
+            // },
             status: 0,
         },
     });
@@ -1814,7 +1826,6 @@ const getAccountingPeriodInvolvedInClosing = async (accountingPeriod) => {
     const currentPeriod = accountingPeriods.find(
         (p) => p.is_current_posting_period
     );
-
     for (let i in accountingPeriods) {
         const period = accountingPeriods[i];
         if (

@@ -183,7 +183,6 @@ const authorization = {
                           `${PRIVILEGE_TYPE}_manager`,
                   ].filter((elem) => elem)
                 : [];
-        console.log({ additionalPrivileges, PRIVILEGE_TYPE });
         if (
             requestRoute == "account" &&
             (method == "PATCH" || method == "DELETE")

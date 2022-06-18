@@ -2625,6 +2625,7 @@ model employee {
   title_id                   Int?
   religion_id                Int?
   employee_type_id           Int?
+  tin_number                 String?
 
   employee_type employee_type? @relation(fields: [employee_type_id], references: [id])
   nationality   nationality?   @relation(fields: [nationality_id], references: [id])

@@ -93,6 +93,7 @@ router.post("/job_title", async (req, res, next) => {
         next
     );
     if (!jobReqBody) {
+        console.log("here");
         return;
     }
     try {
@@ -104,6 +105,7 @@ router.post("/job_title", async (req, res, next) => {
             next
         );
         if (!data) {
+            console.log({ data, jobReqBody });
             return;
         } else res.json(data);
     } catch (e) {
@@ -180,12 +182,12 @@ router.patch("/job_title", async (req, res, next) => {
         if (!Array.isArray(safetyData.safetyEquipments)) {
             throw { key: "safetyEquipments", message: "please send array" };
         }
-        if (!safetyData.safetyEquipments.length) {
-            throw {
-                key: "safetyEquipments",
-                message: "array can't be empty",
-            };
-        }
+        // if (!safetyData.safetyEquipments.length) {
+        //     throw {
+        //         key: "safetyEquipments",
+        //         message: "array can't be empty",
+        //     };
+        // }
     } catch (e) {
         error(e.key, e.message, next);
         return;
