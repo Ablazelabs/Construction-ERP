@@ -3,7 +3,7 @@ const {
     COMPANY_NAME,
     REPORT_BASIS_TITLE,
 } = require("../config/config");
-const { getAccounts } = require("./accountingPeriod");
+const { getAccounts } = require("./generalLedgerDetailFunctions");
 const { groupByFn } = require("./payrollControl");
 const {
     general_ledger,
@@ -1246,5 +1246,4 @@ module.exports = {
     profitLossExport,
     cashFlowExport,
     balanceSheetExport,
-    getAccounts,
 };

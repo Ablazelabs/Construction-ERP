@@ -667,7 +667,7 @@ model project_request {
   prepared_by_id      Int
   checked_by_id       Int?
   approved_by_id      Int?
-  approval_status     Int //[pending, approved, denied]
+  approval_status     Int //[pending, approved, denied] //there should have been a checked by but we missed that 😅
   requested_date      DateTime              @default(now())
   action_taken_date   DateTime?
   status              Int                   @default(0)

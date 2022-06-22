@@ -36,12 +36,12 @@ router.post("/job_title", async (req, res, next) => {
         if (!Array.isArray(reqBody.safetyEquipments)) {
             throw { key: "safetyEquipments", message: "please send array" };
         }
-        if (!reqBody.safetyEquipments.length) {
-            throw {
-                key: "safetyEquipments",
-                message: "array can't be empty",
-            };
-        }
+        // if (!reqBody.safetyEquipments.length) {
+        //     throw {
+        //         key: "safetyEquipments",
+        //         message: "array can't be empty",
+        //     };
+        // }
     } catch (e) {
         error(e.key, e.message, next);
         return;
