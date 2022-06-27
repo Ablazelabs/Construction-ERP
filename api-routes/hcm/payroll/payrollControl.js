@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { error } = require("../../../config/config");
+const { error, getOperationDataType } = require("../../../config/config");
 const {
     salaryMapping,
     otherMapping,
@@ -117,7 +117,7 @@ router.put("/other_account_mapping", async (req, res, next) => {
     }
 });
 router.get(["/lock", "/run"], async (req, res, next) => {
-    const runOrLock = req.path.split("/").pop();
+    const runOrLock = getOperationDataType(req.path);
     try {
         const data = await getLockandRun(runOrLock, next);
         if (!data) {

@@ -21,7 +21,7 @@ router.get("/excel_export", async (req, res, next) => {
             emailValue: [],
             phoneValue: [],
             myEnums: {
-                crv_types: ["Cash", "Check"],
+                crv_types: ["Cash", "Check"], //this is lazy
             },
             rangeValues: {},
         });

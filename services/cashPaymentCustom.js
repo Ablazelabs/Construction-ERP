@@ -20,6 +20,7 @@ const getExportedExcel = async (from, to) => {
     });
     //make the export here i guess
     let dataSheet = [];
+    //why is this in particular in amharic? no reason! 🤷‍♂️
     const headerRow = [
         "ተ.ቁ",
         "የሻጭ ድርጅት/ግለሰብ ስም",
@@ -40,7 +41,11 @@ const getExportedExcel = async (from, to) => {
     }
     mergeRanges.push({ s: { c: 3, r: 3 }, e: { c: 6, r: 3 } }); //D4:G4
     mergeRanges.push({ s: { c: 7, r: 3 }, e: { c: 8, r: 3 } });
-    let sheetOptions = { "!merges": mergeRanges, "!rows": [{ hpx: 30 }] };
+    let sheetOptions = {
+        "!merges": mergeRanges,
+        "!rows": [{ hpx: 60 }],
+        "!cols": Array(4).fill({ wch: 50 }),
+    };
     xlsx.build([{ data: [], options: {} }]);
     //setting data on a
     dataSheet[0] = [`ግብር ከፋይ መለያ ቁጥር - 0062451276`];
@@ -61,6 +66,7 @@ const getExportedExcel = async (from, to) => {
     for (let i in custom) {
         const item = custom[i];
         sheetOptions["!rows"][recordIndex] = { hpx: 11 };
+        // sheetOptions["!cols"][recordIndex] = { wch: 50 }; //this may be important
         //only height works, no bolding or font style option
         dataSheet[recordIndex] = [
             parseInt(i) + 1,

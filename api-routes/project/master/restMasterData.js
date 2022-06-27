@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { error } = require("../../../config/config");
+const { error, getOperationDataType } = require("../../../config/config");
 const { post, get, patch } = require("../../../services/restMasterData");
 const {
     returnReqBody,
@@ -25,7 +25,7 @@ const requiredInputFilter = {
     name: "string",
 };
 router.post(allRoutes, async (req, res, next) => {
-    const masterDataType = req.path.split("/").pop();
+    const masterDataType = getOperationDataType(req.path);
     const color = masterDataType == "priority" ? { color: "string" } : {};
     const optionalInputFilter = {
         ...color,
@@ -67,7 +67,7 @@ router.post(allRoutes, async (req, res, next) => {
     }
 });
 router.get(allRoutes, async (req, res, next) => {
-    const masterDataType = req.path.split("/").pop();
+    const masterDataType = getOperationDataType(req.path);
     const color =
         masterDataType == "priority"
             ? [{ color: "string" }, { color: "number" }, { color: true }]
@@ -115,7 +115,7 @@ router.get(allRoutes, async (req, res, next) => {
     }
 });
 router.patch(allRoutes, async (req, res, next) => {
-    const masterDataType = req.path.split("/").pop();
+    const masterDataType = getOperationDataType(req.path);
     const color = masterDataType == "priority" ? { color: "string" } : {};
     const optionalInputFilter = {
         ...color,

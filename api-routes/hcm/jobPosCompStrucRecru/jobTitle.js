@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { error } = require("../../../config/config");
+const { error, getOperationDataType } = require("../../../config/config");
 const { jobEquipAdder, get, patch } = require("../../../services/jobTitle");
 const {
     returnReqBody,
@@ -115,7 +115,7 @@ router.post("/job_title", async (req, res, next) => {
     }
 });
 router.get("/job_title", async (req, res, next) => {
-    const operationDataType = req.path.split("/").pop();
+    const operationDataType = getOperationDataType(req.path);
     const filters = allFilters[operationDataType],
         sorts = allSorts[operationDataType],
         projections = allProjections[operationDataType];
@@ -145,7 +145,7 @@ router.get("/job_title", async (req, res, next) => {
     }
 });
 router.patch("/job_title", async (req, res, next) => {
-    const operationDataType = req.path.split("/").pop();
+    const operationDataType = getOperationDataType(req.path);
     const requiredInputFilter = allInputFilters[operationDataType],
         optionalInputFilter = allOptionalInputFilters[operationDataType],
         dateValue = dateValues[operationDataType],

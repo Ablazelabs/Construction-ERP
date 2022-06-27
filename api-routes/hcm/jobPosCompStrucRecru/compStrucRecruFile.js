@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { error } = require("../../../config/config");
+const { error, getOperationDataType } = require("../../../config/config");
 const inputFilter = require("../../../validation/inputFilter");
 const uploadValidation = require("../../../validation/uploadValidation");
 const validation = require("../../../validation/validation");
@@ -104,7 +104,7 @@ const inputFields = [
     { name: "file", maxCount: 1 },
 ];
 router.post(allRoutes, upload.fields(inputFields), async (req, res, next) => {
-    const operationDataType = req.path.split("/").pop();
+    const operationDataType = getOperationDataType(req.path);
     let reqBody;
     const requiredInputFilter = allInputFilters[operationDataType];
     const optionalInputFilter = allOptionalInputfilters[operationDataType];
@@ -279,7 +279,7 @@ router.post(allRoutes, upload.fields(inputFields), async (req, res, next) => {
     }
 });
 router.patch(allRoutes, upload.fields(inputFields), async (req, res, next) => {
-    const operationDataType = req.path.split("/").pop();
+    const operationDataType = getOperationDataType(req.path);
     let updateData = {};
     try {
         if (!req.body.updateData) req.body.updateData = {};

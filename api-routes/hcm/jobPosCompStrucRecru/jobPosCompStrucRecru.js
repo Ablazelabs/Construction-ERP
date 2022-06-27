@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { error } = require("../../../config/config");
+const { error, getOperationDataType } = require("../../../config/config");
 const { post, get, patch } = require("../../../services/jobPosCompStrucRecru");
 
 const {
@@ -29,7 +29,7 @@ const {
 } = allConfigs;
 
 router.post(allPostRoutes, async (req, res, next) => {
-    const operationDataType = req.path.split("/").pop();
+    const operationDataType = getOperationDataType(req.path);
     const requiredInputFilter = allInputFilters[operationDataType],
         optionalInputFilter = allOptionalInputFilters[operationDataType],
         dateValue = dateValues[operationDataType],
@@ -73,7 +73,7 @@ router.post(allPostRoutes, async (req, res, next) => {
     }
 });
 router.get(allRoutes, async (req, res, next) => {
-    const operationDataType = req.path.split("/").pop();
+    const operationDataType = getOperationDataType(req.path);
     const filters = allFilters[operationDataType],
         sorts = allSorts[operationDataType],
         projections = allProjections[operationDataType];
@@ -103,7 +103,7 @@ router.get(allRoutes, async (req, res, next) => {
     }
 });
 router.patch(allPostRoutes, async (req, res, next) => {
-    const operationDataType = req.path.split("/").pop();
+    const operationDataType = getOperationDataType(req.path);
 
     const requiredInputFilter = allInputFilters[operationDataType],
         optionalInputFilter = allOptionalInputFilters[operationDataType],

@@ -53,11 +53,18 @@ const snakeToPascal = (str) => {
 const error = (key, message, next, status = 400) => {
     let myError = { status };
     if (key == "status") key = "Status";
-    myError["error_id"] = (Math.random() * 100).toFixed(2);
-    myError[key] = message + "^" + myError["error_id"];
-    status != 400 && console.log({ error: myError });
+    if (status >= 400 && status < 500) {
+        myError["error_id"] = (Math.random() * 100).toFixed(2);
+        myError[key] = message + "^" + myError["error_id"];
+    }
+    status != 400 && console.log({ error: myError, status });
     next(new Error(JSON.stringify(myError)));
 };
+
+const getOperationDataType = (requestPath) => {
+    return requestPath?.split("/")?.pop()?.toLowerCase();
+};
+
 const { PrismaClient } = require("@prisma/client");
 
 const allModels = new PrismaClient();
@@ -67,6 +74,7 @@ module.exports = {
     confirmCredential,
     randomConcurrencyStamp,
     snakeToPascal,
+    getOperationDataType,
     allModels,
     COMPANY_NAME: "ElHadar-PLC",
     REPORT_BASIS_TITLE: "Accounting Method: ",
