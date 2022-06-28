@@ -3,6 +3,7 @@ const {
     allModels,
     error,
     randomConcurrencyStamp,
+    sendEmail,
 } = require("../config/config");
 const { post: mPost, patch: mPatch } = require("./mostCRUD/mostCRUD");
 const {
@@ -12,6 +13,7 @@ const {
     attachment,
     user,
     commitment,
+    employee_type,
 } = allModels;
 module.exports = async (
     { employeeReqBody, uniqueEmployee },
@@ -23,6 +25,33 @@ module.exports = async (
     creator,
     next
 ) => {
+    const actionReason = await allModels.action_reason.findFirst({
+        where: {
+            action_type_code: "Hiring",
+        },
+    });
+    if (!actionReason) {
+        error(
+            "action reason",
+            "please add hiring as one of the action reasons!",
+            next
+        );
+        return false;
+    }
+    const commitmentMonths = await commitment.findUnique({
+        where: {
+            id: employeeCommitmentReqBody.commitment_type_id,
+        },
+    });
+    if (commitmentMonths) {
+        let endDay = new Date(employeeCommitmentReqBody.startDate);
+        endDay.setMonth(endDay.getMonth() + commitmentMonths.period || 0);
+        employeeCommitmentReqBody.endDate = endDay;
+        employeeReqBody.startDate = new Date(
+            employeeCommitmentReqBody.startDate
+        );
+        employeeReqBody.endDate = new Date(employeeCommitmentReqBody.endDate);
+    }
     //check if employee exists and generate id
     const emp = await employee.findFirst({
         where: {
@@ -87,7 +116,7 @@ module.exports = async (
             );
         }
         if (vacancyApplicant?.external_applicant?.file) {
-            const data = attachment.create({
+            const data = await attachment.create({
                 data: {
                     description: String(
                         employeeActionReqBody.employee_status || ""
@@ -103,7 +132,11 @@ module.exports = async (
         }
     }
     const actionData = await mPost(
-        { ...employeeActionReqBody, employee_id: empdata.id },
+        {
+            ...employeeActionReqBody,
+            employee_id: empdata.id,
+            action_reason_id: actionReason.id,
+        },
         "employee_action",
         creator,
         uniqueAction,
@@ -112,16 +145,6 @@ module.exports = async (
     );
     if (!actionData) {
         return false;
-    }
-    const commitmentMonths = await commitment.findUnique({
-        where: {
-            id: employeeCommitmentReqBody.commitment_type_id,
-        },
-    });
-    if (commitmentMonths) {
-        let endDay = new Date(employeeCommitmentReqBody.startDate);
-        endDay.setMonth(endDay.getMonth() + commitmentMonths.period || 0);
-        employeeCommitmentReqBody.endDate = endDay;
     }
     const commitmentData = await mPost(
         { ...employeeCommitmentReqBody, employee_id: empdata.id },
@@ -141,25 +164,68 @@ module.exports = async (
         uniqueOrg,
         next
     );
-    if (accountReqBody.password) {
-        const empUser = await user.create({
+    // if (accountReqBody.password) {
+    //     const empUser = await user.create({
+    //         data: {
+    //             code: Number(employeeReqBody.id_number),
+    //             concurrency_stamp: randomConcurrencyStamp(),
+    //             password: await hash(accountReqBody.password, 10),
+    //             email: employeeReqBody.id_number,
+    //             first_login: true,
+    //             email_confirmed: true,
+    //             employee_id: empdata.id,
+    //             username: accountReqBody.username,
+    //         },
+    //     });
+    // }
+    if (accountReqBody.email) {
+        const fullName = accountReqBody.username;
+        const email = accountReqBody.email;
+        const password = "password"; //for testing
+        await user.create({
             data: {
                 code: Number(employeeReqBody.id_number),
                 concurrency_stamp: randomConcurrencyStamp(),
                 password: await hash(accountReqBody.password, 10),
-                email: employeeReqBody.id_number,
+                email,
                 first_login: true,
                 email_confirmed: true,
                 employee_id: empdata.id,
                 username: accountReqBody.username,
             },
         });
+        await sendEmail(
+            email,
+            `Hello, Employee from ${COMPANY_NAME}`,
+            `${COMPANY_NAME} Account Creation`,
+            `<div>
+                Hello ${fullName}, This is your temporary password from your account on erp.elhadar.com
+                Please login and change your password!
+                <div>
+                    login email: ${email}
+                    <br />
+                    login Password: ${password}
+                </div>
+            </div>`
+        );
     }
 
-    return orgAss;
+    return {
+        success: true,
+        employee: await employee.findUnique({ where: { id: empdata.id } }),
+    };
 };
 
 const generateId = async (id_number, employee_type_id, next) => {
+    const employeeType = await employee_type.findUnique({
+        where: {
+            id: employee_type_id,
+        },
+    });
+    const prefix =
+        employeeType?.description[0]?.toUpperCase() ||
+        "E" + employeeType?.description[1]?.toUpperCase() ||
+        "L" + "-";
     const idRange = await employee_id_range.findFirst();
     if (!idRange) {
         error(
@@ -181,11 +247,20 @@ const generateId = async (id_number, employee_type_id, next) => {
             employee_type_id,
         },
         orderBy: {
-            id_number: "desc",
+            id: "desc",
         },
     });
     if (lastEmp && lastEmp.id_number) {
-        const lastIdNumber = parseInt(lastEmp.id_number);
+        let lastIdNumber = parseInt(lastEmp.id_number);
+        //removing the prefix, which is by default EL-
+        if (isNaN(lastIdNumber)) {
+            let splitValArr = lastEmp.id_number.split("");
+            splitValArr.shift();
+            splitValArr.shift();
+            splitValArr.shift();
+            let splitVal = splitValArr.join("");
+            lastIdNumber = parseInt(splitVal);
+        }
         const nextIdNumber = lastIdNumber + 1;
         if (nextIdNumber > idRange.end) {
             error(
@@ -195,18 +270,24 @@ const generateId = async (id_number, employee_type_id, next) => {
             );
             return false;
         }
-        return getFormattedIdNumber(
-            String(nextIdNumber),
-            idRange.number_of_digit
+        return (
+            prefix +
+            getFormattedIdNumber(String(nextIdNumber), idRange.number_of_digit)
         );
     } else {
         const nextIdNumber = idRange.start;
-        return getFormattedIdNumber(
-            String(nextIdNumber),
-            idRange.number_of_digit
+        return (
+            prefix +
+            getFormattedIdNumber(String(nextIdNumber), idRange.number_of_digit)
         );
     }
 };
+/**
+ *
+ * @param {string} id_number
+ * @param {number} range
+ * @returns
+ */
 const getFormattedIdNumber = (id_number, range) => {
     let formattedIdNumber = id_number;
     if (formattedIdNumber.length < range) {

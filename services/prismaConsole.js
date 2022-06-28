@@ -1,4 +1,5 @@
-const { allModels } = require("../config/config");
+require("dotenv").config();
+const { allModels, sendEmail, COMPANY_NAME } = require("../config/config");
 
 const { accounting_period, user, project } = allModels;
 const prisma = allModels;
@@ -200,5 +201,24 @@ const add = async () => 1 + 1;
 const temp2 = async () => {
     console.log(await user.findFirst());
 };
-temp2();
-console.log("abebe");
+// temp2();
+const sendMailTest = async () => {
+    const fullName = "Yared Terefe Gebresellasie";
+    const email = "yaredterefeg@gmail.com";
+    const password = "password";
+    await sendEmail(
+        email,
+        `Hello, Employee from ${COMPANY_NAME}`,
+        `${COMPANY_NAME} Account Creation`,
+
+        `<div>
+            Hello ${fullName}, This is your temporary password from your account from erp.elhadar.com
+            Please login and change your password!
+            <div>
+                login email: ${email}
+                login Password: ${password}
+            </div>
+        </div>`
+    );
+};
+sendMailTest();
