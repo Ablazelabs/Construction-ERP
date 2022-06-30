@@ -54,7 +54,7 @@ model privilege {
   action            String  @unique
   description       String?
   concurrency_stamp String  @default("random")
-  roles             role[]  @relation(references: [id])
+  roles             role[]
   deleted_status    Int     @default(0)
 }
 
@@ -63,7 +63,7 @@ model role {
   name              String      @unique
   concurrency_stamp String
   description       String?
-  privileges        privilege[] @relation(references: [id])
+  privileges        privilege[]
   users             user[]
   deleted_status    Int         @default(0)
 }
@@ -328,6 +328,7 @@ model project {
   project_request              project_request[]
   project_edit_request         project_edit_request[]
   daily_report                 daily_report[]
+  payment_request              payment_request[]
 }
 
 model daily_work_log {
@@ -498,8 +499,8 @@ model task_manager {
   isProtectedForEdit Boolean   @default(false)
   progress           Float     @default(0)
 
-  prerequisites task_manager[] @relation("dependency", references: [id])
-  dependents    task_manager[] @relation("dependency", references: [id])
+  prerequisites task_manager[] @relation("dependency")
+  dependents    task_manager[] @relation("dependency")
 
   project              project                @relation(fields: [project_id], references: [id])
   sub_task             sub_task[]
@@ -530,8 +531,8 @@ model sub_task {
   isProtectedForEdit Boolean      @default(false)
   task_manager       task_manager @relation(fields: [task_manager_id], references: [id])
   // sub_task           sub_task[]   @relation("dependency")3
-  prerequisites      sub_task[]   @relation("sub_task_dependency", references: [id], map: "dependents")
-  dependents         sub_task[]   @relation("sub_task_dependency", references: [id], map: "prerequisites")
+  prerequisites      sub_task[]   @relation("sub_task_dependency", map: "dependents")
+  dependents         sub_task[]   @relation("sub_task_dependency", map: "prerequisites")
   progress           Float        @default(0)
 
   todos todos[]
@@ -658,33 +659,36 @@ model request {
 }
 
 model project_request {
-  id                  Int                   @id @default(autoincrement())
-  request_type        Int //[payment,manpower,store],
-  priority            Int //[high,mid,low],
-  total_amount        Float?
-  vat_amount          Float?
-  sub_total           Float?
-  prepared_by_id      Int
-  checked_by_id       Int?
-  approved_by_id      Int?
-  approval_status     Int //[pending, approved, denied] //there should have been a checked by but we missed that 😅
-  requested_date      DateTime              @default(now())
-  action_taken_date   DateTime?
-  status              Int                   @default(0)
-  creationDate        DateTime              @default(now())
-  createdBy           String
-  revisionDate        DateTime              @updatedAt
-  revisedBy           String
-  project_id          Int
-  action_note         String?
-  invoice             String?               @db.VarChar(3000) //i intend to use arrays
-  remark              String?               @db.VarChar(1000)
-  prepared_by         employee              @relation(fields: [prepared_by_id], references: [id], name: "project_request_prepared_by")
-  checked_by          employee?             @relation(fields: [checked_by_id], references: [id], name: "project_request_checked_by")
-  approved_by         employee?             @relation(fields: [approved_by_id], references: [id], name: "project_request_approved_by")
-  project             project               @relation(fields: [project_id], references: [id])
-  individual_requests individual_requests[]
-  isProtectedForEdit  Boolean               @default(false)
+  id                     Int                   @id @default(autoincrement())
+  request_type           Int //[payment,manpower,store],
+  priority               Int //[high,mid,low],
+  total_amount           Float?
+  vat_amount             Float?
+  sub_total              Float?
+  prepared_by_id         Int
+  checked_by_id          Int?
+  approved_by_id         Int?
+  finance_approved_by_id Int?
+  approval_status        Int //[pending, approved, denied] //there should have been a checked by but we missed that 😅
+  requested_date         DateTime              @default(now())
+  action_taken_date      DateTime?
+  status                 Int                   @default(0)
+  creationDate           DateTime              @default(now())
+  createdBy              String
+  revisionDate           DateTime              @updatedAt
+  revisedBy              String
+  project_id             Int
+  action_note            String?
+  invoice                String?               @db.VarChar(3000) //i intend to use arrays
+  remark                 String?               @db.VarChar(1000)
+  prepared_by            employee              @relation(fields: [prepared_by_id], references: [id], name: "project_request_prepared_by")
+  checked_by             employee?             @relation(fields: [checked_by_id], references: [id], name: "project_request_checked_by")
+  approved_by            employee?             @relation(fields: [approved_by_id], references: [id], name: "project_request_approved_by")
+  finance_approved_by    employee?             @relation(fields: [finance_approved_by_id], references: [id], name: "project_request_approved_by_finance")
+  project                project               @relation(fields: [project_id], references: [id])
+  individual_requests    individual_requests[]
+  isProtectedForEdit     Boolean               @default(false)
+  payment_request        payment_request[]
 }
 
 model daily_report {
@@ -1023,15 +1027,15 @@ model account_type {
 model bank {
   startDate          DateTime
   endDate            DateTime
-  creationDate       DateTime @default(now())
+  creationDate       DateTime          @default(now())
   createdBy          String
-  revisionDate       DateTime @updatedAt
+  revisionDate       DateTime          @updatedAt
   revisedBy          String
-  status             Int      @default(0)
-  isProtectedForEdit Boolean  @default(false)
-  id                 Int      @id @default(autoincrement())
+  status             Int               @default(0)
+  isProtectedForEdit Boolean           @default(false)
+  id                 Int               @id @default(autoincrement())
   account_type       Int //[bank,credit_card]
-  account_name       String   @unique
+  account_name       String            @unique
   account_number     String?
   account_code       String?
   IBAN               String?
@@ -1039,9 +1043,10 @@ model bank {
   description        String?
   is_primary         Boolean?
   currency_id        Int
-  currency           currency @relation(fields: [currency_id], references: [id])
+  currency           currency          @relation(fields: [currency_id], references: [id])
   //needs currency
   //inside schema
+  payment_request    payment_request[]
 }
 
 model exchange_rate {
@@ -1937,35 +1942,6 @@ model cpv_type {
   cash_payment_voucher cash_payment_voucher[]
 }
 
-model petty_cash {
-  startDate               DateTime
-  endDate                 DateTime
-  creationDate            DateTime              @default(now())
-  createdBy               String
-  revisionDate            DateTime              @updatedAt
-  revisedBy               String
-  status                  Int                   @default(0)
-  isProtectedForEdit      Boolean               @default(false)
-  id                      Int                   @id @default(autoincrement())
-  date                    DateTime
-  pcpv                    String?
-  remark                  String?
-  description             String?
-  debit                   Float?
-  credit                  Float?
-  balance                 Float?
-  project_id              Int?
-  issued_by_id            Int?
-  cash_payment_voucher_id Int?
-  cash_payment_voucher    cash_payment_voucher? @relation(fields: [cash_payment_voucher_id], references: [id])
-  issued_by               employee?             @relation(fields: [issued_by_id], references: [id])
-  project                 project?              @relation(fields: [project_id], references: [id])
-
-  //needs cash_payment_voucher
-  //needs project
-  //needs employee(issued_by)
-}
-
 model crv_payment {
   startDate           DateTime
   endDate             DateTime
@@ -2010,6 +1986,92 @@ model crv_type {
   description        String?
   crv_types          Int?
   crv_payment        crv_payment[]
+}
+
+model payment_request {
+  startDate                  DateTime
+  endDate                    DateTime
+  creationDate               DateTime @default(now())
+  createdBy                  String
+  revisionDate               DateTime @updatedAt
+  revisedBy                  String
+  status                     Int      @default(0)
+  isProtectedForEdit         Boolean  @default(false)
+  id                         Int      @id @default(autoincrement())
+  to                         String
+  from                       String
+  prepare_payment_to_id      Int?
+  prepare_payment_to_name    String?
+  prepare_payment_to_id_file String?
+  amount                     Float
+  for                        Int //:[pettycash replenishment, project_request, other]//pettycash replenishment needs pettycashes attached, project request we just need receipt, required
+
+  project_request_id Int?
+  project_id         Int?
+  date               DateTime @default(now())
+  pv_no              Int?
+  check_no           Int?
+
+  bank_id        Int?
+  account_number Int?
+
+  additional_docs     String @db.VarChar(2000) // should be array of strings but since that's not possible we use this "adfasdfasdf,asdfasdfadsf,asd,fa,sdfa,sdf,asdfasdfasdf" so 2000 letters long string
+  number_of_documents Int    @default(0)
+  prepared_by_id      Int?
+  checked_by_id       Int?
+  approved_by_id      Int?
+
+  //if type pettycash
+
+  // petty_cashes petty_cash[] prisma will add this for me
+  balance            Float
+  remaining_balance  Float //(decrease from balance with the amount in petty cashes) when model created itll be the same as balance
+  project            project?         @relation(fields: [project_id], references: [id])
+  prepare_payment_to employee?        @relation(fields: [prepare_payment_to_id], references: [id], name: "prepare_payment_to_pay_req")
+  project_request    project_request? @relation(fields: [project_request_id], references: [id])
+  bank               bank?            @relation(fields: [bank_id], references: [id])
+
+  prepared_by employee?    @relation(fields: [prepared_by_id], references: [id], name: "prepared_by_pay_req")
+  checked_by  employee?    @relation(fields: [checked_by_id], references: [id], name: "checked_by_pay_req")
+  approved_by employee?    @relation(fields: [approved_by_id], references: [id], name: "approved_by_pay_req")
+  petty_cash  petty_cash[]
+}
+
+model petty_cash {
+  startDate          DateTime
+  endDate            DateTime
+  creationDate       DateTime @default(now())
+  createdBy          String
+  revisionDate       DateTime @updatedAt
+  revisedBy          String
+  status             Int      @default(0)
+  isProtectedForEdit Boolean  @default(false)
+  id                 Int      @id @default(autoincrement())
+  paid_to_id         Int?
+  paid_to_name       String?
+  paid_to_id_file    String?
+  amount_paid        Float
+  reason             String   @db.VarChar(300)
+  remark             String?  @db.VarChar(300)
+  payment_request_id Int
+  prepared_by_id     Int?
+  checked_by_id      Int?
+  approved_by_id     Int?
+  money_received     Boolean  @default(true)
+  date               DateTime
+  pcpv_number        Int?
+
+  paid_to                employee?             @relation(fields: [paid_to_id], references: [id], name: "petty_cash_paid_to")
+  payment_request        payment_request       @relation(fields: [payment_request_id], references: [id])
+  prepared_by            employee?             @relation(fields: [prepared_by_id], references: [id], name: "petty_cash_prepared_by")
+  checked_by             employee?             @relation(fields: [checked_by_id], references: [id], name: "petty_cash_checked_by")
+  approved_by            employee?             @relation(fields: [approved_by_id], references: [id], name: "petty_cash_approved_by")
+  project                project?              @relation(fields: [projectId], references: [id])
+  projectId              Int?
+  cash_payment_voucher   cash_payment_voucher? @relation(fields: [cash_payment_voucherId], references: [id])
+  cash_payment_voucherId Int?
+  employee               employee?             @relation(fields: [employeeId], references: [id])
+  employeeId             Int?
 }
 
 model reconcilation_transaction {
@@ -2631,66 +2693,76 @@ model employee {
   title         title?         @relation(fields: [title_id], references: [id])
   religion      religion?      @relation(fields: [religion_id], references: [id])
 
-  business_unit                    business_unit[]
-  attachment                       attachment[]
-  dependent                        dependent[]
-  discipline                       discipline[]
-  education                        education[]
-  employee_action                  employee_action[]
-  employee_attachment              employee_attachment[]
-  employee_contact                 employee_contact[]
-  employee_loan_repayment          employee_loan_repayment[]
-  employee_pay_frequency           employee_pay_frequency[]
-  employee_paygrade                employee_paygrade[]
-  employee_salary_component        employee_salary_component[]
-  experience                       experience[]
-  leave_assignment                 leave_assignment[]
-  leave_entitlement                leave_entitlement[]
-  leave_transfer                   leave_transfer[]
-  license                          license[]
-  service_allowance_pay            service_allowance_pay[]
-  shift_assignment                 shift_assignment[]
-  address                          address[]
-  employee_commitment              employee_commitment[]
-  vacancy_applicant                vacancy_applicant[]
-  vacancy_examiner                 vacancy_examiner[]
-  vacancy_internal_applicant       vacancy_internal_applicant[]
-  employee_pay_scale               employee_pay_scale[]
-  employee_back_penality_deduction employee_back_penality_deduction[]
-  employee_penality                employee_penality[]
-  payroll_log                      payroll_log[]
-  payroll_log_employee             payroll_log_employee[]
-  payroll_summary                  payroll_summary[]
-  payroll_summary_history          payroll_summary_history[]
-  salary_adjustment                salary_adjustment[]
-  overtime                         overtime[]
-  attendance_captured              attendance_captured[]
-  attendance_payroll               attendance_payroll[]
-  device_id_mapping                device_id_mapping[]
-  leave_plan                       leave_plan[]
-  punch                            punch[]
-  punch_time                       punch_time[]
-  cash_payment_voucher_checked     cash_payment_voucher[]             @relation("checked_by_cash")
-  cash_payment_voucher_prepared    cash_payment_voucher[]             @relation("prepared_by_cash")
-  payment_preparers                cpv_payment_request[]              @relation("prepared_by")
-  payment_checkers                 cpv_payment_request[]              @relation("checked_by")
-  payment_requests                 cpv_payment_request[]              @relation("approved_by")
+  business_unit                       business_unit[]
+  attachment                          attachment[]
+  dependent                           dependent[]
+  discipline                          discipline[]
+  education                           education[]
+  employee_action                     employee_action[]
+  employee_attachment                 employee_attachment[]
+  employee_contact                    employee_contact[]
+  employee_loan_repayment             employee_loan_repayment[]
+  employee_pay_frequency              employee_pay_frequency[]
+  employee_paygrade                   employee_paygrade[]
+  employee_salary_component           employee_salary_component[]
+  experience                          experience[]
+  leave_assignment                    leave_assignment[]
+  leave_entitlement                   leave_entitlement[]
+  leave_transfer                      leave_transfer[]
+  license                             license[]
+  service_allowance_pay               service_allowance_pay[]
+  shift_assignment                    shift_assignment[]
+  address                             address[]
+  employee_commitment                 employee_commitment[]
+  vacancy_applicant                   vacancy_applicant[]
+  vacancy_examiner                    vacancy_examiner[]
+  vacancy_internal_applicant          vacancy_internal_applicant[]
+  employee_pay_scale                  employee_pay_scale[]
+  employee_back_penality_deduction    employee_back_penality_deduction[]
+  employee_penality                   employee_penality[]
+  payroll_log                         payroll_log[]
+  payroll_log_employee                payroll_log_employee[]
+  payroll_summary                     payroll_summary[]
+  payroll_summary_history             payroll_summary_history[]
+  salary_adjustment                   salary_adjustment[]
+  overtime                            overtime[]
+  attendance_captured                 attendance_captured[]
+  attendance_payroll                  attendance_payroll[]
+  device_id_mapping                   device_id_mapping[]
+  leave_plan                          leave_plan[]
+  punch                               punch[]
+  punch_time                          punch_time[]
+  cash_payment_voucher_checked        cash_payment_voucher[]             @relation("checked_by_cash")
+  cash_payment_voucher_prepared       cash_payment_voucher[]             @relation("prepared_by_cash")
+  payment_preparers                   cpv_payment_request[]              @relation("prepared_by")
+  payment_checkers                    cpv_payment_request[]              @relation("checked_by")
+  payment_requests                    cpv_payment_request[]              @relation("approved_by")
   // request_payment_prepared_by      request_payment[]                  @relation("prepared_by")
   // request_payment_checked_by       request_payment[]                  @relation("checked_by")
   // request_payment_approved_by      request_payment[]                  @relation("approved_by")
-  request_payment_prepared_by      request_payment[]                  @relation("prepared_by_req_pay")
-  request_payment_checked_by       request_payment[]                  @relation("checked_by_req_pay")
-  request_payment_approved_by      request_payment[]                  @relation("approved_by_req_pay")
-  petty_cash                       petty_cash[]
-  engineered_sites                 project[]                          @relation("site_engineer")
-  managed_dupties                  project[]                          @relation("dupty_manager")
-  managed_proects                  project[]                          @relation("project_manager")
-  prepared_project_request         project_request[]                  @relation("project_request_prepared_by")
-  checked_project_request          project_request[]                  @relation("project_request_checked_by")
-  approved_project_request         project_request[]                  @relation("project_request_approved_by")
-  daily_report                     daily_report[]
-  user                             user[]
-  announcements                    announcement[]
+  request_payment_prepared_by         request_payment[]                  @relation("prepared_by_req_pay")
+  request_payment_checked_by          request_payment[]                  @relation("checked_by_req_pay")
+  request_payment_approved_by         request_payment[]                  @relation("approved_by_req_pay")
+  petty_cash                          petty_cash[]
+  engineered_sites                    project[]                          @relation("site_engineer")
+  managed_dupties                     project[]                          @relation("dupty_manager")
+  managed_proects                     project[]                          @relation("project_manager")
+  prepared_project_request            project_request[]                  @relation("project_request_prepared_by")
+  checked_project_request             project_request[]                  @relation("project_request_checked_by")
+  approved_project_request            project_request[]                  @relation("project_request_approved_by")
+  project_request_approved_by_finance project_request[]                  @relation("project_request_approved_by_finance")
+  daily_report                        daily_report[]
+  user                                user[]
+  announcements                       announcement[]
+
+  prepare_payment_to          payment_request[] @relation("prepare_payment_to_pay_req")
+  prepared_by_payment_request payment_request[] @relation("prepared_by_pay_req")
+  checked_by_payment_request  payment_request[] @relation("checked_by_pay_req")
+  approved_by_payment_request payment_request[] @relation("approved_by_pay_req")
+  petty_cash_paid_to          petty_cash[]      @relation("petty_cash_paid_to")
+  petty_cash_prepared_by      petty_cash[]      @relation("petty_cash_prepared_by")
+  petty_cash_checked_by       petty_cash[]      @relation("petty_cash_checked_by")
+  petty_cash_approved_by      petty_cash[]      @relation("petty_cash_approved_by")
 }
 
 model employee_action {

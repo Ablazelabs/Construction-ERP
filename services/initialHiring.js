@@ -4,6 +4,7 @@ const {
     error,
     randomConcurrencyStamp,
     sendEmail,
+    COMPANY_NAME,
 } = require("../config/config");
 const { post: mPost, patch: mPatch } = require("./mostCRUD/mostCRUD");
 const {
@@ -25,6 +26,14 @@ module.exports = async (
     creator,
     next
 ) => {
+    if (accountReqBody.email) {
+        const email = accountReqBody.email;
+        const data = await user.findUnique({ where: { email } });
+        if (data) {
+            error("email", "email already exists! please use another", next);
+            return false;
+        }
+    }
     const actionReason = await allModels.action_reason.findFirst({
         where: {
             action_type_code: "Hiring",
@@ -184,30 +193,35 @@ module.exports = async (
         const password = "password"; //for testing
         await user.create({
             data: {
-                code: Number(employeeReqBody.id_number),
+                code: 123434,
                 concurrency_stamp: randomConcurrencyStamp(),
-                password: await hash(accountReqBody.password, 10),
+                password: await hash(password, 10),
                 email,
                 first_login: true,
                 email_confirmed: true,
                 employee_id: empdata.id,
-                username: accountReqBody.username,
+                username: fullName,
             },
         });
-        await sendEmail(
-            email,
-            `Hello, Employee from ${COMPANY_NAME}`,
-            `${COMPANY_NAME} Account Creation`,
-            `<div>
-                Hello ${fullName}, This is your temporary password from your account on erp.elhadar.com
-                Please login and change your password!
-                <div>
-                    login email: ${email}
-                    <br />
-                    login Password: ${password}
-                </div>
-            </div>`
-        );
+        try {
+            await sendEmail(
+                email,
+                `Hello, Employee from ${COMPANY_NAME}`,
+                `${COMPANY_NAME} Account Creation`,
+                `<div>
+                    Hello ${fullName}, This is your temporary password from your account on erp.elhadar.com
+                    Please login and change your password!
+                    <div>
+                        login email: ${email}
+                        <br />
+                        login Password: ${password}
+                    </div>
+                </div>`
+            );
+        } catch (e) {
+            console.log(e);
+            //that's all just continue
+        }
     }
 
     return {

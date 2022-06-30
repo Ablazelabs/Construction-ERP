@@ -6,7 +6,11 @@ const validator = {
             if (type === "string" && typeof value === "number") {
                 return String(value);
             }
-            if (type === "number" && typeof value === "string") {
+            if (
+                type === "number" &&
+                typeof value === "string" &&
+                value !== ""
+            ) {
                 const valueNum = Number(value);
                 if (!isNaN(valueNum)) {
                     return valueNum;

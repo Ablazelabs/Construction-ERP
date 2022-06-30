@@ -16,9 +16,9 @@ const limiter = rateLimit({
     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
+app.use(cors());
 app.use(limiter);
 app.use(json());
-app.use(cors());
 app.use(authenticate);
 
 /**

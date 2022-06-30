@@ -53,7 +53,6 @@ const generalLedgerExport = async (
         reportBasis,
     };
     const generalLedgers = await getGeneralLedgers(filters);
-    console.log({ exportAs });
     if (exportAs === "xlsx") {
         return ledgerBuildExcel(generalLedgers);
     } else {

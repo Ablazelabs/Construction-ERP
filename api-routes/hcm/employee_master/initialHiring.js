@@ -282,7 +282,7 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
                 error("file", "couldn't rename", next);
                 return;
             }
-            reqBody["logo"] = fileUrl;
+            reqBody["photo"] = fileUrl;
         }
     } catch {
         deleteUnusedFile(req.file);

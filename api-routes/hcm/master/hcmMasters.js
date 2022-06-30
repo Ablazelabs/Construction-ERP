@@ -73,8 +73,6 @@ router.post(allRoutes, async (req, res, next) => {
 });
 router.get(allRoutes, async (req, res, next) => {
     const operationDataType = getOperationDataType(req.path);
-    console.log({ operationDataType });
-
     const filters = allFilters[operationDataType],
         sorts = allSorts[operationDataType],
         projections = allProjections[operationDataType];
