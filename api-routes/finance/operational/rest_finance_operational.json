@@ -449,9 +449,6 @@
             "paid_to_name": "string",
             "paid_to_id_file": "string",
             "remark": "string",
-            "prepared_by_id": "number",
-            "checked_by_id": "number",
-            "approved_by_id": "number",
             "pcpv_number": "number"
         }
     },

@@ -1,5 +1,5 @@
 const { error, allModels } = require("../config/config");
-const { payment_request } = allModels;
+const { payment_request, project_request, petty_cash } = allModels;
 const {
     post: mPost,
     patch: mPatch,
@@ -43,6 +43,7 @@ const postPaymentRequest = async (
         if (lastPettyCash) {
             reqBody.balance += lastPettyCash.remaining_balance;
         }
+        delete reqBody.project_request_id;
     } else if (reqBody.for === FORENUM.project_request) {
         //make sure the project request has been selected
         if (!reqBody.project_request_id) {
@@ -53,6 +54,17 @@ const postPaymentRequest = async (
             );
             return false;
         }
+        //add project id to the model too... if there is project request there is project
+        const projectRequest = await project_request.findUnique({
+            where: {
+                id: reqBody.project_request_id,
+            },
+        });
+        if (!projectRequest) {
+            error("project_request_id", "project request doesn't exist", next);
+            return false;
+        }
+        reqBody.project_id = projectRequest.project_id;
         //if sent then hip hip hurray
     }
     if (reqBody.prepare_payment_to_id) {
@@ -94,7 +106,7 @@ const postPettyCash = async (
     } else {
         error(
             "petty_cash",
-            "please prepare pv for pettycash replensishment, pettycash amount is currently zero"
+            "please prepare pv for pettycash replensishment, pettycash balcnce is currently zero"
         );
         return false;
     }
@@ -121,7 +133,7 @@ const patchPaymentRequest = async (
     const updatedPV = await payment_request.findUnique({
         where: { id: reqBody.id },
     });
-    if (updateData.amount) {
+    if (updateData.amount && updatedPV.amount != updateData.amount) {
         if (updatedPV.checked_by_id || updatedPV.approved_by_id) {
             error(
                 "amount",
@@ -135,8 +147,25 @@ const patchPaymentRequest = async (
                 updateData.amount - updatedPV.amount;
         }
     }
+    if (
+        updateData.project_request_id &&
+        updateData.project_request_id != updatedPV.project_request_id
+    ) {
+        //update project if project request changes!
+        const projectRequest = await project_request.findUnique({
+            where: {
+                id: updateData.project_request_id,
+            },
+        });
+        if (!projectRequest) {
+            error("project_request_id", "project request doesn't exist", next);
+            return false;
+        }
+        updateData.project_id = projectRequest.project_id;
+    }
     delete reqBody.additional_docs;
     delete reqBody.number_of_documents;
+    delete reqBody.prepare_payment_to_id_file;
     return mPatch(
         updateDataProjection,
         reqBody,
@@ -147,6 +176,156 @@ const patchPaymentRequest = async (
         next
     );
 };
+const patchPettyCash = async (
+    updateDataProjection,
+    reqBody,
+    updateData,
+    operationDataType,
+    creator,
+    uniqueValues,
+    next
+) => {
+    const updatedPetty = await petty_cash.findUnique({
+        where: {
+            id: reqBody.id,
+        },
+    });
+    let newDecreased = 0;
+    if (
+        updateData.amount_paid &&
+        updatedPetty.amount_paid != updateData.amount_paid
+    ) {
+        newDecreased = updateData.amount - updatedPetty.amount_paid;
+    }
+    if (
+        updateData.project_request_id &&
+        updateData.project_request_id != updatedPV.project_request_id
+    ) {
+        //update project if project request changes!
+        const projectRequest = await project_request.findUnique({
+            where: {
+                id: updateData.project_request_id,
+            },
+        });
+        if (!projectRequest) {
+            error("project_request_id", "project request doesn't exist", next);
+            return false;
+        }
+        updateData.project_id = projectRequest.project_id;
+    }
+    delete reqBody.additional_docs;
+    delete reqBody.number_of_documents;
+    delete reqBody.prepare_payment_to_id_file;
+    return Promise.all([
+        mPatch(
+            updateDataProjection,
+            reqBody,
+            updateData,
+            operationDataType,
+            creator,
+            uniqueValues,
+            next
+        ),
+        await payment_request.update({
+            where: {
+                id: updatedPetty.payment_request_id,
+            },
+            data: {
+                remaining_balance: {
+                    decrement: newDecreased,
+                },
+            },
+        }),
+    ]);
+};
+/**
+ *
+ * @param {number} id
+ * @param {Array<string>} urls
+ * @param {import('express').NextFunction} next
+ */
+const addAttachments = async (id, urls, next) => {
+    const paymentRequest = await payment_request.findUnique({
+        where: { id },
+    });
+    if (paymentRequest) {
+        const addedAttachments = paymentRequest.additional_docs;
+        const addedAttachmentsArray = JSON.parse(addedAttachments);
+        const newSet = addedAttachmentsArray.concat(urls);
+        await payment_request.update({
+            where: { id },
+            data: { additional_docs: JSON.stringify(newSet) },
+        });
+        return { success: true };
+    } else {
+        error("id", "payment request with this id not found!", next);
+        return false;
+    }
+};
+
+const removeAttachment = async (id, removedIndex, next) => {
+    const paymentRequest = await payment_request.findUnique({
+        where: { id },
+    });
+    //remove the file if u can!
+    if (paymentRequest) {
+        const attachments = paymentRequest.additional_docs;
+        const attachmentsArray = JSON.parse(attachments);
+        attachmentsArray.splice(removedIndex, 1);
+        await payment_request.update({
+            where: { id },
+            data: { additional_docs: JSON.stringify(attachmentsArray) },
+        });
+        return { success: true };
+    } else {
+        error("id", "payment request with this id not found!", next);
+        return false;
+    }
+};
+
+/**
+ *
+ * @param {number} id
+ * @param {string} url
+ * @param {import('express').NextFunction} next
+ */
+const addIdImagePayment = async (id, url, next) => {
+    const paymentRequest = await payment_request.findUnique({
+        where: { id },
+    });
+    if (paymentRequest) {
+        await payment_request.update({
+            where: { id },
+            data: { prepare_payment_to_id_file: url },
+        });
+        return { success: true };
+    } else {
+        error("id", "payment request with this id not found!", next);
+        return false;
+    }
+};
+/**
+ *
+ * @param {number} id
+ * @param {string} url
+ * @param {import('express').NextFunction} next
+ */
+const addIdImagePetty = async (id, url, next) => {
+    const pettyCash = await petty_cash.findUnique({
+        where: { id },
+    });
+    if (pettyCash) {
+        await petty_cash.update({
+            where: { id },
+            data: { paid_to_id_file: url },
+        });
+        return { success: true };
+    } else {
+        error("id", "payment request with this id not found!", next);
+        return false;
+    }
+};
+
 const deleter = async ({ id }, operationDataType) => {
     return mDelete(id, operationDataType);
 };
@@ -155,6 +334,11 @@ module.exports = {
     postPaymentRequest,
     patchPaymentRequest,
     postPettyCash,
+    patchPettyCash,
+    addAttachments,
+    addIdImagePayment,
+    addIdImagePetty,
+    removeAttachment,
     deleter,
 };
 // same as the others
