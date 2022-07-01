@@ -324,7 +324,6 @@ model project {
   cpv_payment_request          cpv_payment_request[]
   crv_payment                  crv_payment[]
   request_payment              request_payment[]
-  petty_cash                   petty_cash[]
   project_request              project_request[]
   project_edit_request         project_edit_request[]
   daily_report                 daily_report[]
@@ -1820,7 +1819,6 @@ model cash_payment_voucher {
   //create this model it isn't in project operational
   cpv_payment_request cpv_payment_request[]
   cpv_receipt         cpv_receipt[]
-  petty_cash          petty_cash[]
   request_payment     request_payment[]
 }
 
@@ -2040,38 +2038,31 @@ model payment_request {
 model petty_cash {
   startDate          DateTime
   endDate            DateTime
-  creationDate       DateTime @default(now())
+  creationDate       DateTime        @default(now())
   createdBy          String
-  revisionDate       DateTime @updatedAt
+  revisionDate       DateTime        @updatedAt
   revisedBy          String
-  status             Int      @default(0)
-  isProtectedForEdit Boolean  @default(false)
-  id                 Int      @id @default(autoincrement())
+  status             Int             @default(0)
+  isProtectedForEdit Boolean         @default(false)
+  id                 Int             @id @default(autoincrement())
   paid_to_id         Int?
   paid_to_name       String?
   paid_to_id_file    String?
   amount_paid        Float
-  reason             String   @db.VarChar(300)
-  remark             String?  @db.VarChar(300)
+  reason             String          @db.VarChar(300)
+  remark             String?         @db.VarChar(300)
   payment_request_id Int
   prepared_by_id     Int?
   checked_by_id      Int?
   approved_by_id     Int?
-  money_received     Boolean  @default(true)
+  money_received     Boolean         @default(true)
   date               DateTime
   pcpv_number        Int?
-
-  paid_to                employee?             @relation(fields: [paid_to_id], references: [id], name: "petty_cash_paid_to")
-  payment_request        payment_request       @relation(fields: [payment_request_id], references: [id])
-  prepared_by            employee?             @relation(fields: [prepared_by_id], references: [id], name: "petty_cash_prepared_by")
-  checked_by             employee?             @relation(fields: [checked_by_id], references: [id], name: "petty_cash_checked_by")
-  approved_by            employee?             @relation(fields: [approved_by_id], references: [id], name: "petty_cash_approved_by")
-  project                project?              @relation(fields: [projectId], references: [id])
-  projectId              Int?
-  cash_payment_voucher   cash_payment_voucher? @relation(fields: [cash_payment_voucherId], references: [id])
-  cash_payment_voucherId Int?
-  employee               employee?             @relation(fields: [employeeId], references: [id])
-  employeeId             Int?
+  paid_to            employee?       @relation(fields: [paid_to_id], references: [id], name: "petty_cash_paid_to")
+  payment_request    payment_request @relation(fields: [payment_request_id], references: [id])
+  prepared_by        employee?       @relation(fields: [prepared_by_id], references: [id], name: "petty_cash_prepared_by")
+  checked_by         employee?       @relation(fields: [checked_by_id], references: [id], name: "petty_cash_checked_by")
+  approved_by        employee?       @relation(fields: [approved_by_id], references: [id], name: "petty_cash_approved_by")
 }
 
 model reconcilation_transaction {
@@ -2743,7 +2734,6 @@ model employee {
   request_payment_prepared_by         request_payment[]                  @relation("prepared_by_req_pay")
   request_payment_checked_by          request_payment[]                  @relation("checked_by_req_pay")
   request_payment_approved_by         request_payment[]                  @relation("approved_by_req_pay")
-  petty_cash                          petty_cash[]
   engineered_sites                    project[]                          @relation("site_engineer")
   managed_dupties                     project[]                          @relation("dupty_manager")
   managed_proects                     project[]                          @relation("project_manager")
