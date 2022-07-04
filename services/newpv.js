@@ -1,5 +1,6 @@
 const { error, allModels } = require("../config/config");
 const { payment_request, project_request, petty_cash } = allModels;
+const { unlinkSync } = require("fs");
 const {
     post: mPost,
     patch: mPatch,
@@ -79,7 +80,7 @@ const postPaymentRequest = async (
         );
         return false;
     }
-    reqBody.prepared_by_id = creator;
+    // reqBody.prepared_by_id = creator;
     reqBody.remaining_balance = reqBody.balance;
     return mPost(reqBody, operationDataType, creator, uniqueValues, next);
 };
@@ -254,7 +255,10 @@ const addAttachments = async (id, urls, next) => {
         const newSet = addedAttachmentsArray.concat(urls);
         await payment_request.update({
             where: { id },
-            data: { additional_docs: JSON.stringify(newSet) },
+            data: {
+                additional_docs: JSON.stringify(newSet),
+                number_of_documents: newSet.length,
+            },
         });
         return { success: true };
     } else {
@@ -271,11 +275,20 @@ const removeAttachment = async (id, removedIndex, next) => {
     if (paymentRequest) {
         const attachments = paymentRequest.additional_docs;
         const attachmentsArray = JSON.parse(attachments);
-        attachmentsArray.splice(removedIndex, 1);
+        let [removed] = attachmentsArray.splice(removedIndex, 1);
         await payment_request.update({
             where: { id },
-            data: { additional_docs: JSON.stringify(attachmentsArray) },
+            data: {
+                additional_docs: JSON.stringify(attachmentsArray),
+                number_of_documents: attachmentsArray.length,
+            },
         });
+        try {
+            removed = removed.replace(/\//, "");
+            unlinkSync(removed);
+        } catch (e) {
+            console.log(e);
+        }
         return { success: true };
     } else {
         error("id", "payment request with this id not found!", next);
@@ -293,11 +306,18 @@ const addIdImagePayment = async (id, url, next) => {
     const paymentRequest = await payment_request.findUnique({
         where: { id },
     });
+    let removed = paymentRequest.prepare_payment_to_id_file;
     if (paymentRequest) {
         await payment_request.update({
             where: { id },
             data: { prepare_payment_to_id_file: url },
         });
+        try {
+            removed = removed.replace(/\//, "");
+            unlinkSync(removed);
+        } catch (e) {
+            console.log(e);
+        }
         return { success: true };
     } else {
         error("id", "payment request with this id not found!", next);
@@ -314,11 +334,18 @@ const addIdImagePetty = async (id, url, next) => {
     const pettyCash = await petty_cash.findUnique({
         where: { id },
     });
+    let removed = pettyCash.paid_to_id_file;
     if (pettyCash) {
         await petty_cash.update({
             where: { id },
             data: { paid_to_id_file: url },
         });
+        try {
+            removed = removed.replace(/\//, "");
+            unlinkSync(removed);
+        } catch (e) {
+            console.log(e);
+        }
         return { success: true };
     } else {
         error("id", "payment request with this id not found!", next);

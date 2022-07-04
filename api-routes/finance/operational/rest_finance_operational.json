@@ -103,7 +103,8 @@
             "from": "string",
             "amount": "number",
             "for": "number",
-            "date": "string"
+            "date": "string",
+            "prepared_by_id": "number"
         },
         "petty_cash": {
             "amount_paid": "number",
@@ -440,7 +441,6 @@
             "check_no": "number",
             "bank_id": "number",
             "account_number": "number",
-            "prepared_by_id": "number",
             "checked_by_id": "number",
             "approved_by_id": "number"
         },
@@ -832,6 +832,7 @@
             "from": true,
             "prepare_payment_to": true,
             "prepare_payment_to_name": true,
+            "prepare_payment_to_id_file": true,
             "amount": true,
             "for": true,
             "project_request": true,

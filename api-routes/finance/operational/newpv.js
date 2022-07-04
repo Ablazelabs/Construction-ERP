@@ -3,7 +3,7 @@ const multer = require("multer");
 const router = express.Router();
 const { error, getOperationDataType } = require("../../../config/config");
 const upload = multer({ dest: "uploads/" });
-const { renameSync, unlinkSync } = require("fs");
+const { renameSync, unlinkSync, existsSync, mkdirSync } = require("fs");
 const {
     patchPaymentRequest,
     deleter,
@@ -38,7 +38,7 @@ const {
     allFilters,
 } = allConfigs;
 
-router.post("payment_request", async (req, res, next) => {
+router.post("/payment_request", async (req, res, next) => {
     const operationDataType = "payment_request";
     const requiredInputFilter = allInputFilters[operationDataType],
         optionalInputFilter = allOptionalInputFilters[operationDataType],
@@ -68,6 +68,7 @@ router.post("payment_request", async (req, res, next) => {
             reqBody,
             operationDataType,
             res.locals.id,
+            [],
             next
         );
         if (data == false) {
@@ -79,7 +80,7 @@ router.post("payment_request", async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
-router.post("petty_cash", async (req, res, next) => {
+router.post("/petty_cash", async (req, res, next) => {
     const operationDataType = "payment_request";
     const requiredInputFilter = allInputFilters[operationDataType],
         optionalInputFilter = allOptionalInputFilters[operationDataType],
@@ -124,7 +125,7 @@ router.post("petty_cash", async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
-router.patch("payment_request", async (req, res, next) => {
+router.patch("/payment_request", async (req, res, next) => {
     const operationDataType = getOperationDataType(req.path);
 
     const requiredInputFilter = allInputFilters[operationDataType],
@@ -171,7 +172,7 @@ router.patch("payment_request", async (req, res, next) => {
         return;
     }
 });
-router.patch("petty_cash", async (req, res, next) => {
+router.patch("/petty_cash", async (req, res, next) => {
     const operationDataType = "petty_cash";
 
     const requiredInputFilter = allInputFilters[operationDataType],
@@ -223,16 +224,12 @@ router.patch("petty_cash", async (req, res, next) => {
 });
 router.post(
     "/payment_request/add_attachments",
+    upload.array("file[]"),
     async (req, res, next) => {
-        if (req.body.id) {
-            next();
-        } else {
+        if (!req.body.id) {
             error("id", "please send id of the payment request", next);
             return;
         }
-    },
-    upload.array("file"),
-    async (req, res, next) => {
         const uploadTarget = "payment_request";
         try {
             let fileUrls = [];
@@ -245,17 +242,26 @@ router.post(
                         next,
                         true
                     );
+                    const dir = `uploads/${uploadTarget}`;
+                    if (!existsSync(dir)) {
+                        mkdirSync(dir);
+                    }
                     const fileType = reqFile.originalname.split(".").pop();
-                    const newDestination = `uploads/${uploadTarget}/${req.file.filename}.${fileType}`;
+                    const newDestination = `uploads/${uploadTarget}/${reqFile.filename}.${fileType}`;
                     const fileName = reqFile.filename;
                     const fileUrl = `/uploads/${uploadTarget}/${fileName}.${fileType}`;
                     fileUrls.push(fileUrl);
                     renameSync(reqFile.path, newDestination);
                 } catch (e) {
+                    console.log(e);
                     unlinkSync(reqFile.path);
                 }
             }
-            const data = await addAttachments(req.body.id, fileUrls, next);
+            const data = await addAttachments(
+                Number(req.body.id),
+                fileUrls,
+                next
+            );
             if (!data) {
                 return;
             }
@@ -268,7 +274,7 @@ router.post(
     }
 );
 router.delete("/payment_request/remove_attachment", async (req, res, next) => {
-    if (!req.body.removedIndex) {
+    if (isNaN(req.body.removedIndex)) {
         error(
             "removedIndex",
             "please send which index you want to remove",
@@ -292,22 +298,17 @@ router.delete("/payment_request/remove_attachment", async (req, res, next) => {
 /**
  * will also replace the id(use it as add or as patch)
  */
-router.post(
+router.patch(
     "/payment_request/add_id",
+    upload.single("file"),
     async (req, res, next) => {
-        if (req.body.id) {
-            next();
-        } else {
+        if (!req.body.id) {
             error("id", "please send id of the payment request", next);
             return;
         }
-    },
-    upload.single("file"),
-    async (req, res, next) => {
         const uploadTarget = "payment_request";
         try {
-            let fileUrl = [];
-
+            let fileUrl = "";
             const reqFile = req.file;
             try {
                 uploadValidation(
@@ -317,16 +318,23 @@ router.post(
                     true
                 );
                 const fileType = reqFile.originalname.split(".").pop();
-                const newDestination = `uploads/${uploadTarget}/${req.file.filename}.${fileType}`;
+                const dir = `uploads/${uploadTarget}`;
+                if (!existsSync(dir)) {
+                    mkdirSync(dir);
+                }
+                const newDestination = `uploads/${uploadTarget}/${reqFile.filename}.${fileType}`;
                 const fileName = reqFile.filename;
-                const fileUrl = `/uploads/${uploadTarget}/${fileName}.${fileType}`;
-                fileUrl = fileUrl;
+                fileUrl = `/uploads/${uploadTarget}/${fileName}.${fileType}`;
                 renameSync(reqFile.path, newDestination);
             } catch (e) {
                 unlinkSync(reqFile.path);
             }
 
-            const data = await addIdImagePayment(req.body.id, fileUrl, next);
+            const data = await addIdImagePayment(
+                Number(req.body.id),
+                fileUrl,
+                next
+            );
             if (!data) {
                 return;
             }
@@ -342,17 +350,13 @@ router.post(
  * will also replace the id(use it as add or as patch)
  */
 router.patch(
-    "petty_cash/add_id",
+    "/petty_cash/add_id",
+    upload.single("file"),
     async (req, res, next) => {
-        if (req.body.id) {
-            next();
-        } else {
+        if (!req.body.id) {
             error("id", "please send id of the payment request", next);
             return;
         }
-    },
-    upload.single("file"),
-    async (req, res, next) => {
         const uploadTarget = "payment_request";
         try {
             let fileUrl = [];
@@ -365,6 +369,10 @@ router.patch(
                     next,
                     true
                 );
+                const dir = `uploads/${uploadTarget}`;
+                if (!existsSync(dir)) {
+                    mkdirSync(dir);
+                }
                 const fileType = reqFile.originalname.split(".").pop();
                 const newDestination = `uploads/${uploadTarget}/${req.file.filename}.${fileType}`;
                 const fileName = reqFile.filename;

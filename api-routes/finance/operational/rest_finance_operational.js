@@ -72,8 +72,9 @@ router.post(allPostRoutes, async (req, res, next) => {
         }
         res.json(data);
     } catch (e) {
-        console.log(e);
         error("database", "error", next, 500);
+        console.log(e);
+        console.log("error called with next");
     }
 });
 router.get(allRoutes, async (req, res, next) => {
