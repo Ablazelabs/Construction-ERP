@@ -224,7 +224,7 @@ router.patch("/petty_cash", async (req, res, next) => {
 });
 router.post(
     "/payment_request/add_attachments",
-    upload.array("file[]"),
+    upload.any(),
     async (req, res, next) => {
         if (!req.body.id) {
             error("id", "please send id of the payment request", next);
@@ -233,8 +233,10 @@ router.post(
         const uploadTarget = "payment_request";
         try {
             let fileUrls = [];
+            req.files = req.files.filter((elem) => elem.fieldname === "file[]");
             for (let i in req.files) {
                 const reqFile = req.files[i];
+                console.log(reqFile);
                 try {
                     uploadValidation(
                         reqFile,

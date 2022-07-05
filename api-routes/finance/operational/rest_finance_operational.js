@@ -92,6 +92,14 @@ router.get(allRoutes, async (req, res, next) => {
     }
     const { queryFilter, querySort, limit, skip, projection } = getData;
     try {
+        console.log({
+            queryFilter,
+            querySort,
+            limit,
+            skip,
+            projection,
+            operationDataType,
+        });
         res.json(
             await get(
                 queryFilter,

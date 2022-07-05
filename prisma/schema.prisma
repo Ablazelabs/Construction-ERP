@@ -658,36 +658,38 @@ model request {
 }
 
 model project_request {
-  id                     Int                   @id @default(autoincrement())
-  request_type           Int //[payment,manpower,store],
-  priority               Int //[high,mid,low],
-  total_amount           Float?
-  vat_amount             Float?
-  sub_total              Float?
-  prepared_by_id         Int
-  checked_by_id          Int?
-  approved_by_id         Int?
-  finance_approved_by_id Int?
-  approval_status        Int //[pending, approved, denied] //there should have been a checked by but we missed that 😅
-  requested_date         DateTime              @default(now())
-  action_taken_date      DateTime?
-  status                 Int                   @default(0)
-  creationDate           DateTime              @default(now())
-  createdBy              String
-  revisionDate           DateTime              @updatedAt
-  revisedBy              String
-  project_id             Int
-  action_note            String?
-  invoice                String?               @db.VarChar(3000) //i intend to use arrays
-  remark                 String?               @db.VarChar(1000)
-  prepared_by            employee              @relation(fields: [prepared_by_id], references: [id], name: "project_request_prepared_by")
-  checked_by             employee?             @relation(fields: [checked_by_id], references: [id], name: "project_request_checked_by")
-  approved_by            employee?             @relation(fields: [approved_by_id], references: [id], name: "project_request_approved_by")
-  finance_approved_by    employee?             @relation(fields: [finance_approved_by_id], references: [id], name: "project_request_approved_by_finance")
-  project                project               @relation(fields: [project_id], references: [id])
-  individual_requests    individual_requests[]
-  isProtectedForEdit     Boolean               @default(false)
-  payment_request        payment_request[]
+  id                      Int                   @id @default(autoincrement())
+  request_type            Int //[payment,manpower,store],
+  priority                Int //[high,mid,low],
+  total_amount            Float?
+  vat_amount              Float?
+  sub_total               Float?
+  prepared_by_id          Int
+  checked_by_id           Int?
+  approved_by_id          Int?
+  finance_approved_by_id  Int?
+  approval_status         Int //[pending, approved, denied] //there should have been a checked by but we missed that 😅
+  requested_date          DateTime              @default(now())
+  action_taken_date       DateTime?
+  status                  Int                   @default(0)
+  creationDate            DateTime              @default(now())
+  createdBy               String
+  revisionDate            DateTime              @updatedAt
+  revisedBy               String
+  project_id              Int
+  action_note             String?
+  invoice                 String?               @db.VarChar(3000) //i intend to use arrays
+  remark                  String?               @db.VarChar(1000)
+  prepared_by             employee              @relation(fields: [prepared_by_id], references: [id], name: "project_request_prepared_by")
+  checked_by              employee?             @relation(fields: [checked_by_id], references: [id], name: "project_request_checked_by")
+  approved_by             employee?             @relation(fields: [approved_by_id], references: [id], name: "project_request_approved_by")
+  finance_approved_by     employee?             @relation(fields: [finance_approved_by_id], references: [id], name: "project_request_approved_by_finance")
+  finance_approval_status Int                   @default(1) //[pending, approved, denied] //there should have been a checked by but we missed that 😅
+  finance_action_note     String?
+  project                 project               @relation(fields: [project_id], references: [id])
+  individual_requests     individual_requests[]
+  isProtectedForEdit      Boolean               @default(false)
+  payment_request         payment_request[]
 }
 
 model daily_report {
@@ -2013,12 +2015,13 @@ model payment_request {
   bank_id        Int?
   account_number Int?
 
-  additional_docs     String @db.VarChar(2000) // should be array of strings but since that's not possible we use this "adfasdfasdf,asdfasdfadsf,asd,fa,sdfa,sdf,asdfasdfasdf" so 2000 letters long string
-  number_of_documents Int    @default(0)
+  additional_docs     String  @db.VarChar(2000) // should be array of strings but since that's not possible we use this "adfasdfasdf,asdfasdfadsf,asd,fa,sdfa,sdf,asdfasdfasdf" so 2000 letters long string
+  number_of_documents Int     @default(0)
   prepared_by_id      Int?
   checked_by_id       Int?
   approved_by_id      Int?
-
+  approval_status     Int     @default(1) //[pending, approved, denied]
+  action_note         String?
   //if type pettycash
 
   // petty_cashes petty_cash[] prisma will add this for me

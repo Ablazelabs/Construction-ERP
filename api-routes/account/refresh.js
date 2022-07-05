@@ -19,6 +19,8 @@ router.post("/account/refresh", async (req, res, next) => {
     try {
         payLoad = verify(req.body.refreshToken, process.env.REFRESH_KEY);
     } catch (e) {
+        console.log(e);
+        console.log(req.body, process.env.REFRESH_KEY);
         error("refreshToken", "Invalid or Expired Refresh Token", next, 401);
         return;
     }

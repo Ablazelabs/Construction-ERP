@@ -80,7 +80,7 @@ const error = (key, message, next, status = 400) => {
         myError[key] = message + "^" + myError["error_id"];
     }
     myError[key] = message;
-    status != 400 && console.log({ error: myError, status });
+    status != 400 && console.log({ error: myError });
     next(new Error(JSON.stringify(myError)));
 };
 

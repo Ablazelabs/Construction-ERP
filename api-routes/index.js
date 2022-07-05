@@ -31,6 +31,7 @@ const financemasters = require("./finance/master/financemasters");
 const accountingPeriod = require("./finance/master/accountingPeriod");
 const financeGeneralExport = require("./finance/operational/generalExport");
 const financeNewPvs = require("./finance/operational/newpv");
+const financeApprovals = require("./finance/operational/approvals");
 const financeExports = require("./finance/operational/exportController");
 const businessOverviewExports = require("./finance/businessOverviewExport");
 const exportTemplate = require("./finance/operational/exportTemplate");
@@ -104,6 +105,7 @@ router.use("/finance/master", financemasters);
 router.use("/finance/master", accountingPeriod);
 router.use("/finance/business_export", businessOverviewExports);
 
+router.use("/finance/operational/approval", financeApprovals);
 router.use("/finance/operational", financeNewPvs);
 router.use("/finance/operational", financeGeneralExport);
 router.use("/finance/operational", exportTemplate);
