@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { error } = require("../../../config/config");
+const { error, getOperationDataType } = require("../../../config/config");
 const { post } = require("../../../services/operational_data");
 
 const { returnReqBody } = require("../../../validation/basicValidators");
@@ -45,7 +45,7 @@ router.post(allRoutes, async (req, res, next) => {
     /**
      * operation data type is = "daily_work_log" (nothing fancy)
      */
-    const operationDataType = req.path.split("/").pop();
+    const operationDataType = getOperationDataType(req.path);
 
     const requiredInputFilter = allInputFilters[operationDataType],
         optionalInputFilter = allOptionalInputFilters[operationDataType],

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { error } = require("../../../config/config");
+const { error, getOperationDataType } = require("../../../config/config");
 const inputFilter = require("../../../validation/inputFilter");
 const uploadValidation = require("../../../validation/uploadValidation");
 const validation = require("../../../validation/validation");
@@ -98,7 +98,7 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
     const operationDataType =
         req.path.split("/").pop() == ""
             ? "attachment"
-            : req.path.split("/").pop();
+            : getOperationDataType(req.path);
     let reqBody;
     const requiredInputFilter = allInputFilters[operationDataType];
     const optionalInputFilter = allOptionalInputfilters[operationDataType];
@@ -247,7 +247,7 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
     }
 });
 router.patch(allRoutes, upload.single("file"), async (req, res, next) => {
-    const operationDataType = req.path.split("/").pop();
+    const operationDataType = getOperationDataType(req.path);
     let updateData = {};
     try {
         if (!req.body.updateData) req.body.updateData = {};

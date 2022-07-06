@@ -2,8 +2,7 @@ const { error } = require("../config/config");
 /**
  * It checks if a file has been sent, if it has, it checks if the file is of the allowed file types, if
  * it is, it checks if the file is less than the max file size, if it is, it returns true, if it isn't,
- * it throws an error, if it isn't of the allowed file types, it throws an error, if it isn't required
- * and no file has been sent, it returns false.
+ * it throws an error,
  * @param reqFile - the file that is being sent to the server
  * @param allowedFileTypes - an array of allowed file types
  * @param next - is the next function in the middleware chain

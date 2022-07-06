@@ -1,3 +1,17 @@
+const nodemailer = require("nodemailer");
+
+let transporter = nodemailer.createTransport({
+    host: "mail.ablazelabs.com",
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+        user: process.env.EMAIL_SENDER, // generated ethereal user
+        pass: process.env.EMAIL_PASSWORD, // generated ethereal password
+    },
+    tls: {
+        rejectUnauthorized: false,
+    },
+});
 const confirmCredential = async (to, code) => {
     //TODO
     /**
@@ -14,14 +28,22 @@ const confirmCredential = async (to, code) => {
  * @param {Array<{fileName:string, file:Buffer}>} attachments
  */
 const sendEmail = async (to, title, subject, body, attachments) => {
-    console.log({
-        to,
-        title,
-        subject,
-        body,
-        attachments,
-    });
-    return { success: true };
+    // send mail with defined transport object
+    try {
+        let info = await transporter.sendMail({
+            from: `"Ablazelabs ERP" <${process.env.EMAIL_SENDER}>`, // sender address
+            to, // list of receivers
+            subject, // Subject line
+            text: title, // plain text body
+            html: body, // html body
+        });
+        console.log("Message sent: %s", info.messageId);
+        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        return { success: true };
+    } catch (e) {
+        console.log(e);
+        return { success: false };
+    }
 };
 /**
  *   A function that returns a random string.
@@ -53,11 +75,19 @@ const snakeToPascal = (str) => {
 const error = (key, message, next, status = 400) => {
     let myError = { status };
     if (key == "status") key = "Status";
-    myError["error_id"] = (Math.random() * 100).toFixed(2);
-    myError[key] = message + "^" + myError["error_id"];
+    if (status >= 400 && status < 500) {
+        myError["error_id"] = (Math.random() * 100).toFixed(2);
+        myError[key] = message + "^" + myError["error_id"];
+    }
+    myError[key] = message;
     status != 400 && console.log({ error: myError });
     next(new Error(JSON.stringify(myError)));
 };
+
+const getOperationDataType = (requestPath) => {
+    return requestPath?.split("/")?.pop()?.toLowerCase();
+};
+
 const { PrismaClient } = require("@prisma/client");
 
 const allModels = new PrismaClient();
@@ -67,6 +97,7 @@ module.exports = {
     confirmCredential,
     randomConcurrencyStamp,
     snakeToPascal,
+    getOperationDataType,
     allModels,
     COMPANY_NAME: "ElHadar-PLC",
     REPORT_BASIS_TITLE: "Accounting Method: ",

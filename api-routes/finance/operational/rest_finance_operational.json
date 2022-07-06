@@ -92,12 +92,25 @@
         "cpv_payment_request": { "date": "string" },
         "cpv_receipt": { "date": "string" },
         "cpv_type": { "name": "string", "description": "string" },
-        "petty_cash": { "date": "string" },
         "crv_payment": {},
         "crv_type": { "name": "string" },
         "opening_balance_account": {
             "debit_or_credit": "number",
             "opening_balance_id": "number"
+        },
+        "payment_request": {
+            "to": "string",
+            "from": "string",
+            "amount": "number",
+            "for": "number",
+            "date": "string",
+            "prepared_by_id": "number"
+        },
+        "petty_cash": {
+            "amount_paid": "number",
+            "reason": "string",
+            "money_received": "boolean",
+            "date": "string"
         }
     },
     "enums": {
@@ -243,21 +256,24 @@
         "cpv_receipt": {},
         "cpv_type": {
             "cpv_types": [
-                "PettyCash",
+                "Petty Cash",
                 "Receipt",
                 "Transportation",
-                "House_Rent",
+                "House Rent",
                 "Per_Diem",
-                "Allownace",
-                "Food_Expenses",
+                "Allowance",
+                "Food Expenses",
                 "Sponsorship",
                 "Other"
             ]
         },
-        "petty_cash": {},
         "crv_payment": {},
         "crv_type": { "crv_types": ["Cash", "Check"] },
-        "opening_balance_account": { "debit_or_credit": ["credit", "debit"] }
+        "opening_balance_account": { "debit_or_credit": ["credit", "debit"] },
+        "payment_request": {
+            "for": ["Petty Cash Replenishment", "project_request", "other"]
+        },
+        "petty_cash": {}
     },
     "allOptionalInputFilters": {
         "chart_of_account": {
@@ -393,17 +409,6 @@
             "cash_payment_voucher_id": "number"
         },
         "cpv_type": { "cpv_types": "number" },
-        "petty_cash": {
-            "pcpv": "string",
-            "remark": "string",
-            "description": "string",
-            "debit": "number",
-            "credit": "number",
-            "balance": "number",
-            "project_id": "number",
-            "issued_by_id": "number",
-            "cash_payment_voucher_id": "number"
-        },
         "crv_payment": {
             "date": "string",
             "name": "string",
@@ -425,9 +430,36 @@
             "amount_debit": "number",
             "currency_id": "number",
             "chart_of_account_id": "number"
+        },
+        "payment_request": {
+            "prepare_payment_to_id": "number",
+            "prepare_payment_to_name": "string",
+            "prepare_payment_to_id_file": "string",
+            "project_request_id": "number",
+            "project_id": "number",
+            "pv_no": "number",
+            "check_no": "number",
+            "bank_id": "number",
+            "account_number": "number",
+            "checked_by_id": "number",
+            "approved_by_id": "number"
+        },
+        "petty_cash": {
+            "paid_to_id": "number",
+            "paid_to_name": "string",
+            "paid_to_id_file": "string",
+            "remark": "string",
+            "pcpv_number": "number"
         }
     },
-    "allRangeValues": {},
+    "allRangeValues": {
+        "petty_cash": {
+            "amount_paid": [0, 2000]
+        },
+        "payment_request": {
+            "amount": [0, 10000000000]
+        }
+    },
     "phoneValues": {
         "chart_of_account": [],
         "account_type_financial_statement_section": [],
@@ -496,9 +528,10 @@
         "cpv_payment_request": ["date"],
         "cpv_receipt": ["date"],
         "cpv_type": [],
-        "petty_cash": ["date"],
         "crv_payment": ["date"],
-        "crv_type": []
+        "crv_type": [],
+        "payment_request": ["date"],
+        "petty_cash": ["date"]
     },
     "allProjections": {
         "chart_of_account_files": {
@@ -762,19 +795,6 @@
             "description": true,
             "cpv_types": true
         },
-        "petty_cash": {
-            "id": true,
-            "date": true,
-            "pcpv": true,
-            "remark": true,
-            "description": true,
-            "debit": true,
-            "credit": true,
-            "balance": true,
-            "project": true,
-            "issued_by": true,
-            "cash_payment_voucher": true
-        },
         "crv_payment": {
             "id": true,
             "date": true,
@@ -805,6 +825,46 @@
             "opening_balance": true,
             "currency": true,
             "chart_of_account": true
+        },
+        "payment_request": {
+            "id": true,
+            "to": true,
+            "from": true,
+            "prepare_payment_to": true,
+            "prepare_payment_to_name": true,
+            "prepare_payment_to_id_file": true,
+            "amount": true,
+            "for": true,
+            "project_request": true,
+            "project": true,
+            "date": true,
+            "pv_no": true,
+            "check_no": true,
+            "bank": true,
+            "account_number": true,
+            "additional_docs": true,
+            "number_of_documents": true,
+            "prepared_by": true,
+            "checked_by": true,
+            "approved_by": true,
+            "balance": true,
+            "remaining_balance": true,
+            "petty_cash": true
+        },
+        "petty_cash": {
+            "id": true,
+            "paid_to": true,
+            "paid_to_name": true,
+            "amount_paid": true,
+            "reason": true,
+            "remark": true,
+            "payment_request": true,
+            "prepared_by": true,
+            "checked_by": true,
+            "approved_by": true,
+            "money_received": true,
+            "date": true,
+            "pcpv_number": true
         }
     },
     "allFilters": {
@@ -1051,18 +1111,6 @@
             "description": "string",
             "cpv_types": "number"
         },
-        "petty_cash": {
-            "id": "number",
-            "pcpv": "string",
-            "remark": "string",
-            "description": "string",
-            "debit": "number",
-            "credit": "number",
-            "balance": "number",
-            "project_id": "number",
-            "issued_by_id": "number",
-            "cash_payment_voucher_id": "number"
-        },
         "crv_payment": {
             "id": "number",
             "name": "string",
@@ -1092,6 +1140,44 @@
             "opening_balance_id": "number",
             "currency_id": "number",
             "chart_of_account_id": "number"
+        },
+        "payment_request": {
+            "id": "number",
+            "to": "string",
+            "from": "string",
+            "prepare_payment_to_id": "number",
+            "prepare_payment_to_name": "string",
+            "prepare_payment_to_id_file": "string",
+            "amount": "number",
+            "for": "number",
+            "project_request_id": "number",
+            "project_id": "number",
+            "pv_no": "number",
+            "check_no": "number",
+            "bank_id": "number",
+            "account_number": "number",
+            "additional_docs": "string",
+            "number_of_documents": "number",
+            "prepared_by_id": "number",
+            "checked_by_id": "number",
+            "approved_by_id": "number",
+            "balance": "number",
+            "remaining_balance": "number"
+        },
+        "petty_cash": {
+            "id": "number",
+            "paid_to_id": "number",
+            "paid_to_name": "string",
+            "paid_to_id_file": "string",
+            "amount_paid": "number",
+            "reason": "string",
+            "remark": "string",
+            "payment_request_id": "number",
+            "prepared_by_id": "number",
+            "checked_by_id": "number",
+            "approved_by_id": "number",
+            "money_received": "boolean",
+            "pcpv_number": "number"
         }
     },
     "allSorts": {
@@ -1360,19 +1446,6 @@
             "description": "number",
             "cpv_types": "number"
         },
-        "petty_cash": {
-            "id": "number",
-            "date": "number",
-            "pcpv": "number",
-            "remark": "number",
-            "description": "number",
-            "debit": "number",
-            "credit": "number",
-            "balance": "number",
-            "project_id": "number",
-            "issued_by_id": "number",
-            "cash_payment_voucher_id": "number"
-        },
         "crv_payment": {
             "id": "number",
             "date": "number",
@@ -1403,6 +1476,46 @@
             "opening_balance_id": "number",
             "currency_id": "number",
             "chart_of_account_id": "number"
+        },
+        "payment_request": {
+            "id": "number",
+            "to": "number",
+            "from": "number",
+            "prepare_payment_to_id": "number",
+            "prepare_payment_to_name": "number",
+            "prepare_payment_to_id_file": "number",
+            "amount": "number",
+            "for": "number",
+            "project_request_id": "number",
+            "project_id": "number",
+            "date": "number",
+            "pv_no": "number",
+            "check_no": "number",
+            "bank_id": "number",
+            "account_number": "number",
+            "additional_docs": "number",
+            "number_of_documents": "number",
+            "prepared_by_id": "number",
+            "checked_by_id": "number",
+            "approved_by_id": "number",
+            "balance": "number",
+            "remaining_balance": "number"
+        },
+        "petty_cash": {
+            "id": "number",
+            "paid_to_id": "number",
+            "paid_to_name": "number",
+            "paid_to_id_file": "number",
+            "amount_paid": "number",
+            "reason": "number",
+            "remark": "number",
+            "payment_request_id": "number",
+            "prepared_by_id": "number",
+            "checked_by_id": "number",
+            "approved_by_id": "number",
+            "money_received": "number",
+            "date": "number",
+            "pcpv_number": "number"
         }
     },
     "allRoutes": [
@@ -1437,7 +1550,8 @@
         "/petty_cash",
         "/crv_payment",
         "/crv_type",
-        "/opening_balance_account"
+        "/opening_balance_account",
+        "/payment_request"
     ],
     "allPostRoutes": [
         "/chart_of_account",
@@ -1468,6 +1582,7 @@
         "/petty_cash",
         "/crv_payment",
         "/crv_type",
-        "/opening_balance_account"
+        "/opening_balance_account",
+        "/payment_request"
     ]
 }

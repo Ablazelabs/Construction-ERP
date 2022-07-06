@@ -1,9 +1,9 @@
-const { error } = require("../config/config");
+const { error, getOperationDataType } = require("../config/config");
 const inputFilter = require("../validation/inputFilter");
 const { deleter: mDelete } = require("../services/mostCRUD/mostCRUD");
 
 module.exports = async (req, res, next) => {
-    const operationDataType = req.path.split("/").pop();
+    const operationDataType = getOperationDataType(req.path);
     try {
         inputFilter({ id: "number" }, {}, req.body);
     } catch (e) {

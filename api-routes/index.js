@@ -24,12 +24,14 @@ const operationalData = require("./project/operational/operational_data");
 const mainSubTodo = require("./project/operational/mainsubtodo");
 const dailyWorkLog = require("./project/operational/dailyWorkLog");
 const workingDays = require("./project/workingDays");
-const projectValidations = require("./project/validation/allValidations");
+const projectApprovals = require("./project/approvals/allApprovals");
 
 const financeContact = require("./finance/master/contact");
 const financemasters = require("./finance/master/financemasters");
 const accountingPeriod = require("./finance/master/accountingPeriod");
 const financeGeneralExport = require("./finance/operational/generalExport");
+const financeNewPvs = require("./finance/operational/newpv");
+const financeApprovals = require("./finance/operational/approvals");
 const financeExports = require("./finance/operational/exportController");
 const businessOverviewExports = require("./finance/businessOverviewExport");
 const exportTemplate = require("./finance/operational/exportTemplate");
@@ -96,12 +98,17 @@ router.use("/project/operational", projectRequests);
 router.use("/project/operational", dailyWorkLog);
 router.use("/project/operational", mainSubTodo);
 router.use("/project/operational", operationalData);
-router.use("/project/validation", projectValidations);
+router.use("/project/validation", projectApprovals);
+//this is for the vocabulary mistake I made! --/project/validation has been deprecated
+router.use("/project/approval", projectApprovals);
 
 router.use("/finance/master", financeContact);
 router.use("/finance/master", financemasters);
 router.use("/finance/master", accountingPeriod);
 router.use("/finance/business_export", businessOverviewExports);
+
+router.use("/finance/operational/approval", financeApprovals);
+router.use("/finance/operational", financeNewPvs);
 router.use("/finance/operational", financeGeneralExport);
 router.use("/finance/operational", exportTemplate);
 router.use("/finance/operational/export", financeExports);

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { error } = require("../../../config/config");
+const { error, getOperationDataType } = require("../../../config/config");
 
 const { rename } = require("fs");
 
@@ -13,7 +13,7 @@ router.post(
     ["/chart_of_account_files", "/general_journal_files"],
     upload.single("file"),
     async (req, res, next) => {
-        const uploadTarget = req.path.split("/").pop();
+        const uploadTarget = getOperationDataType(req.path);
         try {
             const data = await excelValidation(req.file, next, false);
             if (data == false) {

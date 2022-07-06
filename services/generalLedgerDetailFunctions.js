@@ -1,5 +1,5 @@
 const { allModels } = require("../config/config");
-
+// this function was necessary to remove circular dependancies between modules
 const { currency, exchange_rate } = allModels;
 /**
  *

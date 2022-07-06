@@ -33,6 +33,7 @@ const {
     crv_payment,
     crv_type,
     export_template,
+    payment_request,
 } = models;
 
 const allModels = {
@@ -67,6 +68,7 @@ const allModels = {
     crv_payment,
     crv_type,
     export_template,
+    payment_request,
 };
 const generatedStrings = {
     chart_of_account: {},

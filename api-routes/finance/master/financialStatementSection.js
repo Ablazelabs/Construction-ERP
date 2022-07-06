@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { error } = require("../../../config/config");
+const { error, getOperationDataType } = require("../../../config/config");
 const {
     post,
     get,
@@ -31,7 +31,7 @@ const {
 } = allConfigs;
 
 router.post("/financial_statement_section", async (req, res, next) => {
-    const operationDataType = req.path.split("/").pop();
+    const operationDataType = getOperationDataType(req.path);
     const requiredInputFilter = allInputFilters[operationDataType],
         optionalInputFilter = allOptionalInputFilters[operationDataType],
         dateValue = dateValues[operationDataType],
@@ -75,7 +75,7 @@ router.post("/financial_statement_section", async (req, res, next) => {
     }
 });
 router.get("/financial_statement_section", async (req, res, next) => {
-    const operationDataType = req.path.split("/").pop();
+    const operationDataType = getOperationDataType(req.path);
     const filters = allFilters[operationDataType],
         sorts = allSorts[operationDataType],
         myEnums = enums[operationDataType],
@@ -107,7 +107,7 @@ router.get("/financial_statement_section", async (req, res, next) => {
     }
 });
 router.patch("/financial_statement_section", async (req, res, next) => {
-    const operationDataType = req.path.split("/").pop();
+    const operationDataType = getOperationDataType(req.path);
 
     const requiredInputFilter = allInputFilters[operationDataType],
         optionalInputFilter = allOptionalInputFilters[operationDataType],

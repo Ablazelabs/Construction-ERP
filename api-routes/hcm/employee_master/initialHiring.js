@@ -24,6 +24,7 @@ for (let i in stringOrgInput) {
 let stringActionInput = {
     ...employeeMastersData.allInputFilters.employee_action,
 };
+delete stringActionInput.action_reason_id;
 for (let i in stringActionInput) {
     stringActionInput[i] = "string";
 }
@@ -129,6 +130,7 @@ allOptionalInputFilters.initial_hiring = {
     ...allOptionalInputFilters.employee_commitment,
     vacancy_applicant_id: "string",
     password: "string",
+    email: "string",
 };
 let phoneValues = {
     employee: employeeMastersData.phoneValues.employee,
@@ -280,7 +282,7 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
                 error("file", "couldn't rename", next);
                 return;
             }
-            reqBody["logo"] = fileUrl;
+            reqBody["photo"] = fileUrl;
         }
     } catch {
         deleteUnusedFile(req.file);
@@ -426,10 +428,15 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
             }
         }
         let accountReqBody = {};
-        if (reqBody.password) {
+        // if (reqBody.password) {
+        //     accountReqBody.username =
+        //         employeeReqBody.first_name + " " + employeeReqBody.middle_name;
+        //     accountReqBody.password = reqBody.password; //this will be hashed in the services
+        // }
+        if (reqBody.email) {
             accountReqBody.username =
                 employeeReqBody.first_name + " " + employeeReqBody.middle_name;
-            accountReqBody.password = reqBody.password; //this will be hashed in the services
+            accountReqBody.email = reqBody.email;
         }
         // console.log(
         //     { employeeReqBody },

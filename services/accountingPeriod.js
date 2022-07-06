@@ -233,13 +233,13 @@ const deleter = async ({ id }) => {
  *
  * @param {{id:number, accounting_period_status:number}} param0
  * @param {number} creator
- * @param {Function} next
+ * @param {Function} _next
  * @returns
  */
 const isValidToChangeStatus = async (
-    { id, accounting_period_status },
-    creator,
-    next
+    { id, accounting_period_status: _accounting_period_status },
+    _creator,
+    _next
 ) => {
     const accountingPeriod = await accounting_period.findUnique({
         where: { id },
@@ -553,10 +553,6 @@ const isClosingValid = async (
     return { success: true };
 };
 /**
- *
- * @param  periods
- */
-/**
  * If any of the periods are not closed, return false, otherwise return true.
  * @param {import("@prisma/client").accounting_period[]} periods
  */
@@ -596,7 +592,7 @@ const isTransactionLocked = async (transactionRecordDate, creator) => {
     return lockTransaction;
 };
 /**
- * It closes the current accounting period and opens the next accounting period
+ * It closes the current accounting period after it processes it and opens the next accounting period
  * @param {import("@prisma/client").accounting_period} accountingPeriod the accounting period to be closed
  * @param {number} creator the user who is closing the period
  * @param {import("@prisma/client").currency} baseCurrency

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { error } = require("../../../config/config");
+const { error, getOperationDataType } = require("../../../config/config");
 const {
     transferApproval,
     getLeaveTransfer,
@@ -30,7 +30,7 @@ router.get(
     ],
     async (req, res, next) => {
         let reqBody = {};
-        const operationDataType = req.path.split("/").pop();
+        const operationDataType = getOperationDataType(req.path);
         try {
             reqBody = inputFilter(
                 {},

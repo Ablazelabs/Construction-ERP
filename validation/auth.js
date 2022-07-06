@@ -1,6 +1,6 @@
 //this module performs authorization for users
 const { verify } = require("jsonwebtoken");
-const { error, allModels } = require("../config/config");
+const { error, allModels, getOperationDataType } = require("../config/config");
 const { user } = allModels;
 const authorization = {
     /**
@@ -116,10 +116,13 @@ const authorization = {
     },
     /**
      * make a readable code!
+     * @param {import("express").Request} req
+     * @param {import("express").Response} res
+     * @param {import("express").NextFunction} next
      */
     authenticate: async (req, res, next) => {
-        const requestRoute = req.path.split("/").pop();
-        const requestPath = req.path;
+        const requestRoute = getOperationDataType(req.path);
+        const requestPath = req.path.toLowerCase();
         const pass =
             req.path.search(/\/api-docs\/|\/uploads\//) == -1 ? false : true;
         const method = req.method;
