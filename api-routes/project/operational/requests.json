@@ -138,6 +138,7 @@
             "approved_by_id": "number",
             "project_id": "number",
             "approval_status": "number",
+            "finance_approval_status": "number",
             "action_note": "string",
             "remark": "string"
         },

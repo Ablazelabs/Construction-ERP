@@ -5,7 +5,7 @@ const inputFilter = require("../../../validation/inputFilter");
 const {
     paymentRequestApprove,
     projectRequestApprove,
-} = require("../../../services/financeValidations");
+} = require("../../../services/financeApprovals");
 
 router.patch("/project_request", async (req, res, next) => {
     let reqBody;

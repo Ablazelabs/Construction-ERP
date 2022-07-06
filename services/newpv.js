@@ -253,14 +253,14 @@ const addAttachments = async (id, urls, next) => {
         const addedAttachments = paymentRequest.additional_docs;
         const addedAttachmentsArray = JSON.parse(addedAttachments);
         const newSet = addedAttachmentsArray.concat(urls);
-        await payment_request.update({
+        const data = await payment_request.update({
             where: { id },
             data: {
                 additional_docs: JSON.stringify(newSet),
                 number_of_documents: newSet.length,
             },
         });
-        return { success: true };
+        return { success: true, data };
     } else {
         error("id", "payment request with this id not found!", next);
         return false;
