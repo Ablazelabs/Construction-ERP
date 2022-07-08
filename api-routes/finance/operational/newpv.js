@@ -81,7 +81,7 @@ router.post("/payment_request", async (req, res, next) => {
     }
 });
 router.post("/petty_cash", async (req, res, next) => {
-    const operationDataType = "payment_request";
+    const operationDataType = "petty_cash";
     const requiredInputFilter = allInputFilters[operationDataType],
         optionalInputFilter = allOptionalInputFilters[operationDataType],
         dateValue = dateValues[operationDataType],

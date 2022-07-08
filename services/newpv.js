@@ -116,6 +116,8 @@ const postPettyCash = async (
         payment_request.update({
             where: {
                 id: lastPettyCash.id,
+            },
+            data: {
                 remaining_balance:
                     lastPettyCash.remaining_balance - reqBody.amount_paid,
             },
