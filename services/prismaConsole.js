@@ -218,7 +218,33 @@ const sendMailTest = async () => {
                 login email: ${email}
                 login Password: ${password}
             </div>
-        </div>`
+            </div>`
     );
 };
-sendMailTest();
+// sendMailTest();
+const transactionOnPrisma = async () => {
+    const abebe = prisma.bank.create({
+        data: {
+            account_name: "Abebe1",
+            account_type: 1,
+            createdBy: "1",
+            revisedBy: "1",
+            endDate: new Date(),
+            startDate: new Date(),
+            account_code: "some code",
+            account_number: "what does this even mean",
+            IBAN: "still no idea",
+            bank_name: "Awash Bank",
+            currency_id: 1,
+        },
+    });
+    const errorCreate = (async () => {
+        throw "error";
+    })().catch((_e) => "error");
+    const data = await errorCreate;
+    // const data = await Promise.all([abebe, errorCreate]);
+    console.log(data);
+    // const never = data[1];
+    // console.log(never)
+};
+transactionOnPrisma();

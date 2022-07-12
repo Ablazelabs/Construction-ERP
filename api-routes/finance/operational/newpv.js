@@ -81,6 +81,7 @@ router.post("/payment_request", async (req, res, next) => {
     }
 });
 router.post("/petty_cash", async (req, res, next) => {
+    console.log({ reqBody: req.body });
     const operationDataType = "petty_cash";
     const requiredInputFilter = allInputFilters[operationDataType],
         optionalInputFilter = allOptionalInputFilters[operationDataType],
@@ -103,6 +104,15 @@ router.post("/petty_cash", async (req, res, next) => {
         next
     );
     if (!reqBody) {
+        console.log(req.body, {
+            requiredInputFilter,
+            optionalInputFilter,
+            dateValue,
+            myEnums,
+            phoneValue,
+            emailValue,
+            rangeValues,
+        });
         return;
     }
     try {

@@ -209,7 +209,7 @@ module.exports = async (
                 `Hello, Employee from ${COMPANY_NAME}`,
                 `${COMPANY_NAME} Account Creation`,
                 `<div>
-                    Hello ${fullName}, This is your temporary password from your account on erp.elhadar.com
+                    <h1>Hello ${fullName},</h1>This is your temporary password from your account on erp.elhadar.com
                     Please login and change your password!
                     <div>
                         login email: ${email}
