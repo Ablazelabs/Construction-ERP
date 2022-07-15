@@ -103,8 +103,7 @@
             "from": "string",
             "amount": "number",
             "for": "number",
-            "date": "string",
-            "prepared_by_id": "number"
+            "date": "string"
         },
         "petty_cash": {
             "amount_paid": "number",

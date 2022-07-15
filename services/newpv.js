@@ -19,6 +19,7 @@ const getLastPettyCash = () => {
 };
 const postPaymentRequest = async (
     reqBody,
+    urls,
     operationDataType,
     creator,
     uniqueValues,
@@ -34,8 +35,8 @@ const postPaymentRequest = async (
     //     "remaining_balance": "number"
     // }
 
-    reqBody.additional_docs = "[]";
-    reqBody.number_of_documents = 0;
+    reqBody.additional_docs = JSON.stringify(urls);
+    reqBody.number_of_documents = urls.length;
     reqBody.balance = reqBody.amount;
 
     if (reqBody.for === FORENUM["Petty Cash Replenishment"]) {
@@ -107,7 +108,8 @@ const postPettyCash = async (
     } else {
         error(
             "petty_cash",
-            "please prepare pv for pettycash replensishment, pettycash balcnce is currently zero"
+            "please prepare pv for pettycash replensishment, pettycash balcnce is currently zero",
+            next
         );
         return false;
     }
