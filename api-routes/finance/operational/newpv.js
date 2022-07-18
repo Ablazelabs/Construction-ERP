@@ -99,7 +99,7 @@ router.post("/payment_request", upload.any(), async (req, res, next) => {
     try {
         const uploadTarget = "payment_request";
         let fileUrls = [];
-        req.files = req.files.filter((elem) => elem.fieldname === "file[]");
+        req.files = req.files?.filter((elem) => elem.fieldname === "file[]");
         for (let i in req.files) {
             const reqFile = req.files[i];
             console.log(reqFile);

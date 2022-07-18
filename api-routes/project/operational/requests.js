@@ -191,6 +191,15 @@ router.get("/all_project_requests", async (req, res, next) => {
             remark: true,
             id: true,
             status: true,
+            total_amount: true,
+            vat_amount: true,
+            sub_total: true,
+            checked_by: true,
+            approved_by: true,
+            project: true,
+            finance_approval_status: true,
+            action_note: true,
+            remark: true,
         };
     delete req.body?.sort?.startDate;
     delete req.body?.sort?.endDate;

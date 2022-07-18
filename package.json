@@ -33,6 +33,7 @@
         "nodemailer": "^6.7.5",
         "pdf-creator-node": "^2.2.4",
         "pg-promise": "^10.11.1",
+        "phantomjs-prebuilt": "^2.1.16",
         "prisma": "^3.5.0",
         "swagger-jsdoc": "^6.1.0",
         "swagger-ui-express": "^4.1.6",

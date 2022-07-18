@@ -138,7 +138,6 @@ const projectIdSetter = async () => {
     }
 };
 // projectIdSetter();
-
 const prismaIntegratedFn = async () => {
     const a = new Date();
     await user.findFirst({
@@ -247,4 +246,7 @@ const transactionOnPrisma = async () => {
     // const never = data[1];
     // console.log(never)
 };
-transactionOnPrisma();
+const prismatest = async () => {
+    console.log(await prisma.user.findFirst());
+};
+prismatest();
