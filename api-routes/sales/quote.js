@@ -1,6 +1,6 @@
 const express = require("express");
 const inputFilter = require("../../validation/inputFilter");
-const { allModels } = require("../../config/config");
+const { allModels, error } = require("../../config/config");
 const { sales_data: personal_details } = allModels;
 const router = express.Router();
 router.post("/customer-form", async (req, res, next) => {
@@ -51,12 +51,16 @@ router.post("/customer-form", async (req, res, next) => {
         await personal_details.create({
             data: {
                 ...reqBody,
+                startDate: new Date(),
+                endDate: new Date(),
+                createdBy: `${res.locals.id}`,
+                revisedBy: `${res.locals.id}`,
             },
         });
-        res.send("Successful");
+        res.json({ success: true });
     } catch (e) {
         console.log(e);
-        res.status(500).send("something went wrong");
+        res.status(500).json({ database: "error" });
     }
 });
 router.get("/customer-form", async (req, res, next) => {
@@ -70,15 +74,17 @@ router.get("/customer-form", async (req, res, next) => {
     if (skip < 0) {
         skip = 0;
     }
-    let data;
+    let data = [];
     try {
         data = await personal_details.findMany({
             take: limit,
             skip,
-            orderBy: [{ isContacted: "asc" }, { created_time: "desc" }],
+            orderBy: [{ isContacted: "asc" }, { creationDate: "desc" }],
         });
-    } catch {
+    } catch (e) {
+        console.log(e);
         res.status(500).send("something went wrong");
+        return;
     }
     const sendData = data.map(
         ({
@@ -114,7 +120,7 @@ router.get("/customer-form", async (req, res, next) => {
             grey,
             ivory,
             isContacted,
-            created_time,
+            creationDate,
         }) => {
             let returnedData = {
                 id,
@@ -128,7 +134,7 @@ router.get("/customer-form", async (req, res, next) => {
                 sales_rep,
                 quantity_remark,
                 isContacted,
-                created_time,
+                created_time: creationDate,
             };
             const booleanRealNames = {
                 ltz_profile: "L, T, Z Profile",
@@ -198,7 +204,7 @@ router.get("/customer-form", async (req, res, next) => {
             return { ...returnedData, ...arrays };
         }
     );
-    res.send(sendData);
+    res.json(sendData);
 });
 router.patch("/customer-form", async (req, res, next) => {
     let reqBody = {};
