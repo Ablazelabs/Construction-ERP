@@ -75,6 +75,8 @@ const hcmTimeAndLeave = require("./hcm/timeAndLeave/hcmTimeAndLeave");
 
 const inventMasterAndStock = require("./inventory/masterAndStock/inventMasterAndStock");
 
+const salesQuote = require("./sales/quote");
+
 router.use(login);
 router.use(logout);
 router.use(refresh);
@@ -147,5 +149,5 @@ router.use("/hcm/time_and_leave/attendance_payroll", attendanceSheet);
 router.use("/hcm/time_and_leave", hcmShiftSchedule);
 router.use("/hcm/time_and_leave", hcmTimeAndLeave);
 router.use("/inventory", inventMasterAndStock);
-
+router.use("/sales", salesQuote);
 module.exports = router;

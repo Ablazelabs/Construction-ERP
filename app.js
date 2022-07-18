@@ -9,7 +9,7 @@ const basicAuth = require("express-basic-auth");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
 const allRoutes = require("./api-routes");
-
+var morgan = require("morgan");
 const limiter = rateLimit({
     windowMs: 1 * 60 * 1000, // 1 minute
     max: 30, // Limit each IP to 30 requests per `window` (here, per 15 minutes)
@@ -18,6 +18,7 @@ const limiter = rateLimit({
 });
 app.use(cors());
 app.use(limiter);
+app.use(morgan("dev"));
 app.use(json());
 app.use(authenticate);
 
@@ -50,7 +51,7 @@ app.use((req, _res, next) => {
 app.use("/api", allRoutes);
 
 /**route where all static uploads are served */
-app.use("/api/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("3/uploads", express.static(path.join(__dirname, "uploads")));
 
 /**error handling middleware(all errors go through here, when the router handlers call next with an error) */
 app.use((err, _req, res, _next) => {

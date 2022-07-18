@@ -12,7 +12,7 @@ router.patch("/project_request", async (req, res, next) => {
     try {
         reqBody = inputFilter(
             {
-                id: "number",
+                id: "object",
                 approval_status: "number",
                 approved_by_id: "number",
             },
@@ -24,6 +24,12 @@ router.patch("/project_request", async (req, res, next) => {
                 key: "approval_status",
                 message:
                     "please send between 2 and 3 as it represents  approved, rejected",
+            };
+        }
+        if (!Array.isArray(req.body.id) || !req.body.id.length) {
+            throw {
+                key: "id",
+                message: "id must be an array and mustn't be empty",
             };
         }
         reqBody.approval_status = Math.floor(reqBody.approval_status);
@@ -55,7 +61,7 @@ router.patch("/payment_request", async (req, res, next) => {
     try {
         reqBody = inputFilter(
             {
-                id: "number",
+                id: "object",
                 approval_status: "number",
                 approved_by_id: "number",
             },
@@ -67,6 +73,12 @@ router.patch("/payment_request", async (req, res, next) => {
                 key: "approval_status",
                 message:
                     "please send between 2 and 3 as it represents  approved, rejected",
+            };
+        }
+        if (!Array.isArray(req.body.id) || !req.body.id.length) {
+            throw {
+                key: "id",
+                message: "id must be an array and mustn't be empty",
             };
         }
         reqBody.approval_status = Math.floor(reqBody.approval_status);

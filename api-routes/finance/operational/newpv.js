@@ -6,7 +6,6 @@ const upload = multer({ dest: "uploads/" });
 const { renameSync, unlinkSync, existsSync, mkdirSync } = require("fs");
 const {
     patchPaymentRequest,
-    deleter,
     postPaymentRequest,
     postPettyCash,
     patchPettyCash,
@@ -24,8 +23,6 @@ const {
 const allConfigs = require("./rest_finance_operational.json");
 const uploadValidation = require("../../../validation/uploadValidation");
 const {
-    allRoutes,
-    allPostRoutes,
     allInputFilters,
     allOptionalInputFilters,
     dateValues,
@@ -33,12 +30,9 @@ const {
     phoneValues,
     emailValues,
     allRangeValues,
-    allProjections,
-    allSorts,
-    allFilters,
 } = allConfigs;
 
-router.post("/payment_request", async (req, res, next) => {
+router.post("/payment_request", upload.any(), async (req, res, next) => {
     const operationDataType = "payment_request";
     const requiredInputFilter = allInputFilters[operationDataType],
         optionalInputFilter = allOptionalInputFilters[operationDataType],
@@ -47,8 +41,46 @@ router.post("/payment_request", async (req, res, next) => {
         phoneValue = phoneValues[operationDataType],
         emailValue = emailValues[operationDataType],
         rangeValues = allRangeValues[operationDataType];
+    let newRequired = {};
+    let newOptional = {};
+    let newReq = {};
+    for (let i in requiredInputFilter) {
+        newRequired[i] = "string";
+    }
+    for (let i in optionalInputFilter) {
+        newOptional[i] = "string";
+    }
+    for (let i in req.body) {
+        if (req.body[i]) {
+            newReq[i] = req.body[i];
+        }
+    }
     let reqBody = returnReqBody(
-        req.body,
+        newReq,
+        {
+            requiredInputFilter: newRequired,
+            optionalInputFilter: newOptional,
+            dateValue: [],
+            myEnums: {},
+            phoneValue: [],
+            emailValue: [],
+            rangeValues: {},
+        },
+        next
+    );
+    if (!reqBody) {
+        return;
+    }
+    for (let i in reqBody) {
+        if (
+            optionalInputFilter[i] === "number" ||
+            requiredInputFilter[i] === "number"
+        ) {
+            reqBody[i] = Number(reqBody[i]);
+        }
+    }
+    reqBody = returnReqBody(
+        reqBody,
         {
             requiredInputFilter,
             optionalInputFilter,
@@ -63,9 +95,39 @@ router.post("/payment_request", async (req, res, next) => {
     if (!reqBody) {
         return;
     }
+
     try {
+        const uploadTarget = "payment_request";
+        let fileUrls = [];
+        req.files = req.files?.filter((elem) => elem.fieldname === "file[]");
+        for (let i in req.files) {
+            const reqFile = req.files[i];
+            console.log(reqFile);
+            try {
+                uploadValidation(
+                    reqFile,
+                    ["pdf", "jpeg", "jpg", "png", "docx", "doc"],
+                    next,
+                    true
+                );
+                const dir = `uploads/${uploadTarget}`;
+                if (!existsSync(dir)) {
+                    mkdirSync(dir);
+                }
+                const fileType = reqFile.originalname.split(".").pop();
+                const newDestination = `uploads/${uploadTarget}/${reqFile.filename}.${fileType}`;
+                const fileName = reqFile.filename;
+                const fileUrl = `/uploads/${uploadTarget}/${fileName}.${fileType}`;
+                fileUrls.push(fileUrl);
+                renameSync(reqFile.path, newDestination);
+            } catch (e) {
+                console.log(e);
+                unlinkSync(reqFile.path);
+            }
+        }
         const data = await postPaymentRequest(
             reqBody,
+            fileUrls,
             operationDataType,
             res.locals.id,
             [],
@@ -76,12 +138,20 @@ router.post("/payment_request", async (req, res, next) => {
         }
         res.json(data);
     } catch (e) {
+        for (let i in req.files) {
+            try {
+                const reqFile = req.files[i];
+                console.log(reqFile);
+                unlinkSync(reqFile.path);
+            } catch {}
+        }
         console.log(e);
         error("database", "error", next, 500);
     }
 });
 router.post("/petty_cash", async (req, res, next) => {
-    const operationDataType = "payment_request";
+    console.log({ reqBody: req.body });
+    const operationDataType = "petty_cash";
     const requiredInputFilter = allInputFilters[operationDataType],
         optionalInputFilter = allOptionalInputFilters[operationDataType],
         dateValue = dateValues[operationDataType],
@@ -118,7 +188,7 @@ router.post("/petty_cash", async (req, res, next) => {
         if (data[0] == false) {
             return;
         }
-        //I used promise.all to handle transaction decreasing remaining balance from payment request!
+        // I used promise.all to handle transaction decreasing remaining balance from payment request!
         res.json(data[0]);
     } catch (e) {
         console.log(e);

@@ -19,6 +19,7 @@ const getLastPettyCash = () => {
 };
 const postPaymentRequest = async (
     reqBody,
+    urls,
     operationDataType,
     creator,
     uniqueValues,
@@ -34,8 +35,8 @@ const postPaymentRequest = async (
     //     "remaining_balance": "number"
     // }
 
-    reqBody.additional_docs = "[]";
-    reqBody.number_of_documents = 0;
+    reqBody.additional_docs = JSON.stringify(urls);
+    reqBody.number_of_documents = urls.length;
     reqBody.balance = reqBody.amount;
 
     if (reqBody.for === FORENUM["Petty Cash Replenishment"]) {
@@ -65,6 +66,14 @@ const postPaymentRequest = async (
             error("project_request_id", "project request doesn't exist", next);
             return false;
         }
+        if (projectRequest.prepared_by_id !== reqBody.prepare_payment_to_id) {
+            error(
+                "project_request_id",
+                "project payment request preparer must be the person you prepare payment to",
+                next
+            );
+            return false;
+        }
         reqBody.project_id = projectRequest.project_id;
         //if sent then hip hip hurray
     }
@@ -80,7 +89,17 @@ const postPaymentRequest = async (
         );
         return false;
     }
-    // reqBody.prepared_by_id = creator;
+    reqBody.prepared_by_id = (
+        await allModels.user.findUnique({ where: { id: creator } })
+    )?.employee_id;
+    // if(!reqBody.prepared_by_id){
+    //     error(
+    //         "prepared_by_id",
+    //         "only finance user can create pv requests",
+    //         next
+    //     );
+    //     return false;
+    // }
     reqBody.remaining_balance = reqBody.balance;
     return mPost(reqBody, operationDataType, creator, uniqueValues, next);
 };
@@ -107,7 +126,8 @@ const postPettyCash = async (
     } else {
         error(
             "petty_cash",
-            "please prepare pv for pettycash replensishment, pettycash balcnce is currently zero"
+            "please prepare pv for pettycash replensishment, pettycash balcnce is currently zero",
+            next
         );
         return false;
     }
@@ -116,6 +136,8 @@ const postPettyCash = async (
         payment_request.update({
             where: {
                 id: lastPettyCash.id,
+            },
+            data: {
                 remaining_balance:
                     lastPettyCash.remaining_balance - reqBody.amount_paid,
             },
