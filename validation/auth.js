@@ -168,6 +168,8 @@ const authorization = {
             ? "hcm"
             : requestPath.match("finance")
             ? "finance"
+            : requestPath.match("sales")
+            ? "sales"
             : requestPath.match(/project|client/)
             ? "project"
             : requestPath.match(/role|privilege/)

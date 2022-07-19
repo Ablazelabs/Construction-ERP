@@ -12,7 +12,7 @@ const allRoutes = require("./api-routes");
 var morgan = require("morgan");
 const limiter = rateLimit({
     windowMs: 1 * 60 * 1000, // 1 minute
-    max: 30, // Limit each IP to 30 requests per `window` (here, per 15 minutes)
+    max: 30, // Limit each IP to 30 requests per `window` (here, per 1 minute)
     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
@@ -24,6 +24,8 @@ app.use(authenticate);
 
 /**
  * we need req.body(json format) to get data from requests, but get doesn't allow, so stringify the json u want to send and send it as a param (parameter name must be body)
+ * if body={ something: "something" }
+ * some_get_route?body=`${JSON.stringify(body)}`
  */
 app.use((req, _res, next) => {
     if (req.method == "GET") {
@@ -51,7 +53,7 @@ app.use((req, _res, next) => {
 app.use("/api", allRoutes);
 
 /**route where all static uploads are served */
-app.use("3/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("uploads", express.static(path.join(__dirname, "uploads")));
 
 /**error handling middleware(all errors go through here, when the router handlers call next with an error) */
 app.use((err, _req, res, _next) => {

@@ -80,6 +80,12 @@ const handlePrivileges = async () => {
                 description: "hcm privilege!",
             },
             {
+                action: "sales",
+                concurrency_stamp: "random",
+                deleted_status: 0,
+                description: "sales privilege!",
+            },
+            {
                 action: "manager",
                 concurrency_stamp: "random",
                 deleted_status: 0,

@@ -1,6 +1,6 @@
 const { allModels } = require("../config/config");
 
-const { project, project_edit_request } = allModels;
+const { project, project_edit_request, payment_request } = allModels;
 
 const indexService = async () => {
     const totalProjectsLength = await project.count();
@@ -42,8 +42,17 @@ const indexService = async () => {
             approval_status: 1,
         },
     });
-    requests["total"] = total + projectEditRequestLength;
-    requests = { ...requests, project_edit_request: projectEditRequestLength };
+    const pvRequestLength = await payment_request.count({
+        where: {
+            approval_status: 1,
+        },
+    });
+    requests["total"] = total + projectEditRequestLength + pvRequestLength;
+    requests = {
+        ...requests,
+        project_edit_request: projectEditRequestLength,
+        pv_request: pvRequestLength,
+    };
     return {
         totalProjectsLength,
         onGoingProjects,

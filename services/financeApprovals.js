@@ -1,5 +1,5 @@
 const {
-    allModels: { project_request, payment_request },
+    allModels: { project_request, payment_request, user },
     error,
 } = require("../config/config");
 
@@ -13,7 +13,7 @@ const {
 const projectRequestApprove = async (
     ids,
     approval_status,
-    approved_by_id,
+    creator,
     action_note,
     next
 ) => {
@@ -49,6 +49,8 @@ const projectRequestApprove = async (
         }
     }
     //if any error happens its totally 500!
+    const approved_by_id = (await user.findUnique({ where: { id: creator } }))
+        ?.employee_id;
     await project_request.updateMany({
         where: {
             OR: ids.map((elem) => ({ id: elem })),
@@ -71,7 +73,7 @@ const projectRequestApprove = async (
 const paymentRequestApprove = async (
     ids,
     approval_status,
-    approved_by_id,
+    creator,
     action_note,
     next
 ) => {
@@ -97,6 +99,12 @@ const paymentRequestApprove = async (
             );
             return false;
         }
+    }
+    const approved_by_id = (await user.findUnique({ where: { id: creator } }))
+        ?.employee_id;
+    if (!approved_by_id) {
+        error("approved_by_id", "couldn't get user employee id!", next);
+        return false;
     }
     //if any error happens its totally 500!
     await payment_request.updateMany({
