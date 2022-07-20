@@ -46,13 +46,22 @@ module.exports = async (identifier, reqBody, next) => {
         error("password", "Wrong password", next);
         return false;
     }
-    const accessToken = sign(
-        {
-            id: queryResult.id,
-        },
-        process.env.ACCESS_KEY,
-        { expiresIn: "10h" }
-    );
+    const accessToken = !queryResult.first_login
+        ? sign(
+              {
+                  id: queryResult.id,
+              },
+              process.env.ACCESS_KEY,
+              { expiresIn: "10h" }
+          )
+        : sign(
+              {
+                  tempId: queryResult.id,
+              },
+              process.env.ACCESS_KEY,
+              { expiresIn: "1h" }
+          );
+    // return { tempAccessToken };
     const refreshToken = sign(
         {
             id: queryResult.id,

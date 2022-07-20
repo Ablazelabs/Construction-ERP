@@ -13,7 +13,6 @@ router.patch("/project_request", async (req, res, next) => {
         reqBody = inputFilter(
             {
                 id: "object",
-                approval_status: "number",
                 approved_by_id: "number",
             },
             { action_note: "string" },
@@ -42,7 +41,7 @@ router.patch("/project_request", async (req, res, next) => {
         const data = await projectRequestApprove(
             id,
             approval_status,
-            reqBody.approved_by_id,
+            res.locals.id,
             reqBody.action_note,
             next
         );
@@ -63,7 +62,6 @@ router.patch("/payment_request", async (req, res, next) => {
             {
                 id: "object",
                 approval_status: "number",
-                approved_by_id: "number",
             },
             { action_note: "string" },
             req.body
@@ -91,7 +89,7 @@ router.patch("/payment_request", async (req, res, next) => {
         const data = await paymentRequestApprove(
             id,
             approval_status,
-            reqBody.approved_by_id,
+            res.locals.id,
             reqBody.action_note,
             next
         );
