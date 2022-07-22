@@ -84,7 +84,7 @@ const authorization = {
             if (mySecondUser) {
                 error(
                     "id",
-                    "user doesn't have privilege (admin cant update admin)",
+                    "user doesn't have privilege (admin can't update admin)",
                     next,
                     403
                 );

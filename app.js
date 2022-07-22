@@ -7,17 +7,17 @@ const { authenticate } = require("./validation/auth");
 const app = express();
 const basicAuth = require("express-basic-auth");
 const cors = require("cors");
-const rateLimit = require("express-rate-limit");
+// const rateLimit = require("express-rate-limit");
 const allRoutes = require("./api-routes");
 var morgan = require("morgan");
-const limiter = rateLimit({
-    windowMs: 1 * 60 * 1000, // 1 minute
-    max: 30, // Limit each IP to 30 requests per `window` (here, per 1 minute)
-    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-});
+// const limiter = rateLimit({
+//     windowMs: 1 * 60 * 1000, // 1 minute
+//     max: 30, // Limit each IP to 30 requests per `window` (here, per 1 minute)
+//     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+//     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+// });
 app.use(cors());
-app.use(limiter);
+// app.use(limiter);
 app.use(morgan("dev"));
 app.use(json());
 app.use(authenticate);
