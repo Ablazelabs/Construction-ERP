@@ -97,6 +97,20 @@ router.post(allRoutes, async (req, res, next) => {
         }
         success && (reqBody.todo_ids = req.body.todo_ids);
     }
+    if (
+        operationDataType === "daily_report" &&
+        req.body.employee_ids &&
+        Array.isArray(req.body.employee_ids) &&
+        req.body.employee_ids.length
+    ) {
+        let success = true;
+        for (const i in req.body.employee_ids) {
+            if (typeof req.body.employee_ids[i] !== "number") {
+                success = false;
+            }
+        }
+        success && (reqBody.todo_ids = req.body.todo_ids);
+    }
     //before posting like the others we need to check date values of operational data(except for the ones that don't have project id as foreign key to keep the date limit)
     //this will be extended now with also task_manager id holder values to respect the task manager dates!
     try {

@@ -3,7 +3,6 @@
         "all_requests": {
             "request_type": "number",
             "priority": "number",
-            "prepared_by_id": "number",
             "project_id": "number"
         },
         "all_individuals": { "quantity": "number" },

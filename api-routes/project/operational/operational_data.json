@@ -143,8 +143,7 @@
         "daily_report": {
             "date": "string",
             "activities_performed": "string",
-            "project_id": "number",
-            "employee_id": "number"
+            "project_id": "number"
         }
     },
     "enums": {
@@ -212,6 +211,7 @@
             "available_machine_on_site": "string",
             "problem_encountered": "string",
             "no_of_labours": "string",
+            "employee_ids": "object",
             "remark": "string"
         }
     },
