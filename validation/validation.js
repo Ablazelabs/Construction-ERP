@@ -2,11 +2,18 @@ const { error } = require("../config/config");
 module.exports = {
     /** Checking the phone number. */
     checkPhoneNumber: (phoneNumber, next, key = "phone_number") => {
+        if (phoneNumber[0] === "0") {
+            if (phoneNumber.length === 10) {
+                return true;
+            }
+            error(key, "phone Number length must be 10", next);
+            return;
+        }
         const splitPhone = phoneNumber.split("-");
         if (splitPhone.length != 2) {
             error(
                 key,
-                "phone Number must be countryCode-phone_number format",
+                "phone Number must be countryCode-phone_number format or 0xxxxxxxxx",
                 next
             );
             return;

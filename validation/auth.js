@@ -188,6 +188,11 @@ const authorization = {
                           `${PRIVILEGE_TYPE}_manager`,
                   ].filter((elem) => elem)
                 : [];
+        console.log({
+            PRIVILEGE_TYPE,
+            additionalPrivileges,
+            matched: requestPath.match("/master/"),
+        });
         if (
             requestRoute == "account" &&
             (method == "PATCH" || method == "DELETE")

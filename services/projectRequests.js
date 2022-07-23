@@ -13,7 +13,11 @@ const { get: mGet } = require("./mostCRUD/mostCRUD");
  * @returns
  */
 const post = async (reqBody, request, creator, next) => {
-    reqBody.approval_status = 1;
+    if (reqBody.approval_status === 0) {
+    } else {
+        reqBody.approval_status = 1;
+    }
+
     if (reqBody.request_type === 1 || reqBody.request_type === 2) {
         let vat_amount = 0;
         let sub_total = 0;

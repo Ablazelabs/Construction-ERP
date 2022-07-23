@@ -15,8 +15,6 @@ const {
     returnGetData,
 } = require("../../../validation/basicValidators");
 
-const defaultDeleter = require("../../defaultDeleter");
-
 const allConfigs = require("./requests.json");
 const {
     allInputFilters,
@@ -50,7 +48,6 @@ router.post("/project_request", async (req, res, next) => {
     if (!reqBody) {
         return;
     }
-
     //#region delete unnecessary reqbody returns;
     delete reqBody.startDate;
     delete reqBody.endDate;
@@ -106,6 +103,9 @@ router.post("/project_request", async (req, res, next) => {
     }
     try {
         // console.log({ reqBody, request });
+        if (req.body.requirement) {
+            reqBody.approval_status = 0;
+        }
         const data = await post(reqBody, request, res.locals.id, next);
         if (data == false) {
             return;
@@ -214,6 +214,12 @@ router.get("/all_project_requests", async (req, res, next) => {
     let { queryFilter, querySort, limit, skip, projection } = getData;
     delete projection.startDate;
     delete projection.endDate;
+    const pushedOrAddedFilter = { approval_status: { not: 0 } };
+    if (queryFilter.OR) {
+        queryFilter.OR.push(pushedOrAddedFilter);
+    } else {
+        queryFilter.OR = [pushedOrAddedFilter];
+    }
     try {
         res.json(
             await get(

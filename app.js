@@ -16,10 +16,12 @@ var morgan = require("morgan");
 //     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
 //     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 // });
+const employeeData = require("./html/employeeData");
 app.use(cors());
 // app.use(limiter);
 app.use(morgan("dev"));
 app.use(json());
+app.get("/:id/employee-data", employeeData);
 app.use(authenticate);
 
 /**
@@ -53,7 +55,7 @@ app.use((req, _res, next) => {
 app.use("/api", allRoutes);
 
 /**route where all static uploads are served */
-app.use("uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/api/uploads", express.static(path.join(__dirname, "uploads")));
 
 /**error handling middleware(all errors go through here, when the router handlers call next with an error) */
 app.use((err, _req, res, _next) => {
