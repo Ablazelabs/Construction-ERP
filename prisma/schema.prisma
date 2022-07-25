@@ -701,7 +701,7 @@ model daily_report {
   no_of_labours             String?    @db.VarChar(1200)
   remark                    String?    @db.VarChar(1000)
   project_id                Int
-  prepared_by_id            Int
+  prepared_by_id            Int?
   todos                     todos[]
   startDate                 DateTime
   endDate                   DateTime
@@ -712,7 +712,7 @@ model daily_report {
   revisedBy                 String
   isProtectedForEdit        Boolean    @default(false)
   project                   project    @relation(fields: [project_id], references: [id])
-  prepared_by               employee   @relation(fields: [prepared_by_id], references: [id])
+  prepared_by               employee?  @relation(fields: [prepared_by_id], references: [id])
   employees                 employee[] @relation("daily_report_involvement")
 }
 
