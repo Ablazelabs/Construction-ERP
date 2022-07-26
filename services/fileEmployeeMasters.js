@@ -1,12 +1,6 @@
-const { error, allModels: models } = require("../config/config");
+const { error, allModels } = require("../config/config");
 const { unlinkSync } = require("fs");
-const { employee, attachment, employee_attachment } = models;
-
-const allModels = {
-    employee,
-    attachment,
-    employee_attachment,
-};
+// const { employee, attachment, employee_attachment } = models;
 const uniqueValues = {
     employee: [],
     attachment: [],
@@ -140,6 +134,12 @@ const patch = async (
         }
     }
     try {
+        console.log({
+            updateData: updateData.tin_number,
+            operationDataType,
+            model: allModels[operationDataType].update,
+            model2: allModels["employee"].update,
+        });
         await allModels[operationDataType].update({
             data: {
                 ...updateData,
