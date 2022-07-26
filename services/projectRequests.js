@@ -1,5 +1,5 @@
 const {
-    allModels: { project_request, project_edit_request },
+    allModels: { project_request, project_edit_request, user },
     error,
     allModels,
 } = require("../config/config");
@@ -13,7 +13,11 @@ const { get: mGet } = require("./mostCRUD/mostCRUD");
  * @returns
  */
 const post = async (reqBody, request, creator, next) => {
-    reqBody.approval_status = 1;
+    if (reqBody.approval_status === 0) {
+    } else {
+        reqBody.approval_status = 1;
+    }
+    console.log(reqBody);
     if (reqBody.request_type === 1 || reqBody.request_type === 2) {
         let vat_amount = 0;
         let sub_total = 0;
@@ -34,17 +38,24 @@ const post = async (reqBody, request, creator, next) => {
             total_amount: vat_amount + sub_total,
         };
     }
-
+    const userData = await user.findUnique({ where: { id: creator } });
+    if (!userData) {
+        error("accessToken", "User not found", next, 401);
+        return false;
+    }
+    if (!userData.employee_id) {
+        error("user", "User isn't registered as an employee", next);
+        return false;
+    }
+    reqBody.prepared_by_id = userData.employee_id;
     await project_request.create({
         data: {
             ...reqBody,
             createdBy: String(creator),
             revisedBy: String(creator),
             individual_requests: {
-                //delete persons when u can!
                 createMany: {
                     data: request.map((elem) => ({
-                        persons: "a",
                         ...elem,
                         createdBy: String(creator),
                         revisedBy: String(creator),

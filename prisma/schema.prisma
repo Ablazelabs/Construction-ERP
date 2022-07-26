@@ -93,6 +93,7 @@ model Client {
   project            project[]
 
   invoice_tracking invoice_tracking[]
+
   @@map(name: "client")
 }
 
@@ -506,7 +507,6 @@ model task_manager {
   manpower_requirement manpower_requirement[]
   required_equipment   required_equipment[]
   required_material    required_material[]
-
 }
 
 model sub_task {
@@ -628,7 +628,6 @@ model todos {
   priority       priority?       @relation(fields: [priority_id], references: [id])
   daily_work_log daily_work_log? @relation(fields: [daily_work_log_id], references: [id])
   daily_report   daily_report?   @relation(fields: [daily_report_id], references: [id])
-
 }
 
 model request {
@@ -693,27 +692,28 @@ model project_request {
 }
 
 model daily_report {
-  id                        Int      @id @default(autoincrement())
+  id                        Int        @id @default(autoincrement())
   date                      DateTime
-  activities_performed      String   @db.VarChar(1200)
-  material_delivered        String?  @db.VarChar(1200)
-  available_machine_on_site String?  @db.VarChar(1200)
-  problem_encountered       String?  @db.VarChar(1200)
-  no_of_labours             String?  @db.VarChar(1200)
-  remark                    String?  @db.VarChar(1000)
+  activities_performed      String     @db.VarChar(1200)
+  material_delivered        String?    @db.VarChar(1200)
+  available_machine_on_site String?    @db.VarChar(1200)
+  problem_encountered       String?    @db.VarChar(1200)
+  no_of_labours             String?    @db.VarChar(1200)
+  remark                    String?    @db.VarChar(1000)
   project_id                Int
-  employee_id               Int
+  prepared_by_id            Int?
   todos                     todos[]
   startDate                 DateTime
   endDate                   DateTime
-  status                    Int      @default(0)
-  creationDate              DateTime @default(now())
+  status                    Int        @default(0)
+  creationDate              DateTime   @default(now())
   createdBy                 String
-  revisionDate              DateTime @updatedAt
+  revisionDate              DateTime   @updatedAt
   revisedBy                 String
-  isProtectedForEdit        Boolean  @default(false)
-  project                   project  @relation(fields: [project_id], references: [id])
-  employee                  employee @relation(fields: [employee_id], references: [id])
+  isProtectedForEdit        Boolean    @default(false)
+  project                   project    @relation(fields: [project_id], references: [id])
+  prepared_by               employee?  @relation(fields: [prepared_by_id], references: [id])
+  employees                 employee[] @relation("daily_report_involvement")
 }
 
 model individual_requests {
@@ -754,7 +754,6 @@ model invoice_tracking {
   isProtectedForEdit Boolean  @default(false)
   client_id          Int
   client             Client   @relation(fields: [client_id], references: [id])
-
 }
 
 model required_document {
@@ -1604,7 +1603,6 @@ model general_journal_header {
   recurring_general_journal    recurring_general_journal? @relation(fields: [recurring_general_journal_id], references: [id])
   currency                     currency                   @relation(fields: [currency_id], references: [id])
   posting_responsible_user     user                       @relation(fields: [posting_responsible_user_id], references: [id])
-
 
   general_ledger         general_ledger[]
   journal_comment        journal_comment[]
@@ -2756,6 +2754,7 @@ model employee {
   approved_project_request            project_request[]                  @relation("project_request_approved_by")
   project_request_approved_by_finance project_request[]                  @relation("project_request_approved_by_finance")
   daily_report                        daily_report[]
+  involved_in_reports                 daily_report[]                     @relation("daily_report_involvement")
   user                                user[]
   announcements                       announcement[]
 
@@ -3616,7 +3615,6 @@ model paygrade_salary_component {
   salary_component_id Int
   paygrade            paygrade         @relation(fields: [paygrade_id], references: [id])
   salary_component    salary_component @relation(fields: [salary_component_id], references: [id])
-
 }
 
 model paygrade_scale {
@@ -3680,7 +3678,6 @@ model payroll_detail_history {
   payroll_summary_history_id Int
   salary_component           salary_component?       @relation(fields: [salary_component_id], references: [id])
   payroll_summary_history    payroll_summary_history @relation(fields: [payroll_summary_history_id], references: [id])
-
 }
 
 model payroll_location_setting {

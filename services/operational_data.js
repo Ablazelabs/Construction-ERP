@@ -4,7 +4,8 @@ const {
     get: mGet,
     patch: mPatch,
 } = require("./mostCRUD/mostCRUD");
-const { project, task_manager, todos, daily_report, sub_task } = allModels;
+const { project, task_manager, todos, daily_report, sub_task, user } =
+    allModels;
 const unique = (value, index, self) => {
     return self.indexOf(value) === index;
 };
@@ -99,11 +100,25 @@ const post = async (
             }
         }
     }
+    reqBody.prepared_by_id = (
+        await user.findUnique({ where: { id: creator } })
+    )?.employee_id;
+    if (!reqBody.prepared_by_id) {
+        error("user", "user ins't registered as an employee", next);
+        return false;
+    }
     if (reqBody.todo_ids) {
         const todos = reqBody.todo_ids;
         delete reqBody.todo_ids;
         reqBody.todos = {
             connect: todos.map((elem) => ({ id: elem })),
+        };
+    }
+    if (reqBody.employee_ids) {
+        const employees = reqBody.employee_ids;
+        delete reqBody.employee_ids;
+        reqBody.employees = {
+            connect: employees.map((elem) => ({ id: elem })),
         };
     }
     let data = await mPost(

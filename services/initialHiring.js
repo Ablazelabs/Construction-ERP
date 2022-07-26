@@ -14,7 +14,7 @@ const {
     attachment,
     user,
     commitment,
-    employee_type,
+    business_unit,
 } = allModels;
 module.exports = async (
     { employeeReqBody, uniqueEmployee },
@@ -83,7 +83,7 @@ module.exports = async (
     }
     employeeReqBody.id_number = await generateId(
         employeeReqBody.id_number,
-        employeeReqBody.employee_type_id,
+        orgAssignmentReqBody.business_unit_id,
         next
     );
     if (!employeeReqBody.id_number) {
@@ -230,16 +230,18 @@ module.exports = async (
     };
 };
 
-const generateId = async (id_number, employee_type_id, next) => {
-    const employeeType = await employee_type.findUnique({
+const generateId = async (id_number, business_unit_id, next) => {
+    const businessUnit = await business_unit.findUnique({
         where: {
-            id: employee_type_id,
+            id: business_unit_id,
         },
     });
+    const whenSplit = businessUnit?.name?.split(" ") || ["E", "L"];
+
     const prefix =
-        employeeType?.description[0]?.toUpperCase() ||
-        "E" + employeeType?.description[1]?.toUpperCase() ||
-        "L" + "-";
+        (whenSplit[0]?.[0]?.toUpperCase() || "E") +
+        (whenSplit[1]?.[0]?.toUpperCase() || "L") +
+        "-";
     const idRange = await employee_id_range.findFirst();
     if (!idRange) {
         error(
@@ -258,7 +260,9 @@ const generateId = async (id_number, employee_type_id, next) => {
     }
     const lastEmp = await employee.findFirst({
         where: {
-            employee_type_id,
+            id_number: {
+                startsWith: prefix,
+            },
         },
         orderBy: {
             id: "desc",

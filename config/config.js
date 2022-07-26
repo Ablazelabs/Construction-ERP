@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 
 let transporter = nodemailer.createTransport({
-    host: "mail.ablazelabs.com",
+    host: "mail.elhadar.com",
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
@@ -31,7 +31,7 @@ const sendEmail = async (to, title, subject, body, attachments) => {
     // send mail with defined transport object
     try {
         let info = await transporter.sendMail({
-            from: `"Ablazelabs ERP" <${process.env.EMAIL_SENDER}>`, // sender address
+            from: `"Elhadar ERP" <${process.env.EMAIL_SENDER}>`, // sender address
             to, // list of receivers
             subject, // Subject line
             text: title, // plain text body

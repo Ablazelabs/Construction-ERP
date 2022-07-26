@@ -143,8 +143,7 @@
         "daily_report": {
             "date": "string",
             "activities_performed": "string",
-            "project_id": "number",
-            "employee_id": "number"
+            "project_id": "number"
         }
     },
     "enums": {
@@ -212,6 +211,7 @@
             "available_machine_on_site": "string",
             "problem_encountered": "string",
             "no_of_labours": "string",
+            "employee_ids": "object",
             "remark": "string"
         }
     },
@@ -491,7 +491,8 @@
             "no_of_labours": true,
             "remark": true,
             "project": true,
-            "employee": true,
+            "employees": true,
+            "prepared_by": true,
             "todos": true
         }
     },
@@ -632,7 +633,7 @@
             "no_of_labours": "string",
             "remark": "string",
             "project_id": "number",
-            "employee_id": "number"
+            "prepared_by_id": "number"
         }
     },
     "allSorts": {
@@ -843,7 +844,7 @@
             "no_of_labours": "number",
             "remark": "number",
             "project_id": "number",
-            "employee_id": "number"
+            "prepared_by_id": "number"
         }
     },
     "allRoutes": [
