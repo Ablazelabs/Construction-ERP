@@ -199,6 +199,37 @@ router.post(allPostRoutes, async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
+router.get("/all_employee", async (req, res, next) => {
+    const operationDataType = "employee";
+    const filters = allFilters[operationDataType],
+        sorts = allSorts[operationDataType],
+        projections = allProjections[operationDataType];
+    const getData = returnGetData(
+        req.body,
+        { filters, sorts, projections },
+        next
+    );
+    if (!getData) {
+        return;
+    }
+    const { queryFilter, querySort, limit, skip, projection } = getData;
+    try {
+        const data = await get(
+            queryFilter,
+            querySort,
+            limit,
+            skip,
+            projection,
+            operationDataType,
+            res.locals.id
+        );
+
+        res.json(data);
+    } catch (e) {
+        console.log(e);
+        error("database", "error", next, 500);
+    }
+});
 router.get(allRoutes, async (req, res, next) => {
     const operationDataType = getOperationDataType(req.path);
     const filters = allFilters[operationDataType],
@@ -230,6 +261,19 @@ router.get(allRoutes, async (req, res, next) => {
                     startDate: elem.start_timme,
                     endDate: elem.end_time,
                 }))
+            );
+        } else if (operationDataType === "employee") {
+            employee_action;
+            org_assignment;
+            job_title;
+            res.json(
+                data.filter((elem) => {
+                    elem.employee_action?.sort(
+                        (a, b) =>
+                            b.creationDate.getTime() - a.creationDate.getTime()
+                    );
+                    return elem.employee_action[0].employee_status === 1;
+                })
             );
         } else {
             res.json(data);

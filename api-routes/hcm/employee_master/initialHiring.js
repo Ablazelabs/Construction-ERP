@@ -131,6 +131,7 @@ allOptionalInputFilters.initial_hiring = {
     vacancy_applicant_id: "string",
     password: "string",
     email: "string",
+    role_id: "number",
 };
 let phoneValues = {
     employee: employeeMastersData.phoneValues.employee,
@@ -434,9 +435,13 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
         //     accountReqBody.password = reqBody.password; //this will be hashed in the services
         // }
         if (reqBody.email) {
+            if (reqBody.role_id) {
+                return error("role", "please select role for user", next);
+            }
             accountReqBody.username =
                 employeeReqBody.first_name + " " + employeeReqBody.middle_name;
             accountReqBody.email = reqBody.email;
+            accountReqBody.role_id = reqBody.role_id;
         }
         // console.log(
         //     { employeeReqBody },
@@ -467,6 +472,7 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
             { accountReqBody },
             reqBody,
             res.locals.id,
+            employeeMastersData.allProjections.employee,
             next
         );
         if (!data) {

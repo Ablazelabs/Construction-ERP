@@ -22,7 +22,8 @@
         "employee_action": {
             "employee_id": "number",
             "action_reason_id": "number",
-            "startDate": "string"
+            "startDate": "string",
+            "endDate": "string"
         },
         "employee_commitment": {
             "commitment_type_id": "number",
@@ -408,7 +409,7 @@
             "employee_action": {
                 "include": {
                     "org_assignment": {
-                        "select": {
+                        "include": {
                             "job_title": true
                         }
                     }

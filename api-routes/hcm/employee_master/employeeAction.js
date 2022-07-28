@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { error } = require("../../../config/config");
+const { error, allModels } = require("../../../config/config");
 const inputFilter = require("../../../validation/inputFilter");
 const uploadValidation = require("../../../validation/uploadValidation");
 const validation = require("../../../validation/validation");
@@ -154,6 +154,49 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
     let reqBody;
     const requiredInputFilter = allInputFilters[operationDataType];
     const optionalInputFilter = allOptionalInputFilters[operationDataType];
+    if (!req.body.employee_id) {
+        return error("employee_id", "please send in employee id", next);
+    }
+    const employee = await allModels.employee.findUnique({
+        where: { id: parseInt(req.body.employee_id) },
+        include: {
+            employee_action: {
+                orderBy: {
+                    creationDate: "desc",
+                },
+                include: {
+                    org_assignment: {
+                        orderBy: {
+                            creationDate: "desc",
+                        },
+                    },
+                },
+            },
+        },
+    });
+    const prevEmpAction = employee.employee_action[0];
+    const prevOrgAss = prevEmpAction.org_assignment[0];
+    if (req.body.business_unit_id) {
+        if (
+            !req.body.job_title_id &&
+            req.body.business_unit_id !== `${prevOrgAss.business_unit_id}`
+        ) {
+            return error(
+                "job_title_id",
+                "please send in job title id with the new business unit",
+                next
+            );
+        }
+    } else {
+        req.body.job_title_id =
+            req.body.job_title_id || `${prevOrgAss.job_title_id}`;
+        req.body.location_id =
+            req.body.location_id || `${prevOrgAss.location_id}`;
+        req.body.business_unit_id =
+            req.body.business_unit_id || `${prevOrgAss.business_unit_id}`;
+        req.body.employee_group_id =
+            req.body.employee_group_id || `${prevOrgAss.employee_group_id}`;
+    }
     try {
         reqBody = inputFilter(
             {
@@ -338,16 +381,17 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
         );
         orgAssignmentReqBody.startDate = reqBody.startDate;
         orgAssignmentReqBody.endDate = reqBody.endDate;
+        console.log({ orgAssignmentReqBody, employeeActionReqBody });
         // business logic here
-        try {
-            const logicDone = await deletePreviousEA(employeeActionReqBody);
-            if (!logicDone) {
-                return;
-            }
-        } catch (e) {
-            console.log("business logic failed", e);
-            return;
-        }
+        // try {
+        //     const logicDone = await deletePreviousEA(employeeActionReqBody);
+        //     if (!logicDone) {
+        //         return;
+        //     }
+        // } catch (e) {
+        //     console.log("business logic failed", e);
+        //     return;
+        // }
         const EA = await normalPost(
             employeeActionReqBody,
             "employee_action",
