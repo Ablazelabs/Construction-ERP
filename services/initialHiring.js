@@ -24,6 +24,7 @@ module.exports = async (
     { accountReqBody },
     reqBody,
     creator,
+    includes,
     next
 ) => {
     if (accountReqBody.email) {
@@ -71,9 +72,21 @@ module.exports = async (
         },
         select: {
             id: true,
+            status: true,
         },
     });
     if (emp) {
+        if (emp.status) {
+            await employee.update({
+                where: { id: emp.id },
+                data: { status: 0 },
+            });
+            return {
+                success: true,
+                message:
+                    "An already existing employee was found and has been activated, please update with the new data",
+            };
+        }
         error(
             "first_name",
             "Employee with the same name and employeement type already exists",
@@ -190,6 +203,7 @@ module.exports = async (
     if (accountReqBody.email) {
         const fullName = accountReqBody.username;
         const email = accountReqBody.email;
+        const role_id = accountReqBody.role_id;
         const password = "password"; //for testing
         await user.create({
             data: {
@@ -197,6 +211,7 @@ module.exports = async (
                 concurrency_stamp: randomConcurrencyStamp(),
                 password: await hash(password, 10),
                 email,
+                roleId: role_id,
                 first_login: true,
                 email_confirmed: true,
                 employee_id: empdata.id,
@@ -226,7 +241,10 @@ module.exports = async (
 
     return {
         success: true,
-        employee: await employee.findUnique({ where: { id: empdata.id } }),
+        employee: await employee.findUnique({
+            where: { id: empdata.id },
+            select: includes,
+        }),
     };
 };
 
@@ -272,7 +290,7 @@ const generateId = async (id_number, business_unit_id, next) => {
         let lastIdNumber = parseInt(lastEmp.id_number);
         //removing the prefix, which is by default EL-
         if (isNaN(lastIdNumber)) {
-            let splitValArr = lastEmp.id_number.split("");
+            let splitValArr = lastEmp.id_number.split(""); // i could have split this with "-" instead!
             splitValArr.shift();
             splitValArr.shift();
             splitValArr.shift();
