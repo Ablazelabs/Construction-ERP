@@ -100,13 +100,6 @@ const post = async (
             }
         }
     }
-    reqBody.prepared_by_id = (
-        await user.findUnique({ where: { id: creator } })
-    )?.employee_id;
-    if (!reqBody.prepared_by_id) {
-        error("user", "user ins't registered as an employee", next);
-        return false;
-    }
     if (reqBody.todo_ids) {
         const todos = reqBody.todo_ids;
         delete reqBody.todo_ids;
@@ -115,6 +108,13 @@ const post = async (
         };
     }
     if (reqBody.employee_ids) {
+        reqBody.prepared_by_id = (
+            await user.findUnique({ where: { id: creator } })
+        )?.employee_id;
+        if (!reqBody.prepared_by_id) {
+            error("user", "user ins't registered as an employee", next);
+            return false;
+        }
         const employees = reqBody.employee_ids;
         delete reqBody.employee_ids;
         reqBody.employees = {

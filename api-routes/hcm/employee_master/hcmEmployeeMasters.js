@@ -224,7 +224,15 @@ router.get("/all_employee", async (req, res, next) => {
             res.locals.id
         );
 
-        res.json(data);
+        res.json(
+            data.map((elem) => {
+                const empAct = elem.employee_action.pop();
+                const employeeStatus = empAct?.employee_status;
+                const orgAss = empAct?.org_assignment?.pop();
+                const jobTitle = orgAss?.job_title?.title_name;
+                return { ...elem, employeeStatus, jobTitle };
+            })
+        );
     } catch (e) {
         console.log(e);
         error("database", "error", next, 500);
@@ -263,14 +271,19 @@ router.get(allRoutes, async (req, res, next) => {
                 }))
             );
         } else if (operationDataType === "employee") {
-            employee_action;
-            org_assignment;
-            job_title;
+            // employee_action;
+            // org_assignment;
+            // job_title;
             res.json(
                 data.filter((elem) => {
                     elem.employee_action?.sort(
                         (a, b) =>
                             b.creationDate.getTime() - a.creationDate.getTime()
+                    );
+                    console.log(
+                        "after sort",
+                        elem.first_name,
+                        elem.employee_action
                     );
                     return elem.employee_action[0].employee_status === 1;
                 })

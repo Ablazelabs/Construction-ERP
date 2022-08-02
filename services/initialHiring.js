@@ -290,7 +290,7 @@ const generateId = async (id_number, business_unit_id, next) => {
         let lastIdNumber = parseInt(lastEmp.id_number);
         //removing the prefix, which is by default EL-
         if (isNaN(lastIdNumber)) {
-            let splitValArr = lastEmp.id_number.split("");
+            let splitValArr = lastEmp.id_number.split(""); // i could have split this with "-" instead!
             splitValArr.shift();
             splitValArr.shift();
             splitValArr.shift();

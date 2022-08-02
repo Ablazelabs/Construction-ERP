@@ -81,8 +81,8 @@ router.post("/project_request", async (req, res, next) => {
                     ...allOptionalInputFilters[requestTypeKey],
                 },
                 dateValue: {
-                    ...dateValue.all_individuals,
-                    ...dateValue[requestTypeKey],
+                    ...dateValues.all_individuals,
+                    ...dateValues[requestTypeKey],
                 },
                 myEnums: { ...enums.all_individuals, ...enums[requestTypeKey] },
                 phoneValue: undefined,

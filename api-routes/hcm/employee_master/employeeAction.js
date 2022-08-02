@@ -174,6 +174,7 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
             },
         },
     });
+    console.log(req.body);
     const prevEmpAction = employee.employee_action[0];
     const prevOrgAss = prevEmpAction.org_assignment[0];
     if (req.body.business_unit_id) {
@@ -189,14 +190,16 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
         }
     } else {
         req.body.job_title_id =
-            req.body.job_title_id || `${prevOrgAss.job_title_id}`;
+            req.body.job_title_id || `${prevOrgAss.job_title_id || ""}`;
         req.body.location_id =
-            req.body.location_id || `${prevOrgAss.location_id}`;
+            req.body.location_id || `${prevOrgAss.location_id || ""}`;
         req.body.business_unit_id =
-            req.body.business_unit_id || `${prevOrgAss.business_unit_id}`;
+            req.body.business_unit_id || `${prevOrgAss.business_unit_id || ""}`;
         req.body.employee_group_id =
-            req.body.employee_group_id || `${prevOrgAss.employee_group_id}`;
+            req.body.employee_group_id ||
+            `${prevOrgAss.employee_group_id || ""}`;
     }
+    console.log(req.body);
     try {
         reqBody = inputFilter(
             {
@@ -206,8 +209,7 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
                 isProtectedForEdit: "string",
                 ...optionalInputFilter,
             },
-            req.body,
-            1
+            req.body
         );
         for (let i in realTypes[operationDataType]) {
             const type = realTypes[operationDataType][i];
