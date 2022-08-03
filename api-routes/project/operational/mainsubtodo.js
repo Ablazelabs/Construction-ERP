@@ -90,7 +90,7 @@ router.post(allRoutes, async (req, res, next) => {
             }
         }
     }
-    if (todos && operationDataType === "subtask") {
+    if (todos && operationDataType === "sub_task") {
         if (typeof todos !== "object") {
             error("todos", "todos must be array", next);
             return;

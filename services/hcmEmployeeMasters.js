@@ -1,5 +1,12 @@
 const {
-    allModels: { commitment, user, leave_assignment },
+    allModels: {
+        commitment,
+        user,
+        leave_assignment,
+        project,
+        task_manager,
+        sub_task,
+    },
 } = require("../config/config");
 const {
     post: mPost,
@@ -243,6 +250,21 @@ const notifications = async (total) => {
             creationDate: { gte: new Date() },
         },
     });
+    const overdueProjectCount = await project.count({
+        where: { project_end_date: { lt: new Date() } },
+    });
+    const overdueMainTaskCount = await task_manager.count({
+        where: { task_end_date: { lt: new Date() } },
+    });
+    const overdueSubTaskCount = await sub_task.count({
+        where: { task_end_date: { lt: new Date() } },
+    });
+    // const counts = [
+    //     {
+    //         count: leaveAssignmentCount,
+
+    //     }
+    // ]
     const leaveAssignmentData = leaveAssignmentCount
         ? {
               name: 0,
@@ -251,7 +273,8 @@ const notifications = async (total) => {
               count: leaveAssignmentCount,
           }
         : undefined;
-    const returnedArray = [leaveAssignmentData].filter((elem) => elem);
+    let returnedArray = [leaveAssignmentData].filter((elem) => elem);
+
     if (total) {
         let sum = 0;
         returnedArray.forEach((elem) => (sum += elem.count));

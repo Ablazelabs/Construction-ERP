@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { error, getOperationDataType } = require("../../../config/config");
+const {
+    error,
+    getOperationDataType,
+    allModels,
+} = require("../../../config/config");
 const {
     post,
     get,
@@ -109,7 +113,7 @@ router.post(allRoutes, async (req, res, next) => {
                 success = false;
             }
         }
-        success && (reqBody.todo_ids = req.body.todo_ids);
+        success && (reqBody.employee_ids = req.body.employee_ids);
     }
     //before posting like the others we need to check date values of operational data(except for the ones that don't have project id as foreign key to keep the date limit)
     //this will be extended now with also task_manager id holder values to respect the task manager dates!
@@ -158,6 +162,21 @@ router.get(allRoutes, async (req, res, next) => {
             operationDataType
         );
         if (operationDataType === "daily_report") {
+            const ids = data.map((elem) => ({ id: Number(elem.revisedBy) }));
+            const userNames = await allModels.user.findMany({
+                where: {
+                    OR: ids,
+                },
+                select: {
+                    id: true,
+                    employee: {
+                        select: {
+                            first_name: true,
+                            middle_name: true,
+                        },
+                    },
+                },
+            });
             res.json(
                 data.map((elem) => {
                     let remarks = [];
@@ -166,7 +185,19 @@ router.get(allRoutes, async (req, res, next) => {
                     } catch (e) {
                         remarks = [elem.remark, null];
                     }
-                    return { ...elem, remark: remarks[0], remark2: remarks[1] };
+                    const foundManager = userNames.find((emp) => {
+                        emp.id === Number(elem.revisedBy);
+                    });
+                    const manager_name =
+                        foundManager?.employee?.first_name +
+                        " " +
+                        foundManager?.employee?.middle_name;
+                    return {
+                        ...elem,
+                        remark: remarks[0],
+                        remark2: remarks[1],
+                        manager_name,
+                    };
                 })
             );
         } else {

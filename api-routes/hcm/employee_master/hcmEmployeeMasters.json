@@ -407,8 +407,14 @@
             "address": true,
             "tin_number": true,
             "employee_action": {
+                "orderBy": {
+                    "creationDate": "desc"
+                },
                 "include": {
                     "org_assignment": {
+                        "orderBy": {
+                            "creationDate": "desc"
+                        },
                         "include": {
                             "job_title": true
                         }

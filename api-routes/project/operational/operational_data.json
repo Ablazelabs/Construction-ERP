@@ -371,7 +371,11 @@
             "duration_in_days": true,
             "working_days": true,
             "project": true,
-            "sub_task": true,
+            "sub_task": {
+                "include": {
+                    "prerequisites": true
+                }
+            },
             "prerequisites": true,
             "progress": true
         },
