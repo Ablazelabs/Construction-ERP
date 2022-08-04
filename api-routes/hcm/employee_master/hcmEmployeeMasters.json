@@ -22,8 +22,7 @@
         "employee_action": {
             "employee_id": "number",
             "action_reason_id": "number",
-            "startDate": "string",
-            "endDate": "string"
+            "startDate": "string"
         },
         "employee_commitment": {
             "commitment_type_id": "number",
@@ -407,8 +406,14 @@
             "address": true,
             "tin_number": true,
             "employee_action": {
+                "orderBy": {
+                    "creationDate": "desc"
+                },
                 "include": {
                     "org_assignment": {
+                        "orderBy": {
+                            "creationDate": "desc"
+                        },
                         "include": {
                             "job_title": true
                         }

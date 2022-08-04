@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { error, getOperationDataType } = require("../../../config/config");
+const {
+    error,
+    getOperationDataType,
+    allModels,
+} = require("../../../config/config");
 const {
     post,
     get,
@@ -226,9 +230,9 @@ router.get("/all_employee", async (req, res, next) => {
 
         res.json(
             data.map((elem) => {
-                const empAct = elem.employee_action.pop();
+                const empAct = elem.employee_action[0];
                 const employeeStatus = empAct?.employee_status;
-                const orgAss = empAct?.org_assignment?.pop();
+                const orgAss = empAct?.org_assignment?.[0];
                 const jobTitle = orgAss?.job_title?.title_name;
                 return { ...elem, employeeStatus, jobTitle };
             })
@@ -251,7 +255,7 @@ router.get(allRoutes, async (req, res, next) => {
     if (!getData) {
         return;
     }
-    const { queryFilter, querySort, limit, skip, projection } = getData;
+    let { queryFilter, querySort, limit, skip, projection } = getData;
     try {
         const data = await get(
             queryFilter,
@@ -274,18 +278,28 @@ router.get(allRoutes, async (req, res, next) => {
             // employee_action;
             // org_assignment;
             // job_title;
+            const employee = await allModels.employee.findFirst({
+                include: {
+                    employee_action: {
+                        include: {
+                            org_assignment: true,
+                        },
+                    },
+                },
+            });
             res.json(
                 data.filter((elem) => {
-                    elem.employee_action?.sort(
-                        (a, b) =>
-                            b.creationDate.getTime() - a.creationDate.getTime()
-                    );
-                    console.log(
-                        "after sort",
-                        elem.first_name,
-                        elem.employee_action
-                    );
-                    return elem.employee_action[0].employee_status === 1;
+                    const empAction = elem.employee_action[0];
+                    if (req.body.filter?.business_unit_id) {
+                        const orgAss = empAction?.org_assignment?.[0];
+                        return (
+                            empAction?.employee_status === 1 &&
+                            orgAss?.business_unit_id ===
+                                req.body.filter?.business_unit_id
+                        );
+                    } else {
+                        return empAction?.employee_status === 1;
+                    }
                 })
             );
         } else {

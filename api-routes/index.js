@@ -19,6 +19,7 @@ const restMasterData = require("./project/master/restMasterData");
 
 const dashboard = require("./project/dashboard/dashboard");
 
+const requirementsGet = require("./project/operational/requirementsGet");
 const projectRequests = require("./project/operational/requests");
 const operationalData = require("./project/operational/operational_data");
 const mainSubTodo = require("./project/operational/mainsubtodo");
@@ -96,6 +97,7 @@ router.use("/project/master", restMasterData);
 router.use("/project/dashboard", dashboard);
 
 router.use("/project", workingDays);
+router.use("/project/operational", requirementsGet);
 router.use("/project/operational", projectRequests);
 router.use("/project/operational", dailyWorkLog);
 router.use("/project/operational", mainSubTodo);
