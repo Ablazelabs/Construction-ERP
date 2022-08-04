@@ -213,6 +213,7 @@ const returnGetData = (reqBody, { filters, sorts, projections }, next) => {
         }
         if (typeof filter[i] == "number")
             queryFilter[i] = { equals: filter[i] };
+        else if (typeof filter[i] == "boolean") queryFilter[i] = filter[i];
         else queryFilter[i] = { contains: filter[i] };
     }
     if (filter.all) {
