@@ -436,7 +436,7 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
         //     accountReqBody.password = reqBody.password; //this will be hashed in the services
         // }
         if (reqBody.email) {
-            if (reqBody.role_id) {
+            if (!reqBody.role_id) {
                 return error("role", "please select role for user", next);
             }
             accountReqBody.username =
