@@ -192,6 +192,7 @@ router.post(allRoutes, upload.single("file"), async (req, res, next) => {
     const requiredInputFilter = allInputFilters[operationDataType];
     const optionalInputFilter = allOptionalInputFilters[operationDataType];
     try {
+        req.body.is_employee_active = "true";
         reqBody = inputFilter(
             {
                 ...requiredInputFilter,
