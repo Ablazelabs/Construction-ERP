@@ -82,6 +82,7 @@ const error = (key, message, next, status = 400) => {
     myError[key] = message;
     status != 400 && console.log({ error: myError });
     next(new Error(JSON.stringify(myError)));
+    return false;
 };
 
 const getOperationDataType = (requestPath) => {

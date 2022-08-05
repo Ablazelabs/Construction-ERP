@@ -30,6 +30,7 @@ router.patch("/project_request", async (req, res, next) => {
             id,
             approval_status,
             reqBody.action_note,
+            res.locals.id,
             next
         );
         if (data == false) {
