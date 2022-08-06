@@ -206,8 +206,28 @@ const get = async (
     limit,
     skip,
     projection,
-    operationDataType
+    operationDataType,
+    creator
 ) => {
+    if (operationDataType === "project") {
+        if (creator) {
+            const userme = await user.findUnique({
+                where: { id: creator },
+                include: { role: { include: { privileges: true } } },
+            });
+            if (!userme || !userme.role || !userme.role.privileges.length) {
+                return [];
+            }
+            if (
+                userme.role.privileges.find((elem) =>
+                    elem.action.match(/(super|admin|HEAD|PROJECT_ONE)/)
+                )
+            ) {
+            } else {
+                queryFilter = { ...queryFilter, createdBy: `${creator}` };
+            }
+        }
+    }
     return mGet(
         queryFilter,
         querySort,
@@ -244,10 +264,98 @@ const patch = async (
     updateData,
     operationDataType,
     creator,
+    checkAgainstProject,
+    checkAgainstTaskManager,
     uniqueValues,
     next
 ) => {
     // console.log("patching", operationDataType);
+    if (checkAgainstTaskManager) {
+        //if this is true the model consists of a task that is connected with task manager id.
+        let taskManager = await task_manager.findUnique({
+            where: { id: updateData.task_manager_id },
+        });
+        if (!taskManager) {
+            taskManager = await allModels[operationDataType].findUnique({
+                where: { id: reqBody.id },
+                include: { task_manager: true },
+            });
+        }
+        for (let i in checkAgainstTaskManager) {
+            if (updateData[checkAgainstTaskManager[i]]) {
+                if (
+                    updateData[checkAgainstTaskManager[i]] <
+                        taskManager.task_start_date &&
+                    updateData[checkAgainstTaskManager[i]].getTime() <
+                        taskManager.task_start_date.getTime()
+                ) {
+                    error(
+                        checkAgainstTaskManager[i],
+                        snakeToPascal(checkAgainstTaskManager[i]) +
+                            ` can't be less than main task start date ${taskManager.task_start_date.toDateString()}`,
+                        next
+                    );
+                    return;
+                } else if (
+                    updateData[checkAgainstTaskManager[i]] >
+                        taskManager.task_end_date &&
+                    updateData[checkAgainstTaskManager[i]].getTime() >
+                        taskManager.task_end_date.getTime()
+                ) {
+                    error(
+                        checkAgainstTaskManager[i],
+                        snakeToPascal(checkAgainstTaskManager[i]) +
+                            ` can't be more than main task end date ${taskManager.task_end_date.toDateString()}`,
+                        next
+                    );
+                    return;
+                }
+            }
+        }
+    } else if (checkAgainstProject) {
+        let projectData = await project.findUnique({
+            where: { id: updateData.project_id },
+        });
+        if (!projectData) {
+            projectData = await allModels[operationDataType].findUnique({
+                where: { id: reqBody.id },
+                include: { project: true },
+            });
+        }
+        for (let i in checkAgainstProject) {
+            if (updateData[checkAgainstProject[i]]) {
+                if (
+                    updateData[checkAgainstProject[i]] <
+                        projectData.project_start_date &&
+                    updateData[checkAgainstProject[i]].getTime() <
+                        projectData.project_start_date.getTime()
+                ) {
+                    error(
+                        checkAgainstProject[i],
+                        `${snakeToPascal(
+                            checkAgainstProject[i]
+                        )} can't be less than project start date ${projectData.project_start_date.toDateString()}`,
+                        next
+                    );
+                    return;
+                } else if (
+                    updateData[checkAgainstProject[i]] >
+                        projectData.project_end_date &&
+                    updateData[checkAgainstProject[i]].getTime() >
+                        projectData.project_end_date.getTime()
+                ) {
+                    error(
+                        checkAgainstProject[i],
+                        `${snakeToPascal(
+                            checkAgainstProject[i]
+                        )} can't be more than project end date ${projectData.project_end_date.toDateString()}`,
+                        next
+                    );
+                    return;
+                }
+            }
+        }
+    }
     if (operationDataType === "todos") {
         const todo = await todos.findUnique({ where: { id: reqBody.id } });
         // console.log(todo.completed, todo.daily_report_id, updateData.completed);

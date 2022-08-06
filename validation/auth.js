@@ -20,7 +20,9 @@ const authorization = {
                         some: {
                             OR: [
                                 { action: privilege },
+                                { action: privilege.replace("TWO", "ONE") },
                                 { action: "admin" },
+                                { action: "HEAD" },
                                 { action: "super" },
                             ],
                         },
@@ -166,12 +168,12 @@ const authorization = {
         // const PRIVILEGE_TYPE = `${requestRoute}_${method}`;
         let PRIVILEGE_TYPE = requestPath.match("hcm")
             ? "HCM_TWO"
-            : requestPath.match("finance")
-            ? "FINANCE_TWO"
             : requestPath.match("sales")
             ? "SALES_TWO"
             : requestPath.match(/project|client/)
             ? "PROJECT_TWO"
+            : requestPath.match("finance")
+            ? "FINANCE_TWO"
             : requestPath.match(/role|privilege/)
             ? "admin"
             : requestRoute == "account" && method === "POST"
