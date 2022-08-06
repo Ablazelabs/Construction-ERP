@@ -22,7 +22,7 @@ const handleUsers = async () => {
             code: 333,
             concurrency_stamp: "random",
             first_login: false,
-            username: "yared terefe",
+            username: "SUPER USER",
             role: {
                 connectOrCreate: {
                     create: {
@@ -30,11 +30,7 @@ const handleUsers = async () => {
                         name: "super role",
                         deleted_status: 1,
                         description: "this role should stay deleted",
-                        privileges: {
-                            connect: {
-                                action: "super",
-                            },
-                        },
+                        privileges: { connect: { action: "super" } },
                     },
                     where: {
                         name: "super role",
@@ -62,34 +58,65 @@ const handlePrivileges = async () => {
                 description: "admin privilege!",
             },
             {
-                action: "hcm",
+                action: "HEAD",
                 concurrency_stamp: "random",
                 deleted_status: 0,
-                description: "hcm privilege!",
+                description:
+                    "head of all project, hcm and finance. company manager",
             },
             {
-                action: "project",
+                action: "HCM_ONE",
                 concurrency_stamp: "random",
                 deleted_status: 0,
-                description: "hcm privilege!",
+                description:
+                    "hcm manager privilege, can change or create master data",
             },
             {
-                action: "finance",
+                action: "HCM_TWO",
                 concurrency_stamp: "random",
                 deleted_status: 0,
-                description: "hcm privilege!",
+                description:
+                    "junior hrs to do operations. people with this privilege don't have master access.",
             },
             {
-                action: "sales",
+                action: "PROJECT_ONE",
                 concurrency_stamp: "random",
                 deleted_status: 0,
-                description: "sales privilege!",
+                description:
+                    "project manager privilege. people with this role can check requests and also have master data access",
             },
             {
-                action: "manager",
+                action: "PROJECT_TWO",
                 concurrency_stamp: "random",
                 deleted_status: 0,
-                description: "hcm privilege!",
+                description:
+                    "normal users with normal projects access, they can submit reports and other features, but not master data",
+            },
+            {
+                action: "FINANCE_ONE",
+                concurrency_stamp: "random",
+                deleted_status: 0,
+                description:
+                    "finance managers who can approve payment requests and have access to master",
+            },
+            {
+                action: "FINANCE_TWO",
+                concurrency_stamp: "random",
+                deleted_status: 0,
+                description:
+                    "finance users who have access to operations like submitting pv requests and pettycash",
+            },
+            {
+                action: "SALES_ONE",
+                concurrency_stamp: "random",
+                deleted_status: 0,
+                description: "sales users who have access to master data",
+            },
+            {
+                action: "SALES_TWO",
+                concurrency_stamp: "random",
+                deleted_status: 0,
+                description: "sales users who have access to operations",
             },
         ],
         skipDuplicates: true,

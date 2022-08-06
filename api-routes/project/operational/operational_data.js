@@ -159,7 +159,8 @@ router.get(allRoutes, async (req, res, next) => {
             limit,
             skip,
             projection,
-            operationDataType
+            operationDataType,
+            res.locals.id
         );
         if (operationDataType === "daily_report") {
             const ids = data.map((elem) => ({ id: Number(elem.revisedBy) }));
@@ -185,9 +186,10 @@ router.get(allRoutes, async (req, res, next) => {
                     } catch (e) {
                         remarks = [elem.remark, null];
                     }
-                    const foundManager = userNames.find((emp) => {
-                        emp.id === Number(elem.revisedBy);
-                    });
+                    const foundManager = userNames.find(
+                        (emp) => emp.id === Number(elem.revisedBy)
+                    );
+                    console.log({ foundManager, elem, userNames });
                     const manager_name =
                         foundManager?.employee?.first_name +
                         " " +
@@ -246,6 +248,9 @@ router.patch(allRoutes, async (req, res, next) => {
             updateData,
             operationDataType,
             res.locals.id,
+            operationDataType !== "project" &&
+                checkAgainstProject[operationDataType],
+            checkAgainstTaskManager[operationDataType],
             uniqueValues[operationDataType],
             next
         );

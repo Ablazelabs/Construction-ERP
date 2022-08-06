@@ -272,6 +272,14 @@ router.get("/detail_project_requests", async (req, res, next) => {
         return;
     }
     let { queryFilter, querySort, limit, skip, projection } = getData;
+    if (queryFilter?.approval_status?.equals === 1) {
+        delete queryFilter?.approval_status;
+        queryFilter["OR"] = [
+            ...(queryFilter["OR"] || []),
+            { approval_status: { equals: 4 } },
+            { approval_status: { equals: 1 } },
+        ];
+    }
     delete projection.startDate;
     delete projection.endDate;
 

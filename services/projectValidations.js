@@ -1,5 +1,5 @@
 const {
-    allModels: { project_request, project, project_edit_request },
+    allModels: { project_request, project, project_edit_request, user },
     error,
 } = require("../config/config");
 
@@ -11,7 +11,17 @@ const {
  * @param {Function} next
  * @returns
  */
-const patch = async (id, approval_status, action_note, next) => {
+const patch = async (id, approval_status, action_note, creator, next) => {
+    const approver = await user.findUnique({
+        where: { id: creator },
+        include: { employee: true, role: { include: { privileges: true } } },
+    });
+    if (!approver) {
+        return error("user", "user not found!", next, 401);
+    }
+    if (!approver.employee) {
+        return error("user", "user isn't registered as an employee", next, 401);
+    }
     const myModel = await project_request.findUnique({
         select: {
             approval_status: true,
@@ -39,7 +49,7 @@ const patch = async (id, approval_status, action_note, next) => {
         );
         return false;
     }
-    if (myModel.approval_status !== 1) {
+    if (myModel.approval_status !== 1 && myModel.approval_status !== 4) {
         error(
             "id",
             `this ${displayRequestType} has already been ${
@@ -50,18 +60,47 @@ const patch = async (id, approval_status, action_note, next) => {
         return false;
     }
     //if any error happens its totally 500!
-    const { project_manager_id } = (await project.findUnique({
-        where: { id: myModel.project_id },
-        select: { project_manager_id: true },
-    })) || { project_manager_id: null };
+    const approverEmpId = approver.employee_id;
+    let approvedOrChecked = {};
+    const userPrivileges = approver?.role?.privileges?.map(
+        (elem) => elem.action
+    );
+    if (!userPrivileges) {
+        return error(
+            "user",
+            "you don't have enough privileges to approve, check or reject this request!"
+        );
+    }
+    const foundPrivilege = userPrivileges.find(
+        (elem) =>
+            elem === "PROJECT_ONE" ||
+            elem === "HEAD" ||
+            elem === "admin" ||
+            elem === "super"
+    );
+    if (!foundPrivilege) {
+        return error(
+            "user",
+            "you don't have enough privileges to approve, check or reject this request!"
+        );
+    }
+    approvedOrChecked =
+        foundPrivilege === "PROJECT_ONE"
+            ? {
+                  checked_by_id: approverEmpId,
+                  approval_status: approval_status === 3 ? 3 : 4,
+              }
+            : {
+                  approved_by_id: approverEmpId,
+                  approval_status: approval_status,
+              };
     await project_request.update({
         data: {
-            approval_status,
             action_note,
             action_taken_date: new Date(),
-            approved_by_id: project_manager_id,
+            ...approvedOrChecked,
         },
-        where: { id: id },
+        where: { id },
     });
     return { success: true };
 };

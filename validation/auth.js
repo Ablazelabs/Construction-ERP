@@ -20,7 +20,9 @@ const authorization = {
                         some: {
                             OR: [
                                 { action: privilege },
+                                { action: privilege.replace("TWO", "ONE") },
                                 { action: "admin" },
+                                { action: "HEAD" },
                                 { action: "super" },
                             ],
                         },
@@ -164,30 +166,31 @@ const authorization = {
             } catch (e) {}
         }
         // const PRIVILEGE_TYPE = `${requestRoute}_${method}`;
-        const PRIVILEGE_TYPE = requestPath.match("hcm")
-            ? "hcm"
-            : requestPath.match("finance")
-            ? "finance"
+        let PRIVILEGE_TYPE = requestPath.match("hcm")
+            ? "HCM_TWO"
             : requestPath.match("sales")
-            ? "sales"
+            ? "SALES_TWO"
             : requestPath.match(/project|client/)
-            ? "project"
+            ? "PROJECT_TWO"
+            : requestPath.match("finance")
+            ? "FINANCE_TWO"
             : requestPath.match(/role|privilege/)
             ? "admin"
             : requestRoute == "account" && method === "POST"
             ? "admin"
             : "*";
-        const additionalPrivileges =
-            PRIVILEGE_TYPE === "hcm" ||
-            PRIVILEGE_TYPE === "finance" ||
-            PRIVILEGE_TYPE === "project"
-                ? [
-                      (requestPath.match("validation") ||
-                          requestPath.match("dashboard") ||
-                          requestPath.match("/master/")) &&
-                          `${PRIVILEGE_TYPE}_manager`,
-                  ].filter((elem) => elem)
-                : [];
+        // const additionalPrivileges =
+        //     PRIVILEGE_TYPE === "HCM_TWO" ||
+        //     PRIVILEGE_TYPE === "FINANCE_TWO" ||
+        //     PRIVILEGE_TYPE === "PROJECT_TWO"
+        //         ? [
+        //                &&
+        //                   `${PRIVILEGE_TYPE}_manager`,
+        //           ].filter((elem) => elem)
+        //         : [];
+        if (requestPath.match("/master/")) {
+            PRIVILEGE_TYPE = PRIVILEGE_TYPE.replace("TWO", "ONE");
+        }
         if (
             requestRoute == "account" &&
             (method == "PATCH" || method == "DELETE")
@@ -217,18 +220,6 @@ const authorization = {
                 ))
             )
                 return;
-            if (additionalPrivileges.length) {
-                for (let i in additionalPrivileges) {
-                    if (
-                        !(await authorization.userHasPrivilege(
-                            payLoad.id,
-                            additionalPrivileges[i],
-                            next
-                        ))
-                    )
-                        return;
-                }
-            }
         }
         next();
     },

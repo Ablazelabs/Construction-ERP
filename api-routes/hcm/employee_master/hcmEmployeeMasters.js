@@ -314,7 +314,7 @@ router.get("/user", async (_req, res, _next) => {
     res.json(await getManagerUsers());
 });
 router.get("/notifications", async (req, res, next) => {
-    res.json(await notifications(req?.body?.filter?.total));
+    res.json(await notifications(req?.body?.filter?.total, res.locals.id));
 });
 router.patch(allPostRoutes, async (req, res, next) => {
     const operationDataType = getOperationDataType(req.path);

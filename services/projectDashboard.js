@@ -1,8 +1,19 @@
 const { allModels } = require("../config/config");
 
-const { project, project_edit_request, payment_request } = allModels;
+const {
+    project,
+    project_edit_request,
+    payment_request,
+    user,
+    project_request,
+} = allModels;
 
-const indexService = async () => {
+const indexService = async (creator) => {
+    const userData = await user.findUnique({
+        where: { id: creator },
+        include: { role: { include: { privileges: true } } },
+    });
+
     const totalProjectsLength = await project.count();
     const completedProjectsLenth = await project.count({
         where: { project_end_date: { lte: new Date() } },
@@ -26,11 +37,24 @@ const indexService = async () => {
             "project_request"
         ].count({
             where: {
-                approval_status: 1,
+                OR: [{ approval_status: 1 }, { approval_status: 4 }],
+                status: 0,
                 request_type: filters[i],
             },
         });
-        total += requests[requestModels[filters[i]]];
+        if (requestModels[filters[i]] === "store_request") {
+            if (
+                userData?.role?.privileges?.find((elem) =>
+                    elem.action.match(/(STORE_TWO|admin|super|HEAD)/)
+                )
+            ) {
+                total += requests[requestModels[filters[i]]];
+            } else {
+                delete requests[requestModels[filters[i]]];
+            }
+        } else {
+            total += requests[requestModels[filters[i]]];
+        }
     }
     let yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
@@ -42,11 +66,15 @@ const indexService = async () => {
             approval_status: 1,
         },
     });
-    const pvRequestLength = await payment_request.count({
-        where: {
-            approval_status: 1,
-        },
-    });
+    const pvRequestLength = userData?.role?.privileges?.find((elem) =>
+        elem.action.match(/(FINANCE_TWO|admin|super|HEAD)/)
+    )
+        ? await payment_request.count({
+              where: {
+                  approval_status: 1,
+              },
+          })
+        : 0;
     requests["total"] = total + projectEditRequestLength + pvRequestLength;
     requests = {
         ...requests,

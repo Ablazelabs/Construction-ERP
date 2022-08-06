@@ -6,7 +6,7 @@ const { indexService } = require("../../../services/projectDashboard");
 
 router.get("/", async (req, res, next) => {
     try {
-        res.json(await indexService());
+        res.json(await indexService(res.locals.id));
     } catch (e) {
         console.log(e);
         error("database", "error", next, 500);
