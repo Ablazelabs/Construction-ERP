@@ -281,7 +281,7 @@ router.post("/report-remark", async (req, res, next) => {
     const { daily_report_id, report } = req.body;
     const data = await addReportRemark(
         daily_report_id,
-        remark,
+        report,
         res.locals.id,
         next
     );
