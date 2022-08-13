@@ -28,7 +28,9 @@
         "individual_store": {
             "return_date": "string"
         },
-        "project_edit_request": {}
+        "project_edit_request": {
+            "reason": "string"
+        }
     },
     "enums": {
         "all_requests": {
@@ -75,6 +77,7 @@
             "prepared_by": true,
             "checked_by": true,
             "approved_by": true,
+            "checker_action_note": true,
             "project": true,
             "approval_status": true,
             "requested_date": true,
@@ -121,7 +124,8 @@
             "requester": true,
             "approval_status": true,
             "requested_date": true,
-            "project": true
+            "project": true,
+            "reason": true
         }
     },
     "allFilters": {

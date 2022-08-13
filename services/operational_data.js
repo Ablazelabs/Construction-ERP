@@ -405,10 +405,44 @@ const patchSecondRemark = async (id, remark) => {
     return { success: true };
 };
 
+const addReportRemark = async (daily_report_id, remark, creator, next) => {
+    const creatorUser = await user.findUnique({ where: { id: creator } });
+    if (!creatorUser.employee_id) {
+        return error("user", "user ins't registered as an employee", next);
+    }
+    try {
+        const prevRemark = await allModels.report_remarks.findFirst({
+            where: {
+                daily_report_id,
+                remark_written_by_id: creatorUser.employee_id,
+            },
+        });
+        if (prevRemark) {
+            await allModels.report_remarks.update({
+                where: { id: prevRemark.id },
+                data: { remark },
+            });
+        } else {
+            await allModels.report_remarks.create({
+                data: {
+                    remark,
+                    daily_report_id,
+                    remark_written_by_id: creatorUser.employee_id,
+                },
+            });
+        }
+        return { success: true };
+    } catch (e) {
+        console.log(e);
+        return error("database", "error", next, 500);
+    }
+};
+
 module.exports = {
     post,
     get,
     patch,
     getProjectId,
     patchSecondRemark,
+    addReportRemark,
 };

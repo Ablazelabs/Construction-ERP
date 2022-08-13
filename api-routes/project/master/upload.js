@@ -7,6 +7,7 @@ const upload = multer({ dest: "uploads/" });
 
 const excelValidation = require("../../../validation/excelValidation");
 const saveList = require("../../../services/saveList");
+const projectMasterTemplates = require("../../../services/projectMasterTemplates");
 router.post("/upload", upload.single("file"), async (req, res, next) => {
     try {
         inputFilter({}, {}, req.body);
@@ -45,5 +46,15 @@ router.post("/upload", upload.single("file"), async (req, res, next) => {
         error("database", "error", next, 500);
         return;
     }
+});
+router.get("/download", async (req, res, next) => {
+    const type = Number(req.body.type);
+    if (isNaN(type)) {
+        return error("type", "please send number", next);
+    }
+    if (type < 0 || type > 12) {
+        return error("type", "please send number between 0 and 12", next);
+    }
+    return res.json({ file: projectMasterTemplates(type) });
 });
 module.exports = router;

@@ -88,15 +88,16 @@ const patch = async (id, approval_status, action_note, creator, next) => {
         foundPrivilege === "PROJECT_ONE"
             ? {
                   checked_by_id: approverEmpId,
+                  checker_action_note: action_note,
                   approval_status: approval_status === 3 ? 3 : 4,
               }
             : {
+                  action_note,
                   approved_by_id: approverEmpId,
                   approval_status: approval_status,
               };
     await project_request.update({
         data: {
-            action_note,
             action_taken_date: new Date(),
             ...approvedOrChecked,
         },

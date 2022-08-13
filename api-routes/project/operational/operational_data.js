@@ -11,6 +11,7 @@ const {
     patch,
     getProjectId,
     patchSecondRemark,
+    addReportRemark,
 } = require("../../../services/operational_data");
 
 const {
@@ -138,6 +139,7 @@ router.post(allRoutes, async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
+
 router.get(allRoutes, async (req, res, next) => {
     const operationDataType = getOperationDataType(req.path);
     const filters = allFilters[operationDataType],
@@ -274,6 +276,20 @@ router.patch("/report_remark", async (req, res, next) => {
         return;
     }
     res.json(await patchSecondRemark(req.body.id, req.body.remark));
+});
+router.post("/report-remark", async (req, res, next) => {
+    const { daily_report_id, report } = req.body;
+    const data = await addReportRemark(
+        daily_report_id,
+        remark,
+        res.locals.id,
+        next
+    );
+    if (!data) {
+        return;
+    } else {
+        return res.json(data);
+    }
 });
 router.delete(allRoutes, defaultDeleter);
 module.exports = router;
