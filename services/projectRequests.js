@@ -74,7 +74,7 @@ const post = async (reqBody, request, creator, next) => {
  * @param {*} next
  * @returns
  */
-const postEditRequest = async ({ requester_id, project_id }, next) => {
+const postEditRequest = async ({ requester_id, project_id, reason }, next) => {
     let yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     const prevReq = await project_edit_request.findFirst({
@@ -98,6 +98,7 @@ const postEditRequest = async ({ requester_id, project_id }, next) => {
         data: {
             requester_id,
             project_id,
+            reason,
         },
     });
     return { success: true };

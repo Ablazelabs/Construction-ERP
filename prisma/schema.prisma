@@ -279,6 +279,7 @@ model project_edit_request {
   approval_status Int      @default(1)
   requested_date  DateTime @default(now())
   project_id      Int
+  reason          String?
   project         project  @relation(fields: [project_id], references: [id])
 }
 
@@ -677,6 +678,7 @@ model project_request {
   revisedBy               String
   project_id              Int
   action_note             String?
+  checker_action_note     String?
   invoice                 String?               @db.VarChar(3000) //i intend to use arrays
   remark                  String?               @db.VarChar(1000)
   prepared_by             employee              @relation(fields: [prepared_by_id], references: [id], name: "project_request_prepared_by")
@@ -692,28 +694,40 @@ model project_request {
 }
 
 model daily_report {
-  id                        Int        @id @default(autoincrement())
+  id                        Int              @id @default(autoincrement())
   date                      DateTime
-  activities_performed      String     @db.VarChar(1200)
-  material_delivered        String?    @db.VarChar(1200)
-  available_machine_on_site String?    @db.VarChar(1200)
-  problem_encountered       String?    @db.VarChar(1200)
-  no_of_labours             String?    @db.VarChar(1200)
-  remark                    String?    @db.VarChar(1000)
+  activities_performed      String           @db.VarChar(1200)
+  material_delivered        String?          @db.VarChar(1200)
+  available_machine_on_site String?          @db.VarChar(1200)
+  problem_encountered       String?          @db.VarChar(1200)
+  no_of_labours             String?          @db.VarChar(1200)
+  remark                    String?          @db.VarChar(1000)
   project_id                Int
   prepared_by_id            Int?
   todos                     todos[]
   startDate                 DateTime
   endDate                   DateTime
-  status                    Int        @default(0)
-  creationDate              DateTime   @default(now())
+  status                    Int              @default(0)
+  creationDate              DateTime         @default(now())
   createdBy                 String
-  revisionDate              DateTime   @updatedAt
+  revisionDate              DateTime         @updatedAt
   revisedBy                 String
-  isProtectedForEdit        Boolean    @default(false)
-  project                   project    @relation(fields: [project_id], references: [id])
-  prepared_by               employee?  @relation(fields: [prepared_by_id], references: [id])
-  employees                 employee[] @relation("daily_report_involvement")
+  isProtectedForEdit        Boolean          @default(false)
+  project                   project          @relation(fields: [project_id], references: [id])
+  prepared_by               employee?        @relation(fields: [prepared_by_id], references: [id])
+  employees                 employee[]       @relation("daily_report_involvement")
+  report_remarks            report_remarks[]
+}
+
+model report_remarks {
+  id                   Int          @id @default(autoincrement())
+  creationDate         DateTime     @default(now())
+  revisionDate         DateTime     @updatedAt
+  remark_written_by_id Int
+  remark_written_by    employee     @relation(fields: [remark_written_by_id], references: [id])
+  remark               String       @db.VarChar(500)
+  daily_report_id      Int
+  daily_report         daily_report @relation(fields: [daily_report_id], references: [id])
 }
 
 model individual_requests {
@@ -2769,6 +2783,7 @@ model employee {
   pv_edit_request             pv_edit_request[]
   sales_reps                  sales_data[]      @relation("sales_rep")
   contact_handlers            sales_data[]      @relation("contact_handler")
+  report_remarks              report_remarks[]
 }
 
 model employee_action {

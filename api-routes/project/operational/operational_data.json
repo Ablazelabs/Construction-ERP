@@ -497,7 +497,8 @@
             "project": true,
             "employees": true,
             "prepared_by": true,
-            "todos": true
+            "todos": true,
+            "report_remarks": true
         }
     },
     "allFilters": {

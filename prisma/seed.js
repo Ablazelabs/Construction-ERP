@@ -6,7 +6,7 @@ const { genSalt, hash } = require("bcrypt");
 
 async function main() {
     await handlePrivileges();
-    await handleUsers();
+    // await handleUsers();
     await handleActionReason();
 }
 
@@ -15,7 +15,9 @@ const handleUsers = async () => {
     const hashPassword = await hash("password", salt);
     await prisma.user.upsert({
         where: { email: "hello@gmail.com" },
-        update: {},
+        update: {
+            concurrency_stamp: "random",
+        },
         create: {
             email: "hello@gmail.com",
             password: hashPassword,
@@ -34,6 +36,174 @@ const handleUsers = async () => {
                     },
                     where: {
                         name: "super role",
+                    },
+                },
+            },
+        },
+    });
+    await prisma.user.upsert({
+        where: { email: "project@gmail.com" },
+        update: {
+            concurrency_stamp: "random",
+        },
+        create: {
+            email: "project@gmail.com",
+            password: hashPassword,
+            code: 333,
+            concurrency_stamp: "random",
+            first_login: false,
+            username: "Project USER",
+            role: {
+                connectOrCreate: {
+                    create: {
+                        concurrency_stamp: "random",
+                        name: "project role",
+                        deleted_status: 0,
+                        description: "project user role",
+                        privileges: { connect: { action: "PROJECT_TWO" } },
+                    },
+                    where: {
+                        name: "project role",
+                    },
+                },
+            },
+        },
+    });
+    await prisma.user.upsert({
+        where: { email: "projectmanager@gmail.com" },
+        update: {
+            concurrency_stamp: "random",
+        },
+        create: {
+            email: "projectmanager@gmail.com",
+            password: hashPassword,
+            code: 333,
+            concurrency_stamp: "random",
+            first_login: false,
+            username: "Project Manager",
+            role: {
+                connectOrCreate: {
+                    create: {
+                        concurrency_stamp: "random",
+                        name: "project manager role",
+                        deleted_status: 0,
+                        description: "project manager role",
+                        privileges: { connect: { action: "PROJECT_ONE" } },
+                    },
+                    where: {
+                        name: "project manager role",
+                    },
+                },
+            },
+        },
+    });
+    await prisma.user.upsert({
+        where: { email: "hcmmanager@gmail.com" },
+        update: {
+            concurrency_stamp: "random",
+        },
+        create: {
+            email: "hcmmanager@gmail.com",
+            password: hashPassword,
+            code: 333,
+            concurrency_stamp: "random",
+            first_login: false,
+            username: "HCM Manager",
+            role: {
+                connectOrCreate: {
+                    create: {
+                        concurrency_stamp: "random",
+                        name: "hcm manager role",
+                        deleted_status: 0,
+                        description: "hcm manager role",
+                        privileges: { connect: { action: "HCM_ONE" } },
+                    },
+                    where: {
+                        name: "hcm manager role",
+                    },
+                },
+            },
+        },
+    });
+    await prisma.user.upsert({
+        where: { email: "hcm@gmail.com" },
+        update: {
+            concurrency_stamp: "random",
+        },
+        create: {
+            email: "hcm@gmail.com",
+            password: hashPassword,
+            code: 333,
+            concurrency_stamp: "random",
+            first_login: false,
+            username: "HCM User",
+            role: {
+                connectOrCreate: {
+                    create: {
+                        concurrency_stamp: "random",
+                        name: "hcm role",
+                        deleted_status: 0,
+                        description: "hcm role",
+                        privileges: { connect: { action: "HCM_TWO" } },
+                    },
+                    where: {
+                        name: "hcm role",
+                    },
+                },
+            },
+        },
+    });
+    await prisma.user.upsert({
+        where: { email: "finance@gmail.com" },
+        update: {
+            concurrency_stamp: "random",
+        },
+        create: {
+            email: "finance@gmail.com",
+            password: hashPassword,
+            code: 333,
+            concurrency_stamp: "random",
+            first_login: false,
+            username: "finance User",
+            role: {
+                connectOrCreate: {
+                    create: {
+                        concurrency_stamp: "random",
+                        name: "finance role",
+                        deleted_status: 0,
+                        description: "finance role",
+                        privileges: { connect: { action: "FINANCE_TWO" } },
+                    },
+                    where: {
+                        name: "finance role",
+                    },
+                },
+            },
+        },
+    });
+    await prisma.user.upsert({
+        where: { email: "financemanager@gmail.com" },
+        update: {
+            concurrency_stamp: "random",
+        },
+        create: {
+            email: "financemanager@gmail.com",
+            password: hashPassword,
+            code: 333,
+            concurrency_stamp: "random",
+            first_login: false,
+            username: "FINANCE Manager",
+            role: {
+                connectOrCreate: {
+                    create: {
+                        concurrency_stamp: "random",
+                        name: "finance manager role",
+                        deleted_status: 0,
+                        description: "finance manager role",
+                        privileges: { connect: { action: "FINANCE_ONE" } },
+                    },
+                    where: {
+                        name: "finance manager role",
                     },
                 },
             },
@@ -136,6 +306,10 @@ const handleActionReason = async () => {
                 reason_description:
                     "Auto Generated Action Reason, This is used for hiring an employee and its automatic, and can't be fetched",
                 status: 0,
+                startDate: new Date(),
+                endDate: new Date(),
+                createdBy: "seed",
+                revisedBy: "seed",
             },
         });
     } else if (!actionReason.status) {
