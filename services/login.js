@@ -68,14 +68,14 @@ module.exports = async (identifier, reqBody, next) => {
         },
         process.env.REFRESH_KEY
     );
-    if (!queryResult.first_login) {
-        await refresh_tokens.create({
-            data: {
-                refresh_token: refreshToken,
-                user_id: queryResult.id,
-            },
-        });
-    }
+    // if (!queryResult.first_login) {
+    await refresh_tokens.create({
+        data: {
+            refresh_token: refreshToken,
+            user_id: queryResult.id,
+        },
+    });
+    // }
     await user.update({
         data: {
             access_failed_count: 0,
