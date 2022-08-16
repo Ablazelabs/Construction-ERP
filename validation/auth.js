@@ -161,9 +161,16 @@ const authorization = {
             next();
             return;
         } else {
-            try {
+            if (payLoad.id) {
                 res.locals.id = payLoad.id;
-            } catch (e) {}
+            } else {
+                return error(
+                    "accessToken",
+                    "please, update your password or login again with your new password",
+                    next,
+                    401
+                );
+            }
         }
         // const PRIVILEGE_TYPE = `${requestRoute}_${method}`;
         let PRIVILEGE_TYPE = requestPath.match("hcm")
