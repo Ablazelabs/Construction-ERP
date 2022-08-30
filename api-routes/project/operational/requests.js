@@ -8,6 +8,8 @@ const {
     getEditRequest,
     statusEditRequest,
     deleter,
+    getParticipationRequest,
+    postParticipationRequest,
 } = require("../../../services/projectRequests");
 
 const {
@@ -164,6 +166,55 @@ router.get("/project_edit_request", async (req, res, next) => {
         error("database", "error", next, 500);
     }
 });
+router.post("/participation_request", async (req, res, next) => {
+    const requiredInputFilter = allInputFilters.project_participation_request;
+    const dateValue = dateValues.project_participation_request;
+    const myEnums = enums.project_participation_request;
+    const optionalInputFilter =
+        allOptionalInputFilters.project_participation_request;
+
+    let reqBody = returnReqBody(
+        req.body,
+        {
+            requiredInputFilter,
+            optionalInputFilter,
+            dateValue,
+            myEnums,
+            phoneValue: undefined,
+            emailValue: undefined,
+            rangeValues: undefined,
+        },
+        next
+    );
+    if (!reqBody) {
+        return;
+    }
+    reqBody.requester_id = res.locals.id;
+    //#region delete unnecessary reqbody returns;
+    delete reqBody.startDate;
+    delete reqBody.endDate;
+    delete reqBody.isProtectedForEdit;
+    //#endregion
+
+    try {
+        const data = await postParticipationRequest(reqBody, next);
+        if (data == false) {
+            return;
+        }
+        res.json(data);
+    } catch (e) {
+        console.log(e);
+        error("database", "error", next, 500);
+    }
+});
+router.get("/participation_request", async (req, res, next) => {
+    try {
+        return res.json(await getParticipationRequest(res.locals.id));
+    } catch (e) {
+        console.log(e);
+        error("database", "error", next, 500);
+    }
+});
 router.get("/project_edit_request/status", async (req, res, next) => {
     try {
         if (!req.body.project_id) {
@@ -215,10 +266,17 @@ router.get("/all_project_requests", async (req, res, next) => {
     delete projection.startDate;
     delete projection.endDate;
     const pushedOrAddedFilter = { approval_status: { not: 0 } };
+    const approvedNotChecked = [
+        { approval_status: 2, checked_by_id: null },
+        { approval_status: 4 },
+    ];
     if (queryFilter.OR) {
         queryFilter.OR.push(pushedOrAddedFilter);
     } else {
         queryFilter.OR = [pushedOrAddedFilter];
+    }
+    if (queryFilter.approval_status === 1) {
+        queryFilter.OR = queryFilter.OR.concat(approvedNotChecked);
     }
     try {
         res.json(

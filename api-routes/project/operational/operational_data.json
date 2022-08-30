@@ -104,10 +104,8 @@
             "manpower_id": "number"
         },
         "todos": {
-            "notes": "string",
             "name": "string",
-            "project_id": "number",
-            "priority_id": "number"
+            "sub_task_id": "number"
         },
         "request": {
             "RFI_no": "string",
@@ -182,7 +180,11 @@
         "simple_task": { "task_end_date": "string" },
         "work_log_and_branch_of_work": {},
         "weather_data": { "reason": "string" },
-        "todos": { "completed": "boolean" },
+        "todos": {
+            "quantity": "number",
+            "total_area": "number",
+            "unit_price": "number"
+        },
         "request": {
             "request_description": "string",
             "date_required": "string",
@@ -285,7 +287,16 @@
             "site_engineer": true,
             "dupty_manager": true,
             "project_address": true,
-            "client": true
+            "client": true,
+            "project_participation_request": {
+                "where": {
+                    "approval_status": 2
+                }
+            },
+            "progress": true,
+            "budget": true,
+            "tax": true,
+            "total_budget": true
         },
         "daily_work_log": {
             "id": true,
@@ -377,7 +388,8 @@
                 }
             },
             "prerequisites": true,
-            "progress": true
+            "progress": true,
+            "budget": true
         },
         "sub_task": {
             "id": true,
@@ -390,7 +402,8 @@
             "task_manager": true,
             "todos": true,
             "prerequisites": true,
-            "progress": true
+            "progress": true,
+            "budget": true
         },
         "simple_task": {
             "id": true,
@@ -423,12 +436,14 @@
         },
         "todos": {
             "id": true,
-            "notes": true,
             "name": true,
-            "project": true,
-            "priority": true,
+            "quantity": true,
+            "total_area": true,
+            "unit_price": true,
+            "total_price": true,
             "sub_task": true,
-            "daily_report": true
+            "daily_report": true,
+            "completed": true
         },
         "request": {
             "id": true,
@@ -498,7 +513,11 @@
             "employees": true,
             "prepared_by": true,
             "todos": true,
-            "report_remarks": true
+            "report_remarks": {
+                "include": {
+                    "remark_written_by": true
+                }
+            }
         }
     },
     "allFilters": {

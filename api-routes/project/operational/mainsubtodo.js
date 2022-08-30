@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { error, getOperationDataType } = require("../../../config/config");
+const {
+    error,
+    getOperationDataType,
+    allModels,
+} = require("../../../config/config");
 const {
     post,
     get,
@@ -104,8 +108,12 @@ router.post(allRoutes, async (req, res, next) => {
             return;
         }
         for (const i in todos) {
-            if (typeof todos[i] !== "string") {
-                error("todos", "todos must contain only strings", next);
+            if (typeof todos[i] !== "object") {
+                error(
+                    "todos",
+                    "todos must contain values of name, quantity, total_area, and unit_price",
+                    next
+                );
                 return;
             }
         }

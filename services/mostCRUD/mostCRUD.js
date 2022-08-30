@@ -153,7 +153,8 @@ const patch = async (
     modelName,
     creator,
     uniqueValues,
-    next
+    next,
+    sendId = false
 ) => {
     const myModel = await allModels[modelName].findUnique({
         select: { ...updateDataProjection, isProtectedForEdit: true },
@@ -195,13 +196,14 @@ const patch = async (
         }
     }
     try {
-        await allModels[modelName].update({
+        const updated = await allModels[modelName].update({
             data: {
                 ...updateData,
                 revisedBy: String(creator),
             },
             where: { id: reqBody.id },
         });
+        return { success: true, id: sendId ? updated.id : undefined };
     } catch (e) {
         console.log(e);
         if (e.meta.field_name) {
@@ -215,8 +217,8 @@ const patch = async (
             );
             return false;
         }
+        return { success: false };
     }
-    return { success: true };
 };
 /**
  * This function takes an id and a model name, and then updates the status and endDate of the record

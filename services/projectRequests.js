@@ -1,5 +1,10 @@
 const {
-    allModels: { project_request, project_edit_request, user },
+    allModels: {
+        project_request,
+        project_edit_request,
+        user,
+        project_participation_request,
+    },
     error,
     allModels,
 } = require("../config/config");
@@ -106,6 +111,34 @@ const postEditRequest = async ({ requester_id, project_id, reason }, next) => {
 
 /**
  *
+ * @param {{requester_id: number,project_id: number}} param0
+ * @param {*} creator
+ * @param {*} next
+ * @returns
+ */
+const postParticipationRequest = async (
+    { requester_id, project_id, remark },
+    next
+) => {
+    const prevReq = await project_participation_request.findFirst({
+        where: { requester_id, project_id },
+    });
+    if (prevReq) {
+        error(
+            "request_id",
+            "you already have requested for this project",
+            next
+        );
+        return;
+    }
+    await project_participation_request.create({
+        data: { requester_id, project_id, remark, requested_date: new Date() },
+    });
+    return { success: true };
+};
+
+/**
+ *
  * @param {boolean} all
  * @returns
  */
@@ -122,6 +155,24 @@ const getEditRequest = async (all = false) => {
           };
     return await project_edit_request.findMany({
         where: whereData,
+        include: {
+            requester: true,
+        },
+    });
+};
+
+/**
+ *
+ * @param {boolean} all
+ * @returns
+ */
+const getParticipationRequest = async (creator) => {
+    return await project_participation_request.findMany({
+        where: {
+            project: {
+                createdBy: String(creator),
+            },
+        },
         include: {
             requester: true,
         },
@@ -183,4 +234,6 @@ module.exports = {
     getEditRequest,
     statusEditRequest,
     deleter,
+    getParticipationRequest,
+    postParticipationRequest,
 };

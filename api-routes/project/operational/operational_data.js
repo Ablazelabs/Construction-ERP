@@ -164,6 +164,20 @@ router.get(allRoutes, async (req, res, next) => {
             operationDataType,
             res.locals.id
         );
+        if (operationDataType === "project") {
+            for (let i in data) {
+                let allowed_users = data[i].project_participation_request.map(
+                    (elem) => elem.requester_id
+                );
+                const privExists = res.locals.privileges.find((elem) =>
+                    elem.match(/|admin|super|HEAD|PROJECT_ONE/)
+                );
+                allowed_users.push(Number(data[i].createdBy));
+                // privExists && allowed_users.push(Number(res.locals.id));
+                data[i].has_access = allowed_users;
+            }
+            return res.json(data);
+        }
         if (operationDataType === "daily_report") {
             const ids = data.map((elem) => ({ id: Number(elem.revisedBy) }));
             const userNames = await allModels.user.findMany({

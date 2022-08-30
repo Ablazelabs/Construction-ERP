@@ -162,6 +162,11 @@ const authorization = {
             return;
         } else {
             if (payLoad.id) {
+                const privileges = await user
+                    .findUnique({ where: { id: payLoad.id } })
+                    .role()
+                    .privileges();
+                res.locals.privileges = privileges.map((elem) => elem.action);
                 res.locals.id = payLoad.id;
             } else {
                 return error(
