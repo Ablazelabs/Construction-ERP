@@ -40,6 +40,18 @@ const indexService = async (creator) => {
     filters = [1, 2, 3];
     let requests = {};
     total = 0;
+    const paymentRequestForFinance = userData?.role?.privileges?.find((elem) =>
+        elem.action.match(/(FINANCE_ONE|admin|super|HEAD)/)
+    )
+        ? await allModels.project_request.count({
+              where: {
+                  approved_by_id: { not: null },
+                  checked_by_id: { not: null },
+                  finance_approved_by_id: null,
+                  approval_status: 2,
+              },
+          })
+        : 0;
     for (let i in filters) {
         requests[requestModels[filters[i]]] = await allModels[
             "project_request"
@@ -103,12 +115,14 @@ const indexService = async (creator) => {
         total +
         projectEditRequestLength +
         pvRequestLength +
-        participationRequests.length;
+        participationRequests.length +
+        payment_request_for_finance;
     requests = {
         ...requests,
         project_edit_request: projectEditRequestLength,
         pv_request: pvRequestLength,
         project_participation_request: participationRequests.length,
+        payment_request_for_finance: paymentRequestForFinance,
     };
     return {
         totalProjectsLength,
