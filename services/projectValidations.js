@@ -81,7 +81,8 @@ const patch = async (id, approval_status, action_note, creator, next) => {
     if (!foundPrivilege) {
         return error(
             "user",
-            "you don't have enough privileges to approve, check or reject this request!"
+            "you don't have enough privileges to approve, check or reject this request!",
+            next
         );
     }
     approvedOrChecked =

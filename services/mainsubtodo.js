@@ -1,4 +1,5 @@
 const { allModels, error, snakeToPascal } = require("../config/config");
+const calculateProject = require("./calculateProject");
 const { post: mPost, get: mGet } = require("./mostCRUD/mostCRUD");
 const { project, task_manager, todos } = allModels;
 /**
@@ -98,7 +99,14 @@ const post = async (
                 data: todos
                     .filter((elem) => elem)
                     .map((elem) => ({
-                        name: elem,
+                        name: elem.name,
+                        quantity: Number(elem.quantity) || 1,
+                        total_area: Number(elem.total_area) || 1,
+                        unit_price: Number(elem.unit_price) || 1,
+                        total_price:
+                            (Number(elem.quantity) || 1) *
+                            (Number(elem.total_area) || 1) *
+                            (Number(elem.unit_price) || 1),
                         createdBy: String(creator),
                         endDate: reqBody.endDate,
                         revisedBy: String(creator),
@@ -119,11 +127,17 @@ const post = async (
         creator,
         uniqueValues,
         next,
-        sendId
+        true
     );
-    console.log(data);
-
+    console.log(data, "here", operationDataType);
     if (operationDataType !== "project") {
+        if (operationDataType === "sub_task" && todos) {
+            const projectData = await allModels.sub_task
+                .findUnique({ where: { id: data.id } })
+                .task_manager()
+                .project();
+            await calculateProject(projectData.id);
+        }
         return data;
     }
     if (!data.id) {

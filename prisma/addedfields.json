@@ -1,0 +1,12 @@
+{
+    "todo": {
+        "quantity": "number",
+        "total_area": "number",
+        "unit_price": "number",
+        "total_price": "number"
+    },
+    "project": {
+        "project_participation_request": "object"
+    },
+    "project_participation_request": {}
+}

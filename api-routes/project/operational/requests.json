@@ -18,6 +18,9 @@
         },
         "project_edit_request": {
             "project_id": "number"
+        },
+        "project_participation_request": {
+            "project_id": "number"
         }
     },
     "allOptionalInputFilters": {
@@ -30,6 +33,9 @@
         },
         "project_edit_request": {
             "reason": "string"
+        },
+        "project_participation_request": {
+            "remark": "string"
         }
     },
     "enums": {
@@ -41,7 +47,8 @@
         "individual_payment": {},
         "individual_manpower": {},
         "individual_store": {},
-        "project_edit_request": {}
+        "project_edit_request": {},
+        "project_participation_request": {}
     },
     "dateValues": {
         "all_requests": [],
@@ -49,7 +56,8 @@
         "individual_payment": [],
         "individual_manpower": [],
         "individual_store": ["return_date"],
-        "project_edit_request": []
+        "project_edit_request": [],
+        "project_participation_request": []
     },
     "allProjections": {
         "request_payment": {
@@ -126,6 +134,14 @@
             "requested_date": true,
             "project": true,
             "reason": true
+        },
+        "project_participation_request": {
+            "id": true,
+            "requester": true,
+            "approval_status": true,
+            "requested_date": true,
+            "project": true,
+            "remark": true
         }
     },
     "allFilters": {
@@ -197,6 +213,12 @@
             "requester_id": "number",
             "approval_status": "number",
             "project_id": "number"
+        },
+        "project_participation_request": {
+            "id": "number",
+            "requester_id": "number",
+            "approval_status": "number",
+            "project_id": "number"
         }
     },
     "allSorts": {
@@ -264,6 +286,13 @@
             "quantity_type": "number"
         },
         "project_edit_request": {
+            "id": "number",
+            "requester_id": "number",
+            "approval_status": "number",
+            "requested_date": "number",
+            "project_id": "number"
+        },
+        "project_participation_request": {
             "id": "number",
             "requester_id": "number",
             "approval_status": "number",

@@ -89,9 +89,9 @@ const postPaymentRequest = async (
         );
         return false;
     }
-    reqBody.prepared_by_id = (
-        await allModels.user.findUnique({ where: { id: creator } })
-    )?.employee_id;
+    const user = await allModels.user.findUnique({ where: { id: creator } });
+    console.log({ creator, user });
+    reqBody.prepared_by_id = user?.employee_id;
     // if(!reqBody.prepared_by_id){
     //     error(
     //         "prepared_by_id",

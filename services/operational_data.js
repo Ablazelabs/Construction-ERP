@@ -1,4 +1,5 @@
 const { allModels, error, snakeToPascal } = require("../config/config");
+const calculateProject = require("./calculateProject");
 const {
     post: mPost,
     get: mGet,
@@ -127,10 +128,66 @@ const post = async (
         creator,
         uniqueValues,
         next,
-        sendId
+        true
     );
 
     if (reqBody.todos) {
+        // const doneTodos = await todos.findMany({
+        //     where: {
+        //         OR: reqBody.todos.connect,
+        //     },
+        //     select: {
+        //         sub_task: {
+        //             include: {
+        //                 todos: true,
+        //                 task_manager: true,
+        //             },
+        //         },
+        //     },
+        // });
+        // const allSubTasks = doneTodos.map((elem) => elem.sub_task);
+        // const uniqueSubTaskIds = allSubTasks
+        //     .map((elem) => elem.id)
+        //     .filter(unique);
+        // let uniqueSubTasks = [];
+        // for (let i in uniqueSubTaskIds) {
+        //     uniqueSubTasks.push(
+        //         allSubTasks.find((elem) => elem.id === uniqueSubTaskIds[i])
+        //     );
+        // }
+        // for (let i in uniqueSubTasks) {
+        //     const subTask = uniqueSubTasks[i];
+        //     const totalTodos = subTask.todos.length;
+        //     const doneSubTodos = subTask.todos.filter(
+        //         (elem) => elem.daily_report_id
+        //     ).length;
+        //     const donePercent = (doneSubTodos / totalTodos) * 100;
+        //     await sub_task.update({
+        //         where: { id: subTask.id },
+        //         data: { progress: donePercent },
+        //     });
+        // }
+        // const mainTaskIds = uniqueSubTasks.map((elem) => elem.task_manager_id);
+        // const uniqueMainTasks = await task_manager.findMany({
+        //     where: {
+        //         OR: mainTaskIds.map((elem) => ({ id: elem })),
+        //     },
+        //     include: {
+        //         sub_task: true,
+        //     },
+        // });
+        // for (let i in uniqueMainTasks) {
+        //     const mainTask = uniqueMainTasks[i];
+        //     let completedPercent = 0;
+        //     for (const j in mainTask.sub_task) {
+        //         completedPercent += mainTask.sub_task[j].progress;
+        //     }
+        //     completedPercent /= mainTask.sub_task.length;
+        //     await task_manager.update({
+        //         where: { id: mainTask.id },
+        //         data: { progress: completedPercent },
+        //     });
+        // }
         const doneTodos = await todos.findMany({
             where: {
                 OR: reqBody.todos.connect,
@@ -144,52 +201,27 @@ const post = async (
                 },
             },
         });
-        const allSubTasks = doneTodos.map((elem) => elem.sub_task);
-        const uniqueSubTaskIds = allSubTasks
-            .map((elem) => elem.id)
-            .filter(unique);
-        let uniqueSubTasks = [];
-        for (let i in uniqueSubTaskIds) {
-            uniqueSubTasks.push(
-                allSubTasks.find((elem) => elem.id === uniqueSubTaskIds[i])
-            );
-        }
-        for (let i in uniqueSubTasks) {
-            const subTask = uniqueSubTasks[i];
-            const totalTodos = subTask.todos.length;
-            const doneSubTodos = subTask.todos.filter(
-                (elem) => elem.daily_report_id
-            ).length;
-            const donePercent = (doneSubTodos / totalTodos) * 100;
-            await sub_task.update({
-                where: { id: subTask.id },
-                data: { progress: donePercent },
-            });
-        }
-        const mainTaskIds = uniqueSubTasks.map((elem) => elem.task_manager_id);
-        const uniqueMainTasks = await task_manager.findMany({
-            where: {
-                OR: mainTaskIds.map((elem) => ({ id: elem })),
-            },
-            include: {
-                sub_task: true,
-            },
-        });
-        for (let i in uniqueMainTasks) {
-            const mainTask = uniqueMainTasks[i];
-            let completedPercent = 0;
-            for (const j in mainTask.sub_task) {
-                completedPercent += mainTask.sub_task[j].progress;
-            }
-            completedPercent /= mainTask.sub_task.length;
-            await task_manager.update({
-                where: { id: mainTask.id },
-                data: { progress: completedPercent },
-            });
+        const projectIds = doneTodos.map(
+            (elem) => elem.sub_task.task_manager.project_id
+        );
+        const uniqueProjectIds = projectIds.filter(unique);
+        for (let projectId of uniqueProjectIds) {
+            await calculateProject(projectId);
         }
     }
 
     if (operationDataType !== "project") {
+        if (operationDataType === "todos") {
+            await calculateProject(data.id, "updateTodo");
+            const project = await allModels.todos
+                .findUnique({
+                    where: { id: data.id },
+                })
+                .sub_task()
+                .task_manager()
+                .project();
+            await calculateProject(project.id);
+        }
         return data;
     }
     if (!data.id) {
@@ -209,25 +241,25 @@ const get = async (
     operationDataType,
     creator
 ) => {
-    if (operationDataType === "project") {
-        if (creator) {
-            const userme = await user.findUnique({
-                where: { id: creator },
-                include: { role: { include: { privileges: true } } },
-            });
-            if (!userme || !userme.role || !userme.role.privileges.length) {
-                return [];
-            }
-            if (
-                userme.role.privileges.find((elem) =>
-                    elem.action.match(/(super|admin|HEAD|PROJECT_ONE)/)
-                )
-            ) {
-            } else {
-                queryFilter = { ...queryFilter, createdBy: `${creator}` };
-            }
-        }
-    }
+    // if (operationDataType === "project") {
+    //     if (creator) {
+    //         const userme = await user.findUnique({
+    //             where: { id: creator },
+    //             include: { role: { include: { privileges: true } } },
+    //         });
+    //         if (!userme || !userme.role || !userme.role.privileges.length) {
+    //             return [];
+    //         }
+    //         if (
+    //             userme.role.privileges.find((elem) =>
+    //                 elem.action.match(/(super|admin|HEAD|PROJECT_ONE)/)
+    //             )
+    //         ) {
+    //         } else {
+    //             queryFilter = { ...queryFilter, createdBy: `${creator}` };
+    //         }
+    //     }
+    // }
     return mGet(
         queryFilter,
         querySort,
@@ -366,15 +398,30 @@ const patch = async (
         }
         // console.log(updateData.completed);
     }
-    return mPatch(
+    const data = mPatch(
         updateDataProjection,
         reqBody,
         updateData,
         operationDataType,
         creator,
         uniqueValues,
-        next
+        next,
+        true
     );
+    if (data) {
+        if (operationDataType === "todos") {
+            await calculateProject(data.id, "updateTodo");
+            const project = await allModels.todos
+                .findUnique({
+                    where: { id: data.id },
+                })
+                .sub_task()
+                .task_manager()
+                .project();
+            await calculateProject(project.id);
+        }
+    }
+    return data;
 };
 /**
  *
