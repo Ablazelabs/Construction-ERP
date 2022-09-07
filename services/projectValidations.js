@@ -1,5 +1,11 @@
 const {
-    allModels: { project_request, project, project_edit_request, user },
+    allModels: {
+        project_request,
+        project,
+        project_edit_request,
+        user,
+        project_participation_request,
+    },
     error,
 } = require("../config/config");
 
@@ -141,7 +147,41 @@ const editRequest = async (id, approval_status, next) => {
     });
     return { success: true };
 };
+
+/**
+ *
+ * @param {number} id
+ * @param {number} approval_status
+ * @param {Function} next
+ * @returns
+ */
+const participationRequest = async (id, approval_status, next) => {
+    const myModel = await project_participation_request.findUnique({
+        where: { id },
+    });
+    if (!myModel) {
+        error("id", `project participation request doesn't exist`, next);
+        return false;
+    }
+    if (myModel.approval_status !== 1) {
+        error(
+            "id",
+            `this project participation request has already been ${
+                ["", "", "approved", "rejected"][myModel.approval_status]
+            }`,
+            next
+        );
+        return false;
+    }
+    await project_participation_request.update({
+        where: { id },
+        data: { approval_status },
+    });
+    return { success: true };
+};
+
 module.exports = {
     patch,
     editRequest,
+    participationRequest,
 };

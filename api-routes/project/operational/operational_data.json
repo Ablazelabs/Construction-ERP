@@ -384,7 +384,8 @@
             "project": true,
             "sub_task": {
                 "include": {
-                    "prerequisites": true
+                    "prerequisites": true,
+                    "todos": true
                 }
             },
             "prerequisites": true,

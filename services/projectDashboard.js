@@ -41,7 +41,7 @@ const indexService = async (creator) => {
     let requests = {};
     total = 0;
     const paymentRequestForFinance = userData?.role?.privileges?.find((elem) =>
-        elem.action.match(/(FINANCE_ONE|admin|super|HEAD)/)
+        elem.action.match(/FINANCE_ONE/)
     )
         ? await allModels.project_request.count({
               where: {
@@ -107,7 +107,9 @@ const indexService = async (creator) => {
     )
         ? await payment_request.count({
               where: {
-                  approval_status: 1,
+                  approval_status: {
+                      in: [1, 4],
+                  },
               },
           })
         : 0;
@@ -116,7 +118,7 @@ const indexService = async (creator) => {
         projectEditRequestLength +
         pvRequestLength +
         participationRequests.length +
-        payment_request_for_finance;
+        paymentRequestForFinance;
     requests = {
         ...requests,
         project_edit_request: projectEditRequestLength,
@@ -124,6 +126,9 @@ const indexService = async (creator) => {
         project_participation_request: participationRequests.length,
         payment_request_for_finance: paymentRequestForFinance,
     };
+    console.log({
+        requests,
+    });
     return {
         totalProjectsLength,
         onGoingProjects,

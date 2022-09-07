@@ -111,7 +111,7 @@ router.use("/finance/master", financemasters);
 router.use("/finance/master", accountingPeriod);
 router.use("/finance/business_export", businessOverviewExports);
 
-router.use("/finance/operational/approval", financeApprovals);
+router.use("/finance/operational/approvals", financeApprovals);
 router.use("/finance/operational", financeNewPvs);
 router.use("/finance/operational", financeGeneralExport);
 router.use("/finance/operational", exportTemplate);
