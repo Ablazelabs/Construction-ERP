@@ -22,6 +22,20 @@ app.use(cors());
 app.use(morgan("dev"));
 app.use(json());
 app.get("/:id/employee-data", employeeData);
+app.get("/api/health", (req, res) => {
+    console.log("route", req.originalUrl);
+    let sslTrue = false;
+    if (process.env.NODE_ENV === "production") {
+        sslTrue = true;
+    }
+    const host = (sslTrue ? "https://" : "http://") + req.headers.host;
+    res.json({
+        success: true,
+        message: `api running on ${host}`,
+        baseUrl: `${host}/api`,
+        currentUrl: `${host}${req.originalUrl}`,
+    });
+});
 app.use(authenticate);
 
 /**
