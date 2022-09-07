@@ -77,9 +77,15 @@ const paymentRequestApprove = async (
     action_note,
     next
 ) => {
+    const userData = await user.findUnique({
+        where: { id: creator },
+        include: { role: { include: { privileges: true } } },
+    });
+    const res = { locals: { privileges: userData.role.privileges } };
     const isFinanceManager = res.locals.privileges.find(
-        (elem) => elem === "FINANCE_ONE"
+        (elem) => elem.action === "FINANCE_ONE"
     );
+    console.log(isFinanceManager, res.locals.privileges);
     const isHead = !Boolean(isFinanceManager);
     const myModels = await payment_request.findMany({
         where: {
@@ -113,8 +119,12 @@ const paymentRequestApprove = async (
     //if any error happens its totally 500!
     await payment_request.updateMany({
         data: {
-            ...(isHead
-                ? { checked_by_id: approved_by_id, action_note }
+            ...(isFinanceManager
+                ? {
+                      checked_by_id: approved_by_id,
+                      action_note,
+                      approval_status: 4,
+                  }
                 : { approval_status, action_note, approved_by_id }),
         },
         where: {

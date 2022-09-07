@@ -7,6 +7,7 @@ const {
         task_manager,
         sub_task,
         daily_report,
+        project_participation_request,
     },
 } = require("../config/config");
 const {
@@ -226,8 +227,10 @@ const getManagerUsers = async () => {
                     some: {
                         action: {
                             in: [
-                                "project_manager",
-                                "project_head",
+                                "PROJECT_ONE",
+                                "FINANCE_ONE",
+                                "HR_ONE",
+                                "HEAD",
                                 "super",
                                 "admin",
                             ],
@@ -251,6 +254,14 @@ const notifications = async (total, creator) => {
             creationDate: { gte: new Date() },
         },
     });
+    const participationRequests = await project_participation_request.findMany({
+        where: {
+            project: {
+                createdBy: String(creator),
+            },
+            approval_status: 1,
+        },
+    });
     const userme = await user.findUnique({
         where: { id: creator },
         include: { role: { include: { privileges: true } } },
@@ -261,7 +272,7 @@ const notifications = async (total, creator) => {
     let queryFilter = {};
     if (
         userme.role.privileges.find((elem) =>
-            elem.action.match(/(super|admin|HEAD|PROJECT_TWO)/)
+            elem.action.match(/(super|admin|HEAD|PROJECT_ONE)/)
         )
     ) {
     } else {
@@ -280,29 +291,33 @@ const notifications = async (total, creator) => {
         where: { ...queryFilter, remark: { contains: "," } },
     });
     const counts = [
-        {
+        leaveAssignmentCount && {
             count: leaveAssignmentCount,
             name: 0,
             type: 1,
             message: `You have ${leaveAssignmentCount} pending leave requests!`,
         },
-        {
+        overdueMainTaskCount && {
             count: overdueMainTaskCount,
             message: `You have ${overdueMainTaskCount} overdue Main tasks!`,
         },
-        {
+        overdueProjectCount && {
             count: overdueProjectCount,
             message: `You have ${overdueProjectCount} overdue projects!`,
         },
-        {
+        overdueSubTaskCount && {
             count: overdueSubTaskCount,
             message: `You have ${overdueSubTaskCount} overdue sub tasks!`,
         },
-        {
+        dailyReportCount && {
             count: dailyReportCount,
             message: `You have ${dailyReportCount} reports with manager remarks!`,
         },
-    ];
+        participationRequests.length && {
+            count: participationRequests.length,
+            message: `You have ${participationRequests.length} project participation requests`,
+        },
+    ].filter((elem) => elem);
     const leaveAssignmentData = leaveAssignmentCount
         ? {
               name: 0,

@@ -172,8 +172,16 @@ router.get(allRoutes, async (req, res, next) => {
     if (!getData) {
         return;
     }
-    const { queryFilter, querySort, limit, skip, projection } = getData;
+    let { queryFilter, querySort, limit, skip, projection } = getData;
+
     try {
+        if (operationDataType === "sub_task" && req.body.filter?.project_id) {
+            queryFilter = {
+                ...queryFilter,
+                task_manager: { project_id: req.body.filter.project_id },
+            };
+        }
+        console.log({ queryFilter, filter: req.body.filter, body: req.body });
         res.json(
             await get(
                 queryFilter,

@@ -846,6 +846,7 @@
             "prepared_by": true,
             "checked_by": true,
             "approved_by": true,
+            "approval_status": true,
             "balance": true,
             "remaining_balance": true,
             "petty_cash": true
