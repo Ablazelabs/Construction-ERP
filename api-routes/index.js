@@ -78,6 +78,9 @@ const inventMasterAndStock = require("./inventory/masterAndStock/inventMasterAnd
 
 const salesQuote = require("./sales/quote");
 
+router.get("/health", (req, res, next) => {
+    res.json({ success: true, message: `api running on ${req.baseUrl}` });
+});
 router.use(login);
 router.use(logout);
 router.use(refresh);
