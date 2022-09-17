@@ -183,7 +183,8 @@
         "todos": {
             "quantity": "number",
             "total_area": "number",
-            "unit_price": "number"
+            "unit_price": "number",
+            "completed": "boolean"
         },
         "request": {
             "request_description": "string",

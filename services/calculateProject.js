@@ -69,7 +69,8 @@ module.exports = async (project_id, editTodo = false) => {
         data: {
             progress: (totalDone / totalTodos) * 100,
             budget: totalBudget,
-            total_budget: totalBudget + totalBudget * project.tax,
+            total_budget: totalBudget + totalBudget * 0.15,
+            tax: totalBudget * 0.15,
         },
     });
 };
