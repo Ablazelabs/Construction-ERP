@@ -280,12 +280,12 @@ const getProjectId = async () => {
             toBeSet = `${parseInt(before.project_id.split("-")[1]) + 1}`;
         }
         const len = toBeSet.length;
-        for (let i = 0; i < 6 - len; i++) {
+        for (let i = 0; i < 4 - len; i++) {
             toBeSet = "0" + toBeSet;
         }
-        return "PID-" + toBeSet;
+        return "EL-" + toBeSet;
     } else {
-        return "PID-000001";
+        return "EL-0001";
     }
 };
 /**
@@ -401,7 +401,7 @@ const patch = async (
         }
         // console.log(updateData.completed);
     }
-    const data = mPatch(
+    const data = await mPatch(
         updateDataProjection,
         reqBody,
         updateData,

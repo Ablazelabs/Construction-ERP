@@ -341,6 +341,17 @@ router.get("/detail_project_requests", async (req, res, next) => {
     delete projection.startDate;
     delete projection.endDate;
 
+    // const pushedOrAddedFilter = { approval_status: { not: 0 } };
+    const approvedNotChecked = [{ approval_status: 2, checked_by_id: null }];
+    // if (queryFilter.OR) {
+    //     queryFilter.OR.push(pushedOrAddedFilter);
+    // } else {
+    //     queryFilter.OR = [pushedOrAddedFilter];
+    // }
+    if (req.body?.filter?.approval_status === 1) {
+        queryFilter.OR = queryFilter.OR.concat(approvedNotChecked);
+    }
+
     projection.individual_requests = {
         select: {
             ...allProjections[individualTypeKey],

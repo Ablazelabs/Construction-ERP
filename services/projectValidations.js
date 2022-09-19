@@ -34,6 +34,7 @@ const patch = async (id, approval_status, action_note, creator, next) => {
             isProtectedForEdit: true,
             request_type: true,
             project_id: true,
+            checked_by_id: true,
         },
         where: { id },
     });
@@ -55,7 +56,12 @@ const patch = async (id, approval_status, action_note, creator, next) => {
         );
         return false;
     }
-    if (myModel.approval_status !== 1 && myModel.approval_status !== 4) {
+    if (
+        myModel.approval_status !== 1 &&
+        myModel.approval_status !== 4 &&
+        !(myModel.approval_status === 2 && myModel.checked_by_id === null)
+    ) {
+        console.log(myModel.approval_status, myModel.checked_by_id);
         error(
             "id",
             `this ${displayRequestType} has already been ${
@@ -96,7 +102,12 @@ const patch = async (id, approval_status, action_note, creator, next) => {
             ? {
                   checked_by_id: approverEmpId,
                   checker_action_note: action_note,
-                  approval_status: approval_status === 3 ? 3 : 4,
+                  approval_status:
+                      approval_status === 3
+                          ? 3
+                          : myModel.approval_status === 2
+                          ? 2
+                          : 4,
               }
             : {
                   action_note,
