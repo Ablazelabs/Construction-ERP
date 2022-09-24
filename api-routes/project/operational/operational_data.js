@@ -170,8 +170,9 @@ router.get(allRoutes, async (req, res, next) => {
                     (elem) => elem.requester_id
                 );
                 const privExists = res.locals.privileges.find((elem) =>
-                    elem.match(/|admin|super|HEAD|PROJECT_ONE/)
+                    elem.match(/admin|super|HEAD|PROJECT_ONE/)
                 );
+                console.log(privExists);
                 allowed_users.push(Number(data[i].createdBy));
                 privExists && allowed_users.push(Number(res.locals.id));
                 data[i].has_access = allowed_users;

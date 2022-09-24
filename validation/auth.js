@@ -203,7 +203,9 @@ const authorization = {
         //           ].filter((elem) => elem)
         //         : [];
         if (requestPath.match("/master/")) {
-            PRIVILEGE_TYPE = PRIVILEGE_TYPE.replace("TWO", "ONE");
+            if (requestRoute !== "client") {
+                PRIVILEGE_TYPE = PRIVILEGE_TYPE.replace("TWO", "ONE");
+            }
         }
         if (
             requestRoute == "account" &&

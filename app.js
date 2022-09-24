@@ -17,6 +17,7 @@ var morgan = require("morgan");
 //     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 // });
 const employeeData = require("./html/employeeData");
+const { loggingRoute } = require("./config/config");
 app.use(cors());
 // app.use(limiter);
 app.use(morgan("dev"));
@@ -33,7 +34,6 @@ app.get("/api/health", (req, res) => {
     });
 });
 app.use(authenticate);
-
 /**
  * we need req.body(json format) to get data from requests, but get doesn't allow, so stringify the json u want to send and send it as a param (parameter name must be body)
  * if body={ something: "something" }

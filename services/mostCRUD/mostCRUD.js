@@ -67,7 +67,9 @@ const post = async (
             }
             error(
                 `${uniqueKey}`,
-                `${snakeToPascal(modelName)} already exists`,
+                `${snakeToPascal(modelName)} with this ${snakeToPascal(
+                    uniqueKey
+                )} already exists`,
                 next
             );
             return false;
