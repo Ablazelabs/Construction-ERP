@@ -2,6 +2,7 @@ const { error } = require("../config/config");
 module.exports = {
     /** Checking the phone number. */
     checkPhoneNumber: (phoneNumber, next, key = "phone_number") => {
+        console.log(phoneNumber);
         if (phoneNumber[0] === "0") {
             if (phoneNumber.length === 10) {
                 return true;
@@ -23,8 +24,6 @@ module.exports = {
         let countryCode = splitPhone[0];
         if (phone_number.length !== 9)
             error(key, "Phone number Length must be 3-9", next);
-        else if (countryCode.length !== 3)
-            error(key, "country code must be of 3 length", next);
         else if (
             phone_number.match("[0-9]{9}") &&
             countryCode.match("[0-9]{3}")

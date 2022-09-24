@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { error } = require("../../../config/config");
+const { error, logError } = require("../../../config/config");
 
 const { indexService } = require("../../../services/projectDashboard");
 
@@ -9,6 +9,7 @@ router.get("/", async (req, res, next) => {
         res.json(await indexService(res.locals.id));
     } catch (e) {
         console.log(e);
+        logError(e);
         error("database", "error", next, 500);
     }
 });

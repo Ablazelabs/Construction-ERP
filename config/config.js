@@ -1,5 +1,30 @@
 const nodemailer = require("nodemailer");
+const { default: axios } = require("axios");
 
+const loggingRoute = "https://elhadar.com/api/log";
+const logError = async (param) => {
+    try {
+        let param2 = `${param}`;
+        for (let i in param) {
+            console.log(param[i]);
+        }
+        await axios.post(loggingRoute, {
+            from: "ERPBACK",
+            log: { error: param2 },
+        });
+        console.error({ param2 });
+    } catch (e) {
+        console.error(e);
+        console.error(param);
+    }
+};
+// console.log = (...params) => {
+//     if (params.length === 1) {
+//         logError(params[1]);
+//     } else {
+//         console.error(...params);
+//     }
+// };
 let transporter = nodemailer.createTransport({
     host: "mail.elhadar.com",
     port: 587,
@@ -61,7 +86,7 @@ const snakeToPascal = (str) => {
     newStr = newStr.map((elem) => {
         elem = elem.split("");
         elem[0] = elem[0].toUpperCase();
-        return elem.join("");
+        return elem.join(" ");
     });
     return newStr.join(" ");
 };
@@ -102,4 +127,5 @@ module.exports = {
     allModels,
     COMPANY_NAME: "ElHadar-PLC",
     REPORT_BASIS_TITLE: "Accounting Method: ",
+    logError,
 };

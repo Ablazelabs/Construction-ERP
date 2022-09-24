@@ -47,7 +47,7 @@ router.get("/working_days", (req, res, next) => {
         if (i.getDay() === 0) {
             continue;
         }
-        if (!includeSaturday && i.getDay() === 6) {
+        if (includeSaturday && i.getDay() === 6) {
             continue;
         }
         workingDays++;
