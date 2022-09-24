@@ -276,13 +276,16 @@ const getProjectId = async () => {
     });
     if (before) {
         let toBeSet = `${parseInt(before.project_id) + 1}`;
+        if (isNaN(toBeSet)) {
+            toBeSet = `${parseInt(before.project_id.split("-")[1]) + 1}`;
+        }
         const len = toBeSet.length;
-        for (let i = 0; i < 6 - len; i++) {
+        for (let i = 0; i < 4 - len; i++) {
             toBeSet = "0" + toBeSet;
         }
-        return toBeSet;
+        return "EL-" + toBeSet;
     } else {
-        return "000001";
+        return "EL-0001";
     }
 };
 /**
@@ -398,7 +401,7 @@ const patch = async (
         }
         // console.log(updateData.completed);
     }
-    const data = mPatch(
+    const data = await mPatch(
         updateDataProjection,
         reqBody,
         updateData,

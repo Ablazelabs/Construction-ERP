@@ -24,11 +24,7 @@ app.use(json());
 app.get("/:id/employee-data", employeeData);
 app.get("/api/health", (req, res) => {
     console.log("route", req.originalUrl);
-    let sslTrue = false;
-    if (process.env.NODE_ENV === "production") {
-        sslTrue = true;
-    }
-    const host = (sslTrue ? "https://" : "http://") + req.headers.host;
+    const host = req.protocol + "://" + req.headers.host;
     res.json({
         success: true,
         message: `api running on ${host}`,

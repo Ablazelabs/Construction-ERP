@@ -203,6 +203,7 @@ const patch = async (
             },
             where: { id: reqBody.id },
         });
+        console.log({ updated, sendId });
         return { success: true, id: sendId ? updated.id : undefined };
     } catch (e) {
         console.log(e);

@@ -45,10 +45,22 @@ const indexService = async (creator) => {
     )
         ? await allModels.project_request.count({
               where: {
-                  approved_by_id: { not: null },
-                  checked_by_id: { not: null },
-                  finance_approved_by_id: null,
-                  approval_status: 2,
+                  approval_status: {
+                      in: [2, 4],
+                  },
+                  request_type: 1,
+              },
+          })
+        : 0;
+    const paymentRequestForStore = userData?.role?.privileges?.find((elem) =>
+        elem.action.match(/STORE_ONE/)
+    )
+        ? await allModels.project_request.count({
+              where: {
+                  approval_status: {
+                      in: [2, 4],
+                  },
+                  request_type: 3,
               },
           })
         : 0;
@@ -125,6 +137,7 @@ const indexService = async (creator) => {
         pv_request: pvRequestLength,
         project_participation_request: participationRequests.length,
         payment_request_for_finance: paymentRequestForFinance,
+        payment_request_for_store: paymentRequestForStore,
     };
     console.log({
         requests,

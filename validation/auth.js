@@ -135,6 +135,7 @@ const authorization = {
             requestRoute == "refresh" ||
             requestRoute == "sendcode" ||
             requestRoute == "confirm_account" ||
+            (requestRoute == "leave_assignment" && method === "POST") ||
             pass
         ) {
             next();
@@ -166,7 +167,8 @@ const authorization = {
                     .findUnique({ where: { id: payLoad.id } })
                     .role()
                     .privileges();
-                res.locals.privileges = privileges.map((elem) => elem.action);
+                res.locals.privileges =
+                    privileges?.map((elem) => elem.action) || [];
                 res.locals.id = payLoad.id;
             } else {
                 return error(

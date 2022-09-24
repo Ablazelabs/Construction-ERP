@@ -173,7 +173,7 @@ router.get(allRoutes, async (req, res, next) => {
                     elem.match(/|admin|super|HEAD|PROJECT_ONE/)
                 );
                 allowed_users.push(Number(data[i].createdBy));
-                // privExists && allowed_users.push(Number(res.locals.id));
+                privExists && allowed_users.push(Number(res.locals.id));
                 data[i].has_access = allowed_users;
             }
             return res.json(data);
